@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 /**
+ * 用户
  * @author : LiJiWei
  * @version V1.0
  * @Project: scis
@@ -19,10 +20,6 @@ public class User implements Serializable {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="user_id")
     private long id;
-    @Column(name = "class_id")
-    private long classId;
-    @Column(name = "college_id")
-    private long collegeId;
     @Column(name = "user_login")
     private String login;
     @Column(name = "user_password")
@@ -40,19 +37,33 @@ public class User implements Serializable {
     @Column(name = "user_identity")
     private String identity;
 
-    /*配置用户角色*/
-
-    @ManyToMany(cascade = {CascadeType.REFRESH},fetch = FetchType.LAZY)
+    /**
+     * 用户角色
+     */
+    @ManyToMany(cascade = {CascadeType.REFRESH},fetch = FetchType.EAGER)
     @JoinTable(name="Is_role_user",
             joinColumns={@JoinColumn(name="rule_id")},
             inverseJoinColumns={@JoinColumn(name="user_id")})
     private List<ScisRule> rules;
-
-    /*用户日志*/
-
+    /**
+     * 用户日志
+     */
     @OneToMany(cascade = {CascadeType.REFRESH},fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",referencedColumnName = "user_id")
     private List<ScisLogs> logs;
+    /**
+     * 班级
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "class_id",referencedColumnName = "class_id")
+    private ScisClass scisClass;
+
+    /**
+     * 学院
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "college_id",referencedColumnName = "college_id")
+    private ScisCollege college;
 
     public User() {
     }

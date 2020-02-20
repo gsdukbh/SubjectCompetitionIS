@@ -2,8 +2,10 @@ package werls.scis.dao.pojo;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 /**
+ * 角色
  * @author : LiJiWei
  * @version V1.0
  * @Project: scis
@@ -22,11 +24,18 @@ public class ScisRule implements Serializable {
     @Column(name = "rule_authority")
     private String authority;
 
+    @ManyToMany
+    @JoinTable(name="Is_role_user",
+            joinColumns={@JoinColumn(name="rule_id")},
+            inverseJoinColumns={@JoinColumn(name="user_id")})
+    private List<User> userList;
+
     @Override
     public String toString() {
         return "ScisRule{" +
                 "id=" + id +
                 ", authority='" + authority + '\'' +
+                ", userList=" + userList +
                 '}';
     }
 

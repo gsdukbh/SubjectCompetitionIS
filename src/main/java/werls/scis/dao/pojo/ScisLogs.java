@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.sql.Date;
 
 /**
+ * 日志
  * @author : LiJiWei
  * @version V1.0
  * @Project: scis
@@ -20,13 +21,25 @@ public class ScisLogs implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "logs_id")
     private long id;
-    @Column(name = "user_id")
-    private long userId;
+
     @Column(name = "logs_content")
     private String content;
     @Column(name = "logs_time")
     private Date time;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id",referencedColumnName = "user_id")
+    private User user;
+
+    @Override
+    public String toString() {
+        return "ScisLogs{" +
+                "id=" + id +
+                ", content='" + content + '\'' +
+                ", time=" + time +
+                ", user=" + user +
+                '}';
+    }
 
     public long getId() {
         return id;
@@ -34,14 +47,6 @@ public class ScisLogs implements Serializable {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
     }
 
     public String getContent() {

@@ -1,6 +1,10 @@
 package werls.scis.dao.pojo;
 
+import javax.persistence.*;
+import java.io.Serializable;
+
 /**
+ * 竞赛
  * @author : LiJiWei
  * @version V1.0
  * @Project: scis
@@ -8,5 +12,13 @@ package werls.scis.dao.pojo;
  * @Description: TODO
  * @date Date : 2020年02月19日 22:13
  */
-public class ScisCompetition {
+@Entity
+@Table(name = "Is_competition")
+public class ScisCompetition implements Serializable {
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @Column(name="competition_id")
+    private long id;
+
 }
