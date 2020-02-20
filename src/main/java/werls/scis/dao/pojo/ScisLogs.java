@@ -27,9 +27,6 @@ public class ScisLogs implements Serializable {
     @Column(name = "logs_time")
     private Date time;
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
 
     public long getId() {
         return id;

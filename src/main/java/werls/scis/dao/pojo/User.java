@@ -39,14 +39,20 @@ public class User implements Serializable {
     private String status;
     @Column(name = "user_identity")
     private String identity;
+
     /*配置用户角色*/
 
-    @ManyToMany(cascade = {CascadeType.REFRESH},fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.REFRESH},fetch = FetchType.LAZY)
     @JoinTable(name="Is_role_user",
             joinColumns={@JoinColumn(name="rule_id")},
             inverseJoinColumns={@JoinColumn(name="user_id")})
     private List<ScisRule> rules;
 
+    /*用户日志*/
+
+    @OneToMany(cascade = {CascadeType.REFRESH},fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id",referencedColumnName = "user_id")
+    private List<ScisLogs> logs;
 
     public User() {
     }
