@@ -15,7 +15,10 @@ import java.io.Serializable;
 @Table(name = "Is_rule")
 public class ScisRule implements Serializable {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(name="rule_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "rule_id")
     private long id;
+    @Column(name = "rule_authority")
+    private String authority;
+
 }

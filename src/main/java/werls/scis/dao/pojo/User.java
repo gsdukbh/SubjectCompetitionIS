@@ -47,6 +47,7 @@ public class User implements Serializable {
             inverseJoinColumns={@JoinColumn(name="user_id")})
     private List<ScisRule> rules;
 
+
     public User() {
     }
 }
