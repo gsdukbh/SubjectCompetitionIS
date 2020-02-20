@@ -65,6 +65,12 @@ public class User implements Serializable {
     @JoinColumn(name = "college_id",referencedColumnName = "college_id")
     private ScisCollege college;
 
+    /**
+     * 竞赛报名
+     */
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "Is_apply_from")
+    private List<ScisApplyFrom>applyFroms;
     public User() {
     }
 }

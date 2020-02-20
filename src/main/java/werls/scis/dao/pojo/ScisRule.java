@@ -24,10 +24,7 @@ public class ScisRule implements Serializable {
     @Column(name = "rule_authority")
     private String authority;
 
-    @ManyToMany
-    @JoinTable(name="Is_role_user",
-            joinColumns={@JoinColumn(name="rule_id")},
-            inverseJoinColumns={@JoinColumn(name="user_id")})
+    @ManyToMany(mappedBy = "rules")
     private List<User> userList;
 
     @Override

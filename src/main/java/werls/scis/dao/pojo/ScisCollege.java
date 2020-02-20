@@ -24,7 +24,7 @@ public class ScisCollege implements Serializable {
     @Column(name = "college_name")
     private String collegeName;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "college",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "college_id",referencedColumnName = "college_id")
     private List<ScisMajor> majors;
 
