@@ -42,6 +42,63 @@ public class ScisApplyFrom implements Serializable {
     @JoinColumn(name = "competition_id")
     private ScisCompetition competition;
 
+    @Override
+    public String toString() {
+        return "ScisApplyFrom{" +
+                "id=" + id +
+                ", applyTime=" + applyTime +
+                ", rank='" + rank + '\'' +
+                ", status='" + status + '\'' +
+                ", user=" + user +
+                ", competition=" + competition +
+                '}';
+    }
 
+    public String getStatus() {
+        return status;
+    }
 
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public Date getApplyTime() {
+        return applyTime;
+    }
+
+    public void setApplyTime(Date applyTime) {
+        this.applyTime = applyTime;
+    }
+
+    public String getRank() {
+        return rank;
+    }
+
+    public void setRank(String rank) {
+        this.rank = rank;
+    }
+
+    public ScisCompetition getCompetition() {
+        return competition;
+    }
+
+    public void setCompetition(ScisCompetition competition) {
+        this.competition = competition;
+    }
 }

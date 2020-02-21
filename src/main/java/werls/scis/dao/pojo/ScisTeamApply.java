@@ -50,4 +50,91 @@ public class ScisTeamApply implements Serializable {
      @ManyToOne(fetch = FetchType.LAZY,optional = false)
      @JoinColumn(name = "competition_id")
      private ScisCompetition competition;
+
+    @Override
+    public String toString() {
+        return "ScisTeamApply{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", number='" + number + '\'' +
+                ", score='" + score + '\'' +
+                ", applyTime=" + applyTime +
+                ", rank='" + rank + '\'' +
+                ", status='" + status + '\'' +
+                ", userList=" + userList +
+                ", competition=" + competition +
+                '}';
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public List<User> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(List<User> userList) {
+        this.userList = userList;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    public String getScore() {
+        return score;
+    }
+
+    public void setScore(String score) {
+        this.score = score;
+    }
+
+    public Date getApplyTime() {
+        return applyTime;
+    }
+
+    public void setApplyTime(Date applyTime) {
+        this.applyTime = applyTime;
+    }
+
+    public String getRank() {
+        return rank;
+    }
+
+    public void setRank(String rank) {
+        this.rank = rank;
+    }
+
+    public ScisCompetition getCompetition() {
+        return competition;
+    }
+
+    public void setCompetition(ScisCompetition competition) {
+        this.competition = competition;
+    }
 }

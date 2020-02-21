@@ -49,7 +49,6 @@ public class User implements Serializable {
      * 用户日志
      */
     @OneToMany(mappedBy = "user",cascade = {CascadeType.REFRESH},fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id",referencedColumnName = "user_id")
     private List<ScisLogs> logs;
     /**
      * 班级
@@ -70,11 +69,150 @@ public class User implements Serializable {
      */
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
     private List<ScisApplyFrom>applyFroms;
-
     /**
-     * 团体竞赛
+     * 公告教师，管理员专属，一对多
      */
-    @ManyToMany(mappedBy = "userList",cascade = {CascadeType.REFRESH},fetch = FetchType.EAGER)
-    private List<ScisTeamApply> teamApplies;
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
+    private List<ScisAnnouncement> announcements;
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", login='" + login + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", sex='" + sex + '\'' +
+                ", status='" + status + '\'' +
+                ", identity='" + identity + '\'' +
+                ", rules=" + rules +
+                ", logs=" + logs +
+                ", scisClass=" + scisClass +
+                ", college=" + college +
+                ", applyFroms=" + applyFroms +
+                ", announcements=" + announcements +
+                '}';
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getIdentity() {
+        return identity;
+    }
+
+    public void setIdentity(String identity) {
+        this.identity = identity;
+    }
+
+    public List<ScisRule> getRules() {
+        return rules;
+    }
+
+    public void setRules(List<ScisRule> rules) {
+        this.rules = rules;
+    }
+
+    public List<ScisLogs> getLogs() {
+        return logs;
+    }
+
+    public void setLogs(List<ScisLogs> logs) {
+        this.logs = logs;
+    }
+
+    public ScisClass getScisClass() {
+        return scisClass;
+    }
+
+    public void setScisClass(ScisClass scisClass) {
+        this.scisClass = scisClass;
+    }
+
+    public ScisCollege getCollege() {
+        return college;
+    }
+
+    public void setCollege(ScisCollege college) {
+        this.college = college;
+    }
+
+    public List<ScisApplyFrom> getApplyFroms() {
+        return applyFroms;
+    }
+
+    public void setApplyFroms(List<ScisApplyFrom> applyFroms) {
+        this.applyFroms = applyFroms;
+    }
+
+    public List<ScisAnnouncement> getAnnouncements() {
+        return announcements;
+    }
+
+    public void setAnnouncements(List<ScisAnnouncement> announcements) {
+        this.announcements = announcements;
+    }
 }

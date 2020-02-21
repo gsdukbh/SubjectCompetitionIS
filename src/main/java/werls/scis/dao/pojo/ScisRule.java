@@ -21,6 +21,9 @@ public class ScisRule implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "rule_id")
     private long id;
+    /**
+     * 角色
+     */
     @Column(name = "rule_authority")
     private String authority;
 

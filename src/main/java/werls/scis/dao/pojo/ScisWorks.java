@@ -17,7 +17,7 @@ import java.sql.Date;
  */
 @Entity
 @Table(name = "Is_works")
-public class ScisWorks  {
+public class ScisWorks  implements Serializable{
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -68,12 +68,129 @@ public class ScisWorks  {
      */
     @Column(name = "works_mem")
     private String mem;
-
-
+    /**
+     * 评语
+     */
+    @Column(name = "works_remark")
+    private String remark;
     /**
      * 所属的竞赛项目
      */
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "competition_id")
+    @JoinColumn(name = "competition_id",referencedColumnName = "competition_id")
     private ScisCompetition competition;
+
+    @Override
+    public String toString() {
+        return "ScisWorks{" +
+                "id=" + id +
+                ", upTime=" + upTime +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", url='" + url + '\'' +
+                ", download='" + download + '\'' +
+                ", author='" + author + '\'' +
+                ", moder='" + moder + '\'' +
+                ", score='" + score + '\'' +
+                ", mem='" + mem + '\'' +
+                ", remark='" + remark + '\'' +
+                ", competition=" + competition +
+                '}';
+    }
+
+    public Date getUpTime() {
+        return upTime;
+    }
+
+    public void setUpTime(Date upTime) {
+        this.upTime = upTime;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDownload() {
+        return download;
+    }
+
+    public void setDownload(String download) {
+        this.download = download;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getModer() {
+        return moder;
+    }
+
+    public void setModer(String moder) {
+        this.moder = moder;
+    }
+
+    public String getScore() {
+        return score;
+    }
+
+    public void setScore(String score) {
+        this.score = score;
+    }
+
+    public String getMem() {
+        return mem;
+    }
+
+    public void setMem(String mem) {
+        this.mem = mem;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public ScisCompetition getCompetition() {
+        return competition;
+    }
+
+    public void setCompetition(ScisCompetition competition) {
+        this.competition = competition;
+    }
 }
