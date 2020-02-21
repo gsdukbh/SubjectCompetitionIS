@@ -25,9 +25,15 @@ public class ScisClass implements Serializable {
     private String grade;
     @Column(name = "class_name")
     private String name;
-    @ManyToOne(fetch =FetchType.LAZY )
+    /**
+     * 班级专业
+     */
+    @ManyToOne(fetch =FetchType.LAZY,optional = false)
     @JoinColumn(name = "major_id",referencedColumnName = "major_id")
     private ScisMajor major;
+
+    @OneToMany(mappedBy = "scisClass",fetch = FetchType.LAZY)
+    private  List<User> userList;
 
     @Override
     public String toString() {
@@ -36,7 +42,16 @@ public class ScisClass implements Serializable {
                 ", grade='" + grade + '\'' +
                 ", name='" + name + '\'' +
                 ", major=" + major +
+                ", userList=" + userList +
                 '}';
+    }
+
+    public List<User> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(List<User> userList) {
+        this.userList = userList;
     }
 
     public long getId() {

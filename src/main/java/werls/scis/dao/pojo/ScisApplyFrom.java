@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.sql.Date;
 
 /**
- * 竞赛报名
+ * 个人竞赛报名
  * @author : LiJiWei
  * @version V1.0
  * @Project: scis
@@ -19,13 +19,29 @@ public class ScisApplyFrom implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(name="competition_id")
+    @Column(name="apply_id")
     private long id;
-
+    @Column(name = "apply_time")
     private Date applyTime;
+    @Column(name = "apply_rank")
+    private String rank;
+    @Column(name = "apply_status")
+    private String status;
 
-    private Integer applyNumber;
+    /**
+     * 竞赛用户
+     */
+    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    @JoinColumn(name = "user_id",referencedColumnName = "user_id")
+    private User user;
 
-    private String applyShape;
+    /**
+     * 参加的竞赛
+     */
+    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    @JoinColumn(name = "competition_id")
+    private ScisCompetition competition;
+
+
 
 }

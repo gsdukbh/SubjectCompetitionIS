@@ -32,8 +32,26 @@ public class ScisCollege implements Serializable {
     /**
      * 学院教师
      */
-    @OneToMany
+    @OneToMany(mappedBy = "college")
     private List<User>userList;
+
+    @Override
+    public String toString() {
+        return "ScisCollege{" +
+                "id=" + id +
+                ", collegeName='" + collegeName + '\'' +
+                ", majors=" + majors +
+                ", userList=" + userList +
+                '}';
+    }
+
+    public List<User> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(List<User> userList) {
+        this.userList = userList;
+    }
 
     public long getId() {
         return id;

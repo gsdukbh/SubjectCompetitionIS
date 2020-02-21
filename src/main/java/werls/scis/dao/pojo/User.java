@@ -48,28 +48,33 @@ public class User implements Serializable {
     /**
      * 用户日志
      */
-    @OneToMany(cascade = {CascadeType.REFRESH},fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user",cascade = {CascadeType.REFRESH},fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",referencedColumnName = "user_id")
     private List<ScisLogs> logs;
     /**
      * 班级
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name = "class_id",referencedColumnName = "class_id")
     private ScisClass scisClass;
 
     /**
      * 学院
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name = "college_id",referencedColumnName = "college_id")
     private ScisCollege college;
 
     /**
      * 竞赛报名
      */
-//    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
-//    private List<ScisApplyFrom>applyFroms;
-    public User() {
-    }
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
+    private List<ScisApplyFrom>applyFroms;
+
+    /**
+     * 团体竞赛
+     */
+    @ManyToMany(mappedBy = "userList",cascade = {CascadeType.REFRESH},fetch = FetchType.EAGER)
+    private List<ScisTeamApply> teamApplies;
+
 }

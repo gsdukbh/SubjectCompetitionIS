@@ -3,6 +3,7 @@ package werls.scis.dao.pojo;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.List;
 
 /**
  * 竞赛
@@ -39,6 +40,24 @@ public class ScisCompetition implements Serializable {
     private String level;
     @Column(name = "competition_organizer")
     private String organizer;
+    @Column(name = "competition_num_limit")
+    private String numLimit;
 
-
+    /**
+     * 个人报名
+     */
+    @OneToMany(mappedBy = "competition",fetch = FetchType.LAZY)
+    @JoinColumn(name = "competition_id",referencedColumnName = "competition_id")
+    private List<ScisApplyFrom> applyFromList;
+    /**
+     * 团体报名
+     */
+    @OneToMany(mappedBy = "competition",fetch = FetchType.LAZY)
+    @JoinColumn(name = "competition_id",referencedColumnName = "competition_id")
+    private List<ScisTeamApply> teamApplyList;
+    /**
+     * 竞赛作品
+     */
+    @OneToMany(mappedBy = "competition")
+    private ScisWorks works;
 }

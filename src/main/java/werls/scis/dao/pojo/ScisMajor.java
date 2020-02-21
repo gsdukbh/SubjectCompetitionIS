@@ -30,8 +30,7 @@ public class ScisMajor implements Serializable {
     @JoinColumn(name = "college_id")
     private ScisCollege college;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "major_id",referencedColumnName = "major_id")
+    @OneToMany(mappedBy = "major",fetch = FetchType.LAZY)
     private List<ScisClass> classList;
 
     @Override

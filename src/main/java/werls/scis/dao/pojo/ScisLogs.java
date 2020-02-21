@@ -27,7 +27,7 @@ public class ScisLogs implements Serializable {
     @Column(name = "logs_time")
     private Date time;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name = "user_id",referencedColumnName = "user_id")
     private User user;
 
