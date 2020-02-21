@@ -25,7 +25,8 @@ public class ScisMajor implements Serializable {
     private String majorName;
     @Column(name = "education_level")
     private String majorLevel;
-    @ManyToOne(cascade = {CascadeType.REFRESH},fetch = FetchType.LAZY)
+
+    @ManyToOne(cascade = {CascadeType.REFRESH},fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name = "college_id")
     private ScisCollege college;
 

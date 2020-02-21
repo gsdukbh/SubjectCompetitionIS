@@ -23,19 +23,17 @@ public class ScisCollege implements Serializable {
     private long id;
     @Column(name = "college_name")
     private String collegeName;
-
+    /**
+     *开设的专业
+     */
     @OneToMany(mappedBy = "college",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "college_id",referencedColumnName = "college_id")
     private List<ScisMajor> majors;
-
-    @Override
-    public String toString() {
-        return "ScisCollege{" +
-                "id=" + id +
-                ", collegeName='" + collegeName + '\'' +
-                ", majors=" + majors +
-                '}';
-    }
+    /**
+     * 学院教师
+     */
+    @OneToMany
+    private List<User>userList;
 
     public long getId() {
         return id;
