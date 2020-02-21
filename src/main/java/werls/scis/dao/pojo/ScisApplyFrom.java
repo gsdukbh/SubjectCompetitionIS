@@ -2,6 +2,7 @@ package werls.scis.dao.pojo;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.sql.Date;
 
 /**
  * 竞赛报名
@@ -21,5 +22,10 @@ public class ScisApplyFrom implements Serializable {
     @Column(name="competition_id")
     private long id;
 
+    private Date applyTime;
+
+    private Integer applyNumber;
+
+    private String applyShape;
 
 }

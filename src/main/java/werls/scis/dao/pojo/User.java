@@ -68,9 +68,8 @@ public class User implements Serializable {
     /**
      * 竞赛报名
      */
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "Is_apply_from")
-    private List<ScisApplyFrom>applyFroms;
+//    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
+//    private List<ScisApplyFrom>applyFroms;
     public User() {
     }
 }
