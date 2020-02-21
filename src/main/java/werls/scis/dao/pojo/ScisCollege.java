@@ -33,7 +33,7 @@ public class ScisCollege implements Serializable {
      * 学院教师
      */
     @OneToMany(mappedBy = "college")
-    private List<User>userList;
+    private List<ScisUser> scisUserList;
 
     @Override
     public String toString() {
@@ -41,16 +41,16 @@ public class ScisCollege implements Serializable {
                 "id=" + id +
                 ", collegeName='" + collegeName + '\'' +
                 ", majors=" + majors +
-                ", userList=" + userList +
+                ", userList=" + scisUserList +
                 '}';
     }
 
-    public List<User> getUserList() {
-        return userList;
+    public List<ScisUser> getScisUserList() {
+        return scisUserList;
     }
 
-    public void setUserList(List<User> userList) {
-        this.userList = userList;
+    public void setScisUserList(List<ScisUser> scisUserList) {
+        this.scisUserList = scisUserList;
     }
 
     public long getId() {

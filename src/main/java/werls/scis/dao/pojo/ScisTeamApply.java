@@ -42,7 +42,7 @@ public class ScisTeamApply implements Serializable {
     @JoinTable(name = "Is_team_user",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "team_id")})
-    private List<User>userList;
+    private List<ScisUser> scisUserList;
 
     /**
      * 竞赛（团队）
@@ -61,7 +61,7 @@ public class ScisTeamApply implements Serializable {
                 ", applyTime=" + applyTime +
                 ", rank='" + rank + '\'' +
                 ", status='" + status + '\'' +
-                ", userList=" + userList +
+                ", userList=" + scisUserList +
                 ", competition=" + competition +
                 '}';
     }
@@ -74,12 +74,12 @@ public class ScisTeamApply implements Serializable {
         this.status = status;
     }
 
-    public List<User> getUserList() {
-        return userList;
+    public List<ScisUser> getScisUserList() {
+        return scisUserList;
     }
 
-    public void setUserList(List<User> userList) {
-        this.userList = userList;
+    public void setScisUserList(List<ScisUser> scisUserList) {
+        this.scisUserList = scisUserList;
     }
 
     public long getId() {

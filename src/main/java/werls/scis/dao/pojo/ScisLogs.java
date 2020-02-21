@@ -29,7 +29,7 @@ public class ScisLogs implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name = "user_id",referencedColumnName = "user_id")
-    private User user;
+    private ScisUser scisUser;
 
     @Override
     public String toString() {
@@ -37,7 +37,7 @@ public class ScisLogs implements Serializable {
                 "id=" + id +
                 ", content='" + content + '\'' +
                 ", time=" + time +
-                ", user=" + user +
+                ", user=" + scisUser +
                 '}';
     }
 

@@ -33,7 +33,7 @@ public class ScisApplyFrom implements Serializable {
      */
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name = "user_id",referencedColumnName = "user_id")
-    private User user;
+    private ScisUser scisUser;
 
     /**
      * 参加的竞赛
@@ -49,7 +49,7 @@ public class ScisApplyFrom implements Serializable {
                 ", applyTime=" + applyTime +
                 ", rank='" + rank + '\'' +
                 ", status='" + status + '\'' +
-                ", user=" + user +
+                ", user=" + scisUser +
                 ", competition=" + competition +
                 '}';
     }
@@ -62,12 +62,12 @@ public class ScisApplyFrom implements Serializable {
         this.status = status;
     }
 
-    public User getUser() {
-        return user;
+    public ScisUser getScisUser() {
+        return scisUser;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setScisUser(ScisUser scisUser) {
+        this.scisUser = scisUser;
     }
 
     public long getId() {

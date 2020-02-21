@@ -61,7 +61,7 @@ public class ScisAnnouncement implements Serializable {
      */
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name = "user_id")
-    private User user;
+    private ScisUser scisUser;
 
     @Override
     public String toString() {
@@ -74,7 +74,7 @@ public class ScisAnnouncement implements Serializable {
                 ", from='" + from + '\'' +
                 ", status='" + status + '\'' +
                 ", type='" + type + '\'' +
-                ", user=" + user +
+                ", user=" + scisUser +
                 '}';
     }
 
@@ -110,12 +110,12 @@ public class ScisAnnouncement implements Serializable {
         this.type = type;
     }
 
-    public User getUser() {
-        return user;
+    public ScisUser getScisUser() {
+        return scisUser;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setScisUser(ScisUser scisUser) {
+        this.scisUser = scisUser;
     }
 
     public long getId() {

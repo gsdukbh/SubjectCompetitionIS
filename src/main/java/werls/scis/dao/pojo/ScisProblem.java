@@ -37,7 +37,7 @@ public class ScisProblem implements Serializable {
     @JoinTable(name = "Is_user_problem",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "problem_id")})
-    private List<User> userList;
+    private List<ScisUser> scisUserList;
 
     /**
      * 竞赛问题
@@ -65,7 +65,7 @@ public class ScisProblem implements Serializable {
                 ", type='" + type + '\'' +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
-                ", userList=" + userList +
+                ", userList=" + scisUserList +
                 ", competitionList=" + competitionList +
                 ", worksList=" + worksList +
                 '}';
@@ -121,12 +121,12 @@ public class ScisProblem implements Serializable {
         this.title = title;
     }
 
-    public List<User> getUserList() {
-        return userList;
+    public List<ScisUser> getScisUserList() {
+        return scisUserList;
     }
 
-    public void setUserList(List<User> userList) {
-        this.userList = userList;
+    public void setScisUserList(List<ScisUser> scisUserList) {
+        this.scisUserList = scisUserList;
     }
 
     public List<ScisWorks> getWorksList() {

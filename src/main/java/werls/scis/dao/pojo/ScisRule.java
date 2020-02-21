@@ -1,5 +1,7 @@
 package werls.scis.dao.pojo;
 
+import org.springframework.context.annotation.Configuration;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -26,17 +28,38 @@ public class ScisRule implements Serializable {
      */
     @Column(name = "rule_authority")
     private String authority;
-
+    /**
+     * 身份
+     */
+    @Column(name = "rule_name")
+    private String name;
     @ManyToMany(mappedBy = "rules")
-    private List<User> userList;
+    private List<ScisUser> scisUserList;
 
     @Override
     public String toString() {
         return "ScisRule{" +
                 "id=" + id +
                 ", authority='" + authority + '\'' +
-                ", userList=" + userList +
+                ", name='" + name + '\'' +
+                ", scisUserList=" + scisUserList +
                 '}';
+    }
+
+    public List<ScisUser> getScisUserList() {
+        return scisUserList;
+    }
+
+    public void setScisUserList(List<ScisUser> scisUserList) {
+        this.scisUserList = scisUserList;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public long getId() {

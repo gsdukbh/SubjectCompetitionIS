@@ -33,7 +33,7 @@ public class ScisClass implements Serializable {
     private ScisMajor major;
 
     @OneToMany(mappedBy = "scisClass",fetch = FetchType.LAZY)
-    private  List<User> userList;
+    private  List<ScisUser> scisUserList;
 
     @Override
     public String toString() {
@@ -42,16 +42,16 @@ public class ScisClass implements Serializable {
                 ", grade='" + grade + '\'' +
                 ", name='" + name + '\'' +
                 ", major=" + major +
-                ", userList=" + userList +
+                ", userList=" + scisUserList +
                 '}';
     }
 
-    public List<User> getUserList() {
-        return userList;
+    public List<ScisUser> getScisUserList() {
+        return scisUserList;
     }
 
-    public void setUserList(List<User> userList) {
-        this.userList = userList;
+    public void setScisUserList(List<ScisUser> scisUserList) {
+        this.scisUserList = scisUserList;
     }
 
     public long getId() {

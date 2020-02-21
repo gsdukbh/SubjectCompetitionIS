@@ -14,7 +14,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "Is_user")
-public class User implements Serializable {
+public class ScisUser implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -48,7 +48,7 @@ public class User implements Serializable {
     /**
      * 用户日志
      */
-    @OneToMany(mappedBy = "user",cascade = {CascadeType.REFRESH},fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "scisUser",cascade = {CascadeType.REFRESH},fetch = FetchType.LAZY)
     private List<ScisLogs> logs;
     /**
      * 班级
@@ -67,12 +67,12 @@ public class User implements Serializable {
     /**
      * 竞赛报名
      */
-    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "scisUser",fetch = FetchType.LAZY)
     private List<ScisApplyFrom>applyFroms;
     /**
      * 公告教师，管理员专属，一对多
      */
-    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "scisUser",fetch = FetchType.LAZY)
     private List<ScisAnnouncement> announcements;
 
     @Override
