@@ -27,7 +27,7 @@ public class ScisCollege implements Serializable {
      *开设的专业
      */
     @OneToMany(mappedBy = "college",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JoinColumn(name = "college_id",referencedColumnName = "college_id")
+//    @JoinColumn(name = "college_id",referencedColumnName = "college_id")
     private List<ScisMajor> majors;
     /**
      * 学院教师
