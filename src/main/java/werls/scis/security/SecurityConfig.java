@@ -43,6 +43,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     AppAuthenticationFailureHandler appAuthenticationFailureHandler;
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private AppExpiredSessionStrategy appExpiredSessionStrategy;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -77,6 +80,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
+//                .loginPage("/login")
                 .successHandler(appAuthenticationSuccessHandler)
                 .failureHandler(appAuthenticationFailureHandler)
                 .usernameParameter("loginName").passwordParameter("password")
@@ -100,7 +104,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                 .cors().disable()/*允许伪造请求*/
-                .csrf().disable();
+                .csrf().disable()
+                .sessionManagement()
+                .invalidSessionUrl("/login/invalid")
+                .maximumSessions(1)
+                .maxSessionsPreventsLogin(false)
+                //当达到最大值时，旧用户被踢出后的操作
+                .expiredSessionStrategy(appExpiredSessionStrategy);
     }
 
 }

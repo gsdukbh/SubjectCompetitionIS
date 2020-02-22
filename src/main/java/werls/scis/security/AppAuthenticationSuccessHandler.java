@@ -49,6 +49,7 @@ public class AppAuthenticationSuccessHandler  implements AuthenticationSuccessHa
         map.put("message","登录成功");
         map.put("data",authentication);
         response.setContentType("application/json;charset=utf-8");
+
         PrintWriter out = response.getWriter();
         out.write(objectMapper.writeValueAsString(map));
         out.flush();
