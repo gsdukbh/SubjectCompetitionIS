@@ -1,5 +1,6 @@
 package werls.scis.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,8 +12,13 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * 权限配置
+ * 运行时调用
  * @author : LiJiWei
  * @version V1.0
  * @Project: scis
@@ -33,7 +39,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     AppAuthenticationSuccessHandler appAuthenticationSuccessHandler;
-
+    @Autowired
+    AppAuthenticationFailureHandler appAuthenticationFailureHandler;
+    @Autowired
+    private ObjectMapper objectMapper;
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -60,19 +69,35 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         System.out.println("AppSecurityConfigurer configure http......");
+        System.out.println(new BCryptPasswordEncoder().encode("1234"));
         http.authorizeRequests()
                 .antMatchers("/login","/css/**","/js/**","/img/*","/register","/registerAccount").permitAll()
                 .antMatchers("/", "/home").hasRole("USER")
-                .antMatchers("/admin/**").hasAnyRole("ADMIN", "DBA")
+                .antMatchers("/admin").hasAnyRole("ADMIN", "DBA")
                 .anyRequest().authenticated()
                 .and()
-                .formLogin().loginPage("/login").successHandler(appAuthenticationSuccessHandler)
+                .formLogin()
+                .successHandler(appAuthenticationSuccessHandler)
+                .failureHandler(appAuthenticationFailureHandler)
                 .usernameParameter("loginName").passwordParameter("password")
                 .permitAll()/*允许跨域请求*/
                 .and()
-                .logout().permitAll()
+                .exceptionHandling()
+                //没有权限，返回json
+                .accessDeniedHandler((request,response,ex) -> {
+                    response.setContentType("application/json;charset=utf-8");
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    PrintWriter out = response.getWriter();
+                    Map<String,Object> map = new HashMap<String,Object>();
+                    map.put("code",403);
+                    map.put("message", "权限不足");
+                    out.write(objectMapper.writeValueAsString(map));
+                    out.flush();
+                    out.close();
+                })
                 .and()
-                .exceptionHandling().accessDeniedPage("/accessDenied")
+                .logout()
+                .permitAll()
                 .and()
                 .cors().disable()/*允许伪造请求*/
                 .csrf().disable();

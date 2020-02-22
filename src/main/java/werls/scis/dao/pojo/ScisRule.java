@@ -42,7 +42,6 @@ public class ScisRule implements Serializable {
                 "id=" + id +
                 ", authority='" + authority + '\'' +
                 ", name='" + name + '\'' +
-                ", scisUserList=" + scisUserList +
                 '}';
     }
 

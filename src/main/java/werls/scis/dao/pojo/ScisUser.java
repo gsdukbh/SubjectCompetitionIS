@@ -42,8 +42,8 @@ public class ScisUser implements Serializable {
      */
     @ManyToMany(cascade = {CascadeType.REFRESH},fetch = FetchType.EAGER)
     @JoinTable(name="Is_role_user",
-            joinColumns={@JoinColumn(name="rule_id")},
-            inverseJoinColumns={@JoinColumn(name="user_id")})
+            joinColumns={@JoinColumn(name="user_id")},
+            inverseJoinColumns={@JoinColumn(name="rule_id")})
     private List<ScisRule> rules;
     /**
      * 用户日志
