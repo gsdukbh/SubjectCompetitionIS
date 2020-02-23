@@ -39,10 +39,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     AppAuthenticationSuccessHandler appAuthenticationSuccessHandler;
+
     @Autowired
     AppAuthenticationFailureHandler appAuthenticationFailureHandler;
+
     @Autowired
     private ObjectMapper objectMapper;
+
     @Autowired
     private AppExpiredSessionStrategy appExpiredSessionStrategy;
 
@@ -84,7 +87,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .successHandler(appAuthenticationSuccessHandler)
                 .failureHandler(appAuthenticationFailureHandler)
                 .usernameParameter("loginName").passwordParameter("password")
-                .permitAll()/*允许跨域请求*/
+                .permitAll()
                 .and()
                 .exceptionHandling()
                 //没有权限，返回json
@@ -103,8 +106,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .permitAll()
                 .and()
-                .cors().disable()/*允许伪造请求*/
+                .cors().disable()
                 .csrf().disable()
+                .exceptionHandling()
+                .and()
                 .sessionManagement()
                 .invalidSessionUrl("/login/invalid")
                 .maximumSessions(1)

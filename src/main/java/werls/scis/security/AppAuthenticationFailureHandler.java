@@ -45,6 +45,7 @@ public class AppAuthenticationFailureHandler implements AuthenticationFailureHan
                                         HttpServletResponse response,
                                         AuthenticationException exception) throws IOException, ServletException {
         logger.info("登录失败");
+        response.setHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("application/json;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         PrintWriter out = response.getWriter();

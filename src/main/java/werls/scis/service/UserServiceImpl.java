@@ -47,6 +47,7 @@ public class UserServiceImpl implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        System.out.println("nnnnn:"+username);
         ScisUser user = userRepository.findByLogin(username);
         if (user == null){
           throw new UsernameNotFoundException("用户名不存在");
