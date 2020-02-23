@@ -18,10 +18,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm install
-        working-directory: '/vueWeb'
+        working-directory: './vueWeb'
       - run: npm run build --if-present
-        working-directory: '/vueWeb'
+        working-directory: './vueWeb'
       - run: npm test
-        working-directory: '/vueWeb'
+        working-directory: .'/vueWeb'
         env:
           CI: true
