@@ -1,6 +1,9 @@
 name: Node.js Vue.js CI
 
-on: [push]
+on: 
+  push:
+    paths: 
+      - '/vueWeb'
 
 jobs:
   build:
@@ -18,10 +21,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm install
-        -working-directory: ./vueWeb
       - run: npm run build --if-present
-        -working-directory: ./vueWeb
       - run: npm test
-        -working-directory: ./vueWeb
         env:
           CI: true
