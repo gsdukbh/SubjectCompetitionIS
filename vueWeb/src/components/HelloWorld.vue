@@ -8,9 +8,9 @@
       </p>
       <p>
         <label for="password" class="sr-only">Password</label>
-        <input type="password" v-model="password" id="password" name="password" class="form-control" placeholder="Password" required>
+        <input  type="password" v-model="password" id="password" name="password" class="form-control" placeholder="Password" required>
       </p>
-      <button  v-on:click="login" class="btn btn-lg btn-primary btn-block" type="button">Sign in</button>
+      <button  @click="login" class="btn btn-lg btn-primary btn-block" type="button">Sign in</button>
           <p>{{info}}</p>
       <p>{{password}}</p>
       <p>{{loginName}}</p>

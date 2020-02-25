@@ -1,5 +1,8 @@
 package werls.scis.dao.pojo;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
@@ -21,7 +24,7 @@ public class ScisCompetition implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="competition_id")
-    private long id;
+    private Integer id;
     @Column(name = "competition_name")
     private String name;
     @Column(name = "competition_status")
@@ -46,16 +49,19 @@ public class ScisCompetition implements Serializable {
     /**
      * 个人报名
      */
-    @OneToMany(mappedBy = "competition",fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SUBSELECT)
+    @OneToMany(mappedBy = "competition",fetch = FetchType.EAGER)
     private List<ScisApplyFrom> applyFromList;
     /**
      * 团体报名
      */
-    @OneToMany(mappedBy = "competition",fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SUBSELECT)
+    @OneToMany(mappedBy = "competition",fetch = FetchType.EAGER)
     private List<ScisTeamApply> teamApplyList;
     /**
      * 竞赛作品
      */
+    @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "competition")
     private List<ScisWorks> works;
 
@@ -79,11 +85,51 @@ public class ScisCompetition implements Serializable {
                 '}';
     }
 
-    public long getId() {
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public List<ScisTeamApply> getTeamApplyList() {
+        return teamApplyList;
+    }
+
+    public void setTeamApplyList(List<ScisTeamApply> teamApplyList) {
+        this.teamApplyList = teamApplyList;
+    }
+
+    public List<ScisWorks> getWorks() {
+        return works;
+    }
+
+    public void setWorks(List<ScisWorks> works) {
+        this.works = works;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

@@ -22,7 +22,7 @@ public class ScisWorks  implements Serializable{
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="works_id")
-    private long id;
+    private Integer id;
     /**
      * 上传时间
      */
@@ -76,7 +76,7 @@ public class ScisWorks  implements Serializable{
     /**
      * 所属的竞赛项目
      */
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.REFRESH)
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.REFRESH)
     @JoinColumn(name = "competition_id",referencedColumnName = "competition_id")
     private ScisCompetition competition;
 
@@ -114,13 +114,6 @@ public class ScisWorks  implements Serializable{
         this.url = url;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

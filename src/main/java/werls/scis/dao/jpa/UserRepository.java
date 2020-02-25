@@ -3,6 +3,8 @@ package werls.scis.dao.jpa;
 import org.springframework.data.jpa.repository.JpaRepository;
 import werls.scis.dao.pojo.ScisUser;
 
+import java.util.List;
+
 /**
  * 用户jpa
  * @author : LiJiWei
@@ -33,4 +35,18 @@ public interface UserRepository extends JpaRepository<ScisUser,Integer> {
      * @return 用户
      */
     ScisUser findByIdentity (String identity);
+
+    /**
+     * 邮箱查询
+     * @param email 邮箱
+     * @return 用户
+     */
+    ScisUser findByEmail(String email);
+
+    /**
+     * 查看用户是否激活
+     * @param status 状态
+     * @return 用户
+     */
+    List<ScisUser> findByStatus(String status);
 }

@@ -1,5 +1,8 @@
 package werls.scis.dao.pojo;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -20,20 +23,26 @@ public class ScisCollege implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "college_id")
-    private long id;
+    private Integer id;
     @Column(name = "college_name")
     private String collegeName;
     /**
      *开设的专业
      */
-    @OneToMany(mappedBy = "college",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SUBSELECT)
+    @OneToMany(mappedBy = "college",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
 //    @JoinColumn(name = "college_id",referencedColumnName = "college_id")
     private List<ScisMajor> majors;
     /**
      * 学院教师
      */
-    @OneToMany(mappedBy = "college")
+    @Fetch(FetchMode.SUBSELECT)
+    @OneToMany(mappedBy = "college",fetch = FetchType.EAGER)
     private List<ScisUser> scisUserList;
+
+    public ScisCollege() {
+        super();
+    }
 
     @Override
     public String toString() {
@@ -41,7 +50,7 @@ public class ScisCollege implements Serializable {
                 "id=" + id +
                 ", collegeName='" + collegeName + '\'' +
                 ", majors=" + majors +
-                ", userList=" + scisUserList +
+                ", scisUserList=" + scisUserList +
                 '}';
     }
 
@@ -53,11 +62,11 @@ public class ScisCollege implements Serializable {
         this.scisUserList = scisUserList;
     }
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

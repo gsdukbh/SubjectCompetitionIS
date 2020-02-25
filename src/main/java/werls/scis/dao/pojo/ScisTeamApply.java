@@ -1,5 +1,8 @@
 package werls.scis.dao.pojo;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
@@ -21,7 +24,7 @@ public class ScisTeamApply implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="team_id")
-    private long id;
+    private Integer id;
     @Column(name = "team_name")
     private String name;
     @Column(name = "team_number")
@@ -38,6 +41,7 @@ public class ScisTeamApply implements Serializable {
     /**
      * 团队成员
      */
+    @Fetch(FetchMode.SUBSELECT)
     @ManyToMany(cascade = {CascadeType.REFRESH},fetch = FetchType.EAGER)
     @JoinTable(name = "Is_team_user",
             joinColumns = {@JoinColumn(name = "user_id")},
@@ -47,7 +51,7 @@ public class ScisTeamApply implements Serializable {
     /**
      * 竞赛（团队）
      */
-     @ManyToOne(fetch = FetchType.LAZY,optional = false)
+     @ManyToOne(fetch = FetchType.EAGER,optional = false)
      @JoinColumn(name = "competition_id")
      private ScisCompetition competition;
 
@@ -82,11 +86,11 @@ public class ScisTeamApply implements Serializable {
         this.scisUserList = scisUserList;
     }
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

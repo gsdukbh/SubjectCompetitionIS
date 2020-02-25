@@ -1,6 +1,7 @@
 package werls.scis.dao.pojo;
 
-import org.springframework.context.annotation.Configuration;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -16,13 +17,13 @@ import java.util.List;
  * @date Date : 2020年02月19日 22:02
  */
 @Entity
-@Table(name = "Is_rule")
-public class ScisRule implements Serializable {
+@Table(name = "Is_role")
+public class ScisRole implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "rule_id")
-    private long id;
+    private Integer id;
     /**
      * 角色
      */
@@ -33,24 +34,28 @@ public class ScisRule implements Serializable {
      */
     @Column(name = "rule_name")
     private String name;
-    @ManyToMany(mappedBy = "rules")
-    private List<ScisUser> scisUserList;
+
+//    @ManyToMany(mappedBy = "rules")
+//    private List<ScisUser> scisUserList;
+
+    /**
+     * 角色拥有的菜单
+     */
+    @Fetch(FetchMode.SUBSELECT)
+    @ManyToMany(cascade = {CascadeType.REFRESH},fetch = FetchType.EAGER)
+    @JoinTable(name="Is_role_menu",
+            joinColumns={@JoinColumn(name="rule_id")},
+            inverseJoinColumns={@JoinColumn(name="menu_id")})
+    private List<ScisMenu> menuList;
 
     @Override
     public String toString() {
-        return "ScisRule{" +
+        return "ScisRole{" +
                 "id=" + id +
                 ", authority='" + authority + '\'' +
                 ", name='" + name + '\'' +
+                ", menuList=" + menuList +
                 '}';
-    }
-
-    public List<ScisUser> getScisUserList() {
-        return scisUserList;
-    }
-
-    public void setScisUserList(List<ScisUser> scisUserList) {
-        this.scisUserList = scisUserList;
     }
 
     public String getName() {
@@ -61,11 +66,19 @@ public class ScisRule implements Serializable {
         this.name = name;
     }
 
-    public long getId() {
+    public List<ScisMenu> getMenuList() {
+        return menuList;
+    }
+
+    public void setMenuList(List<ScisMenu> menuList) {
+        this.menuList = menuList;
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

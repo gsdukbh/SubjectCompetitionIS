@@ -1,0 +1,34 @@
+package werls.scis.dao.jpa;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import werls.scis.dao.pojo.ScisClass;
+import werls.scis.dao.pojo.ScisUser;
+
+import java.util.List;
+
+/**
+ * 班级 处理
+ * @author : LiJiWei
+ * @version V1.0
+ * @Project: scis
+ * @Package werls.scis.dao.jpa
+ * @Description: TODO
+ * @date Date : 2020年02月24日 14:05
+ */
+public interface ClassJpaRepository extends JpaRepository<ScisClass,Integer> {
+
+    /**
+     * 使用班级名称查询
+     * @param name 班级名称
+     * @return 班级
+     */
+    ScisClass findByName(String name);
+
+    /**
+     * 使用年级查询
+     * @param grade 年级
+     * @return 班级List
+     */
+    List<ScisClass> findByGrade(String grade);
+
+}

@@ -1,5 +1,8 @@
 package werls.scis.dao.pojo;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -19,7 +22,7 @@ public class ScisUser implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="user_id")
-    private long id;
+    private Integer id;
     @Column(name = "user_login")
     private String login;
     @Column(name = "user_password")
@@ -40,16 +43,13 @@ public class ScisUser implements Serializable {
     /**
      * 用户角色
      */
+    @Fetch(FetchMode.SUBSELECT)
     @ManyToMany(cascade = {CascadeType.REFRESH},fetch = FetchType.EAGER)
     @JoinTable(name="Is_role_user",
             joinColumns={@JoinColumn(name="user_id")},
             inverseJoinColumns={@JoinColumn(name="rule_id")})
-    private List<ScisRule> rules;
-    /**
-     * 用户日志
-     */
-    @OneToMany(mappedBy = "scisUser",cascade = {CascadeType.REFRESH},fetch = FetchType.LAZY)
-    private List<ScisLogs> logs;
+    private List<ScisRole> rules;
+
     /**
      * 班级
      */
@@ -67,17 +67,20 @@ public class ScisUser implements Serializable {
     /**
      * 竞赛报名
      */
-    @OneToMany(mappedBy = "scisUser",fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SUBSELECT)
+    @OneToMany(mappedBy = "scisUser",fetch = FetchType.EAGER)
     private List<ScisApplyFrom>applyFroms;
     /**
      * 公告教师，管理员专属，一对多
      */
-    @OneToMany(mappedBy = "scisUser",fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SUBSELECT)
+    @OneToMany(mappedBy = "scisUser",fetch = FetchType.EAGER
+    )
     private List<ScisAnnouncement> announcements;
 
     @Override
     public String toString() {
-        return "User{" +
+        return "ScisUser{" +
                 "id=" + id +
                 ", login='" + login + '\'' +
                 ", password='" + password + '\'' +
@@ -88,7 +91,6 @@ public class ScisUser implements Serializable {
                 ", status='" + status + '\'' +
                 ", identity='" + identity + '\'' +
                 ", rules=" + rules +
-                ", logs=" + logs +
                 ", scisClass=" + scisClass +
                 ", college=" + college +
                 ", applyFroms=" + applyFroms +
@@ -112,11 +114,12 @@ public class ScisUser implements Serializable {
         this.status = status;
     }
 
-    public long getId() {
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -168,20 +171,12 @@ public class ScisUser implements Serializable {
         this.identity = identity;
     }
 
-    public List<ScisRule> getRules() {
+    public List<ScisRole> getRules() {
         return rules;
     }
 
-    public void setRules(List<ScisRule> rules) {
+    public void setRules(List<ScisRole> rules) {
         this.rules = rules;
-    }
-
-    public List<ScisLogs> getLogs() {
-        return logs;
-    }
-
-    public void setLogs(List<ScisLogs> logs) {
-        this.logs = logs;
     }
 
     public ScisClass getScisClass() {

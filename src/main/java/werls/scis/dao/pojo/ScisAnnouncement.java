@@ -20,7 +20,7 @@ public class ScisAnnouncement implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="announcement_id")
-    private long id;
+    private Integer id;
     /**
      * 标题
      */
@@ -34,6 +34,7 @@ public class ScisAnnouncement implements Serializable {
     /**
      * 公告时间
      */
+//    @Temporal(TemporalType.DATE)
     @Column(name = "announcement_time")
     private Date time;
     /**
@@ -59,7 +60,7 @@ public class ScisAnnouncement implements Serializable {
     /**
      * 用户多对一
      */
-    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(name = "user_id")
     private ScisUser scisUser;
 
@@ -118,11 +119,11 @@ public class ScisAnnouncement implements Serializable {
         this.scisUser = scisUser;
     }
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

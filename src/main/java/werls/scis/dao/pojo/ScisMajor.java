@@ -1,5 +1,8 @@
 package werls.scis.dao.pojo;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -20,17 +23,18 @@ public class ScisMajor implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "major_id")
-    private long id;
+    private Integer id;
     @Column(name = "major_name")
     private String majorName;
     @Column(name = "education_level")
     private String majorLevel;
 
-    @ManyToOne(cascade = {CascadeType.REFRESH},fetch = FetchType.LAZY,optional = false)
+    @ManyToOne(cascade = {CascadeType.REFRESH},fetch = FetchType.EAGER,optional = false)
     @JoinColumn(name = "college_id")
     private ScisCollege college;
 
-    @OneToMany(mappedBy = "major",fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SUBSELECT)
+    @OneToMany(mappedBy = "major",fetch = FetchType.EAGER)
     private List<ScisClass> classList;
 
     @Override
@@ -52,11 +56,11 @@ public class ScisMajor implements Serializable {
         this.classList = classList;
     }
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

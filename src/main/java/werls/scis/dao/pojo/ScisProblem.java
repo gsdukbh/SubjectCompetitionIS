@@ -1,5 +1,8 @@
 package werls.scis.dao.pojo;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
@@ -21,7 +24,7 @@ public class ScisProblem implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="problem_id")
-    private long id;
+    private Integer id;
     @Column(name = "problem_time")
     private Date time;
     @Column(name = "problem_type")
@@ -33,7 +36,8 @@ public class ScisProblem implements Serializable {
     /**
      * 用户反馈问题
      */
-    @ManyToMany(fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SUBSELECT)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "Is_user_problem",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "problem_id")})
@@ -42,7 +46,8 @@ public class ScisProblem implements Serializable {
     /**
      * 竞赛问题
      */
-    @ManyToMany(fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SUBSELECT)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "Is_competition_problem",
             joinColumns = {@JoinColumn(name = "competition_id")},
             inverseJoinColumns = {@JoinColumn(name = "problem_id")})
@@ -51,7 +56,8 @@ public class ScisProblem implements Serializable {
     /**
      * 作品问题
      */
-    @ManyToMany(fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SUBSELECT)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "Is_works_problem",
             joinColumns = {@JoinColumn(name = "works_id")},
             inverseJoinColumns = {@JoinColumn(name = "problem_id")})
@@ -65,19 +71,17 @@ public class ScisProblem implements Serializable {
                 ", type='" + type + '\'' +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
-                ", userList=" + scisUserList +
+                ", scisUserList=" + scisUserList +
                 ", competitionList=" + competitionList +
                 ", worksList=" + worksList +
                 '}';
     }
 
-
-
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

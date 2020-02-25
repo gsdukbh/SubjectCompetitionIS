@@ -20,7 +20,7 @@ public class ScisApplyFrom implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="apply_id")
-    private long id;
+    private Integer id;
     @Column(name = "apply_time")
     private Date applyTime;
     @Column(name = "apply_rank")
@@ -31,14 +31,15 @@ public class ScisApplyFrom implements Serializable {
     /**
      * 竞赛用户
      */
-    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+
+    @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(name = "user_id",referencedColumnName = "user_id")
     private ScisUser scisUser;
 
     /**
      * 参加的竞赛
      */
-    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(name = "competition_id")
     private ScisCompetition competition;
 
@@ -49,7 +50,7 @@ public class ScisApplyFrom implements Serializable {
                 ", applyTime=" + applyTime +
                 ", rank='" + rank + '\'' +
                 ", status='" + status + '\'' +
-                ", user=" + scisUser +
+                ", scisUser=" + scisUser +
                 ", competition=" + competition +
                 '}';
     }
@@ -70,11 +71,11 @@ public class ScisApplyFrom implements Serializable {
         this.scisUser = scisUser;
     }
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
