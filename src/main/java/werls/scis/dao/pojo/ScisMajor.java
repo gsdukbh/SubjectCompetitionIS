@@ -1,5 +1,6 @@
 package werls.scis.dao.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -31,6 +32,7 @@ public class ScisMajor implements Serializable {
 
     @ManyToOne(cascade = {CascadeType.REFRESH},fetch = FetchType.EAGER,optional = false)
     @JoinColumn(name = "college_id")
+    @JsonIgnore
     private ScisCollege college;
 
     @Fetch(FetchMode.SUBSELECT)
@@ -43,7 +45,6 @@ public class ScisMajor implements Serializable {
                 "id=" + id +
                 ", majorName='" + majorName + '\'' +
                 ", majorLevel='" + majorLevel + '\'' +
-                ", college=" + college +
                 ", classList=" + classList +
                 '}';
     }

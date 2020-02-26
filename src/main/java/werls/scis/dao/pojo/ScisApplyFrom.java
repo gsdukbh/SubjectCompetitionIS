@@ -1,5 +1,7 @@
 package werls.scis.dao.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
@@ -27,13 +29,15 @@ public class ScisApplyFrom implements Serializable {
     private String rank;
     @Column(name = "apply_status")
     private String status;
-
+    @Column(name = "apply_score")
+    private Integer score;
     /**
      * 竞赛用户
      */
 
     @ManyToOne(fetch = FetchType.EAGER,optional = false)
-    @JoinColumn(name = "user_id",referencedColumnName = "user_id")
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
     private ScisUser scisUser;
 
     /**
@@ -41,6 +45,7 @@ public class ScisApplyFrom implements Serializable {
      */
     @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(name = "competition_id")
+    @JsonIgnore
     private ScisCompetition competition;
 
     @Override
@@ -50,9 +55,16 @@ public class ScisApplyFrom implements Serializable {
                 ", applyTime=" + applyTime +
                 ", rank='" + rank + '\'' +
                 ", status='" + status + '\'' +
-                ", scisUser=" + scisUser +
-                ", competition=" + competition +
+                ", score=" + score +
                 '}';
+    }
+
+    public Integer getScore() {
+        return score;
+    }
+
+    public void setScore(Integer score) {
+        this.score = score;
     }
 
     public String getStatus() {
@@ -62,6 +74,7 @@ public class ScisApplyFrom implements Serializable {
     public void setStatus(String status) {
         this.status = status;
     }
+
 
     public ScisUser getScisUser() {
         return scisUser;

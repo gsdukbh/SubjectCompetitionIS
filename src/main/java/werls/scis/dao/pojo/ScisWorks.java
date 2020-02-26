@@ -1,6 +1,7 @@
 package werls.scis.dao.pojo;
 
 import antlr.collections.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -78,6 +79,7 @@ public class ScisWorks  implements Serializable{
      */
     @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.REFRESH)
     @JoinColumn(name = "competition_id",referencedColumnName = "competition_id")
+    @JsonIgnore
     private ScisCompetition competition;
 
     @Override
@@ -178,7 +180,7 @@ public class ScisWorks  implements Serializable{
     public void setRemark(String remark) {
         this.remark = remark;
     }
-
+    @JsonIgnore
     public ScisCompetition getCompetition() {
         return competition;
     }

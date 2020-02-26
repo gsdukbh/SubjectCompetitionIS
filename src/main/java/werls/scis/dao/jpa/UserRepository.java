@@ -1,5 +1,7 @@
 package werls.scis.dao.jpa;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import werls.scis.dao.pojo.ScisUser;
 
@@ -16,7 +18,7 @@ import java.util.List;
  */
 public interface UserRepository extends JpaRepository<ScisUser,Integer> {
     /**
-     * 登录名/学号/工号，查找用户
+     * 登录名/学号/工号
      * @param login 登录名/学号/工号
      * @return 用户
      */
@@ -49,4 +51,23 @@ public interface UserRepository extends JpaRepository<ScisUser,Integer> {
      * @return 用户
      */
     List<ScisUser> findByStatus(String status);
+
+    /**
+     * 查看用户是否激活
+     * @param status 状态 String
+     * @param pageable Pageable
+     * @return Page<ScisUser>
+     */
+    Page<ScisUser> findByStatus(String status, Pageable pageable);
+
+    /**
+     * 登录时调用，
+     * @param login login String
+     * @param phone phone String
+     * @param identity identity String
+     * @param email email  String
+     * @return ScisUser
+     */
+    ScisUser findByLoginOrPhoneOrIdentityOrEmail(String login,String phone,String identity,String email);
+
 }

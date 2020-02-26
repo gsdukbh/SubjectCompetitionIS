@@ -1,5 +1,6 @@
 package werls.scis.dao.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -62,6 +63,7 @@ public class ScisUser implements Serializable {
      */
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name = "college_id",referencedColumnName = "college_id")
+    @JsonIgnore
     private ScisCollege college;
 
     /**
@@ -74,9 +76,11 @@ public class ScisUser implements Serializable {
      * 公告教师，管理员专属，一对多
      */
     @Fetch(FetchMode.SUBSELECT)
-    @OneToMany(mappedBy = "scisUser",fetch = FetchType.EAGER
-    )
+    @OneToMany(mappedBy = "scisUser",fetch = FetchType.EAGER)
     private List<ScisAnnouncement> announcements;
+
+    @ManyToMany(mappedBy = "scisUserList")
+    private List<ScisTeamApply> teamApplies;
 
     @Override
     public String toString() {
@@ -96,6 +100,14 @@ public class ScisUser implements Serializable {
                 ", applyFroms=" + applyFroms +
                 ", announcements=" + announcements +
                 '}';
+    }
+
+    public List<ScisTeamApply> getTeamApplies() {
+        return teamApplies;
+    }
+
+    public void setTeamApplies(List<ScisTeamApply> teamApplies) {
+        this.teamApplies = teamApplies;
     }
 
     public String getSex() {

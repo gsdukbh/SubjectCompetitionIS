@@ -1,5 +1,6 @@
 package werls.scis.dao.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -50,9 +51,8 @@ public class ScisMenu implements Serializable {
     @Column(name = "name")
     private String name;
 
-//    @ManyToMany(cascade = {CascadeType.REFRESH},fetch = FetchType.EAGER)
-//    private List<ScisRule> rules;
-
+    @ManyToMany(mappedBy = "menuList")
+    private List<ScisRole> rules;
 
     @Override
     public String toString() {
@@ -63,7 +63,24 @@ public class ScisMenu implements Serializable {
                 ", keepAlive=" + keepAlive +
                 ", requireAuth=" + requireAuth +
                 ", name='" + name + '\'' +
+                ", rules=" + rules +
                 '}';
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+   @JsonIgnore
+    public List<ScisRole> getRules() {
+        return rules;
+    }
+
+    public void setRules(List<ScisRole> rules) {
+        this.rules = rules;
     }
 
     public String getUrl() {

@@ -1,5 +1,7 @@
 package werls.scis.dao.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
@@ -60,8 +62,10 @@ public class ScisAnnouncement implements Serializable {
     /**
      * 用户多对一
      */
+
     @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private ScisUser scisUser;
 
     @Override
@@ -75,7 +79,6 @@ public class ScisAnnouncement implements Serializable {
                 ", from='" + from + '\'' +
                 ", status='" + status + '\'' +
                 ", type='" + type + '\'' +
-                ", user=" + scisUser +
                 '}';
     }
 

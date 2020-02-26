@@ -1,5 +1,6 @@
 package werls.scis.dao.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -53,6 +54,7 @@ public class ScisTeamApply implements Serializable {
      */
      @ManyToOne(fetch = FetchType.EAGER,optional = false)
      @JoinColumn(name = "competition_id")
+     @JsonIgnore
      private ScisCompetition competition;
 
     @Override
@@ -77,7 +79,7 @@ public class ScisTeamApply implements Serializable {
     public void setStatus(String status) {
         this.status = status;
     }
-
+    @JsonIgnore
     public List<ScisUser> getScisUserList() {
         return scisUserList;
     }
