@@ -1,5 +1,6 @@
 package werls.scis.dao.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -36,32 +37,25 @@ public class ScisProblem implements Serializable {
     /**
      * 用户反馈问题
      */
-    @Fetch(FetchMode.SUBSELECT)
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "Is_user_problem",
-            joinColumns = {@JoinColumn(name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "problem_id")})
-    private List<ScisUser> scisUserList;
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
+    private ScisUser scisUser;
 
     /**
      * 竞赛问题
      */
-    @Fetch(FetchMode.SUBSELECT)
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "Is_competition_problem",
-            joinColumns = {@JoinColumn(name = "competition_id")},
-            inverseJoinColumns = {@JoinColumn(name = "problem_id")})
-    private List<ScisCompetition> competitionList;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonIgnore
+    private ScisCompetition competition;
 
     /**
      * 作品问题
      */
+    @JsonIgnore
     @Fetch(FetchMode.SUBSELECT)
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "Is_works_problem",
-            joinColumns = {@JoinColumn(name = "works_id")},
-            inverseJoinColumns = {@JoinColumn(name = "problem_id")})
-    private List<ScisWorks> worksList;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private ScisWorks worksList;
 
     @Override
     public String toString() {
@@ -71,10 +65,31 @@ public class ScisProblem implements Serializable {
                 ", type='" + type + '\'' +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
-                ", scisUserList=" + scisUserList +
-                ", competitionList=" + competitionList +
-                ", worksList=" + worksList +
                 '}';
+    }
+
+    public ScisWorks getWorksList() {
+        return worksList;
+    }
+
+    public void setWorksList(ScisWorks worksList) {
+        this.worksList = worksList;
+    }
+
+    public ScisUser getScisUser() {
+        return scisUser;
+    }
+
+    public void setScisUser(ScisUser scisUser) {
+        this.scisUser = scisUser;
+    }
+
+    public ScisCompetition getCompetition() {
+        return competition;
+    }
+
+    public void setCompetition(ScisCompetition competition) {
+        this.competition = competition;
     }
 
     public Integer getId() {
@@ -91,14 +106,6 @@ public class ScisProblem implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public List<ScisCompetition> getCompetitionList() {
-        return competitionList;
-    }
-
-    public void setCompetitionList(List<ScisCompetition> competitionList) {
-        this.competitionList = competitionList;
     }
 
     public Date getTime() {
@@ -125,19 +132,5 @@ public class ScisProblem implements Serializable {
         this.title = title;
     }
 
-    public List<ScisUser> getScisUserList() {
-        return scisUserList;
-    }
 
-    public void setScisUserList(List<ScisUser> scisUserList) {
-        this.scisUserList = scisUserList;
-    }
-
-    public List<ScisWorks> getWorksList() {
-        return worksList;
-    }
-
-    public void setWorksList(List<ScisWorks> worksList) {
-        this.worksList = worksList;
-    }
 }

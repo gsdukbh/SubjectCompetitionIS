@@ -65,6 +65,10 @@ public class ScisCompetition implements Serializable {
     @OneToMany(mappedBy = "competition")
     private List<ScisWorks> works;
 
+    @Fetch(FetchMode.SUBSELECT)
+    @OneToMany(mappedBy = "competition")
+    private List<ScisProblem> problems;
+
     @Override
     public String toString() {
         return "ScisCompetition{" +
@@ -82,7 +86,16 @@ public class ScisCompetition implements Serializable {
                 ", applyFromList=" + applyFromList +
                 ", teamApplyList=" + teamApplyList +
                 ", works=" + works +
+                ", problems=" + problems +
                 '}';
+    }
+
+    public List<ScisProblem> getProblems() {
+        return problems;
+    }
+
+    public void setProblems(List<ScisProblem> problems) {
+        this.problems = problems;
     }
 
     public String getUrl() {

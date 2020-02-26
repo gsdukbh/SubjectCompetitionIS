@@ -74,7 +74,7 @@ public class ScisMenu implements Serializable {
     public void setId(Integer id) {
         this.id = id;
     }
-   @JsonIgnore
+    @JsonIgnore
     public List<ScisRole> getRules() {
         return rules;
     }

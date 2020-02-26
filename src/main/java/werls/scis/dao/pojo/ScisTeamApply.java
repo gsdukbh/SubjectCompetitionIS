@@ -68,7 +68,6 @@ public class ScisTeamApply implements Serializable {
                 ", rank='" + rank + '\'' +
                 ", status='" + status + '\'' +
                 ", userList=" + scisUserList +
-                ", competition=" + competition +
                 '}';
     }
 

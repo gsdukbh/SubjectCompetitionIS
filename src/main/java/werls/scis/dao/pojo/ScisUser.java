@@ -44,18 +44,20 @@ public class ScisUser implements Serializable {
     /**
      * 用户角色
      */
+    @JsonIgnore
     @Fetch(FetchMode.SUBSELECT)
     @ManyToMany(cascade = {CascadeType.REFRESH},fetch = FetchType.EAGER)
     @JoinTable(name="Is_role_user",
             joinColumns={@JoinColumn(name="user_id")},
-            inverseJoinColumns={@JoinColumn(name="rule_id")})
-    private List<ScisRole> rules;
+            inverseJoinColumns={@JoinColumn(name="role_id")})
+    private List<ScisRole> roles;
 
     /**
      * 班级
      */
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name = "class_id",referencedColumnName = "class_id")
+    @JsonIgnore
     private ScisClass scisClass;
 
     /**
@@ -82,6 +84,10 @@ public class ScisUser implements Serializable {
     @ManyToMany(mappedBy = "scisUserList")
     private List<ScisTeamApply> teamApplies;
 
+    @Fetch(FetchMode.SUBSELECT)
+    @OneToMany(mappedBy = "scisUser",fetch = FetchType.EAGER,cascade = CascadeType.REFRESH)
+    private  List<ScisProblem> problems;
+
     @Override
     public String toString() {
         return "ScisUser{" +
@@ -94,12 +100,28 @@ public class ScisUser implements Serializable {
                 ", sex='" + sex + '\'' +
                 ", status='" + status + '\'' +
                 ", identity='" + identity + '\'' +
-                ", rules=" + rules +
-                ", scisClass=" + scisClass +
-                ", college=" + college +
+                ", roles=" + roles +
                 ", applyFroms=" + applyFroms +
                 ", announcements=" + announcements +
+                ", teamApplies=" + teamApplies +
+                ", problems=" + problems +
                 '}';
+    }
+
+    public List<ScisRole> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<ScisRole> roles) {
+        this.roles = roles;
+    }
+
+    public List<ScisProblem> getProblems() {
+        return problems;
+    }
+
+    public void setProblems(List<ScisProblem> problems) {
+        this.problems = problems;
     }
 
     public List<ScisTeamApply> getTeamApplies() {
@@ -184,11 +206,11 @@ public class ScisUser implements Serializable {
     }
 
     public List<ScisRole> getRules() {
-        return rules;
+        return roles;
     }
 
-    public void setRules(List<ScisRole> rules) {
-        this.rules = rules;
+    public void setRules(List<ScisRole> roles) {
+        this.roles = roles;
     }
 
     public ScisClass getScisClass() {

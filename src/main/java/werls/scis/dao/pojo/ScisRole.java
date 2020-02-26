@@ -23,20 +23,20 @@ public class ScisRole implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "rule_id")
+    @Column(name = "role_id")
     private Integer id;
     /**
      * 角色
      */
-    @Column(name = "rule_authority")
+    @Column(name = "role_authority")
     private String authority;
     /**
      * 身份
      */
-    @Column(name = "rule_name")
+    @Column(name = "role_name")
     private String name;
 
-   @ManyToMany(mappedBy = "rules")
+   @ManyToMany(mappedBy = "roles")
    private List<ScisUser> scisUserList;
 
     /**
@@ -45,9 +45,8 @@ public class ScisRole implements Serializable {
     @Fetch(FetchMode.SUBSELECT)
     @ManyToMany(cascade = {CascadeType.REFRESH},fetch = FetchType.EAGER)
     @JoinTable(name="Is_role_menu",
-            joinColumns={@JoinColumn(name="rule_id")},
+            joinColumns={@JoinColumn(name="role_id")},
             inverseJoinColumns={@JoinColumn(name="menu_id")})
-
     private List<ScisMenu> menuList;
 
     @Override

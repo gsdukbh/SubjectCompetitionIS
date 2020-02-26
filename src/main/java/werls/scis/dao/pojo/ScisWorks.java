@@ -1,11 +1,13 @@
 package werls.scis.dao.pojo;
 
-import antlr.collections.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.List;
 
 /**
  * 竞赛作品，部分竞赛需要
@@ -63,7 +65,7 @@ public class ScisWorks  implements Serializable{
      * 分数
      */
     @Column(name = "works_score")
-    private String score;
+    private Integer score;
     /**
      * 评分成员
      */
@@ -82,6 +84,10 @@ public class ScisWorks  implements Serializable{
     @JsonIgnore
     private ScisCompetition competition;
 
+    @Fetch(FetchMode.SUBSELECT)
+    @OneToMany(mappedBy = "worksList",fetch = FetchType.EAGER,cascade = CascadeType.REFRESH)
+    private List<ScisProblem> problemList;
+
     @Override
     public String toString() {
         return "ScisWorks{" +
@@ -93,11 +99,19 @@ public class ScisWorks  implements Serializable{
                 ", download='" + download + '\'' +
                 ", author='" + author + '\'' +
                 ", moder='" + moder + '\'' +
-                ", score='" + score + '\'' +
+                ", score=" + score +
                 ", mem='" + mem + '\'' +
                 ", remark='" + remark + '\'' +
-                ", competition=" + competition +
+                ", problemList=" + problemList +
                 '}';
+    }
+
+    public List<ScisProblem> getProblemList() {
+        return problemList;
+    }
+
+    public void setProblemList(List<ScisProblem> problemList) {
+        this.problemList = problemList;
     }
 
     public Date getUpTime() {
@@ -157,11 +171,19 @@ public class ScisWorks  implements Serializable{
         this.moder = moder;
     }
 
-    public String getScore() {
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getScore() {
         return score;
     }
 
-    public void setScore(String score) {
+    public void setScore(Integer score) {
         this.score = score;
     }
 
