@@ -39,7 +39,7 @@ public interface TeamApplyRepository extends JpaRepository<ScisTeamApply,Integer
     Page<ScisTeamApply> findByScore(Integer score,Pageable pageable);
 
     /**
-     * > scoreAfter 团队
+     * > score 团队
      * @param scoreAfter Integer
      * @param pageable Pageable
      * @return Page<ScisTeamApply>
@@ -47,7 +47,7 @@ public interface TeamApplyRepository extends JpaRepository<ScisTeamApply,Integer
     Page<ScisTeamApply> findByScoreAfter(Integer scoreAfter,Pageable pageable);
 
     /**
-     *  < scoreAfter 团队分数
+     *  < score 团队分数
      * @param scoreBefore Integer
      * @param pageable Pageable
      * @return Page<ScisTeamApply>

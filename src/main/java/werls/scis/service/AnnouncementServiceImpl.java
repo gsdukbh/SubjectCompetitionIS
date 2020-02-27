@@ -3,6 +3,7 @@ package werls.scis.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import werls.scis.dao.jpa.AnnouncementJpaRepository;
@@ -10,6 +11,7 @@ import werls.scis.dao.pojo.ScisAnnouncement;
 
 import javax.xml.ws.soap.Addressing;
 import java.sql.Date;
+import java.util.List;
 
 /**
  * @author : LiJiWei
@@ -20,6 +22,7 @@ import java.sql.Date;
  * @date Date : 2020年02月27日 14:28
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class AnnouncementServiceImpl {
 
     @Autowired
@@ -30,7 +33,7 @@ public class AnnouncementServiceImpl {
      * @param pageable Pageable
      * @return Page<ScisAnnouncement>
      */
-    @Transactional(rollbackFor = Exception.class)
+
     public Page<ScisAnnouncement> findByTimeAfter(Date timeAfter, Pageable pageable){
         return announcementJpaRepository.findByTimeAfter(timeAfter, pageable);
     }
@@ -40,7 +43,7 @@ public class AnnouncementServiceImpl {
      * @param pageable Pageable
      * @return  Page<ScisAnnouncement>
      */
-    @Transactional(rollbackFor = Exception.class)
+
     public Page<ScisAnnouncement> findByTime(Date date, Pageable pageable){
         return announcementJpaRepository.findByTime(date, pageable);
     }
@@ -51,7 +54,7 @@ public class AnnouncementServiceImpl {
      * @param pageable Pageable
      * @return  List<ScisAnnouncement>
      */
-    @Transactional(rollbackFor = Exception.class)
+
     public Page<ScisAnnouncement> findByTimeBefore(Date timeBefore, Pageable pageable){
         return announcementJpaRepository.findByTimeBefore(timeBefore, pageable);
     }
@@ -63,7 +66,7 @@ public class AnnouncementServiceImpl {
      * @param pageable Pageable
      * @return   Page<ScisAnnouncement>
      */
-    @Transactional(rollbackFor = Exception.class)
+
     public Page<ScisAnnouncement> findByTimeBetween(Date start,Date end, Pageable pageable){
         return announcementJpaRepository.findByTimeBetween(start, end, pageable);
     }
@@ -73,7 +76,7 @@ public class AnnouncementServiceImpl {
      * @param pageable Pageable
      * @return Page<ScisAnnouncement>
      */
-    @Transactional(rollbackFor = Exception.class)
+
     public Page<ScisAnnouncement> findByFrom(String from, Pageable pageable){
         return announcementJpaRepository.findByFrom(from, pageable);
     }
@@ -84,7 +87,7 @@ public class AnnouncementServiceImpl {
      * @param pageable Pageable
      * @return  Page<ScisAnnouncement>
      */
-    @Transactional(rollbackFor = Exception.class)
+
     public Page<ScisAnnouncement> findByTypeLike(String typeLike, Pageable pageable){
         return announcementJpaRepository.findByTypeLike(typeLike, pageable);
     }
@@ -94,7 +97,7 @@ public class AnnouncementServiceImpl {
      * @param pageable Pageable
      * @return Page<ScisAnnouncement>
      */
-    @Transactional(rollbackFor = Exception.class)
+
     public  Page<ScisAnnouncement> findByAuthorLike(String authorLike, Pageable pageable){
         return announcementJpaRepository.findByAuthorLike(authorLike, pageable);
     }
@@ -104,9 +107,27 @@ public class AnnouncementServiceImpl {
      * @param pageable Pageable
      * @return Page<ScisAnnouncement>
      */
-    @Transactional(rollbackFor = Exception.class)
+
     public Page<ScisAnnouncement> findByTitleLike(String titleLike, Pageable pageable){
         return  announcementJpaRepository.findByTitleLike(titleLike, pageable);
     }
 
+    /**
+     * 必须包含完整的信息
+     * @param scisAnnouncement ScisAnnouncement
+     * @return ScisAnnouncement
+     */
+
+    public ScisAnnouncement save(ScisAnnouncement scisAnnouncement){
+        return announcementJpaRepository.save(scisAnnouncement);
+    }
+
+    public List<ScisAnnouncement> save(List<ScisAnnouncement> announcementList){
+        return announcementJpaRepository.saveAll(announcementList);
+    }
+
+
+    public Page<ScisAnnouncement> findAll(Pageable pageable){
+        return announcementJpaRepository.findAll(pageable);
+    }
 }

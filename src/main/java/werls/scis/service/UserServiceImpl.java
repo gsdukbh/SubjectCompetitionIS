@@ -58,10 +58,8 @@ public class UserServiceImpl implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println("nnnnn:" + username);
 
         ScisUser user = userRepository.findByLoginOrPhoneOrIdentityOrEmail(username,username,username,username);
-
         if (user == null) {
             throw new UsernameNotFoundException("用户名不存在");
         }
@@ -70,15 +68,6 @@ public class UserServiceImpl implements UserDetailsService {
         for (ScisRole rule : rules) {
             authorities.add(new SimpleGrantedAuthority(rule.getAuthority()));
         }
-        System.out.println(user.toString());
-
-       /* Pageable pageable1= PageRequest.of(0, 2,Sort.by("time"));
-        Date date=new Date();
-        java.sql.Date date1=new java.sql.Date(date.getTime());
-        System.out.println("时间"+this.announcementJpaRepository.findByTime(date1,pageable1).getContent().toString());
-        Pageable pageable= PageRequest.of(0, 2);
-        System.out.println(this.findByName("2016",pageable).getContent().toString());*/
-
         return new User(user.getLogin(), user.getPassword(), authorities);
     }
 
@@ -91,7 +80,18 @@ public class UserServiceImpl implements UserDetailsService {
     public void save(ScisUser user) {
         userRepository.save(user);
     }
-
+    @Transactional(rollbackFor = Exception.class)
+    public void saveAll(List<ScisUser> user) {
+        userRepository.saveAll(user);
+    }
+    @Transactional(rollbackFor = Exception.class)
+    public List<ScisUser> findAll() {
+       return userRepository.findAll();
+    }
+    @Transactional(rollbackFor = Exception.class)
+    public Page<ScisUser> findAll(Pageable pageable) {
+        return userRepository.findAll(pageable);
+    }
     /**
      * 通过用户查询
      * @param login login
