@@ -81,7 +81,7 @@ public class ScisUser implements Serializable {
     @OneToMany(mappedBy = "scisUser",fetch = FetchType.EAGER)
     private List<ScisAnnouncement> announcements;
 
-    @ManyToMany(mappedBy = "scisUserList")
+    @ManyToMany(mappedBy = "scisUserList",fetch = FetchType.EAGER)
     private List<ScisTeamApply> teamApplies;
 
     @Fetch(FetchMode.SUBSELECT)

@@ -39,6 +39,7 @@ public class ScisProblem implements Serializable {
      */
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
     private ScisUser scisUser;
 
     /**
@@ -47,14 +48,15 @@ public class ScisProblem implements Serializable {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnore
+    @JoinColumn(name = "competition_id")
     private ScisCompetition competition;
 
     /**
      * 作品问题
      */
     @JsonIgnore
-    @Fetch(FetchMode.SUBSELECT)
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "works_id")
     private ScisWorks worksList;
 
     @Override

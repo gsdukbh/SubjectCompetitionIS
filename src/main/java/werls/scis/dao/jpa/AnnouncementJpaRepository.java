@@ -26,7 +26,7 @@ public interface AnnouncementJpaRepository extends JpaRepository<ScisAnnouncemen
      * @param pageable Pageable
      * @return Page<ScisAnnouncement>
      */
-    Page<ScisAnnouncement> findByTimeIsAfter(Date timeAfter, Pageable pageable);
+    Page<ScisAnnouncement> findByTimeAfter(Date timeAfter, Pageable pageable);
 
     /**
      * 公告当天时间

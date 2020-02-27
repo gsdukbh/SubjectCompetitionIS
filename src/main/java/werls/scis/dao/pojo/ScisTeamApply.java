@@ -29,9 +29,9 @@ public class ScisTeamApply implements Serializable {
     @Column(name = "team_name")
     private String name;
     @Column(name = "team_number")
-    private String number;
+    private Integer number;
     @Column(name = "team_score")
-    private String score;
+    private Integer score;
     @Column(name = "team_apply_time")
     private Date applyTime;
     @Column(name = "team_rank")
@@ -103,19 +103,19 @@ public class ScisTeamApply implements Serializable {
         this.name = name;
     }
 
-    public String getNumber() {
+    public Integer getNumber() {
         return number;
     }
 
-    public void setNumber(String number) {
+    public void setNumber(Integer number) {
         this.number = number;
     }
 
-    public String getScore() {
+    public Integer getScore() {
         return score;
     }
 
-    public void setScore(String score) {
+    public void setScore(Integer score) {
         this.score = score;
     }
 

@@ -36,8 +36,9 @@ public class ScisRole implements Serializable {
     @Column(name = "role_name")
     private String name;
 
-   @ManyToMany(mappedBy = "roles")
-   private List<ScisUser> scisUserList;
+    @Fetch(FetchMode.SUBSELECT)
+    @ManyToMany(mappedBy = "roles")
+    private List<ScisUser> scisUserList;
 
     /**
      * 角色拥有的菜单

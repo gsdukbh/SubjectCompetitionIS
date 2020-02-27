@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import werls.scis.dao.jpa.AnnouncementJpaRepository;
 import werls.scis.dao.jpa.ClassJpaRepository;
 import werls.scis.dao.jpa.CollegeJpaRepository;
@@ -42,10 +43,6 @@ public class UserServiceImpl implements UserDetailsService {
 
     @Autowired
     UserRepository userRepository;
-    @Autowired
-    private AnnouncementJpaRepository announcementJpaRepository ;
-    @Autowired
-    ClassJpaRepository classJpaRepository;
 
     /**
      * Locates the user based on the username. In the actual implementation, the search
@@ -87,15 +84,37 @@ public class UserServiceImpl implements UserDetailsService {
 
     /**
      * 保存，修改用户时调用
-     *
+     * 需要完整的user
      * @param user 用户
      */
-
+    @Transactional(rollbackFor = Exception.class)
     public void save(ScisUser user) {
-        this.userRepository.save(user);
+        userRepository.save(user);
     }
 
-    public Page<ScisClass> findByName(String name, Pageable pageable){
-        return classJpaRepository.findByName(name,pageable);
+    /**
+     * 通过用户查询
+     * @param login login
+     * @return ScisUser
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public ScisUser findByLogin(String login) {
+        return userRepository.findByLogin(login);
+    }
+    @Transactional(rollbackFor = Exception.class)
+    public ScisUser findByPhone (String phone){
+        return userRepository.findByPhone(phone);
+    }
+    @Transactional(rollbackFor = Exception.class)
+    public ScisUser findByIdentity(String identity){
+        return userRepository.findByIdentity(identity);
+    }
+    @Transactional(rollbackFor = Exception.class)
+    public ScisUser findByEmail(String email){
+        return userRepository.findByEmail(email);
+    }
+    @Transactional(rollbackFor = Exception.class)
+    public  Page<ScisUser> findByStatus(String status, Pageable pageable){
+        return userRepository.findByStatus(status, pageable);
     }
 }
