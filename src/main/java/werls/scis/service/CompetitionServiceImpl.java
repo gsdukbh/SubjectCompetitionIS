@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import werls.scis.dao.jpa.CompetitionRepository;
+import werls.scis.dao.pojo.ScisApplyFrom;
 import werls.scis.dao.pojo.ScisCompetition;
 
 import java.util.List;
@@ -88,6 +89,15 @@ public class CompetitionServiceImpl {
     }
     public Page<ScisCompetition> findAll(Pageable pageable){
         return competitionRepository.findAll(pageable);
+    }
+    public void delete(ScisCompetition scisCompetition){
+        this.competitionRepository.delete(scisCompetition);
+    }
+    public void deleteAll(List<ScisCompetition> scisCompetition){
+        this.competitionRepository.deleteAll(scisCompetition);
+    }
+    public void deleteById(Integer id){
+        this.competitionRepository.deleteById(id);
     }
 
 }

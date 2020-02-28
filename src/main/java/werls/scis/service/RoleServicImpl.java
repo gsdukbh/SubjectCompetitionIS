@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import werls.scis.dao.jpa.RoleRepository;
+import werls.scis.dao.pojo.ScisApplyFrom;
 import werls.scis.dao.pojo.ScisRole;
 
 import java.util.List;
@@ -43,6 +44,17 @@ public class RoleServicImpl {
     }
     public Page<ScisRole> findAll (Pageable pageable){
         return roleRepository.findAll(pageable);
+    }
+
+
+    public void delete(ScisRole role){
+        this.roleRepository.delete(role);
+    }
+    public void deleteAll(List<ScisRole> role ){
+        this.roleRepository.deleteAll(role);
+    }
+    public void deleteById(Integer id){
+        this.roleRepository.deleteById(id);
     }
 
 }

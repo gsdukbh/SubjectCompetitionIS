@@ -126,8 +126,18 @@ public class AnnouncementServiceImpl {
         return announcementJpaRepository.saveAll(announcementList);
     }
 
-
     public Page<ScisAnnouncement> findAll(Pageable pageable){
         return announcementJpaRepository.findAll(pageable);
+    }
+
+
+    public void delete(ScisAnnouncement announcement){
+        this.announcementJpaRepository.delete(announcement);
+    }
+    public void deleteAll(List<ScisAnnouncement> announcement){
+        this.announcementJpaRepository.deleteAll(announcement);
+    }
+    public void deleteById(Integer id){
+        this.announcementJpaRepository.deleteById((long)id);
     }
 }

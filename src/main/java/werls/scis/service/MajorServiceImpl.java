@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import werls.scis.dao.jpa.MajorRepostitory;
+import werls.scis.dao.pojo.ScisApplyFrom;
 import werls.scis.dao.pojo.ScisMajor;
 
 import java.util.List;
@@ -47,6 +48,17 @@ public class MajorServiceImpl {
     }
     public Page<ScisMajor> findAll( Pageable pageable){
         return this.major.findAll(pageable);
+    }
+
+
+    public void delete(ScisMajor major){
+        this.major.delete(major);
+    }
+    public void deleteAll(List<ScisMajor> major){
+        this.major.deleteAll(major);
+    }
+    public void deleteById(Integer id){
+        this.major.deleteById(id);
     }
 
 }

@@ -19,10 +19,7 @@ import werls.scis.dao.jpa.AnnouncementJpaRepository;
 import werls.scis.dao.jpa.ClassJpaRepository;
 import werls.scis.dao.jpa.CollegeJpaRepository;
 import werls.scis.dao.jpa.UserRepository;
-import werls.scis.dao.pojo.ScisAnnouncement;
-import werls.scis.dao.pojo.ScisClass;
-import werls.scis.dao.pojo.ScisRole;
-import werls.scis.dao.pojo.ScisUser;
+import werls.scis.dao.pojo.*;
 
 import javax.sound.midi.SoundbankResource;
 import java.util.ArrayList;
@@ -117,4 +114,15 @@ public class UserServiceImpl implements UserDetailsService {
     public  Page<ScisUser> findByStatus(String status, Pageable pageable){
         return userRepository.findByStatus(status, pageable);
     }
+
+    public void delete(ScisUser user){
+        this.userRepository.delete(user);
+    }
+    public void deleteAll(List<ScisUser> user){
+        this.userRepository.deleteAll(user);
+    }
+    public void deleteById(Integer id){
+        this.userRepository.deleteById(id);
+    }
+
 }

@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import werls.scis.dao.jpa.ProblemRepository;
+import werls.scis.dao.pojo.ScisApplyFrom;
 import werls.scis.dao.pojo.ScisProblem;
 
 import java.sql.Date;
@@ -62,6 +63,17 @@ public class ProblemServiceImpl {
     }
     public Page<ScisProblem> findAll(Pageable pageable){
         return this.problemRepository.findAll(pageable);
+    }
+
+
+    public void delete(ScisProblem problem){
+        this.problemRepository.delete(problem);
+    }
+    public void deleteAll(List<ScisProblem> problem){
+        this.problemRepository.deleteAll(problem);
+    }
+    public void deleteById(Integer id){
+        this.problemRepository.deleteById(id);
     }
 
 }

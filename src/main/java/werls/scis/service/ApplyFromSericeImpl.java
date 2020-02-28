@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import werls.scis.dao.jpa.ApplyFromRepository;
+import werls.scis.dao.pojo.ScisAnnouncement;
 import werls.scis.dao.pojo.ScisApplyFrom;
 
 import java.util.List;
@@ -87,4 +88,15 @@ public class ApplyFromSericeImpl {
     public Page<ScisApplyFrom> findAll(Pageable pageable){
         return apply.findAll( pageable);
     }
+
+    public void delete(ScisApplyFrom applyFrom){
+        this.apply.delete(applyFrom);
+    }
+    public void deleteAll(List<ScisApplyFrom>  applyFrom){
+        this.apply.deleteAll(applyFrom);
+    }
+    public void deleteById(Integer id){
+        this.apply.deleteById(id);
+    }
+
 }

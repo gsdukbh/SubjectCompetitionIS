@@ -7,6 +7,7 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import werls.scis.dao.jpa.ClassJpaRepository;
+import werls.scis.dao.pojo.ScisApplyFrom;
 import werls.scis.dao.pojo.ScisClass;
 
 import java.util.List;
@@ -90,5 +91,13 @@ public class ClassServiceImpl {
     public Page<ScisClass> findAll( Pageable pageable){
         return classJpaRepository.findAll(pageable);
     }
-
+    public void delete(ScisClass scisClass){
+        this.classJpaRepository.delete(scisClass);
+    }
+    public void deleteAll(List<ScisClass>  scisClass){
+        this.classJpaRepository.deleteAll(scisClass);
+    }
+    public void deleteById(Integer id){
+        this.classJpaRepository.deleteById(id);
+    }
 }

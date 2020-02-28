@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import werls.scis.dao.jpa.TeamApplyRepository;
 import werls.scis.dao.pojo.ScisTeamApply;
 
+import java.util.List;
+
 /**
  * @author : LiJiWei
  * @version V1.0
@@ -85,5 +87,22 @@ public class TeamServiceImpl {
     public Page<ScisTeamApply> findByNumber(Integer number, Pageable pageable){
         return  teamApplyRepository.findByNumber(number, pageable);
     }
-
+    public void save (ScisTeamApply teamApply){
+       teamApplyRepository.save(teamApply);
+    }
+    public void saveAll (List<ScisTeamApply> teamApply){
+        teamApplyRepository.saveAll(teamApply);
+    }
+    public Page<ScisTeamApply> findAll(Pageable pageable){
+        return teamApplyRepository.findAll(pageable);
+    }
+    public void delete(ScisTeamApply teamApply){
+        this.teamApplyRepository.delete(teamApply);
+    }
+    public void deleteAll(List<ScisTeamApply>teamApply){
+        this.teamApplyRepository.deleteAll(teamApply);
+    }
+    public void deleteById(Integer id){
+        this.teamApplyRepository.deleteById(id);
+    }
 }

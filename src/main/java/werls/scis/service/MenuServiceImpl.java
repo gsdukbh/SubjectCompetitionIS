@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import werls.scis.dao.jpa.MajorRepostitory;
 import werls.scis.dao.jpa.MenuRepository;
+import werls.scis.dao.pojo.ScisApplyFrom;
 import werls.scis.dao.pojo.ScisMenu;
 
 import java.util.List;
@@ -34,4 +35,15 @@ public class MenuServiceImpl {
     public Page<ScisMenu> findAll(Pageable pageable){
         return this.menuRepository.findAll(pageable);
     }
+
+    public void delete(ScisMenu menu){
+        this.menuRepository.delete(menu);
+    }
+    public void deleteAll(List<ScisMenu> menu){
+        this.menuRepository.deleteAll(menu);
+    }
+    public void deleteById(Integer id){
+        this.menuRepository.deleteById(id);
+    }
+
 }

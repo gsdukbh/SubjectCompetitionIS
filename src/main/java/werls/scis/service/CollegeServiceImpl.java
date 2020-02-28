@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import werls.scis.dao.jpa.CollegeJpaRepository;
+import werls.scis.dao.pojo.ScisApplyFrom;
 import werls.scis.dao.pojo.ScisCollege;
 
 import java.util.List;
@@ -50,4 +51,15 @@ public class CollegeServiceImpl {
     public Page<ScisCollege> findAll(Pageable pageable){
         return collegeJpaRepository.findAll(pageable);
     }
+    public void delete(ScisCollege college){
+        this.collegeJpaRepository.delete(college);
+    }
+    public void deleteAll(List<ScisCollege> college){
+        this.collegeJpaRepository.deleteAll(college);
+    }
+    public void deleteById(Integer id){
+        this.collegeJpaRepository.deleteById(id);
+    }
+
+
 }
