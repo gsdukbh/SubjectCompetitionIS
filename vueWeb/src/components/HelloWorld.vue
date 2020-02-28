@@ -12,8 +12,6 @@
       </p>
       <button  @click="login" class="btn btn-lg btn-primary btn-block" type="button">Sign in</button>
           <p>{{info}}</p>
-      <p>{{password}}</p>
-      <p>{{loginName}}</p>
       </form>
   </div>
 </template>

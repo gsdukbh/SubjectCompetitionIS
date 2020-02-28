@@ -84,7 +84,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .loginPage("/login")
+//                .loginPage("/login")
                 .successHandler(appAuthenticationSuccessHandler)
                 .failureHandler(appAuthenticationFailureHandler)
                 .usernameParameter("loginName").passwordParameter("password")
@@ -108,7 +108,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                 .cors().disable()
-                .csrf().disable()
+                .csrf().disable()/*部署时需要关掉*/
                 .exceptionHandling()
                 .and()
                 .sessionManagement()

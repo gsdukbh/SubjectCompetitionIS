@@ -17,11 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class Test {
 
-    @RequestMapping("/admin")
-    public String in(){
-        return "ok";
-    }
-
     @RequestMapping("/login/invalid")
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public String session(){
