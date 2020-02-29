@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,6 +45,8 @@ public class AppAuthenticationSuccessHandler  implements AuthenticationSuccessHa
                                         HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
      logger.info("登录成功,{}",authentication);
+
+        System.out.println(Arrays.toString(request.getCookies()));
         Map<String,Object> map = new HashMap<String,Object>();
         map.put("code",200);
         map.put("message","登录成功");

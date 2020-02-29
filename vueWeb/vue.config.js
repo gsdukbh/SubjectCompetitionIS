@@ -1,6 +1,23 @@
+
+const path = require('path')
+function resolve(dir) {
+    return path.join(__dirname, dir)
+}
+const defaultSettings = require('./src/settings.js')
+const name = defaultSettings.title
+
 module.exports = {
+
+    configureWebpack:{
+        name: name,
+        resolve:{
+            alias:{
+                '@': resolve('src')
+            }
+        }
+    },
+
     devServer:{
-        // host:'localhost',
         port:8000,
         proxy:{
             '/api':{

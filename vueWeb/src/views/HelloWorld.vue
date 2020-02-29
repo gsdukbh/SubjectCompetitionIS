@@ -49,7 +49,10 @@ export default {
                  'Content-Type': 'application/x-www-form-urlencoded'
              }
           })
-          .then(response => (this.info = response))
+          .then(response => {
+              this.info=response.data;
+              this.$router.replace({path:'/admin'})
+          })
 
           .catch(function (error) {
               console.log(error.config);

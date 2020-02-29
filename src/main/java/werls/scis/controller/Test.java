@@ -1,10 +1,7 @@
 package werls.scis.controller;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author : LiJiWei
@@ -21,5 +18,10 @@ public class Test {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public String session(){
         return "session 过期";
+    }
+
+    @GetMapping("/admin")
+    public String admin(){
+        return "okokokokokokok";
     }
 }
