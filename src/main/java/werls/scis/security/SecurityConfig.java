@@ -2,6 +2,7 @@ package werls.scis.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
@@ -13,6 +14,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 
@@ -42,19 +44,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthenticationProvider authenticationProvider;
 
-
-
     @Autowired
     AppAuthenticationSuccessHandler appAuthenticationSuccessHandler;
 
     @Autowired
-    AppAuthenticationFailureHandler appAuthenticationFailureHandler;
+    private AppAuthenticationFailureHandler appFailureHandler;
 
     @Autowired
-    private ObjectMapper objectMapper;
+    AppAccessDeniedHandler appAccessDeniedHandler;
 
     @Autowired
     private AppExpiredSessionStrategy appExpiredSessionStrategy;
+
+    @Autowired
+    MyLogoutSuccessHandler logoutSuccessHandler;
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -95,35 +99,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/login")
                 .usernameParameter("loginName").passwordParameter("password")
                 .successHandler(appAuthenticationSuccessHandler)
-                .failureHandler(appAuthenticationFailureHandler)
+                .failureHandler(appFailureHandler)
                 .permitAll()
                 .and()
                 .exceptionHandling()
                 //没有权限，返回json
-                .accessDeniedHandler((request,response,ex) -> {
-                    response.setContentType("application/json;charset=utf-8");
-                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                    PrintWriter out = response.getWriter();
-                    Map<String,Object> map = new HashMap<String,Object>();
-                    map.put("code",403);
-                    map.put("message", "权限不足");
-                    out.write(objectMapper.writeValueAsString(map));
-                    out.flush();
-                    out.close();
-                })
+                .accessDeniedHandler(appAccessDeniedHandler)
                 .and()
                 .logout()
-                .logoutSuccessHandler((request,response,authentication) -> {
-                    Map<String,Object> map = new HashMap<String,Object>();
-                    map.put("code",200);
-                    map.put("message","退出成功");
-                    map.put("data",authentication);
-                    response.setContentType("application/json;charset=utf-8");
-                    PrintWriter out = response.getWriter();
-                    out.write(objectMapper.writeValueAsString(map));
-                    out.flush();
-                    out.close();
-                })
+                .logoutSuccessHandler(logoutSuccessHandler)
                 .permitAll()
                 .and()
                 .cors().disable()
@@ -132,7 +116,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .sessionManagement()
                 .invalidSessionUrl("/login/invalid")
-                .maximumSessions(5)
+                .maximumSessions(1)
                 .maxSessionsPreventsLogin(false)
                 //当达到最大值时，旧用户被踢出后的操作
                 .expiredSessionStrategy(appExpiredSessionStrategy);

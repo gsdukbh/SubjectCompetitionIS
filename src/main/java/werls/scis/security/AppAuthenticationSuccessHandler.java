@@ -4,6 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -33,6 +36,11 @@ public class AppAuthenticationSuccessHandler  implements AuthenticationSuccessHa
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    RedisTemplate redisTemplate;
+    @Autowired
+    StringRedisTemplate stringRedisTemplate;
     /**
      * Called when a user has been successfully authenticated.
      *
@@ -52,7 +60,6 @@ public class AppAuthenticationSuccessHandler  implements AuthenticationSuccessHa
         map.put("message","登录成功");
         map.put("data",authentication);
         response.setContentType("application/json;charset=utf-8");
-
         PrintWriter out = response.getWriter();
         out.write(objectMapper.writeValueAsString(map));
         out.flush();

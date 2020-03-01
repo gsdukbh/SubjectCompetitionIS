@@ -3,6 +3,9 @@ package werls.scis.dao.jpa;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
+import org.springframework.stereotype.Repository;
 import werls.scis.dao.pojo.ScisAnnouncement;
 import werls.scis.dao.pojo.ScisClass;
 
@@ -17,6 +20,8 @@ import java.util.List;
  * @Description: TODO
  * @date Date : 2020年02月25日 10:14
  */
+
+@Repository
 public interface AnnouncementJpaRepository extends JpaRepository<ScisAnnouncement,Long> {
 
 

@@ -1,5 +1,6 @@
 package werls.scis.dao.jpa;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -62,6 +63,7 @@ public interface UserRepository extends JpaRepository<ScisUser,Integer> {
      * @param email email  String
      * @return ScisUser
      */
+    @Cacheable(value = "ScisUser",key = "0")
     ScisUser findByLoginOrPhoneOrIdentityOrEmail(String login,String phone,String identity,String email);
 
 }
