@@ -11,9 +11,9 @@ Vue.use(Router)
 export const allRouter = [
     {
         path:'/',
+        name:'登录',
         hidden:true,
         component:HelloWorld,
-        name:'登录',
         meta:{
             title:"噢噢噢噢"
         }
@@ -27,6 +27,7 @@ export const allRouter = [
         },
         component:test
     }
+
 ]
 const createRouter = () => new Router({
     mode:'history',
@@ -40,3 +41,10 @@ export function resetRouter() {
     router.matcher = newRouter.matcher
 }
 export default router
+router.beforeEach((to, from, next) => {
+    /* 路由发生变化修改页面title */
+    if (to.meta.title) {
+        document.title = to.meta.title
+    }
+    next()
+})

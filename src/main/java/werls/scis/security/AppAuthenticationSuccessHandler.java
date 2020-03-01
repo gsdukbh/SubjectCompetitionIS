@@ -31,7 +31,7 @@ import java.util.Map;
 public class AppAuthenticationSuccessHandler  implements AuthenticationSuccessHandler {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-   @Autowired
+    @Autowired
     private ObjectMapper objectMapper;
     /**
      * Called when a user has been successfully authenticated.

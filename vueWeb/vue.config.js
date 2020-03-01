@@ -1,10 +1,10 @@
-
+'use strict'
 const path = require('path')
 function resolve(dir) {
     return path.join(__dirname, dir)
 }
 const defaultSettings = require('./src/settings.js')
-const name = defaultSettings.title
+const name = defaultSettings.title ||'学科竞赛系统'
 
 module.exports = {
 

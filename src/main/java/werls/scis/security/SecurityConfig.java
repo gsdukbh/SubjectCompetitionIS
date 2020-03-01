@@ -4,13 +4,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
+
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
@@ -27,6 +31,7 @@ import java.util.Map;
  * @date Date : 2020年02月21日 22:44
  */
 @Configuration
+@EnableRedisHttpSession
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private werls.scis.service.UserServiceImpl userService;
@@ -36,6 +41,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private AuthenticationProvider authenticationProvider;
+
+
 
     @Autowired
     AppAuthenticationSuccessHandler appAuthenticationSuccessHandler;
@@ -83,11 +90,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/TEA").hasAnyRole("TEA")
                 .anyRequest().authenticated()
                 .and()
+
                 .formLogin()
-//                .loginPage("/login")
+                .loginPage("/login")
+                .usernameParameter("loginName").passwordParameter("password")
                 .successHandler(appAuthenticationSuccessHandler)
                 .failureHandler(appAuthenticationFailureHandler)
-                .usernameParameter("loginName").passwordParameter("password")
                 .permitAll()
                 .and()
                 .exceptionHandling()
@@ -105,6 +113,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 })
                 .and()
                 .logout()
+                .logoutSuccessHandler((request,response,authentication) -> {
+                    Map<String,Object> map = new HashMap<String,Object>();
+                    map.put("code",200);
+                    map.put("message","退出成功");
+                    map.put("data",authentication);
+                    response.setContentType("application/json;charset=utf-8");
+                    PrintWriter out = response.getWriter();
+                    out.write(objectMapper.writeValueAsString(map));
+                    out.flush();
+                    out.close();
+                })
                 .permitAll()
                 .and()
                 .cors().disable()
@@ -113,7 +132,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .sessionManagement()
                 .invalidSessionUrl("/login/invalid")
-                .maximumSessions(1)
+                .maximumSessions(5)
                 .maxSessionsPreventsLogin(false)
                 //当达到最大值时，旧用户被踢出后的操作
                 .expiredSessionStrategy(appExpiredSessionStrategy);
