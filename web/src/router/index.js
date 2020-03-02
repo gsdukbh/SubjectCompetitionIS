@@ -1,14 +1,26 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import About from '../views/About'
 
 Vue.use(VueRouter)
 
-const routes = [
+export  const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
+    name: 'wode',
+    component: Home,
+    meta:{
+      title:'sss'
+    }
+  },
+  {
+    path: '/s',
+    name: 'ssss',
+    component: About,
+    meta:{
+      title:'sss'
+    }
   },
   {
     path: '/about',
@@ -22,8 +34,14 @@ const routes = [
 
 const router = new VueRouter({
   mode: 'history',
+  scrollBehavior: () => ({ y: 0 }),
   base: process.env.BASE_URL,
-  routes
+  routes:routes
 })
 
+export function resetRouter() {
+  const newRouter = router()
+  router.matcher = newRouter.matcher // reset router
+}
 export default router
+
