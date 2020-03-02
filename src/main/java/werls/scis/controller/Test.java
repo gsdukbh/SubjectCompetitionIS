@@ -28,12 +28,24 @@ public class Test {
         return "session 过期";
     }
 
-    @Cacheable(value = "121",key = "3")
+    @Cacheable(value = "admin",key = "2")
     @GetMapping("/admin")
     public String admin(){
-        return "okokokokokokok";
+        return "is admin";
+    }
+    @Cacheable(value = "stu",key = "1")
+    @GetMapping("/student")
+    public String stu(){
+        return "is stu";
+    }
+    @Cacheable(value = "tea",key = "")
+    @GetMapping("/tea")
+    public String tea(){
+        return "is tea";
     }
 
-
-
+    @RequestMapping(value = "/home/{s}",method = RequestMethod.GET)
+    public String home(@PathVariable String s){
+        return "is tea"+s;
+    }
 }

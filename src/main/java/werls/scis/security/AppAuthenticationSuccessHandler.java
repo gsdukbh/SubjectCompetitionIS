@@ -10,6 +10,7 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.session.Session;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;
@@ -39,6 +40,7 @@ public class AppAuthenticationSuccessHandler  implements AuthenticationSuccessHa
 
     @Autowired
     RedisTemplate redisTemplate;
+
     @Autowired
     StringRedisTemplate stringRedisTemplate;
     /**
@@ -54,7 +56,7 @@ public class AppAuthenticationSuccessHandler  implements AuthenticationSuccessHa
                                         Authentication authentication) throws IOException, ServletException {
      logger.info("登录成功,{}",authentication);
 
-        System.out.println(Arrays.toString(request.getCookies()));
+        System.out.println(request.getSession().getAttribute("JSESSIONID"));
         Map<String,Object> map = new HashMap<String,Object>();
         map.put("code",200);
         map.put("message","登录成功");

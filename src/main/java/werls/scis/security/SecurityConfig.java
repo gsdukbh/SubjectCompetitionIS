@@ -88,7 +88,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         System.out.println("AppSecurityConfigurer configure http......");
         System.out.println(new BCryptPasswordEncoder().encode("1234"));
         http.authorizeRequests()
-                .antMatchers("/login","/css/**","/js/**","/img/*","/register","/registerAccount","/home").permitAll()
+                .antMatchers("/login","/css/**","/js/**","/img/*","/register","/registerAccount","/home/**").permitAll()
                 .antMatchers("/student").hasAnyRole("STU","ADMIN", "TEA")
                 .antMatchers("/admin").hasAnyRole("ADMIN", "TEA")
                 .antMatchers("/TEA").hasAnyRole("TEA")

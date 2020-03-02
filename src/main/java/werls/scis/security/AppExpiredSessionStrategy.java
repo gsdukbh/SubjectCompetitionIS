@@ -27,7 +27,7 @@ public class AppExpiredSessionStrategy implements SessionInformationExpiredStrat
     public void onExpiredSessionDetected(SessionInformationExpiredEvent event) throws IOException, ServletException {
         Map<String,Object> map = new HashMap<>();
         map.put("code",0);
-        map.put("msg","已经另一台机器登录，您被迫下线。" + event.getSessionInformation().getLastRequest());
+        map.put("msg","已经在另一台机器登录，您被迫下线。" + event.getSessionInformation().getLastRequest());
         String s = objectMapper.writeValueAsString(map);
         event.getResponse().setContentType("application/json;charset=UTF-8");
         event.getResponse().getWriter().write(s);

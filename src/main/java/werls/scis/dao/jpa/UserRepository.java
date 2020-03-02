@@ -63,7 +63,7 @@ public interface UserRepository extends JpaRepository<ScisUser,Integer> {
      * @param email email  String
      * @return ScisUser
      */
-    @Cacheable(value = "ScisUser",key = "0")
+//    @Cacheable(value = "ScisUser",key = "0")
     ScisUser findByLoginOrPhoneOrIdentityOrEmail(String login,String phone,String identity,String email);
 
 }
