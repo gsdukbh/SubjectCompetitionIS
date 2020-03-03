@@ -2,8 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import About from '../views/About'
-
-import getPageTitle from "../utils/get-page-title";
+import Login from '../views/login'
 
 
 Vue.use(VueRouter)
@@ -15,6 +14,14 @@ export const routes = [
     component: Home,
     meta:{
       title:'home'
+    }
+  },
+  {
+    path:'/login',
+    name:'login',
+    component:Login,
+    meta:{
+      title:'登录'
     }
   },
   {
