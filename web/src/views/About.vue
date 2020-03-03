@@ -1,49 +1,23 @@
 <template>
   <div class="about">
-    <el-container>
-      <el-header>Header</el-header>
-      <el-main>Main</el-main>
-    </el-container>
+    <h1>This is an about page</h1>
+    <span class="svg-container">
+          <svg-icon icon-class="user" />
+        </span>
 
-    <el-container>
-      <el-header>Header</el-header>
-      <el-main>Main</el-main>
-      <el-footer>Footer</el-footer>
-    </el-container>
   </div>
 </template>
-<style scoped>
-  .el-header, .el-footer {
-    background-color: #B3C0D1;
-    color: #333;
-    text-align: center;
-    line-height: 60px;
+<style  lang="scss" scoped>
+  .svg-container {
+    padding: 6px 5px 6px 15px;
+    color: #2c3e50;
+    vertical-align: middle;
+    width: 30px;
+    display: inline-block;
   }
-
-  .el-aside {
-    background-color: #D3DCE6;
-    color: #333;
-    text-align: center;
-    line-height: 200px;
-  }
-
-  .el-main {
-    background-color: #E9EEF3;
-    color: #333;
-    text-align: center;
-    line-height: 160px;
-  }
-
-  body > .el-container {
-    margin-bottom: 40px;
-  }
-
-  .el-container:nth-child(5) .el-aside,
-  .el-container:nth-child(6) .el-aside {
-    line-height: 260px;
-  }
-
-  .el-container:nth-child(7) .el-aside {
-    line-height: 320px;
+  span {
+    &:first-of-type {
+      margin-right: 16px;
+    }
   }
 </style>

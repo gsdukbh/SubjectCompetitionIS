@@ -3,23 +3,18 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import About from '../views/About'
 
+import getPageTitle from "../utils/get-page-title";
+
+
 Vue.use(VueRouter)
 
-export  const routes = [
+export const routes = [
   {
     path: '/',
-    name: 'wode',
+    name: 'Home',
     component: Home,
     meta:{
-      title:'sss'
-    }
-  },
-  {
-    path: '/s',
-    name: 'ssss',
-    component: About,
-    meta:{
-      title:'sss'
+      title:'home'
     }
   },
   {
@@ -32,16 +27,18 @@ export  const routes = [
   }
 ]
 
-const router = new VueRouter({
+const createRouter =() => new VueRouter({
   mode: 'history',
-  scrollBehavior: () => ({ y: 0 }),
   base: process.env.BASE_URL,
+  scrollBehavior: () => ({ y: 0 }),
   routes:routes
 })
 
+const  router =createRouter()
+
 export function resetRouter() {
-  const newRouter = router()
-  router.matcher = newRouter.matcher // reset router
+  const newRouter=createRouter()
+  router.matcher = newRouter.matcher
 }
 export default router
 
