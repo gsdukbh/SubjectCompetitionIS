@@ -4,21 +4,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
-import org.springframework.session.Session;
 import org.springframework.stereotype.Component;
+import werls.scis.service.UserServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,7 +35,7 @@ public class AppAuthenticationSuccessHandler  implements AuthenticationSuccessHa
     private ObjectMapper objectMapper;
 
     @Autowired
-    RedisTemplate redisTemplate;
+    UserServiceImpl  userService;
 
     @Autowired
     StringRedisTemplate stringRedisTemplate;
@@ -54,17 +50,17 @@ public class AppAuthenticationSuccessHandler  implements AuthenticationSuccessHa
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
-     logger.info("登录成功,{}",authentication);
-
-        System.out.println(request.getSession().getAttribute("JSESSIONID"));
-        Map<String,Object> map = new HashMap<String,Object>();
-        map.put("code",200);
-        map.put("message","登录成功");
-        map.put("data",authentication);
+        logger.info("登录成功,{}", authentication);
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("code", 200);
+        map.put("message", "登录成功,正在转跳");
+        map.put("token",authentication.getName());
+        map.put("role",authentication.getAuthorities());
         response.setContentType("application/json;charset=utf-8");
         PrintWriter out = response.getWriter();
         out.write(objectMapper.writeValueAsString(map));
         out.flush();
         out.close();
     }
+
 }

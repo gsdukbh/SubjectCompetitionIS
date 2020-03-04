@@ -4,7 +4,7 @@
     <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
-
+    admin
   </div>
 </template>
 <style  lang="scss" scoped>
@@ -20,4 +20,8 @@
       margin-right: 16px;
     }
   }
+
+    #about{
+
+    }
 </style>

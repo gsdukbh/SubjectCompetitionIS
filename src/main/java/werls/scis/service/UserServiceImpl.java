@@ -3,6 +3,8 @@ package werls.scis.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -36,10 +38,80 @@ import java.util.List;
  * @date Date : 2020年02月21日 23:23
  */
 @Service
+
 public class UserServiceImpl implements UserDetailsService {
 
     @Autowired
     UserRepository userRepository;
+
+
+
+    /**
+     * 保存，修改用户时调用
+     * 需要完整的user
+     * @param user 用户
+     */
+    @CachePut(value = "UserList",key = "1")
+    @Transactional(rollbackFor = Exception.class)
+    public void save(ScisUser user) {
+        userRepository.save(user);
+    }
+    @CachePut(value = "UserList",key = "1")
+    @Transactional(rollbackFor = Exception.class)
+    public void saveAll(List<ScisUser> user) {
+        userRepository.saveAll(user);
+    }
+    @Transactional(rollbackFor = Exception.class)
+    public List<ScisUser> findAll() {
+       return userRepository.findAll();
+    }
+    @Cacheable(value = "UserList",key = "1" ,unless = "#result == null")
+    @Transactional(rollbackFor = Exception.class)
+    public Page<ScisUser> findAll(Pageable pageable) {
+        return userRepository.findAll(pageable);
+    }
+    /**
+     * 通过用户查询
+     * @param login login
+     * @return ScisUser
+     */
+
+    public ScisUser findByLogin(String login) {
+        return userRepository.findByLogin(login);
+    }
+
+    public ScisUser findByPhone (String phone){
+        return userRepository.findByPhone(phone);
+    }
+
+    public ScisUser findByIdentity(String identity){
+        return userRepository.findByIdentity(identity);
+    }
+
+    public ScisUser findByEmail(String email){
+        return userRepository.findByEmail(email);
+    }
+
+    public  Page<ScisUser> findByStatus(String status, Pageable pageable){
+        return userRepository.findByStatus(status, pageable);
+    }
+
+    public void delete(ScisUser user){
+        this.userRepository.delete(user);
+    }
+
+    public void deleteAll(List<ScisUser> user){
+        this.userRepository.deleteAll(user);
+    }
+
+    public void deleteById(Integer id){
+        this.userRepository.deleteById(id);
+    }
+
+
+    public ScisUser findByLoginOrPhoneOrIdentityOrEmail(String login){
+        return this.userRepository.findByLoginOrPhoneOrIdentityOrEmail(login,login,login,login);
+    }
 
     /**
      * Locates the user based on the username. In the actual implementation, the search
@@ -56,7 +128,7 @@ public class UserServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        ScisUser user = userRepository.findByLoginOrPhoneOrIdentityOrEmail(username,username,username,username);
+        ScisUser user = findByLoginOrPhoneOrIdentityOrEmail(username);
         if (user == null) {
             throw new UsernameNotFoundException("用户名不存在");
         }
@@ -67,62 +139,4 @@ public class UserServiceImpl implements UserDetailsService {
         }
         return new User(user.getLogin(), user.getPassword(), authorities);
     }
-
-    /**
-     * 保存，修改用户时调用
-     * 需要完整的user
-     * @param user 用户
-     */
-    @Transactional(rollbackFor = Exception.class)
-    public void save(ScisUser user) {
-        userRepository.save(user);
-    }
-    @Transactional(rollbackFor = Exception.class)
-    public void saveAll(List<ScisUser> user) {
-        userRepository.saveAll(user);
-    }
-    @Transactional(rollbackFor = Exception.class)
-    public List<ScisUser> findAll() {
-       return userRepository.findAll();
-    }
-    @Transactional(rollbackFor = Exception.class)
-    public Page<ScisUser> findAll(Pageable pageable) {
-        return userRepository.findAll(pageable);
-    }
-    /**
-     * 通过用户查询
-     * @param login login
-     * @return ScisUser
-     */
-    @Transactional(rollbackFor = Exception.class)
-    public ScisUser findByLogin(String login) {
-        return userRepository.findByLogin(login);
-    }
-    @Transactional(rollbackFor = Exception.class)
-    public ScisUser findByPhone (String phone){
-        return userRepository.findByPhone(phone);
-    }
-    @Transactional(rollbackFor = Exception.class)
-    public ScisUser findByIdentity(String identity){
-        return userRepository.findByIdentity(identity);
-    }
-    @Transactional(rollbackFor = Exception.class)
-    public ScisUser findByEmail(String email){
-        return userRepository.findByEmail(email);
-    }
-    @Transactional(rollbackFor = Exception.class)
-    public  Page<ScisUser> findByStatus(String status, Pageable pageable){
-        return userRepository.findByStatus(status, pageable);
-    }
-
-    public void delete(ScisUser user){
-        this.userRepository.delete(user);
-    }
-    public void deleteAll(List<ScisUser> user){
-        this.userRepository.deleteAll(user);
-    }
-    public void deleteById(Integer id){
-        this.userRepository.deleteById(id);
-    }
-
 }

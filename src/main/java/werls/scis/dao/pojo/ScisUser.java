@@ -55,7 +55,7 @@ public class ScisUser implements Serializable {
     /**
      * 班级
      */
-    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(name = "class_id",referencedColumnName = "class_id")
     @JsonIgnore
     private ScisClass scisClass;
@@ -63,7 +63,7 @@ public class ScisUser implements Serializable {
     /**
      * 学院
      */
-    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(name = "college_id",referencedColumnName = "college_id")
     @JsonIgnore
     private ScisCollege college;

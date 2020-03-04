@@ -3,11 +3,11 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import About from '../views/About'
 import Login from '../views/login'
-
+import Layout from '../layout'
 
 Vue.use(VueRouter)
 
-export const routes = [
+export const publicRoutes = [
   {
     path: '/',
     name: 'Home',
@@ -25,6 +25,34 @@ export const routes = [
     }
   },
   {
+    path:'/home',
+    name:'ho',
+    component:Layout,
+    meta:{
+      title:'管理员',
+      roles:['ROLE_ADMIN']
+    },
+    children:[
+      {
+        path:'/admin',
+        name:'s',
+        component:About,
+        meta:{
+          title:'管理员',
+          roles:['ROLE_ADMIN']
+        }
+      },
+      {
+        path:'/user',
+        name:'login',
+        component:Home,
+        meta:{
+          title:'管理员',
+        }
+      }
+    ]
+  },
+  {
     path: '/about',
     name: 'About',
     // route level code-splitting
@@ -33,12 +61,39 @@ export const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   }
 ]
-
+export const asyncRoutes =[
+  {
+    path:'/admin',
+    name:'s',
+    component:About,
+    meta:{
+      title:'管理员',
+      roles:['ROLE_ADMIN']
+    }
+  },
+  {
+    path:'/user',
+    name:'login',
+    component:Home,
+    meta:{
+      title:'管理员',
+    }
+  },
+  {
+    path:'/home',
+    name:'ho',
+    component:About,
+    meta:{
+      title:'管理员',
+      roles:['ROLE_ADMIN']
+    }
+  }
+]
 const createRouter =() => new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   scrollBehavior: () => ({ y: 0 }),
-  routes:routes
+  routes:publicRoutes
 })
 
 const  router =createRouter()

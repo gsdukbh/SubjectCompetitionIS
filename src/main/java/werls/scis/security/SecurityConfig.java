@@ -86,18 +86,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         System.out.println("AppSecurityConfigurer configure http......");
-        System.out.println(new BCryptPasswordEncoder().encode("1234"));
+        System.out.println(new BCryptPasswordEncoder().encode("123456"));
         http.authorizeRequests()
-                .antMatchers("/login","/css/**","/js/**","/img/*","/register","/registerAccount","/home/**").permitAll()
-                .antMatchers("/student").hasAnyRole("STU","ADMIN", "TEA")
+                .antMatchers("/login","/css/**","/js/**","/img/*","/register","/public/**","/home/**").permitAll()
+                .antMatchers("/student/**","/i/**").hasAnyRole("STU","ADMIN", "TEA")
                 .antMatchers("/admin").hasAnyRole("ADMIN", "TEA")
                 .antMatchers("/TEA").hasAnyRole("TEA")
                 .anyRequest().authenticated()
                 .and()
-
                 .formLogin()
                 .loginPage("/login")
-                .usernameParameter("loginName").passwordParameter("password")
+                .usernameParameter("username").passwordParameter("password")
                 .successHandler(appAuthenticationSuccessHandler)
                 .failureHandler(appFailureHandler)
                 .permitAll()

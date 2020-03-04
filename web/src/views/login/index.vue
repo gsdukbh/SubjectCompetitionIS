@@ -1,90 +1,63 @@
 <template>
-    <div class="login-container">
-        <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on"
+    <div class="login-container" >
+        <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on"
                  label-position="left">
 
             <div class="title-container">
-                <h3 class="title">登 录</h3>
+                <h2 class="title">登 录</h2>
             </div>
+
             <el-form-item prop="username">
-             <span class="svg-container">
-                <svg-icon icon-class="user"/>
-             </span>
+        <span class="svg-container">
+          <svg-icon icon-class="user"/>
+        </span>
                 <el-input
                         ref="username"
                         v-model="loginForm.username"
-                        placeholder="Username"
+                        placeholder="用户名"
                         name="username"
                         type="text"
                         tabindex="1"
-                        autocomplete="on"
-                ></el-input>
-
+                        auto-complete="on"
+                />
             </el-form-item>
 
-            <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
-                <el-form-item prop="password">
-          <span class="svg-container">
-            <svg-icon icon-class="password"/>
-          </span>
-                    <el-input
-                            :key="passwordType"
-                            ref="password"
-                            v-model="loginForm.password"
-                            :type="passwordType"
-                            placeholder="Password"
-                            name="password"
-                            tabindex="2"
-                            autocomplete="on"
-                            @keyup.native="checkCapslock"
-                            @blur="capsTooltip = false"
-                            @keyup.enter.native="handleLogin"
-                    />
-                    <span class="show-pwd" @click="showPwd">
-            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"/>
-          </span>
-                </el-form-item>
-            </el-tooltip>
+            <el-form-item prop="password">
+        <span class="svg-container">
+          <svg-icon icon-class="password"/>
+        </span>
+                <el-input
+                        :key="passwordType"
+                        ref="password"
+                        v-model="loginForm.password"
+                        :type="passwordType"
+                        placeholder="密码"
+                        name="password"
+                        tabindex="2"
+                        auto-complete="on"
+                        @keyup.enter.native="handleLogin"
+                />
+                <span class="show-pwd" @click="showPwd">
+          <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"/>
+        </span>
+            </el-form-item>
 
             <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;"
                        @click.native.prevent="handleLogin">Login
             </el-button>
 
-            <div style="position:relative">
-                <div class="tips">
-                    <span>Username : admin</span>
-                    <span>Password : any</span>
-                </div>
-                <div class="tips">
-                    <span style="margin-right:18px;">Username : editor</span>
-                    <span>Password : any</span>
-                </div>
 
-                <el-button class="thirdparty-button" type="primary" @click="showDialog=true">
-                    Or connect with
-                </el-button>
-            </div>
         </el-form>
-
-        <el-dialog title="Or connect with" :visible.sync="showDialog">
-            Can not be simulated on local, so please combine you own business simulation! ! !
-            <br>
-            <br>
-            <br>
-            <social-sign/>
-        </el-dialog>
-        ssssss
     </div>
 </template>
 
 <script>
-    import {validUsername} from '@/utils/validate'
 
     export default {
         name: "Login",
         data() {
             const validateUsername = (rule, value, callback) => {
-                if (!validateUsername(value)) {
+                if (value.length < 1) {
                     callback(new Error('请输入你的用户名'))
                 } else {
                     callback()
@@ -98,11 +71,12 @@
                 }
             }
             return {
-                loginFrom: {
+                loginForm: {
                     username: 'root',
                     password: '123456'/*默认*/
                 },
-                loginRules: {/*?????????*/
+
+                loginRules: {
                     username: [{required: true, trigger: 'blur', validator: validateUsername}],
                     password: [{required: true, trigger: 'blur', validator: validatePassword}]
                 },
@@ -110,30 +84,17 @@
                 capsTooltip: false,
                 loading: false,
                 showDialog: false,
-                redirect: undefined,
-                otherQuery: {}
             }
         },
-        watch: {
-            $route: {
-                handler: function (route) {
-                    const query = route.query
-                    if (query) {
-                        this.redirect = query.redirect
-                        this.redirect = this.getOtherQuery(query)
-                    }
-                },
-                immediate: true
-            }
-        },
+
         created() {//初始化后
 
         },
         mounted() {//创建vm.$el之后
             /*判空*/
-            if (this.loginFrom.username === '') {
+            if (this.loginForm.username === '') {
                 this.$refs.username.focus()
-            } else if (this.loginFrom.password === '') {
+            } else if (this.loginForm.password === '') {
                 this.$refs.password.focus()
             }
         },
@@ -141,40 +102,103 @@
 
         },
         methods: {
-            checkCapslock(e) {
-                const {key} = e
-                this.capsTooltip = key && key.length === 1 && (key >= 'A' && key <= 'Z')
-            },
-            showPwd(){
-                if(this.passwordType==='password'){
-                    this.passwordType=''
-                }else {
-                    this.passwordType='password'
+            showPwd() {
+                if (this.passwordType === 'password') {
+                    this.passwordType = ''
+                } else {
+                    this.passwordType = 'password'
                 }
-                this.$nextTick(()=>{
+                this.$nextTick(() => {
                     this.$refs.password.focus()
                 })
             },
-            handleLogin(){/*登录前检验*/
-                this.$refs.loginFrom.validate(valid=>{
-                    if (valid){
-                        this.loading=true
-                        this.$store.dispatch('user/login',this.loginFrom)
-                        .then(()=>{
-                            this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-                            this.loading = false
-                        })
+            handleLogin() {/*登录前检验*/
+
+                this.$refs.loginForm.validate(valid => {
+                    if (valid) {
+                        this.loading = true
+                        this.$store.dispatch('user/login', this.loginForm)
+                            .then(response => {
+                                console.log(response.data)
+                                if (response.data.code === 401) {
+                                    this.$notify.error({
+                                        title: '错误',
+                                        message: response.data.message
+                                    });
+
+                                } else if (response.data.code === 200) {
+                                    this.$notify.success({
+                                        title: '登录成功',
+                                        message: response.data.message
+                                    });
+                                    this.$router.push({path: '/home' || '/'})
+                                }
+
+                                this.loading = false
+                            })
+                            .catch(() => {
+                                this.loading = false
+                            })
+                    } else {
+                        console.log("错误提交！")
+                        return false
                     }
+
                 })
             }
         }
     }
 </script>
+<style lang="scss" >
+
+
+    $bg:#283443;
+    $light_gray:#fff;
+    $cursor: #fff;
+
+    @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
+        .login-container .el-input input {
+            color: $cursor;
+        }
+    }
+
+    /* reset element-ui css */
+    .login-container {
+        .el-input {
+            display: inline-block;
+            height: 47px;
+            width: 85%;
+
+            input {
+                background: transparent;
+                border: 0px;
+                -webkit-appearance: none;
+                border-radius: 0px;
+                padding: 12px 5px 12px 15px;
+                color: $light_gray;
+                height: 47px;
+                caret-color: $cursor;
+
+                &:-webkit-autofill {
+                    box-shadow: 0 0 0px 1000px $bg inset !important;
+                    -webkit-text-fill-color: $cursor !important;
+                }
+            }
+        }
+
+        .el-form-item {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            color: #454545;
+        }
+    }
+</style>
 
 <style lang="scss" scoped>
-    $bg: #2d3a4b;
-    $dark_gray: #889aa4;
-    $light_gray: #eee;
+    $bg:#2d3a4b;
+    $dark_gray:#889aa4;
+    $light_gray:#eee;
 
     .login-container {
         min-height: 100%;
@@ -231,18 +255,6 @@
             color: $dark_gray;
             cursor: pointer;
             user-select: none;
-        }
-
-        .thirdparty-button {
-            position: absolute;
-            right: 0;
-            bottom: 6px;
-        }
-
-        @media only screen and (max-width: 470px) {
-            .thirdparty-button {
-                display: none;
-            }
         }
     }
 </style>

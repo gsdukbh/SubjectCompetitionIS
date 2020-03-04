@@ -37,7 +37,7 @@ public class ScisRole implements Serializable {
     private String name;
 
     @Fetch(FetchMode.SUBSELECT)
-    @ManyToMany(mappedBy = "roles")
+    @ManyToMany(mappedBy = "roles",fetch = FetchType.EAGER)
     private List<ScisUser> scisUserList;
 
     /**
