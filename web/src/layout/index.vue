@@ -1,97 +1,93 @@
 <template>
-    <el-container style="height: 500px; border: 1px solid #eee">
-        <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
-            <el-menu :default-openeds="['1', '3']">
-                <el-submenu index="1">
-                    <template slot="title"><i class="el-icon-message"></i>导航一</template>
-                    <el-menu-item-group>
-                        <template slot="title">分组一</template>
-                        <el-menu-item index="1-1">选项1</el-menu-item>
-                        <el-menu-item index="1-2">选项2</el-menu-item>
-                    </el-menu-item-group>
-                    <el-menu-item-group title="分组2">
-                        <el-menu-item index="1-3">选项3</el-menu-item>
-                    </el-menu-item-group>
-                    <el-submenu index="1-4">
-                        <template slot="title">选项4</template>
-                        <el-menu-item index="1-4-1">选项4-1</el-menu-item>
-                    </el-submenu>
-                </el-submenu>
-                <el-submenu index="2">
-                    <template slot="title"><i class="el-icon-menu"></i>导航二</template>
-                    <el-menu-item-group>
-                        <template slot="title">分组一</template>
-                        <el-menu-item index="2-1">选项1</el-menu-item>
-                        <el-menu-item index="2-2">选项2</el-menu-item>
-                    </el-menu-item-group>
-                    <el-menu-item-group title="分组2">
-                        <el-menu-item index="2-3">选项3</el-menu-item>
-                    </el-menu-item-group>
-                    <el-submenu index="2-4">
-                        <template slot="title">选项4</template>
-                        <el-menu-item index="2-4-1">选项4-1</el-menu-item>
-                    </el-submenu>
-                </el-submenu>
-                <el-submenu index="3">
-                    <template slot="title"><i class="el-icon-setting"></i>导航三</template>
-                    <el-menu-item-group>
-                        <template slot="title">分组一</template>
-                        <el-menu-item index="3-1">选项1</el-menu-item>
-                        <el-menu-item index="3-2">选项2</el-menu-item>
-                    </el-menu-item-group>
-                    <el-menu-item-group title="分组2">
-                        <el-menu-item index="3-3">选项3</el-menu-item>
-                    </el-menu-item-group>
-                    <el-submenu index="3-4">
-                        <template slot="title">选项4</template>
-                        <el-menu-item index="3-4-1">选项4-1</el-menu-item>
-                    </el-submenu>
-                </el-submenu>
-            </el-menu>
-        </el-aside>
-
-        <el-container>
-            <el-header style="text-align: right; font-size: 12px">
-                <el-dropdown>
-                    <i class="el-icon-setting" style="margin-right: 15px"></i>
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item>查看</el-dropdown-item>
-                        <el-dropdown-item>新增</el-dropdown-item>
-                        <el-dropdown-item>删除</el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
-                <span>王小虎</span>
-            </el-header>
-
-            <el-main>
-                <el-table :data="tableData">
-                    <el-table-column prop="date" label="日期" width="140">
-                    </el-table-column>
-                    <el-table-column prop="name" label="姓名" width="120">
-                    </el-table-column>
-                    <el-table-column prop="address" label="地址">
-                    </el-table-column>
-                </el-table>
-            </el-main>
-        </el-container>
-    </el-container>
-
+  <div :class="classObj" class="app-wrapper">
+    <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
+    <sidebar class="sidebar-container" />
+    <div class="main-container">
+      <div :class="{'fixed-header':fixedHeader}">
+        <navbar />
+      </div>
+      <app-main />
+    </div>
+  </div>
 </template>
 
 <script>
-    export default {
-        name: "index"
+import { Navbar, Sidebar, AppMain } from './components'
+import ResizeMixin from './mixin/ResizeHandler'
+
+export default {
+  name: 'Layout',
+  components: {
+    Navbar,
+    Sidebar,
+    AppMain
+  },
+  mixins: [ResizeMixin],
+  computed: {
+    sidebar() {
+      return this.$store.state.app.sidebar
+    },
+    device() {
+      return this.$store.state.app.device
+    },
+    fixedHeader() {
+      return this.$store.state.settings.fixedHeader
+    },
+    classObj() {
+      return {
+        hideSidebar: !this.sidebar.opened,
+        openSidebar: this.sidebar.opened,
+        withoutAnimation: this.sidebar.withoutAnimation,
+        mobile: this.device === 'mobile'
+      }
     }
+  },
+  methods: {
+    handleClickOutside() {
+      this.$store.dispatch('app/closeSideBar', { withoutAnimation: false })
+    }
+  }
+}
 </script>
 
-<style scoped>
-    .el-header {
-        background-color: #B3C0D1;
-        color: #333;
-        line-height: 60px;
-    }
+<style lang="scss" scoped>
+  @import "~@/styles/mixin.scss";
+  @import "~@/styles/variables.scss";
 
-    .el-aside {
-        color: #333;
+  .app-wrapper {
+    @include clearfix;
+    position: relative;
+    height: 100%;
+    width: 100%;
+    &.mobile.openSidebar{
+      position: fixed;
+      top: 0;
     }
+  }
+  .drawer-bg {
+    background: #000;
+    opacity: 0.3;
+    width: 100%;
+    top: 0;
+    height: 100%;
+    position: absolute;
+    z-index: 999;
+  }
+
+  .fixed-header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 9;
+    width: calc(100% - #{$sideBarWidth});
+    transition: width 0.28s;
+  }
+
+  .hideSidebar .fixed-header {
+    width: calc(100% - 54px)
+  }
+
+  .mobile .fixed-header {
+    width: 100%;
+  }
 </style>

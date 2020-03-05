@@ -1,6 +1,6 @@
 import {getInfo, logout, postFrom} from '../../api/api'
 import { getToken, setToken, removeToken } from '../../utils/auth'
-import router, { resetRouter } from '../../router'
+import { resetRouter } from '../../router'
 
 const state = {
   token: getToken(),
@@ -32,8 +32,9 @@ const actions = {
   // 用户登录 异步
   login({commit}, userInfo) {
 
-    const {username, password} = userInfo
+
     return new Promise((resolve, reject) => {
+
       postFrom("/login", userInfo)
           .then(response => {
             const {data} = response
@@ -57,16 +58,18 @@ const actions = {
           reject('验证失败，请重新登录.')
         }
 
-        const { role, message, code } = data
-        console.log(role)
+      const { role, message, code,avatar } = data
+        console.log(message,code)
+
         // 角色必须是非空数组
+
         if (!role || role.length <= 0) {
           reject('getInfo：角色必须为非null数组!')
         }
 
         commit('SET_ROLES', role)
         commit('SET_NAME', data.data.name)
-        // commit('SET_AVATAR', avatar)
+        commit('SET_AVATAR', avatar||'https://avatars3.githubusercontent.com/u/43371824?s=460&v=4')
         // commit('SET_INTRODUCTION', introduction)
 
         resolve(data)
@@ -106,31 +109,6 @@ const actions = {
     })
   },
 
-  // 动态修改权限
-  changeRoles({ commit, dispatch }, role) {
-    return new Promise(async resolve => {
-      const token = role + '-token'
-
-      commit('SET_TOKEN', token)
-
-      setToken(token)
-
-      const { roles } = await dispatch('getInfo')
-
-      resetRouter()
-
-      // 根据角色生成可访问的路线图
-      const accessRoutes = await dispatch('permission/generateRoutes', roles, { root: true })
-
-      //动态添加可访问的路线
-      router.addRoutes(accessRoutes)
-
-      // 重置访问的视图和缓存的视图
-      dispatch('tagsView/delAllViews', null, { root: true })
-
-      resolve()
-    })
-  }
 }
 
 export default {

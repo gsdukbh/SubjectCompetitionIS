@@ -7,6 +7,8 @@
     admin
   </div>
 </template>
+
+
 <style  lang="scss" scoped>
   .svg-container {
     padding: 6px 5px 6px 15px;

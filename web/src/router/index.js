@@ -10,10 +10,11 @@ Vue.use(VueRouter)
 export const publicRoutes = [
   {
     path: '/',
-    name: 'Home',
+    name: 'Dashboard',
     component: Home,
     meta:{
-      title:'home'
+      title:'首页',
+      icon:'dashboard'
     }
   },
   {
@@ -38,16 +39,15 @@ export const publicRoutes = [
         name:'s',
         component:About,
         meta:{
-          title:'管理员',
-          roles:['ROLE_ADMIN']
+          title:'ces',
         }
       },
       {
         path:'/user',
-        name:'login',
+        name:'ss',
         component:Home,
         meta:{
-          title:'管理员',
+          title:'111',
         }
       }
     ]
@@ -68,6 +68,7 @@ export const asyncRoutes =[
     component:About,
     meta:{
       title:'管理员',
+      icon:'dashboard',
       roles:['ROLE_ADMIN']
     }
   },

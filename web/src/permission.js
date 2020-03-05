@@ -8,7 +8,7 @@ import getPageTitle from './utils/get-page-title'
 
 NProgress.configure({ showSpinner: false })
 
-const whiteList = ['/login']
+const whiteList = ['/login','/']
 
 router.beforeEach(async(to, from, next) => {
 
@@ -23,7 +23,7 @@ router.beforeEach(async(to, from, next) => {
     if (to.path === '/login') {
      //如果已登录，请重定向到主页
 
-      next({ path: '/' })
+      next({ path: '/home' })
 
       NProgress.done()
 
@@ -38,8 +38,11 @@ router.beforeEach(async(to, from, next) => {
         try {
        //获取用户信息
 
-          await store.dispatch('user/getInfo')
-
+         const {role}= await store.dispatch('user/getInfo')
+          /*加载权限路径*/
+          console.log(role)
+          const authorityRouter = await store.dispatch('permission/generateRoutes',role)
+          router.addRoutes(authorityRouter)
           next()
         } catch (error) {
 
@@ -56,7 +59,8 @@ router.beforeEach(async(to, from, next) => {
     /* has no token*/
 
     if (whiteList.indexOf(to.path) !== -1) {
-    //在免费的登录白名单中，直接进入
+
+    //在登录白名单中，直接进入
       next()
     } else {
      //将其他无权访问的页面重定向到登录页面.
