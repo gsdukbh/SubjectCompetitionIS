@@ -5,7 +5,7 @@ import app from "./modules/app";
 import getters from "./getters";
 import settings from "./modules/settings";
 import permission from "./modules/permission";
-
+import tagsView from "./modules/tagsView";
 
 Vue.use(Vuex)
 
@@ -28,6 +28,7 @@ export default new Vuex.Store({
     user,
     app,
     settings,
-    permission
+    permission,
+    tagsView
   }
 })

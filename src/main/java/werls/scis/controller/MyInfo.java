@@ -29,7 +29,7 @@ import java.util.Map;
 public class MyInfo {
     @Autowired
     UserServiceImpl userService;
-    
+
     @Cacheable(value = "uInfo",key = "#info",unless = "#result == null")
     @PostMapping(value = "/i")
     public String getUserInfo(@Param("info") String info) {

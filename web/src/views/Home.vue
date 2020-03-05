@@ -18,7 +18,7 @@
 // @ is an alias to /src
 
 export default {
-  name: 'Dashboard',
+  name: '111',
     methods:{
         open4() {
             this.$notify.success({

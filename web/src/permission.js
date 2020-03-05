@@ -8,7 +8,7 @@ import getPageTitle from './utils/get-page-title'
 
 NProgress.configure({ showSpinner: false })
 
-const whiteList = ['/login','/']
+const whiteList = ['/login','/**']
 
 router.beforeEach(async(to, from, next) => {
 
@@ -43,13 +43,15 @@ router.beforeEach(async(to, from, next) => {
           console.log(role)
           const authorityRouter = await store.dispatch('permission/generateRoutes',role)
           router.addRoutes(authorityRouter)
-          next()
+          next({...to,replace:true})
+
         } catch (error) {
 
          //删除令牌并转到登录页面以重新登录
           await store.dispatch('user/resetToken')
 
           Message.error(error || 'Has Error')
+
           next(`/login?redirect=${to.path}`)
           NProgress.done()
         }
@@ -59,10 +61,12 @@ router.beforeEach(async(to, from, next) => {
     /* has no token*/
 
     if (whiteList.indexOf(to.path) !== -1) {
-
+      console.log("toooooo")
     //在登录白名单中，直接进入
       next()
+
     } else {
+      console.log("toooooo")
      //将其他无权访问的页面重定向到登录页面.
       next(`/login?redirect=${to.path}`)
       NProgress.done()

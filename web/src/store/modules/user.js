@@ -41,6 +41,7 @@ const actions = {
             commit('SET_TOKEN', data.token)//使用用户名
             setToken(data.token)
             resolve(response)
+            // this.getInfo(commit)
           })
           .catch(errors => {
             reject(errors)
@@ -60,11 +61,11 @@ const actions = {
 
       const { role, message, code,avatar } = data
         console.log(message,code)
-
+        console.log(role)
         // 角色必须是非空数组
 
         if (!role || role.length <= 0) {
-          reject('getInfo：角色必须为非null数组!')
+          reject(message)
         }
 
         commit('SET_ROLES', role)

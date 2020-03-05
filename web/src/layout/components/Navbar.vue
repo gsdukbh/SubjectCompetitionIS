@@ -44,6 +44,11 @@ export default {
       'avatar'
     ])
   },
+  data(){
+    return {
+      name:'',
+    }
+  },
   methods: {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
