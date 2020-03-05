@@ -4,7 +4,6 @@ import defaultSettings from '../../settings'
 const { showSettings, tagsView, fixedHeader, sidebarLogo } = defaultSettings
 
 const state = {
-  // theme: variables.theme,
   showSettings: showSettings,
   tagsView: tagsView,
   fixedHeader: fixedHeader,
@@ -12,8 +11,13 @@ const state = {
 }
 
 const mutations = {
+
   CHANGE_SETTING: (state, { key, value }) => {
-    if (state.hasOwnProperty(key)) {
+    //不安全的写法,在 "eslint": "^6.7.2",中 提示错误 by LiJiWei
+    // if (state.hasOwnProperty(key)) {
+    //   state[key] = value
+    // }
+    if(Object.prototype.hasOwnProperty.call(state,key)){
       state[key] = value
     }
   }

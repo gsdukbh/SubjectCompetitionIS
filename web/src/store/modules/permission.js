@@ -6,9 +6,12 @@ import { asyncRoutes, publicRoutes } from '../../router'
  * @param route
  */
 function hasPermission(roles, route) {
+
   if (route.meta && route.meta.roles) {
+    console.log("sccccccss")
     return roles.some(role => route.meta.roles.includes(role))
   } else {
+    console.log("aaaa")
     return true
   }
 }
@@ -37,6 +40,7 @@ const state = {
 
 const mutations = {
   SET_ROUTES: (state, routes) => {
+    console.log("今天今天i几天内")
     state.addRoutes = routes
     state.routes = publicRoutes.concat(routes)
   }
@@ -47,12 +51,13 @@ const actions = {
     return new Promise(resolve => {
       let accessedRoutes
       if (roles.includes('ROLE_ADMIN')||roles.includes('ROLE_STU')) {
-        console.log("kkkkkkkkkkkkkk")
 
-        accessedRoutes = asyncRoutes
 
+        accessedRoutes = asyncRoutes || []
+        console.log(accessedRoutes)
       } else {
-        console.log("ssssssssssss")
+        console.log("ssssssssssss"+roles)
+
         accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
       }
       commit('SET_ROUTES', accessedRoutes)

@@ -1,15 +1,15 @@
 import store from '@/store'
 
 const { body } = document
-const WIDTH = 992 // refer to Bootstrap's responsive design
+const WIDTH = 992 // 参考Bootstrap的响应式设计
 
 export default {
   watch: {
-    $route(route) {
-      if (this.device === 'mobile' && this.sidebar.opened) {
-        store.dispatch('app/closeSideBar', { withoutAnimation: false })
-      }
-    }
+    // $route(route) {
+    //   if (this.device === 'mobile' && this.sidebar.opened) {
+    //     store.dispatch('app/closeSideBar', { withoutAnimation: false })
+    //   }
+    // }
   },
   beforeMount() {
     window.addEventListener('resize', this.$_resizeHandler)
@@ -25,7 +25,7 @@ export default {
     }
   },
   methods: {
-    // use $_ for mixins properties
+    // 使用$ _作为mixins属性
     // https://vuejs.org/v2/style-guide/index.html#Private-property-names-essential
     $_isMobile() {
       const rect = body.getBoundingClientRect()

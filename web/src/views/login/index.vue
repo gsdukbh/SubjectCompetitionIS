@@ -84,6 +84,7 @@
                 capsTooltip: false,
                 loading: false,
                 showDialog: false,
+
             }
         },
 
@@ -131,7 +132,7 @@
                                         title: '登录成功',
                                         message: response.data.message
                                     });
-                                    this.$router.push({path: '/home' || '/'})
+                                 this.$router.push({path: '/home' || '/'})
                                 }
 
                                 this.loading = false

@@ -8,7 +8,7 @@ import getPageTitle from './utils/get-page-title'
 
 NProgress.configure({ showSpinner: false })
 
-const whiteList = ['/login','/**']
+const whiteList = ['/login']
 
 router.beforeEach(async(to, from, next) => {
 
@@ -39,10 +39,13 @@ router.beforeEach(async(to, from, next) => {
        //获取用户信息
 
          const {role}= await store.dispatch('user/getInfo')
+
           /*加载权限路径*/
-          console.log(role)
+
           const authorityRouter = await store.dispatch('permission/generateRoutes',role)
+
           router.addRoutes(authorityRouter)
+          console.log(router)
           next({...to,replace:true})
 
         } catch (error) {

@@ -32,11 +32,11 @@ import AppLink from './Link'
 import FixiOSBug from './FixiOSBug'
 
 export default {
-  name: 'SidebarItem',
+  name: 'barItem',
   components: { Item, AppLink },
   mixins: [FixiOSBug],
   props: {
-    // route object
+    // 路线对象
     item: {
       type: Object,
       required: true
@@ -51,8 +51,7 @@ export default {
     }
   },
   data() {
-    // To fix https://github.com/PanJiaChen/vue-admin-template/issues/237
-    // TODO: refactor with render function
+
     this.onlyOneChild = null
     return {}
   },
@@ -62,18 +61,18 @@ export default {
         if (item.hidden) {
           return false
         } else {
-          // Temp set(will be used if only has one showing child)
+         //临时集（如果只有一个显示子级，将使用它）
           this.onlyOneChild = item
           return true
         }
       })
 
-      // When there is only one child router, the child router is displayed by default
+      //当只有一个子路由器时，默认情况下会显示该子路由器
       if (showingChildren.length === 1) {
         return true
       }
 
-      // Show parent if there are no child router to display
+      // 如果没有子路由器要显示，请显示父级
       if (showingChildren.length === 0) {
         this.onlyOneChild = { ... parent, path: '', noShowingChildren: true }
         return true
