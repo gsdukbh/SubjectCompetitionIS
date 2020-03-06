@@ -122,7 +122,21 @@ public class Public {
             res.put("code", 200);
             /*通过手机发送验证码*/
             return JSON.toJSONString(res);
-
+        }
+    }
+    @PostMapping(value = "/password/recover/find")
+    public String pwdReByAny(@Param("id")String info){
+        Map<String, Object> res = new HashMap<>();
+        ScisUser user = userService.findByLoginOrPhoneOrIdentityOrEmail(info);
+        if (user==null){
+            res.put("code", 404);
+            res.put("message", "没有该用户");
+            return JSON.toJSONString(res);
+        }else {
+            res.put("code", 200);
+            res.put("message", "有该用户");
+            res.put("email",user.getEmail());
+            return JSON.toJSONString(res);
         }
     }
 }

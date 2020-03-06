@@ -45,8 +45,8 @@
 
                     <el-tooltip class="item" effect="dark" content="个人中心" placement="left-end">
 
-                        <div class="avatar-wrapper" >
-                            <img :src="avatar" class="user-avatar" >
+                        <div class="avatar-wrapper">
+                            <img :src="avatar" class="user-avatar">
                             <i class="el-icon-caret-bottom"/>
                         </div>
                     </el-tooltip>
@@ -61,12 +61,17 @@
                         <a target="_blank" href="https://github.com/gsdukbh/SubjectCompetitionIS">
                             <el-dropdown-item>Github</el-dropdown-item>
                         </a>
-                        <div >
 
+                        <div v-if="islogin === false">
+                            <el-dropdown-item divided @click.native="login">
+                                <span style="display:block;">Login</span>
+                            </el-dropdown-item>
                         </div>
-                        <el-dropdown-item divided @click.native="logout">
-                            <span style="display:block;">Log Out</span>
-                        </el-dropdown-item>
+                        <div v-else>
+                            <el-dropdown-item divided @click.native="logout">
+                                <span style="display:block;">Log Out</span>
+                            </el-dropdown-item>
+                        </div>
 
                     </el-dropdown-menu>
 
@@ -81,13 +86,14 @@
         </div>
 
 
-    </div >
+    </div>
 </template>
 
 <script>
-
+    import {getToken} from '@/utils/auth'
     import Search from '@/components/HeaderSearch'
     import {mapGetters} from "vuex";
+
     export default {
         name: "publicLayout",
         components: {
@@ -106,13 +112,27 @@
         data() {
             return {
                 activeIndex: '',
-
+                islogin: false
+            }
+        },
+        mounted() {
+            const hasToken = getToken()
+            if (hasToken) {
+                this.islogin = true
             }
         },
         methods: {
             handleSelect(key, keyPath) {
                 console.log(key, keyPath);
+            },
+            login(){
+                this.$router.push({path:'/login'})
+            },
+            async logout() {
+                await this.$store.dispatch('user/logout')
+                await this.$router.push(`/login?redirect=${this.$route.fullPath}`)
             }
+
         }
     }
 </script>
