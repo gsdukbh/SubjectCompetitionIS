@@ -51,12 +51,12 @@ public class UserServiceImpl implements UserDetailsService {
      * 需要完整的user
      * @param user 用户
      */
-    @CachePut(value = "UserList",key = "1")
+
     @Transactional(rollbackFor = Exception.class)
     public void save(ScisUser user) {
         userRepository.save(user);
     }
-    @CachePut(value = "UserList",key = "1")
+
     @Transactional(rollbackFor = Exception.class)
     public void saveAll(List<ScisUser> user) {
         userRepository.saveAll(user);
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserDetailsService {
     public List<ScisUser> findAll() {
        return userRepository.findAll();
     }
-    @Cacheable(value = "UserList",key = "1" ,unless = "#result == null")
+
     @Transactional(rollbackFor = Exception.class)
     public Page<ScisUser> findAll(Pageable pageable) {
         return userRepository.findAll(pageable);
@@ -108,6 +108,7 @@ public class UserServiceImpl implements UserDetailsService {
         this.userRepository.deleteById(id);
     }
 
+    /*查询时非常的久*/
 
     public ScisUser findByLoginOrPhoneOrIdentityOrEmail(String login){
         return this.userRepository.findByLoginOrPhoneOrIdentityOrEmail(login,login,login,login);

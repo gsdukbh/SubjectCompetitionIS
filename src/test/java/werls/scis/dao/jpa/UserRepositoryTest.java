@@ -39,13 +39,12 @@ class UserRepositoryTest {
     private RedisTemplate<String, String> redisTemplate;
 
 
-
     @Test
     void findByLogin() {
         ScisUser userVo = new ScisUser();
         TimeUnit timeUnit;
         System.out.println(TimeUnit.HOURS.toSeconds(1));
-       redisTemplate.opsForValue().set("wo","12121",10,TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set("wo", "12121", 10, TimeUnit.MINUTES);
         System.out.println(redisTemplate.opsForValue().get("wo"));
 
     }

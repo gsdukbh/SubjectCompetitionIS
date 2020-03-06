@@ -4,6 +4,8 @@ import Home from '../views/Home.vue'
 // import About from '../views/About'
 import Login from '../views/login'
 import Layout from '../layout'
+import publicLayout from '../layout/components/public'
+
 
 Vue.use(VueRouter)
 
@@ -17,6 +19,45 @@ export const publicRoutes = [
             title: '登录'
         }
     },
+
+    {
+        path: '/password/recover',
+        component: publicLayout,
+        hidden: true,
+        redirect:'/password/recover/index',
+        meta: {
+            title: '密码重置'
+        },
+        children: [
+            {
+
+                path: "/password/recover/index",
+                component: () => import('../views/login/pwdRe/index'),
+                name: '密码重置',
+
+            }
+        ]
+
+    },
+    /*公开的页面*/
+    {
+        path:'/public',
+        component: publicLayout,
+        hidden: true,
+        redirect:'/public/index',
+        children: [
+            {
+                path: '/public/index',
+                component:()=>import('../views/public/index')
+            }
+        ]
+    },
+    {
+        path: '/404',
+        component: () => import('@/views/error-page/404'),
+        hidden: true
+    },
+
     // {
     //     path: '/about',
     //     name: 'About',
@@ -62,10 +103,17 @@ export const asyncRoutes = [
     },
 
 
-    {path: '*', redirect: '/404', hidden: true}
+    {
+        path: '*',
+        redirect: '/404',
+        hidden: true,
+        meta: {
+            title: '404'
+        }
+    }
 ]
 const createRouter = () => new VueRouter({
-    // mode: 'history',
+    mode: 'history',
     base: process.env.BASE_URL,
     scrollBehavior: () => ({y: 0}),
     routes: publicRoutes

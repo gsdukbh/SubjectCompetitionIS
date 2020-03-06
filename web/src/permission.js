@@ -1,83 +1,90 @@
 import router from './router'
 import store from './store'
-import { Message } from 'element-ui'
+import {Message} from 'element-ui'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
-import { getToken } from './utils/auth'
+import {getToken} from './utils/auth'
 import getPageTitle from './utils/get-page-title'
 
-NProgress.configure({ showSpinner: false })
+import {whiteList} from './utils/validate'
+NProgress.configure({showSpinner: false})
 
-const whiteList = ['/login']
+// const whiteList = ['/login','/','/password/recover']
 
-router.beforeEach(async(to, from, next) => {
 
-  NProgress.start()
+router.beforeEach(async (to, from, next) => {
 
-  document.title = getPageTitle(to.meta.title)
+    NProgress.start()
 
- //确定用户是否已登录
-  const hasToken = getToken()
+    document.title = getPageTitle(to.meta.title)
 
-  if (hasToken) {
-    if (to.path === '/login') {
-     //如果已登录，请重定向到主页
+    //确定用户是否已登录
+    const hasToken = getToken()
 
-      next({ path: '/home' })
+    if (hasToken) {
+        if (to.path === '/login') {
+            //如果已登录，请重定向到主页
 
-      NProgress.done()
+            next({path: '/home'})
 
+            NProgress.done()
+
+        } else {
+            const hasRoles = store.getters.roles && store.getters.roles.length > 0
+
+            if (hasRoles) {
+
+                next()
+
+            } else {
+                try {
+                    //获取用户信息
+
+                    const {role} = await store.dispatch('user/getInfo')
+
+                    /*加载权限路径*/
+
+                    const authorityRouter = await store.dispatch('permission/generateRoutes', role)
+
+                    router.addRoutes(authorityRouter)
+
+                    next({...to, replace: true})
+
+                } catch (error) {
+
+                    //删除令牌并转到登录页面以重新登录
+                    await store.dispatch('user/resetToken')
+
+                    Message.error(error || 'Has Error')
+
+                    next(`/login?redirect=${to.path}`)
+                    NProgress.done()
+                }
+            }
+        }
     } else {
-      const hasRoles = store.getters.roles && store.getters.roles.length > 0
+        /* has no token*/
+        //
 
-      if (hasRoles) {
+        if (whiteList(to.path)) {
 
-        next()
+        //在登录白名单中，直接进入
+          next()
 
-      } else {
-        try {
-       //获取用户信息
+          NProgress.done()
 
-         const {role}= await store.dispatch('user/getInfo')
+        } else {
 
-          /*加载权限路径*/
+         //将其他无权访问的页面重定向到登录页面.
+          next(`/public?redirect=${to.path}`)
 
-          const authorityRouter = await store.dispatch('permission/generateRoutes',role)
-
-          router.addRoutes(authorityRouter)
-          console.log(router)
-          next({...to,replace:true})
-
-        } catch (error) {
-
-         //删除令牌并转到登录页面以重新登录
-          await store.dispatch('user/resetToken')
-
-          Message.error(error || 'Has Error')
-
-          next(`/login?redirect=${to.path}`)
           NProgress.done()
         }
-      }
-    }
-  } else {
-    /* has no token*/
 
-    if (whiteList.indexOf(to.path) !== -1) {
-      console.log("toooooo")
-    //在登录白名单中，直接进入
-      next()
-
-    } else {
-      console.log("toooooo")
-     //将其他无权访问的页面重定向到登录页面.
-      next(`/login?redirect=${to.path}`)
-      NProgress.done()
     }
-  }
 })
 
 router.afterEach(() => {
-  // finish progress bar
-  NProgress.done()
+    // 完成进度栏
+    NProgress.done()
 })

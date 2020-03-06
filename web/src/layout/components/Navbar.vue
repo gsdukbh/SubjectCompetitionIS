@@ -9,6 +9,7 @@
       <template v-if="device!=='mobile'">
 
         <search id="header-search" class="right-menu-item" />
+
       </template>
 
       <el-dropdown class="avatar-container" trigger="click">
@@ -16,21 +17,27 @@
           <img :src="avatar" class="user-avatar">
           <i class="el-icon-caret-bottom" />
         </div>
+
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/home">
             <el-dropdown-item>
               Home
             </el-dropdown-item>
           </router-link>
+
           <a target="_blank" href="https://github.com/gsdukbh/SubjectCompetitionIS">
             <el-dropdown-item>Github</el-dropdown-item>
           </a>
+
           <el-dropdown-item divided @click.native="logout">
             <span style="display:block;">Log Out</span>
           </el-dropdown-item>
+
         </el-dropdown-menu>
+
       </el-dropdown>
     </div>
+
   </div>
 </template>
 

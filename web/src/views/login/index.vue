@@ -14,7 +14,7 @@
                 <el-input
                         ref="username"
                         v-model="loginForm.username"
-                        placeholder="用户名"
+                        placeholder="学号/工号/身份号/手机/邮箱"
                         name="username"
                         type="text"
                         tabindex="1"
@@ -22,7 +22,7 @@
                 />
             </el-form-item>
 
-            <el-form-item prop="password">
+            <el-form-item prop="password3">
         <span class="svg-container">
           <svg-icon icon-class="password"/>
         </span>
@@ -46,6 +46,22 @@
                        @click.native.prevent="handleLogin">Login
             </el-button>
 
+            <div style="position:relative">
+                <div class="tips">
+                    <span> <el-link type="primary" @click="toHome">返回首页</el-link></span>
+
+                </div>
+                <div class="tips">
+                    <span style="margin-right:18px;">
+                        <el-link type="primary" >{{msg}}</el-link>
+                    </span>
+                </div>
+
+                <el-button class="thirdparty-button" type="primary" @click="passwordRecover">
+                    忘记密码
+                </el-button>
+
+            </div>
 
         </el-form>
     </div>
@@ -83,8 +99,7 @@
                 passwordType: 'password',
                 capsTooltip: false,
                 loading: false,
-                showDialog: false,
-
+                msg:''
             }
         },
 
@@ -120,7 +135,7 @@
                         this.loading = true
                         this.$store.dispatch('user/login', this.loginForm)
                             .then(response => {
-                                console.log(response.data)
+
                                 if (response.data.code === 401) {
                                     this.$notify.error({
                                         title: '错误',
@@ -141,11 +156,22 @@
                                 this.loading = false
                             })
                     } else {
-                        console.log("错误提交！")
+                        this.$notify.error({
+                            title: '错误',
+                            message: "错误提交"
+                        });
                         return false
                     }
 
                 })
+            },
+            passwordRecover(){
+                this.$router.push({path:'/password/recover'});
+                console.log("忘记")
+            },
+            toHome(){
+                console.log("home")
+                this.$router.push({path:'/'});
             }
         }
     }
@@ -256,6 +282,16 @@
             color: $dark_gray;
             cursor: pointer;
             user-select: none;
+        }
+        .thirdparty-button {
+            position: absolute;
+            right: 0;
+            bottom: 6px;
+        }
+        @media only screen and (max-width: 470px) {
+            .thirdparty-button {
+                display: none;
+            }
         }
     }
 </style>
