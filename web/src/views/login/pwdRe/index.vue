@@ -15,11 +15,10 @@
 
             <el-divider class="bg"></el-divider>
 
-            <el-card class="box-card" v-show="card === 0">
+            <el-card class="box-card" v-if="card === 0">
                 <div slot="header" class="clearfix">
                     <span>找回密码</span>
 
-                    <!--   <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
 
                 </div>
 
@@ -30,34 +29,68 @@
                         <el-input class="input" v-model="ruleForm.name" placeholder="请输入学号/工号/身份号/手机/邮箱"></el-input>
                     </el-form-item>
 
-                    <el-form-item class="item" label="手机验证" prop="delivery">
-
-                        <el-switch class="sw" v-model="ruleForm.delivery"></el-switch>
-
-                    </el-form-item>
 
                     <el-form-item class="button">
 
-                        <el-button type="primary"  @click="submitForm('ruleForm')">立即创建</el-button>
+                        <!--完成验证码 Popover 弹出框-->
+                        <el-popover
+                                placement="right"
+                                width="400"
+                                trigger="click">
+
+                            <slide-verify :l="50"
+                                          :r="10"
+                                          :w="310"
+                                          :h="155"
+                                          :imgs="imgs"
+                                          @success="onSuccess"
+                                          @fail="onFail"
+                                          @refresh="onRefresh"
+                                          :slider-text="text"
+                                          class="span"
+                            ></slide-verify>
+
+                            <el-button type="primary" slot="reference" @click="submitForm('ruleForm')">立即找回</el-button>
+
+                        </el-popover>
+
                         <el-button @click="resetForm('ruleForm')">重置</el-button>
                     </el-form-item>
 
                 </el-form>
-                <!--完成验证码 Popover 弹出框-->
-                <el-dialog
-                        title="提示"
-                        :visible.sync="dialogVisible"
-                        width="30%"
-                        :before-close="handleClose">
-                    <span>这是一段信息</span>
-
-                </el-dialog>
-
-                <el-button type="primary" round style="margin-top: 12px;" @click="next">下一步</el-button>
-
 
             </el-card>
+            <el-card class="box-card" v-if="card === 1">
+                <div slot="header" class="clearfix">
+                    <span>验证方式</span>
+                </div>
+                <el-form label-width="50px" class="demo-ruleForm">
 
+                    <el-form-item class="item" prop="delivery">
+                        <el-switch
+                                v-model="value1"
+                                active-text="手机验证"
+                                inactive-text="邮箱验证">
+                        </el-switch>
+                    </el-form-item>
+
+                </el-form>
+                <div>
+                    <el-divider></el-divider>
+                    <span v-if="value1 ===false ">你绑定的邮箱账号：{{getData.email}}</span>
+
+                    <span v-if="value1 ===true">少量的邪恶足以抵消全部高贵的品质, 害得人声名狼藉</span>
+                </div>
+                <el-row>
+                    <el-col :span="12">
+                        <el-input v-model="input" class="center "  placeholder="请输入内容"></el-input>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-button type="primary" class="button1" round>主要按钮</el-button>
+                    </el-col>
+
+                </el-row>
+            </el-card>
         </el-card>
     </div>
 
@@ -67,6 +100,7 @@
 
     import Vue from 'vue';
     import SlideVerify from 'vue-monoplasty-slide-verify';
+    import {postFrom} from '../../../api/api'
 
     Vue.use(SlideVerify);
     export default {
@@ -75,50 +109,85 @@
             return {
                 text: '向右滑完成验证',
                 active: 0,
-                card: 0,
+                card: 1,
+                value1: false,
                 dialogVisible: false,
+                loding: true,
+                imgs: [],
                 ruleForm: {
-                    name: '',
+                    name: '1361404576@qq.com',
                     delivery: false,
 
                 },
+                getData: {
+                    email: '',
+                    phone: ''
+                },
                 rules: {
                     name: [
-                        {required: true, message: '请输入活动名称', trigger: 'blur'},
-                        {min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur'}
+                        {required: true, message: '请输入账号信息', trigger: 'blur'},
+                        {min: 3, message: '长度在 3 个字符 以上', trigger: 'blur'}
                     ],
 
                 }
             }
         },
+        mounted() {
+            if (this.ruleForm.name === '') {
+                this.$refs.name.focus()
+            }
+        },
         methods: {
-            next() {
-
-                if (this.active++ > 2)
-                    this.active = 0;
-            },
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        alert('submit!');
+                        return true
                     } else {
                         console.log('error submit!!');
                         return false;
                     }
                 });
             },
+            onSuccess() {
+                this.$message({
+                    message: '验证成功',
+                    type: 'success'
+                });
+                postFrom('/public/password/recover/find', this.ruleForm)
+                    .then(response => {
+                        if (response.data.code === 200) {
+                            this.getData.email = response.data.email || '';
+                            this.getData.phone = response.data.phone || '';
+                            this.card = 1;
+                            this.active = 1
+                        } else {
+                            this.$message.error(response.data.message);
+                        }
+                    })
+                    .catch(error => {
+                        this.$message.error("出现一些问题" + error)
+                    })
+
+            },
+            onFail() {
+
+            },
+            onRefresh() {
+
+            },
             resetForm(formName) {
                 this.$refs[formName].resetFields();
             },
+
             handleClose(done) {
-                this.$confirm('确认关闭？')
+                this.$confirm('放弃验证？')
                     .then(() => {
                         done();
                     })
-                    .catch(() => {});
+                    .catch(() => {
+                    });
             }
         }
-
 
 
     }
@@ -152,25 +221,13 @@
         background-color: rgba(255, 255, 255, 0.8)
     }
 
-    .item {
-
-        position: relative;
-        text-align: center;
-        float: left;
-        display: inline-block;
-    }
-
-    .sw {
-        margin: 0 0 0 0;
-        float: none;
-        display: inline-block;
-        padding: 10px 5px;
-        position: absolute;
-        top: 0;
-    }
 
     .button {
         padding-top: 80px;
+    }
+    .button1{
+       align-content: center;
+
     }
 
     .input {
@@ -179,5 +236,10 @@
 
     .bg {
         background-color: rgba(0, 0, 0, 0.8)
+    }
+
+    .span {
+        text-align: center;
+        left: auto;
     }
 </style>

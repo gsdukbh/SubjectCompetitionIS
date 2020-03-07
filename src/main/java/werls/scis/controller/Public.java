@@ -57,6 +57,7 @@ public class Public {
 
     /**
      * 邮箱重置
+     *
      * @param email 邮箱
      * @return JSON
      */
@@ -85,25 +86,25 @@ public class Public {
     }
 
     @PostMapping(value = "/password/recover/email/code")
-    public  String pwdReByEmailCode(@Param("email") String email,
-                                    @Param("code") String code,
-                                    @Param("password")String password){
+    public String pwdReByEmailCode(@Param("email") String email,
+                                   @Param("code") String code,
+                                   @Param("password") String password) {
         Map<String, Object> res = new HashMap<>();
-        String redisCode =redisTemplate.opsForValue().get(email);
-        if (redisCode == null){
-            res.put("code",404);
+        String redisCode = redisTemplate.opsForValue().get(email);
+        if (redisCode == null) {
+            res.put("code", 404);
             res.put("message", "验证码无效，重新输入");
             return JSON.toJSONString(res);
-        }else if (redisCode.equals(code)){
-            res.put("code",200);
+        } else if (redisCode.equals(code)) {
+            res.put("code", 200);
             res.put("message", "密码修改成功");
             ScisUser user = userService.findByLoginOrPhoneOrIdentityOrEmail(email);
             user.setPassword(new BCryptPasswordEncoder().encode(password));
-            logger.info(user.getName()+"重置了密码");
+            logger.info(user.getName() + "重置了密码");
             userService.save(user);
             return JSON.toJSONString(res);
-        }else {
-            res.put("code",403);
+        } else {
+            res.put("code", 403);
             res.put("message", "验证码错误");
             return JSON.toJSONString(res);
         }
@@ -111,31 +112,39 @@ public class Public {
 
     /*其他方式使用手机验证码重置*/
 
-    public String pwdReByPhone(@Param("id")String phone){
+    public String pwdReByPhone(@Param("id") String phone) {
         Map<String, Object> res = new HashMap<>();
         ScisUser user = userService.findByLoginOrPhoneOrIdentityOrEmail(phone);
-        if (user==null){
+        if (user == null) {
             res.put("code", 404);
             res.put("message", "没有该用户");
             return JSON.toJSONString(res);
-        }else {
+        } else {
             res.put("code", 200);
             /*通过手机发送验证码*/
             return JSON.toJSONString(res);
         }
     }
+
     @PostMapping(value = "/password/recover/find")
-    public String pwdReByAny(@Param("id")String info){
+    public String pwdReByAny(@Param("name") String name) {
         Map<String, Object> res = new HashMap<>();
-        ScisUser user = userService.findByLoginOrPhoneOrIdentityOrEmail(info);
-        if (user==null){
+        ScisUser user = userService.findByLoginOrPhoneOrIdentityOrEmail(name);
+        if (user == null) {
             res.put("code", 404);
             res.put("message", "没有该用户");
             return JSON.toJSONString(res);
-        }else {
+        } else {
             res.put("code", 200);
             res.put("message", "有该用户");
-            res.put("email",user.getEmail());
+            String email = user.getEmail() == null ? null : user.getEmail().substring(0, 3) +
+                    "****" +
+                    user.getEmail().substring(7);
+            String phone = user.getPhone() == null ? null : user.getPhone().substring(0, 3) +
+                    "****" +
+                    user.getPhone().substring(7);
+            res.put("email", email);
+            res.put("phone", phone);
             return JSON.toJSONString(res);
         }
     }

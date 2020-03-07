@@ -70,3 +70,4 @@ export const logout= ()=>{
         url:"/api/logout",
     })
 }
+
