@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -112,7 +113,7 @@ public class Public {
 
     /*其他方式使用手机验证码重置*/
 
-    public String pwdReByPhone(@Param("id") String phone) {
+    public String pwdReByPhone(@Param("phone") String phone) {
         Map<String, Object> res = new HashMap<>();
         ScisUser user = userService.findByLoginOrPhoneOrIdentityOrEmail(phone);
         if (user == null) {
@@ -127,12 +128,14 @@ public class Public {
     }
 
     @PostMapping(value = "/password/recover/find")
+    @Cacheable(value = "pwdReByAny",key = "#name",unless = "#result == null ")
     public String pwdReByAny(@Param("name") String name) {
         Map<String, Object> res = new HashMap<>();
         ScisUser user = userService.findByLoginOrPhoneOrIdentityOrEmail(name);
         if (user == null) {
             res.put("code", 404);
             res.put("message", "没有该用户");
+            logger.info("正在查询："+name);
             return JSON.toJSONString(res);
         } else {
             res.put("code", 200);
@@ -145,6 +148,7 @@ public class Public {
                     user.getPhone().substring(7);
             res.put("email", email);
             res.put("phone", phone);
+            logger.info("查询："+name+"成功");
             return JSON.toJSONString(res);
         }
     }
