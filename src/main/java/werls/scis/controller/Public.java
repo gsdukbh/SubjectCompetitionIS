@@ -49,11 +49,16 @@ public class Public {
     private RedisTemplate<String, String> redisTemplate;
 
     @GetMapping(value = "/1")
-    public String te() {
+    public String te(@RequestParam("me") String test ,@RequestParam("sdddd") String sd ) {
         Map<String, Object> res = new HashMap<>();
         res.put("code", 200);
-        res.put("message", "success");
+        res.put("message", test + sd);
         return JSON.toJSONString(res);
+    }
+    @GetMapping(value = "/kk")
+    public String test(@RequestBody JSONObject jsonParam ) {
+
+        return JSON.toJSONString(jsonParam);
     }
 
     /**
@@ -63,7 +68,7 @@ public class Public {
      * @return JSON
      */
     @PostMapping(value = "/password/recover/email")
-    public String pwdRecoverByEmail(@Param("email") String email) {
+    public String pwdRecoverByEmail(@RequestParam("email") String email) {
         Map<String, Object> res = new HashMap<>();
         ScisUser user = userService.findByLoginOrPhoneOrIdentityOrEmail(email);
         if (user == null) {

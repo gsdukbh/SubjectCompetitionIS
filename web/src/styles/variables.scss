@@ -1,13 +1,13 @@
 // sidebar
-$menuText: #ffffff;
-$menuActiveText:#409EFF;
+$menuText: #000000;
+$menuActiveText: #000000;
 $subMenuActiveText: #000000; //https://github.com/ElemeFE/element/issues/12951
 
-$menuBg:#304156;
-$menuHover:#263445;
+$menuBg: #409EFF;
+$menuHover: #83c9ba;
 
-$subMenuBg:#1f2d3d;
-$subMenuHover:#001528;
+$subMenuBg: rgb(47, 142, 255);
+$subMenuHover: #76baff;
 
 $sideBarWidth: 210px;
 

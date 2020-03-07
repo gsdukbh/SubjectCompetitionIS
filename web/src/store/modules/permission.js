@@ -40,7 +40,7 @@ const state = {
 
 const mutations = {
   SET_ROUTES: (state, routes) => {
-    console.log("今天今天i几天内")
+
     state.addRoutes = routes
     state.routes = publicRoutes.concat(routes)
   }
@@ -50,13 +50,12 @@ const actions = {
   generateRoutes({ commit }, roles) {
     return new Promise(resolve => {
       let accessedRoutes
-      if (roles.includes('ROLE_ADMIN')||roles.includes('ROLE_STU')) {
+      if (roles.includes('ROLE_ADMIN') || roles.includes('ROLE_TEA') || roles.includes('ROLE_STU')) {
 
 
         accessedRoutes = asyncRoutes || []
         console.log(accessedRoutes)
       } else {
-        console.log("ssssssssssss"+roles)
 
         accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
       }

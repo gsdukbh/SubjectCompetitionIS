@@ -4,6 +4,7 @@
                  class="el-menu-demo top"
                  mode="horizontal"
                  text-color="#303133"
+                 active-text-color="#409eff"
                  @select="handleSelect">
             <el-menu-item index="1">处理中心</el-menu-item>
 

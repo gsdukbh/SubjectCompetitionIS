@@ -32,6 +32,7 @@
     "eslint-plugin-vue": "^6.1.2",
     "lint-staged": "^9.5.0",
     "svg-sprite-loader": "^4.1.6",
+    "tui-editor": "^1.4.10",
     "vue-cli-plugin-element": "^1.0.1",
     "vue-cli-plugin-sass-resources-loader": "^1.0.0",
     "vue-cli-plugin-svg-sprite-loader": "~1.0.1",

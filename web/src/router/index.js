@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-// import About from '../views/About'
 import Login from '../views/login'
 import Layout from '../layout'
 import publicLayout from '../layout/components/public'
@@ -39,6 +38,7 @@ export const publicRoutes = [
         ]
 
     },
+
     /*公开的页面*/
     {
         path:'/public',
@@ -52,27 +52,18 @@ export const publicRoutes = [
             }
         ]
     },
+
     {
         path: '/404',
         component: () => import('@/views/error-page/404'),
         hidden: true
     },
 
-    // {
-    //     path: '/about',
-    //     name: 'About',
-    //     // route level code-splitting
-    //     // this generates a separate chunk (about.[hash].js) for this route
-    //     // which is lazy-loaded when the route is visited.
-    //     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-    // },
-
-
 ]
 export const asyncRoutes = [
     {
         path: '/home',
-        name: 'sccc',
+        name: 'dashboard',
         component: Layout,
         meta: {
             title: '管理员',
@@ -91,15 +82,35 @@ export const asyncRoutes = [
         ]
     },
     {
-        path: '/121',
-        name: '121',
+        path: '/competition',
         component: Layout,
-        // hidden:true,
+        alwaysShow: true,
+        name: 'competition',
         meta: {
-            title: '登录ssss',
-            roles: ['ROLE_ADMIN'],
-
-        }
+            title: '竞赛管理',
+            roles: ['ROLE_ADMIN','ROLE_TEA'],
+            icon:'competition'
+        },
+        children : [
+            {
+                path: 'index',
+                component: () => import('../views/competition/index'),
+                name: 'PageCompetition',
+                meta: {
+                    title: '竞赛管理',
+                    roles: ['ROLE_ADMIN'],
+                }
+            },
+            {
+                path: 'publish',
+                name: 'publish',
+                component: () => import('../views/competition/editCompetition'),
+                meta: {
+                    title: '竞赛发布',
+                    roles: ['ROLE_ADMIN','ROLE_TEA'],
+                }
+            }
+        ]
     },
 
 
@@ -112,6 +123,7 @@ export const asyncRoutes = [
         }
     }
 ]
+
 const createRouter = () => new VueRouter({
     mode: 'history',
     base: process.env.BASE_URL,
