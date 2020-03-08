@@ -54,7 +54,7 @@ const actions = {
 
 
         accessedRoutes = asyncRoutes || []
-        console.log(accessedRoutes)
+
       } else {
 
         accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)

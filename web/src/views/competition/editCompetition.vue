@@ -3,9 +3,9 @@
         <el-card shadow="hover" class="card">
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="20%" class="demo-ruleForm">
 
-                    <el-form-item label="竞赛名称" prop="name">
-                        <el-input v-model="ruleForm.name" style="width: 50%"></el-input>
-                    </el-form-item>
+                <el-form-item label="竞赛名称" prop="name">
+                    <el-input v-model="ruleForm.name" style="width: 50%"></el-input>
+                </el-form-item>
 
                 <el-form-item label="竞赛级别" prop="region">
                     <el-select v-model="ruleForm.region" placeholder="请选择竞赛级别">
@@ -14,12 +14,12 @@
                     </el-select>
                 </el-form-item>
 
-                <el-form-item label="承办单位" prop="region">
+                <el-form-item label="承办单位" prop="organizer">
 
-                    <el-select v-model="ruleForm.region" placeholder="请选择竞赛级别">
-
-                        <el-option label="校级" value="校级"></el-option>
-
+                    <el-select v-model="ruleForm.organizer" placeholder="请选择竞赛级别">
+                        <div v-for="item in college" v-bind:key="item.id">
+                            <el-option :label=item.collegeName :value=item.collegeName ></el-option>
+                        </div>
                     </el-select>
 
                 </el-form-item>
@@ -34,7 +34,7 @@
                     </el-col>
 
                     <el-col :span="2">
-                       <p class="p">结束时间： </p>
+                        <p class="p">结束时间： </p>
                     </el-col>
 
                     <el-col :span="5">
@@ -47,8 +47,8 @@
 
                 </el-form-item>
 
-                <el-form-item label="立即发布" prop="delivery">
-                    <el-switch v-model="ruleForm.delivery"></el-switch>
+                <el-form-item label="立即发布" prop="status">
+                    <el-switch v-model="ruleForm.status"></el-switch>
                 </el-form-item>
 
                 <el-form-item label="活动性质" prop="type">
@@ -76,16 +76,19 @@
                     <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
                     <el-button @click="resetForm('ruleForm')">重置</el-button>
                 </el-form-item>
-
             </el-form>
         </el-card>
+
     </div>
 </template>
 
 <script>
 
+    import {getJson} from "../../api/api";
+
     export default {
         name: "editCompetition",
+
         data() {
             return {
                 ruleForm: {
@@ -93,14 +96,20 @@
                     region: '',
                     date1: '',
                     date2: '',
-                    organizer:'',
-                    delivery: false,
+                    organizer: '',
+                    status: false,
                     type: [],
                     resource: '',
                     desc: '',
                     restaurants: [],
                     state: '',
-                    timeout:  null
+                    timeout: null
+                },
+
+                content: '',
+                college: {
+                    id: '',
+                    collegeName: '',
                 },
                 rules: {
                     name: [
@@ -108,7 +117,7 @@
                         {min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur'}
                     ],
                     region: [
-                        {required: true, message: '请选择活动区域', trigger: 'change'}
+                        {required: true, message: '请选择竞赛级别', trigger: 'change'}
                     ],
                     date1: [
                         {type: 'date', required: true, message: '请选择日期', trigger: 'change'}
@@ -124,12 +133,21 @@
                     ],
                     desc: [
                         {required: true, message: '请填写活动形式', trigger: 'blur'}
+                    ],
+                    organizer: [
+                        {required: true, message: '请选择举办单位', trigger: 'change'}
                     ]
                 }
             };
         },
         created() {//初始化后
-            
+            getJson('/api/public/college/findAll')
+                .then(response => {
+                    this.college = response.data.content;
+                })
+            .catch(error =>{
+                this.$message.error("出现了一些问题" + error)
+            })
         },
         methods: {
             submitForm(formName) {
@@ -151,14 +169,14 @@
 </script>
 
 <style scoped>
-.card{
-    align-items: center;
-    width: 90%;
-    margin: 0 auto;
-    padding-top: 10px;
-}
+    .card {
+        align-items: center;
+        width: 90%;
+        margin: 0 auto;
+        padding-top: 10px;
+    }
 
-    .p{
+    .p {
         text-align: center;
     }
 </style>

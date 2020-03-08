@@ -1,6 +1,8 @@
 package werls.scis.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -42,9 +44,11 @@ public class CollegeServiceImpl {
     public Page<ScisCollege> findByCollegeNameLike(String collegeName, Pageable pageable){
         return collegeJpaRepository.findByCollegeNameLike(collegeName, pageable);
     }
+    @CachePut(value = "college",unless = "#result == null ",key = "'college'")
     public void save (ScisCollege college){
         collegeJpaRepository.save(college);
     }
+    @CachePut(value = "college",unless = "#result == null ",key = "'college'")
     public void saveAll (List<ScisCollege> college){
         collegeJpaRepository.saveAll(college);
     }

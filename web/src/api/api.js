@@ -70,4 +70,10 @@ export const logout= ()=>{
         url:"/api/logout",
     })
 }
+export const getJson =(url)=>{
+    return axios({
+        method:'get',
+        url:url,
+    })
+}
 

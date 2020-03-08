@@ -1,8 +1,19 @@
 package werls.scis.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.web.bind.annotation.*;
 import werls.scis.dao.pojo.ScisCompetition;
+import werls.scis.service.CompetitionServiceImpl;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author : LiJiWei
@@ -16,8 +27,46 @@ import werls.scis.dao.pojo.ScisCompetition;
 @RequestMapping("/tea")
 public class CompetitionAdmin {
 
-    public String save(String name,String status){
+    @Autowired
+    CompetitionServiceImpl competitionService;
 
-        return null;
+    @PostMapping("/competition/save")
+    public String save(@RequestBody JSONObject competition) {
+        Map<String, Object> res = new HashMap<>();
+        if (competition != null) {
+            ScisCompetition scisCompetition = new ScisCompetition();
+            scisCompetition.setName(competition.getString("name"));
+            scisCompetition.setAuthor(competition.getString("author"));
+            scisCompetition.setStatus(competition.getString("status"));
+            scisCompetition.setStartTime(competition.getSqlDate("data1"));
+            scisCompetition.setEndTime(competition.getSqlDate("data2"));
+            scisCompetition.setLevel(competition.getString("region"));
+            scisCompetition.setOrganizer(competition.getString("organizer"));
+            scisCompetition.setContent(competition.getString("content"));
+            res.put("code", 200);
+            res.put("message", "ok");
+            competitionService.save(scisCompetition);
+            return JSON.toJSONString(res);
+        }else {
+            res.put("code",404 );
+            res.put("message", "fail");
+            return JSON.toJSONString(res);
+        }
     }
+
+    /**
+     * 默认 开始时间降序排序
+     * @param page 分页
+     * @param size 每页大小
+     * @return Page
+     */
+    @GetMapping("/competition/findAll")
+    @Cacheable(value = "CompetitionAll",key = "#page+#size",unless = "#result == null ")
+    public Page<ScisCompetition> findByAll(@RequestParam(name = "page",defaultValue = "0") Integer page,
+                                           @RequestParam(name ="size",defaultValue = "2" )Integer size){
+        Pageable pageable1= PageRequest.of(page, size, Sort.by("startTime").descending());
+        competitionService.findAll(pageable1);
+        return  competitionService.findAll(pageable1);
+    }
+
 }

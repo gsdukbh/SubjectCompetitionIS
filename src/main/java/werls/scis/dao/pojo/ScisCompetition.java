@@ -28,6 +28,9 @@ public class ScisCompetition implements Serializable {
     @Column(name = "competition_name")
     private String name;
     @Column(name = "competition_status")
+    /**
+     * 0 1 发布 or 未发布
+     */
     private String status;
     @Column(name = "competition_start_time")
     private Date startTime;
@@ -62,11 +65,11 @@ public class ScisCompetition implements Serializable {
      * 竞赛作品
      */
     @Fetch(FetchMode.SUBSELECT)
-    @OneToMany(mappedBy = "competition")
+    @OneToMany(mappedBy = "competition",fetch = FetchType.EAGER)
     private List<ScisWorks> works;
 
     @Fetch(FetchMode.SUBSELECT)
-    @OneToMany(mappedBy = "competition")
+    @OneToMany(mappedBy = "competition",fetch = FetchType.EAGER)
     private List<ScisProblem> problems;
 
     @Override
