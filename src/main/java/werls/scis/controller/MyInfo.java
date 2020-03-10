@@ -44,13 +44,14 @@ public class MyInfo {
             res.put("message", "success");
             res.put("data", user);
             List<String> role= new ArrayList<>();
-            for (ScisRole scisRole: user.getRules() ){
+            for (ScisRole scisRole: user.getRoles() ){
                 role.add(scisRole.getAuthority());
             }
+
 //            res.put("avatar",user)  留坑 头像图片地址
             res.put("role",role);
             user.setPassword("");
-            user.setRules(null);
+            user.setRoles(null);
             return JSON.toJSONString(res);
         }
     }

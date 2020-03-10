@@ -2,35 +2,34 @@
     <div>
 
         竞赛管理
-
-
-        <el-button style="margin-top:80px;" type="primary" icon="el-icon-document" @click="getHtml">
-            Get HTML
-        </el-button>
+        <markdown-viewer height="auto" v-bind="content"/>
         <div v-html="html"></div>
     </div>
 </template>
 
 <script>
-
+    import MarkdownViewer from "../../components/MarkdownViewer/index";
     export default {
         name: "index",
-
+        components: {MarkdownViewer},
         data(){
             return{
-                html:''
-            }
+                html:null,
+                content:'![image](https://uicdn.toast.com/toastui/img/tui-editor-bi.png) \n' +
+                    '' +
+                    '| @cols=2:merged |\n' +
+                    '| --- | --- |\n' +
+                    '| table | table |'
+        }
+        },
+        mounted() {
+
         },
         methods:{
-            getHtml(){
-                this.html = this.$refs.markdownEditor.getValue()
-                console.log(this.CodeBlockManager)
 
-            },
-            CodeBlockManager(){
-              return   this.$refs.markdownEditor.CodeBlockManager()
             }
-        }
+
+
     }
 </script>
 

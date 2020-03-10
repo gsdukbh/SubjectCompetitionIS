@@ -114,6 +114,8 @@ public class UserServiceImpl implements UserDetailsService {
         return this.userRepository.findByLoginOrPhoneOrIdentityOrEmail(login,login,login,login);
     }
 
+
+
     /**
      * Locates the user based on the username. In the actual implementation, the search
      * may possibly be case sensitive, or case insensitive depending on how the
@@ -134,7 +136,7 @@ public class UserServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException("用户名不存在");
         }
         List<GrantedAuthority> authorities = new ArrayList<>();
-        List<ScisRole> rules = user.getRules();
+        List<ScisRole> rules = user.getRoles();
         for (ScisRole rule : rules) {
             authorities.add(new SimpleGrantedAuthority(rule.getAuthority()));
         }

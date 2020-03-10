@@ -6,7 +6,11 @@ import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 /**
  * 用户
  * @author : LiJiWei
@@ -44,13 +48,13 @@ public class ScisUser implements Serializable {
     /**
      * 用户角色
      */
-    @JsonIgnore
+
     @Fetch(FetchMode.SUBSELECT)
     @ManyToMany(cascade = {CascadeType.REFRESH},fetch = FetchType.EAGER)
     @JoinTable(name="Is_role_user",
             joinColumns={@JoinColumn(name="user_id")},
             inverseJoinColumns={@JoinColumn(name="role_id")})
-    private List<ScisRole> roles;
+    private List<ScisRole> roles ;
 
     /**
      * 班级
@@ -148,7 +152,6 @@ public class ScisUser implements Serializable {
         this.status = status;
     }
 
-
     public Integer getId() {
         return id;
     }
@@ -205,14 +208,6 @@ public class ScisUser implements Serializable {
         this.identity = identity;
     }
 
-    public List<ScisRole> getRules() {
-        return roles;
-    }
-
-    public void setRules(List<ScisRole> roles) {
-        this.roles = roles;
-    }
-
     public ScisClass getScisClass() {
         return scisClass;
     }
@@ -244,4 +239,6 @@ public class ScisUser implements Serializable {
     public void setAnnouncements(List<ScisAnnouncement> announcements) {
         this.announcements = announcements;
     }
+
+
 }

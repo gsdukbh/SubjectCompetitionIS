@@ -35,9 +35,12 @@ public class ScisRole implements Serializable {
      */
     @Column(name = "role_name")
     private String name;
-
+    @JsonIgnore
     @Fetch(FetchMode.SUBSELECT)
-    @ManyToMany(mappedBy = "roles",fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name="Is_role_user",
+            joinColumns={@JoinColumn(name="user_id")},
+            inverseJoinColumns={@JoinColumn(name="role_id")})
     private List<ScisUser> scisUserList;
 
     /**
@@ -56,11 +59,12 @@ public class ScisRole implements Serializable {
                 "id=" + id +
                 ", authority='" + authority + '\'' +
                 ", name='" + name + '\'' +
+                ", scisUserList=" + scisUserList +
                 ", menuList=" + menuList +
                 '}';
     }
 
-    @JsonIgnore
+   @JsonIgnore
     public List<ScisUser> getScisUserList() {
         return scisUserList;
     }

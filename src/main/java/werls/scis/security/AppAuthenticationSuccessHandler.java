@@ -50,7 +50,7 @@ public class AppAuthenticationSuccessHandler  implements AuthenticationSuccessHa
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
-        logger.info("登录成功,{}", authentication);
+        logger.info("登录成功");
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("code", 200);
         map.put("message", "登录成功,正在转跳");

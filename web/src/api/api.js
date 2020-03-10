@@ -9,8 +9,7 @@ import  qs from 'qs'
 export const postJson = (url,params)=>{
     return axios({
         method:'post',
-        url:url,
-        baseURI:'/api',
+        url:'/api'+url,
         data:params,
         header:{
         }
@@ -73,7 +72,7 @@ export const logout= ()=>{
 export const getJson =(url)=>{
     return axios({
         method:'get',
-        url:url,
+        url:'/api'+url,
     })
 }
 

@@ -35,14 +35,16 @@ public class CompetitionAdmin {
         Map<String, Object> res = new HashMap<>();
         if (competition != null) {
             ScisCompetition scisCompetition = new ScisCompetition();
+            scisCompetition.setId(competition.getInteger("id"));
             scisCompetition.setName(competition.getString("name"));
             scisCompetition.setAuthor(competition.getString("author"));
             scisCompetition.setStatus(competition.getString("status"));
-            scisCompetition.setStartTime(competition.getSqlDate("data1"));
-            scisCompetition.setEndTime(competition.getSqlDate("data2"));
+            scisCompetition.setStartTime(competition.getSqlDate("startTime"));
+            scisCompetition.setEndTime(competition.getSqlDate("endTime"));
             scisCompetition.setLevel(competition.getString("region"));
             scisCompetition.setOrganizer(competition.getString("organizer"));
             scisCompetition.setContent(competition.getString("content"));
+            scisCompetition.setNumLimit(competition.getString("type"));
             res.put("code", 200);
             res.put("message", "ok");
             competitionService.save(scisCompetition);
@@ -62,7 +64,7 @@ public class CompetitionAdmin {
      */
     @GetMapping("/competition/findAll")
     @Cacheable(value = "CompetitionAll",key = "#page+#size",unless = "#result == null ")
-    public Page<ScisCompetition> findByAll(@RequestParam(name = "page",defaultValue = "0") Integer page,
+     public Page<ScisCompetition> findByAll(@RequestParam(name = "page",defaultValue = "0") Integer page,
                                            @RequestParam(name ="size",defaultValue = "2" )Integer size){
         Pageable pageable1= PageRequest.of(page, size, Sort.by("startTime").descending());
         competitionService.findAll(pageable1);

@@ -66,7 +66,7 @@ export default {
         this.editor.setValue(newValue)
       }
     },
-    language(val) {
+    language() {
       this.destroyEditor()
       this.initEditor()
     },
@@ -112,7 +112,11 @@ export default {
     },
     getHtml() {
       return this.editor.getHtml()
+    },
+    getMarkdown(){
+      return this.editor.getMarkdown()
     }
+
   }
 }
 </script>
