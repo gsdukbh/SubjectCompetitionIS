@@ -152,7 +152,8 @@
 
                                 this.loading = false
                             })
-                            .catch(() => {
+                            .catch(error => {
+                                this.$message.error("出现了一些问题" + error)
                                 this.loading = false
                             })
                     } else {

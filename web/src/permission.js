@@ -70,7 +70,7 @@ router.beforeEach(async (to, from, next) => {
 
         //在登录白名单中，直接进入
           next()
-
+            console.log("ssssssssssss")
           NProgress.done()
 
         } else {

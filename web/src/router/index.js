@@ -53,12 +53,6 @@ export const publicRoutes = [
         ]
     },
 
-    {
-        path: '/404',
-        component: () => import('@/views/error-page/404'),
-        hidden: true
-    },
-
 ]
 export const asyncRoutes = [
     {
@@ -66,9 +60,9 @@ export const asyncRoutes = [
         name: 'dashboard',
         component: Layout,
         meta: {
-            title: '管理员',
+            title: '首页',
             icon: 'dashboard',
-            roles: ['ROLE_ADMIN'],
+            // roles: ['ROLE_ADMIN'],
         },
         children: [
             {
