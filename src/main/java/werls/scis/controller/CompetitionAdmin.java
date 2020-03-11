@@ -30,6 +30,11 @@ public class CompetitionAdmin {
     @Autowired
     CompetitionServiceImpl competitionService;
 
+    /**
+     * 测试json 接收
+     * @param competition json
+     * @return json
+     */
     @PostMapping("/competition/save")
     public String save(@RequestBody JSONObject competition) {
         Map<String, Object> res = new HashMap<>();
@@ -65,10 +70,11 @@ public class CompetitionAdmin {
     @GetMapping("/competition/findAll")
     @Cacheable(value = "CompetitionAll",key = "#page+#size",unless = "#result == null ")
      public Page<ScisCompetition> findByAll(@RequestParam(name = "page",defaultValue = "0") Integer page,
-                                           @RequestParam(name ="size",defaultValue = "2" )Integer size){
+                                           @RequestParam(name ="size",defaultValue = "30" )Integer size){
         Pageable pageable1= PageRequest.of(page, size, Sort.by("startTime").descending());
         competitionService.findAll(pageable1);
         return  competitionService.findAll(pageable1);
+
     }
 
 }

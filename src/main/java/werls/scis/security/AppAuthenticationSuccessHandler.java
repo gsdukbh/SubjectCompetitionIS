@@ -34,11 +34,6 @@ public class AppAuthenticationSuccessHandler  implements AuthenticationSuccessHa
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
-    UserServiceImpl  userService;
-
-    @Autowired
-    StringRedisTemplate stringRedisTemplate;
     /**
      * Called when a user has been successfully authenticated.
      *
@@ -62,5 +57,4 @@ public class AppAuthenticationSuccessHandler  implements AuthenticationSuccessHa
         out.flush();
         out.close();
     }
-
 }

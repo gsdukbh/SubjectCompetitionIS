@@ -34,7 +34,6 @@ public class MyLogoutSuccessHandler  implements LogoutSuccessHandler{
     @Autowired
     private ObjectMapper objectMapper;
 
-//    @CacheEvict(value = "ScisUser",key = "0")
     @Override
     public void onLogoutSuccess(HttpServletRequest request,
                                 HttpServletResponse response,
