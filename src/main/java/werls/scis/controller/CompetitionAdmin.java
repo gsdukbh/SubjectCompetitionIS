@@ -68,9 +68,9 @@ public class CompetitionAdmin {
      * @return Page
      */
     @GetMapping("/competition/findAll")
-    @Cacheable(value = "CompetitionAll",key = "#page+#size",unless = "#result == null ")
+    @Cacheable(value = "CompetitionAll",key = "'page:'+#page+'size:'+#size",unless = "#result == null ")
      public Page<ScisCompetition> findByAll(@RequestParam(name = "page",defaultValue = "0") Integer page,
-                                           @RequestParam(name ="size",defaultValue = "30" )Integer size){
+                                           @RequestParam(name ="size",defaultValue = "20" )Integer size){
         Pageable pageable1= PageRequest.of(page, size, Sort.by("startTime").descending());
         competitionService.findAll(pageable1);
         return  competitionService.findAll(pageable1);

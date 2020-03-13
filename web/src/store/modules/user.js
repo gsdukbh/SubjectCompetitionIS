@@ -2,6 +2,7 @@ import {getInfo, logout, postFrom} from '../../api/api'
 import { getToken, setToken, removeToken } from '../../utils/auth'
 import { resetRouter } from '../../router'
 
+
 const state = {
   token: getToken(),
   name: '',
@@ -57,6 +58,9 @@ const actions = {
         const { data } = response
         if (!data) {
           reject('验证失败，请重新登录.')
+        }else if(data.code === 0 ){
+          reject(data.message)
+          this.resetToken(commit)
         }
 
       const { role, message, avatar } = data

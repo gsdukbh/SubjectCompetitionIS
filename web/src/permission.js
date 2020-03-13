@@ -70,14 +70,12 @@ router.beforeEach(async (to, from, next) => {
 
         //在登录白名单中，直接进入
           next()
-            console.log("ssssssssssss")
           NProgress.done()
 
         } else {
 
          //将其他无权访问的页面重定向到登录页面.
           next(`/public?redirect=${to.path}`)
-
           NProgress.done()
         }
 
