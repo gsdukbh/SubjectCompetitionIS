@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author : LiJiWei
@@ -47,7 +48,7 @@ public class AppAuthenticationFailureHandler implements AuthenticationFailureHan
         logger.info("登录失败");
         response.setContentType("application/json;charset=utf-8");
         PrintWriter out = response.getWriter();
-        Map<String,Object> map = new HashMap<String,Object>();
+        Map<String,Object> map = new ConcurrentHashMap<>();
         map.put("code",401);
         if (exception instanceof UsernameNotFoundException || exception instanceof BadCredentialsException) {
             map.put("message","用户名或密码错误");

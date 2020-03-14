@@ -60,7 +60,7 @@ const actions = {
           reject('验证失败，请重新登录.')
         }else if(data.code === 0 ){
           reject(data.message)
-          this.resetToken(commit)
+         
         }
 
       const { role, message, avatar } = data

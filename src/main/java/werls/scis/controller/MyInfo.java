@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author : LiJiWei
@@ -34,7 +35,7 @@ public class MyInfo {
     @PostMapping(value = "/i")
     public String getUserInfo(@Param("info") String info) {
         ScisUser user = this.userService.findByLoginOrPhoneOrIdentityOrEmail(info);
-        Map<String, Object> res = new HashMap<>();
+        Map<String, Object> res = new ConcurrentHashMap<>();
         if (user == null) {
             res.put("code", 404);
             res.put("message", "null");

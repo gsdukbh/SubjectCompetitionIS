@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 登录成功，根据角色进行分配路径
@@ -46,7 +47,7 @@ public class AppAuthenticationSuccessHandler  implements AuthenticationSuccessHa
                                         HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
         logger.info("登录成功");
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new ConcurrentHashMap<>();
         map.put("code", 200);
         map.put("message", "登录成功,正在转跳");
         map.put("token",authentication.getName());

@@ -14,6 +14,7 @@ import werls.scis.service.CompetitionServiceImpl;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author : LiJiWei
@@ -24,7 +25,6 @@ import java.util.Map;
  * @date Date : 2020年03月08日 0:27
  */
 @RestController
-@RequestMapping("/tea")
 public class CompetitionAdmin {
 
     @Autowired
@@ -32,12 +32,13 @@ public class CompetitionAdmin {
 
     /**
      * 测试json 接收
+     *
      * @param competition json
      * @return json
      */
-    @PostMapping("/competition/save")
+    @PostMapping("/tea/competition/save")
     public String save(@RequestBody JSONObject competition) {
-        Map<String, Object> res = new HashMap<>();
+        Map<String, Object> res = new ConcurrentHashMap<>();
         if (competition != null) {
             ScisCompetition scisCompetition = new ScisCompetition();
             scisCompetition.setId(competition.getInteger("id"));
@@ -54,8 +55,8 @@ public class CompetitionAdmin {
             res.put("message", "ok");
             competitionService.save(scisCompetition);
             return JSON.toJSONString(res);
-        }else {
-            res.put("code",404 );
+        } else {
+            res.put("code", 404);
             res.put("message", "fail");
             return JSON.toJSONString(res);
         }
@@ -63,18 +64,17 @@ public class CompetitionAdmin {
 
     /**
      * 默认 开始时间降序排序
+     *
      * @param page 分页
      * @param size 每页大小
      * @return Page
      */
-    @GetMapping("/competition/findAll")
-    @Cacheable(value = "CompetitionAll",key = "'page:'+#page+'size:'+#size",unless = "#result == null ")
-     public Page<ScisCompetition> findByAll(@RequestParam(name = "page",defaultValue = "0") Integer page,
-                                           @RequestParam(name ="size",defaultValue = "20" )Integer size){
-        Pageable pageable1= PageRequest.of(page, size, Sort.by("startTime").descending());
-        competitionService.findAll(pageable1);
-        return  competitionService.findAll(pageable1);
-
+    @RequestMapping("/public/competition/findAll")
+    @Cacheable(value = "CompetitionAll", key = "'page:'+#page+'size:'+#size", unless = "#result == null ")
+    public Page<ScisCompetition> findByAll(@RequestParam(name = "page", defaultValue = "0") Integer page,
+                                           @RequestParam(name = "size", defaultValue = "20") Integer size) {
+        Pageable pageable1 = PageRequest.of(page, size, Sort.by("startTime"));
+        return competitionService.findAll(pageable1);
     }
 
 }

@@ -19,6 +19,7 @@ import werls.scis.util.VerificationCode;
 import javax.xml.ws.soap.Addressing;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -69,7 +70,7 @@ public class Public {
      */
     @PostMapping(value = "/password/recover/email")
     public String pwdRecoverByEmail(@RequestParam("email") String email) {
-        Map<String, Object> res = new HashMap<>();
+        Map<String, Object> res = new ConcurrentHashMap<>();
         ScisUser user = userService.findByLoginOrPhoneOrIdentityOrEmail(email);
         if (user == null) {
             res.put("code", 404);
@@ -95,7 +96,7 @@ public class Public {
     public String pwdReByEmailCode(@Param("email") String email,
                                    @Param("code") String code,
                                    @Param("password") String password) {
-        Map<String, Object> res = new HashMap<>();
+        Map<String, Object> res = new ConcurrentHashMap<>();
         String redisCode = redisTemplate.opsForValue().get(email);
         if (redisCode == null) {
             res.put("code", 404);

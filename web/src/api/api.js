@@ -37,7 +37,7 @@ export const postFrom =(url,params)=>{
 export const getData = (url,params)=>{
     return axios({
         method:'get',
-        url:url,
+        url:'/api'+url,
         data:params,
     })
 }

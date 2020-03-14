@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author : LiJiWei
@@ -44,7 +45,7 @@ public class AppAccessDeniedHandler implements AccessDeniedHandler {
         response.setContentType("application/json;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         PrintWriter out = response.getWriter();
-        Map<String,Object> map = new HashMap<String,Object>();
+        Map<String,Object> map = new ConcurrentHashMap<>();
         map.put("code",403);
         map.put("message", "权限不足");
         out.write(objectMapper.writeValueAsString(map));

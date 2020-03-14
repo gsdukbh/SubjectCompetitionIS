@@ -9,6 +9,7 @@ import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * session
@@ -25,7 +26,7 @@ public class AppExpiredSessionStrategy implements SessionInformationExpiredStrat
     private ObjectMapper objectMapper = new ObjectMapper();
     @Override
     public void onExpiredSessionDetected(SessionInformationExpiredEvent event) throws IOException, ServletException {
-        Map<String,Object> map = new HashMap<>();
+        Map<String,Object> map = new ConcurrentHashMap<>();
         map.put("code",0);
         map.put("message","已经在另一台机器登录，您被迫下线。" + event.getSessionInformation().getLastRequest());
         String s = objectMapper.writeValueAsString(map);
