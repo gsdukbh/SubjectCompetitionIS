@@ -6,10 +6,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import werls.scis.dao.jpa.CompetitionRepository;
-import werls.scis.dao.pojo.ScisApplyFrom;
 import werls.scis.dao.pojo.ScisCompetition;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author : LiJiWei
@@ -98,6 +98,9 @@ public class CompetitionServiceImpl {
     }
     public void deleteById(Integer id){
         this.competitionRepository.deleteById(id);
+    }
+    public Optional<ScisCompetition> findById(Integer id){
+        return  competitionRepository.findById(id);
     }
 
 }

@@ -16,7 +16,7 @@
             <el-divider class="bg"></el-divider>
 
             <!--查找账号-->
-            <el-card class="box-card" v-if="card === 0">
+            <el-card class="box-card" v-if="active === 0">
                 <div slot="header" class="clearfix">
                     <span>找回密码</span>
 
@@ -62,7 +62,7 @@
 
             </el-card>
             <!--发送验证码-->
-            <el-card class="box-card" v-if="card === 1">
+            <el-card class="box-card" v-if="active === 1">
                 <div slot="header" class="clearfix">
                     <span>验证方式</span>
                 </div>
@@ -112,7 +112,7 @@
                 </el-button>
             </el-card>
             <!--密码重置-->
-            <el-card class="box-card" v-if="card === 2">
+            <el-card class="box-card" v-if="active === 2">
                 <div slot="header" class="clearfix">
                     <span>完成</span>
                 </div>
@@ -184,7 +184,6 @@
             return {
                 text: '向右滑完成验证',
                 active: 0,
-                card: 0,
                 value1: false,
                 dialogVisible: false,
                 loading: true,
@@ -243,7 +242,6 @@
                         if (response.data.code === 200) {
                             this.getData.email = response.data.email || '';
                             this.getData.phone = response.data.phone || '';
-                            this.card = 1;
                             this.active = 1;
                             this.$notify({
                                 title: '查询成功',
@@ -271,10 +269,10 @@
             },
             next() {
                 this.active = 2;
-                this.card = 2;
+
             },
             re(){
-                this.card = 1;
+
                 this.active = 1;
             },
             sendPhone() {

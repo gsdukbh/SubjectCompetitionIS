@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
  */
 @RestController
 @RequestMapping("/public")
-public class Public {
+public class Password {
     private Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     UserServiceImpl userService;

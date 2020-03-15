@@ -25,42 +25,12 @@ import java.util.concurrent.ConcurrentHashMap;
  * @date Date : 2020年03月08日 0:27
  */
 @RestController
+@RequestMapping("/public")
 public class CompetitionAdmin {
 
     @Autowired
     CompetitionServiceImpl competitionService;
 
-    /**
-     * 测试json 接收
-     *
-     * @param competition json
-     * @return json
-     */
-    @PostMapping("/tea/competition/save")
-    public String save(@RequestBody JSONObject competition) {
-        Map<String, Object> res = new ConcurrentHashMap<>();
-        if (competition != null) {
-            ScisCompetition scisCompetition = new ScisCompetition();
-            scisCompetition.setId(competition.getInteger("id"));
-            scisCompetition.setName(competition.getString("name"));
-            scisCompetition.setAuthor(competition.getString("author"));
-            scisCompetition.setStatus(competition.getString("status"));
-            scisCompetition.setStartTime(competition.getSqlDate("startTime"));
-            scisCompetition.setEndTime(competition.getSqlDate("endTime"));
-            scisCompetition.setLevel(competition.getString("region"));
-            scisCompetition.setOrganizer(competition.getString("organizer"));
-            scisCompetition.setContent(competition.getString("content"));
-            scisCompetition.setNumLimit(competition.getString("type"));
-            res.put("code", 200);
-            res.put("message", "ok");
-            competitionService.save(scisCompetition);
-            return JSON.toJSONString(res);
-        } else {
-            res.put("code", 404);
-            res.put("message", "fail");
-            return JSON.toJSONString(res);
-        }
-    }
 
     /**
      * 默认 开始时间降序排序
@@ -69,12 +39,28 @@ public class CompetitionAdmin {
      * @param size 每页大小
      * @return Page
      */
-    @RequestMapping("/public/competition/findAll")
+    @RequestMapping("/competition/findAll")
     @Cacheable(value = "CompetitionAll", key = "'page:'+#page+'size:'+#size", unless = "#result == null ")
     public Page<ScisCompetition> findByAll(@RequestParam(name = "page", defaultValue = "0") Integer page,
                                            @RequestParam(name = "size", defaultValue = "20") Integer size) {
         Pageable pageable1 = PageRequest.of(page, size, Sort.by("startTime"));
         return competitionService.findAll(pageable1);
     }
+    @Cacheable(value = "CompetitionAll", key = "'id:'+#id", unless = "#result == null ")
+    @GetMapping("/competition/findById/{id}")
+    public Object findById(@PathVariable Integer id){
+        Map<String, Object> res = new HashMap<>(10);
+        if (competitionService.findById(id).isPresent()){
+            res.put("code",200);
+            res.put("data",competitionService.findById(id).get());
+            res.put("message","Success");
+            return  JSON.toJSON(res);
+        }else {
+            res.put("code",400);
+            res.put("message","Null");
+            return  JSON.toJSON(res);
+        }
+    }
+
 
 }

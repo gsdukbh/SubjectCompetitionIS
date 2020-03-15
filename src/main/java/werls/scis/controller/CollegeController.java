@@ -30,7 +30,7 @@ public class CollegeController {
     @GetMapping("/findAll")
     @Cacheable(value = "college",unless = "#result == null ",key = "'college'")
     public Page<ScisCollege> findAll(){
-        Pageable pageable1= PageRequest.of(0, 20, Sort.by("collegeName"));
-        return  service.findAll(pageable1);
+            Pageable pageable1= PageRequest.of(0, 20, Sort.by("collegeName"));
+            return  service.findAll(pageable1);
     }
 }

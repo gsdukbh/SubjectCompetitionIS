@@ -28,9 +28,6 @@ public class ScisCompetition implements Serializable {
     @Column(name = "competition_name")
     private String name;
     @Column(name = "competition_status")
-    /**
-     * 0 1 发布 or 未发布
-     */
     private String status;
     @Column(name = "competition_start_time")
     private Date startTime;
@@ -48,7 +45,12 @@ public class ScisCompetition implements Serializable {
     private String organizer;
     @Column(name = "competition_num_limit")
     private String numLimit;
-
+    @Column(name = "competition_place")
+    private String place;
+    @Column(name = "competition_type")
+    private String type;
+    @Column(name = "competition_isTeam")
+    private Boolean team;
     /**
      * 个人报名
      */
@@ -86,11 +88,38 @@ public class ScisCompetition implements Serializable {
                 ", level='" + level + '\'' +
                 ", organizer='" + organizer + '\'' +
                 ", numLimit='" + numLimit + '\'' +
+                ", place='" + place + '\'' +
+                ", type='" + type + '\'' +
+                ", team=" + team +
                 ", applyFromList=" + applyFromList +
                 ", teamApplyList=" + teamApplyList +
                 ", works=" + works +
                 ", problems=" + problems +
                 '}';
+    }
+
+    public Boolean getTeam() {
+        return team;
+    }
+
+    public void setTeam(Boolean team) {
+        this.team = team;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getPlace() {
+        return place;
+    }
+
+    public void setPlace(String place) {
+        this.place = place;
     }
 
     public List<ScisProblem> getProblems() {
