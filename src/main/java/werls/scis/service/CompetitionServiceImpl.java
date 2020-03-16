@@ -102,5 +102,15 @@ public class CompetitionServiceImpl {
     public Optional<ScisCompetition> findById(Integer id){
         return  competitionRepository.findById(id);
     }
+    /**
+     * 通过名称和举办单位查询
+     * @param name String 赛事名称
+     * @param organizer String 举办单位
+     * @param pageable  Pageable
+     * @return  Page<ScisCompetition>
+     */
+    public  Page<ScisCompetition> findByNameLikeAndOrganizer(String name,String organizer,Pageable pageable){
+        return competitionRepository.findByNameLikeAndOrganizer(name,organizer,pageable);
+    }
 
 }

@@ -96,6 +96,10 @@ export const asyncRoutes = [
                 }
             },
             {
+                path: 'edit',
+                component: ()=>import('../views/competition/edit'),
+            },
+            {
                 path: 'publish',
                 name: 'publish',
                 component: () => import('../views/competition/editCompetition'),

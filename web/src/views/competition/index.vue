@@ -3,27 +3,26 @@
         <!--搜索-->
         <div>
 
-            <el-input placeholder="Title" style="width: 200px;"/>
+            <el-input placeholder="名称" style="width: 200px;" v-model="search.name"/>
 
-            <el-select v-model="value" filterable placeholder="请选择">
+            <el-select v-model="search.organizer" filterable placeholder="请选择承办单位">
                 <el-option
-                        v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
+                        v-for="item in college"
+                        :key="item.id"
+                        :label="item.collegeName"
+                        :value="item.collegeName">
                 </el-option>
             </el-select>
 
-            <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
-                Search
+            <el-button  class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+                搜索
             </el-button>
-            <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit"
-                       @click="handleCreate">
-                Add
+            <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit">
+                添加赛事
             </el-button>
-            <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download"
-                       @click="handleDownload">
-                Export
+            <el-button  :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download"
+                       @click="getExcel">
+                导出
             </el-button>
         </div>
 
@@ -51,7 +50,7 @@
 
             <el-table-column
                     prop="startTime"
-                    label="日期"
+                    label="开始日期"
                     sortable
                     width="180">
             </el-table-column>
@@ -59,28 +58,38 @@
             <el-table-column
                     prop="name"
                     sortable
-                    label="姓名"
+                    label="名称"
                     width="180">
             </el-table-column>
 
             <el-table-column
-                    prop="address"
-                    label="地址">
+                    sortable
+                    prop="organizer"
+                    label="承办单位"
+                    width="180">
             </el-table-column>
 
-            <el-table-column label="Actions" align="center" width="300px" class-name="small-padding fixed-width">
+            <el-table-column
+                    prop="place"
+                    label="举办地点">
+            </el-table-column>
+
+            <el-table-column label="操作" align="center" width="300" class-name="small-padding fixed-width">
                 <template slot-scope="{row,$index}">
-                    <el-button type="primary" size="mini" @click="handleUpdate(row)">
-                        Edit
+                    <router-link :to="''">
+                        <el-button type="primary" size="mini">
+                            编辑
+                        </el-button>
+                    </router-link>
+                    <el-button v-if="row.status!=='published'" size="mini" type="success"
+                               @click="handleModifyStatus(row,'published')">
+                        发布
                     </el-button>
-                    <el-button v-if="row.status!='published'" size="mini" type="success" @click="handleModifyStatus(row,'published')">
-                        Publish
+                    <el-button v-if="row.status!=='draft'" size="mini" @click="handleModifyStatus(row,'draft')">
+                        草稿
                     </el-button>
-                    <el-button v-if="row.status!='draft'" size="mini" @click="handleModifyStatus(row,'draft')">
-                        Draft
-                    </el-button>
-                    <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
-                        Delete
+                    <el-button v-if="row.status!=='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
+                        删除
                     </el-button>
                 </template>
             </el-table-column>
@@ -90,62 +99,106 @@
             <el-pagination
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
-                    :current-page="currentPage"
+                    @next-click="handleCurrentChange"
+                    @prev-click="handleCurrentChange"
+                    :current-page="page.page"
                     :page-sizes="[20,50,100]"
-                    :page-size="page.pageSize"
+                    :page-size="page.size"
                     background
                     layout="total, sizes, prev, pager, next, jumper"
                     :total="page.totalElements">
             </el-pagination>
-    </div>
+        </div>
     </div>
 </template>
 
 <script>
-    import {getData} from "../../api/api";
+    import {getData, getJson, postFrom} from "../../api/api";
 
     export default {
         name: "index",
         data() {
             return {
                 html: null,
-                loading:true,
-                tableData:[],
-                page:{
-                    pageSize:20,
-                    pageNumber:0,
-                    totalElements:null,
-                    totalPages:null
+                loading: true,
+                tableData: [],
+                page: {
+                    size: 20,
+                    page: 0,
+                    totalElements: 100,
                 },
+                search:{
+                    organizer:null,
+                    name:null
+                },
+                college: {
+                    id: '',
+                    collegeName: '',
+                },
+                downloadLoading:false,
                 multipleSelection: []
             }
         },
         created() {
             getData('/public/competition/findAll')
-            .then(response =>{
-                this.tableData = response.data.content;
+                .then(response => {
+                    this.tableData = response.data.content;
+                    this.page.totalElements = response.data.totalElements;
+                    this.loading = false;
+                })
+                .catch(error => {
+                    this.$message.error("出现了一些问题" + error)
+                })
 
-                this.loading=false;
-            })
+
         },
         mounted() {
-
+            getJson('/public/college/findAll')
+                .then(response => {
+                    this.college = response.data.content;
+                })
+                .catch(error => {
+                    this.$message.error("出现了一些问题" + error)
+                })
         },
         methods: {
-                next(){
-                    console.log("wwwww")
-                },
-            currentPage(){
+            handleSizeChange(val) {
+                this.page.size = val;
+                this.loading = true;
+               this.getDataPage();
+            },
+            handleCurrentChange(val) {
+                /*页面切换*/
+                this.page.size=val;
+                this.getDataPage()
+            },
+            handleSelectionChange(val) {
+                this.multipleSelection = val
+            },
+            handleFilter() {
+                /*搜索*/
 
             },
-            handleSizeChange(){
+            handleModifyStatus() {
 
             },
-            handleCurrentChange(){
+            handleDelete() {
 
             },
-            handleSelectionChange(val){
-                this.multipleSelection=val
+            getExcel(){
+                /*获得excel文件*/
+
+            },
+            getDataPage(){
+                postFrom('/public/competition/findAll', this.page)
+                    .then(response => {
+                        this.tableData = response.data.content;
+                        this.page.totalElements = response.data.totalElements;
+                        this.loading = false;
+
+                    }).catch(error => {
+                    this.$message.error("出现了一些问题" + error)
+                })
             }
         }
 
@@ -153,8 +206,8 @@
 </script>
 
 <style scoped>
-.center{
-    text-align: center;
-    align-content: center;
-}
+    .center {
+        text-align: center;
+        align-content: center;
+    }
 </style>

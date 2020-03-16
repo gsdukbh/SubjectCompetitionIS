@@ -62,4 +62,12 @@ public interface CompetitionRepository extends JpaRepository<ScisCompetition, In
      */
     ScisCompetition findByUrl(String url);
 
+    /**
+     * 通过名称和举办单位查询
+     * @param name String 赛事名称
+     * @param organizer String 举办单位
+     * @param pageable  Pageable
+     * @return  Page<ScisCompetition>
+     */
+    Page<ScisCompetition> findByNameLikeAndOrganizer(String name,String organizer,Pageable pageable);
 }

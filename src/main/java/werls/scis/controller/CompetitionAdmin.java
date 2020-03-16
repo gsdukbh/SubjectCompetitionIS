@@ -61,6 +61,20 @@ public class CompetitionAdmin {
             return  JSON.toJSON(res);
         }
     }
-
-
+    @RequestMapping("/competition/search")
+    public Page<ScisCompetition> search(@RequestParam(name = "page", defaultValue = "0") Integer page,
+                                        @RequestParam(name = "size", defaultValue = "20") Integer size,
+                                        String name,
+                                        String organizer){
+        Pageable pageable = PageRequest.of(page, size, Sort.by("startTime"));
+        if (name!=null && organizer !=null){
+            return competitionService.findByNameLikeAndOrganizer(name,organizer,pageable);
+        }else if(name != null){
+            return competitionService.findByNameLike(name,pageable);
+        }else if (organizer!=null){
+            return competitionService.findByOrganizer(organizer,pageable);
+        }else {
+            return null;
+        }
+    }
 }

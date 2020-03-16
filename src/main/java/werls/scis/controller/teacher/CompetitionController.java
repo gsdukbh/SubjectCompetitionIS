@@ -3,6 +3,7 @@ package werls.scis.controller.teacher;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 import werls.scis.dao.pojo.ScisCompetition;
@@ -24,6 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class CompetitionController {
     @Autowired
     CompetitionServiceImpl competitionService;
+
     @PostMapping("/tea/competition/save")
     public String save(@RequestBody ScisCompetition competition) {
         Map<String, Object> res = new ConcurrentHashMap<>(10);
@@ -38,7 +40,7 @@ public class CompetitionController {
             return JSON.toJSONString(res);
         }
     }
-    @Cacheable(value = "CompetitionAll", key = "'id:'+#id", unless = "#result == null ")
+    @CacheEvict(value = "CompetitionAll", key = "'id:'+#id")
     @PostMapping("/competition/deleteById/{id}")
     public Object deleteById(@PathVariable Integer id){
         Map<String, Object> res = new ConcurrentHashMap<>();

@@ -31,5 +31,7 @@ class UserServiceImplTest {
 
     @Test
     void findAll() {
+        String s="123123";
+        System.out.println(s.substring(0,3)+"sss"+s.substring(3));
     }
 }
