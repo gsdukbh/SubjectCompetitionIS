@@ -168,7 +168,6 @@
             },
             passwordRecover(){
                 this.$router.push({path:'/password/recover'});
-                console.log("忘记")
             },
             toHome(){
                 console.log("home")

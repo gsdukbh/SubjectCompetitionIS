@@ -1,5 +1,6 @@
 package werls.scis.dao.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -35,8 +36,7 @@ public class ScisCompetition implements Serializable {
     private Date endTime;
     @Column(name = "competition_content")
     private String content;
-    @Column(name = "competition_url")
-    private String url;
+
     @Column(name = "competition_author")
     private String author;
     @Column(name = "competition_level")
@@ -56,22 +56,26 @@ public class ScisCompetition implements Serializable {
      */
     @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "competition",fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<ScisApplyFrom> applyFromList;
     /**
      * 团体报名
      */
     @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "competition",fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<ScisTeamApply> teamApplyList;
     /**
      * 竞赛作品
      */
     @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "competition",fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<ScisWorks> works;
 
     @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "competition",fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<ScisProblem> problems;
 
     @Override
@@ -83,7 +87,6 @@ public class ScisCompetition implements Serializable {
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
                 ", content='" + content + '\'' +
-                ", url='" + url + '\'' +
                 ", author='" + author + '\'' +
                 ", level='" + level + '\'' +
                 ", organizer='" + organizer + '\'' +
@@ -122,6 +125,7 @@ public class ScisCompetition implements Serializable {
         this.place = place;
     }
 
+    @JsonIgnore
     public List<ScisProblem> getProblems() {
         return problems;
     }
@@ -130,14 +134,8 @@ public class ScisCompetition implements Serializable {
         this.problems = problems;
     }
 
-    public String getUrl() {
-        return url;
-    }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
+    @JsonIgnore
     public List<ScisTeamApply> getTeamApplyList() {
         return teamApplyList;
     }
@@ -146,6 +144,7 @@ public class ScisCompetition implements Serializable {
         this.teamApplyList = teamApplyList;
     }
 
+    @JsonIgnore
     public List<ScisWorks> getWorks() {
         return works;
     }
@@ -234,6 +233,7 @@ public class ScisCompetition implements Serializable {
         this.numLimit = numLimit;
     }
 
+    @JsonIgnore
     public List<ScisApplyFrom> getApplyFromList() {
         return applyFromList;
     }

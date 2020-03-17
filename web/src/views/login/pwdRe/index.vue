@@ -226,7 +226,7 @@
                     if (valid) {
                         return true
                     } else {
-                        console.log('error submit!!');
+
                         return false;
                     }
                 });
@@ -337,7 +337,7 @@
                             this.$message.error("出现了一些问题" + error)
                         })
                     } else {
-                        console.log('error submit!!');
+
                         return false;
                     }
                     NProgress.done()

@@ -18,12 +18,21 @@ export const publicRoutes = [
             title: '登录'
         }
     },
+    {
+        path: '/404',
+        name: '404',
+        component: import('../views/error-page/404'),
+        hidden: true,
+        meta: {
+            title: '404'
+        }
+    },
 
     {
         path: '/password/recover',
         component: publicLayout,
         hidden: true,
-        redirect:'/password/recover/index',
+        redirect: '/password/recover/index',
         meta: {
             title: '密码重置'
         },
@@ -41,14 +50,14 @@ export const publicRoutes = [
 
     /*公开的页面*/
     {
-        path:'/public',
+        path: '/public',
         component: publicLayout,
         hidden: true,
-        redirect:'/public/index',
+        redirect: '/public/index',
         children: [
             {
                 path: '/public/index',
-                component:()=>import('../views/public/index')
+                component: () => import('../views/public/index')
             }
         ]
     },
@@ -82,22 +91,37 @@ export const asyncRoutes = [
         name: 'competition',
         meta: {
             title: '竞赛管理',
-            roles: ['ROLE_ADMIN','ROLE_TEA'],
-            icon:'competition'
+            roles: ['ROLE_ADMIN', 'ROLE_TEA'],
+            icon: 'competition'
         },
-        children : [
+        children: [
             {
                 path: 'index',
                 component: () => import('../views/competition/index'),
                 name: 'PageCompetition',
                 meta: {
-                    title: '竞赛管理',
-                    roles: ['ROLE_ADMIN'],
+                    title: '竞赛项目',
+                    roles: ['ROLE_ADMIN', 'ROLE_TEA'],
                 }
             },
             {
-                path: 'edit',
-                component: ()=>import('../views/competition/edit'),
+                path: 'edit/:id(\\d+)',
+                component: () => import('../views/competition/edit'),
+                name: 'editCompetition',
+                hidden: true,
+                meta: {
+                    title: '竞赛修改',
+                    roles: ['ROLE_ADMIN', 'ROLE_TEA']
+                }
+            },
+            {
+                path: 'detail/:id(\\d+)',
+                name: 'detail',
+                component: () => import('../views/competition/detail'),
+                hidden: true,
+                meta: {
+                    title: '竞赛详情',
+                }
             },
             {
                 path: 'publish',
@@ -105,7 +129,7 @@ export const asyncRoutes = [
                 component: () => import('../views/competition/editCompetition'),
                 meta: {
                     title: '竞赛发布',
-                    roles: ['ROLE_ADMIN','ROLE_TEA'],
+                    roles: ['ROLE_ADMIN', 'ROLE_TEA'],
                 }
             }
         ]

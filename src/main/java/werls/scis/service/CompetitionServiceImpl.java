@@ -33,7 +33,7 @@ public class CompetitionServiceImpl {
      * @return Page<ScisCompetition>
      */
     public Page<ScisCompetition> findByNameLike(String name, Pageable pageable) {
-        return competitionRepository.findByNameLike(name, pageable);
+        return competitionRepository.findByNameContaining(name, pageable);
     }
 
     /**
@@ -73,14 +73,7 @@ public class CompetitionServiceImpl {
     public Page<ScisCompetition> findByOrganizer(String organizer, Pageable pageable){
         return competitionRepository.findByOrganizer(organizer, pageable);
     }
-    /**
-     * 固定url
-     * @param url 赛事固定url
-     * @return ScisCompetition
-     */
-    public ScisCompetition findByUrl(String url){
-        return competitionRepository.findByUrl(url);
-    }
+
     public void save(ScisCompetition scisCompetition){
         competitionRepository.save(scisCompetition);
     }

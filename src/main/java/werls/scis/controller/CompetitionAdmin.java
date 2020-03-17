@@ -1,5 +1,6 @@
 package werls.scis.controller;
 
+import com.alibaba.druid.sql.visitor.functions.Isnull;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,13 +41,30 @@ public class CompetitionAdmin {
      * @return Page
      */
     @RequestMapping("/competition/findAll")
-    @Cacheable(value = "CompetitionAll", key = "'page:'+#page+'size:'+#size", unless = "#result == null ")
+//    @Cacheable(value = "CompetitionAll", key = "'page:'+#page+'size:'+#size+'name:'+#name+'organizer:'+#organizer", unless = "#result == null ")
     public Page<ScisCompetition> findByAll(@RequestParam(name = "page", defaultValue = "0") Integer page,
-                                           @RequestParam(name = "size", defaultValue = "20") Integer size) {
-        Pageable pageable1 = PageRequest.of(page, size, Sort.by("startTime"));
-        return competitionService.findAll(pageable1);
+                                           @RequestParam(name = "size", defaultValue = "20") Integer size,
+                                           @RequestParam(name = "name",defaultValue = "") String name,
+                                           @RequestParam(name = "organizer",defaultValue = "") String organizer) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("startTime"));
+        if ( !"".equals(organizer) && !"".equals(name)){
+
+            return competitionService.findByNameLikeAndOrganizer(name,organizer,pageable);
+        }else if(!"".equals(name)){
+
+            return competitionService.findByNameLike(name,pageable);
+        }else if (!"".equals(organizer)){
+
+            return competitionService.findByOrganizer(organizer,pageable);
+        }else {
+
+            return competitionService.findAll(pageable);
+        }
     }
-    @Cacheable(value = "CompetitionAll", key = "'id:'+#id", unless = "#result == null ")
+
+
+//    @Cacheable(value = "CompetitionAll", key = "'id:'+#id", unless = "#result == null ")
     @GetMapping("/competition/findById/{id}")
     public Object findById(@PathVariable Integer id){
         Map<String, Object> res = new HashMap<>(10);
@@ -59,22 +77,6 @@ public class CompetitionAdmin {
             res.put("code",400);
             res.put("message","Null");
             return  JSON.toJSON(res);
-        }
-    }
-    @RequestMapping("/competition/search")
-    public Page<ScisCompetition> search(@RequestParam(name = "page", defaultValue = "0") Integer page,
-                                        @RequestParam(name = "size", defaultValue = "20") Integer size,
-                                        String name,
-                                        String organizer){
-        Pageable pageable = PageRequest.of(page, size, Sort.by("startTime"));
-        if (name!=null && organizer !=null){
-            return competitionService.findByNameLikeAndOrganizer(name,organizer,pageable);
-        }else if(name != null){
-            return competitionService.findByNameLike(name,pageable);
-        }else if (organizer!=null){
-            return competitionService.findByOrganizer(organizer,pageable);
-        }else {
-            return null;
         }
     }
 }

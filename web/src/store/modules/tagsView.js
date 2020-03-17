@@ -48,7 +48,7 @@ const mutations = {
   },
 
   DEL_ALL_VISITED_VIEWS: state => {
-    // keep affix tags
+    // 保留标签
     const affixTags = state.visitedViews.filter(tag => tag.meta.affix)
     state.visitedViews = affixTags
   },

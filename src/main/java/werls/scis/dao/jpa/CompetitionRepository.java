@@ -21,7 +21,7 @@ public interface CompetitionRepository extends JpaRepository<ScisCompetition, In
      * @param pageable Pageable
      * @return Page<ScisCompetition>
      */
-    Page<ScisCompetition> findByNameLike(String name, Pageable pageable);
+    Page<ScisCompetition> findByNameContaining(String name, Pageable pageable);
 
     /**
      * 竞赛状态
@@ -55,12 +55,7 @@ public interface CompetitionRepository extends JpaRepository<ScisCompetition, In
      */
     Page<ScisCompetition> findByOrganizer(String organizer, Pageable pageable);
 
-    /**
-     * 固定url
-     * @param url 赛事固定url
-     * @return ScisCompetition
-     */
-    ScisCompetition findByUrl(String url);
+
 
     /**
      * 通过名称和举办单位查询
