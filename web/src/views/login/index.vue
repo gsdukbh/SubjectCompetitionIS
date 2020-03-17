@@ -170,7 +170,6 @@
                 this.$router.push({path:'/password/recover'});
             },
             toHome(){
-                console.log("home")
                 this.$router.push({path:'/'});
             }
         }

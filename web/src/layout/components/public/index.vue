@@ -124,7 +124,7 @@
         },
         methods: {
             handleSelect(key, keyPath) {
-                console.log(key, keyPath);
+
             },
             login(){
                 this.$router.push({path:'/login'})
