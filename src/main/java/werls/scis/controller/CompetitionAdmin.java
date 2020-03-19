@@ -66,17 +66,13 @@ public class CompetitionAdmin {
 
 //    @Cacheable(value = "CompetitionAll", key = "'id:'+#id", unless = "#result == null ")
     @GetMapping("/competition/findById/{id}")
-    public Object findById(@PathVariable Integer id){
-        Map<String, Object> res = new HashMap<>(10);
+    public ScisCompetition findById(@PathVariable Integer id){
+
         if (competitionService.findById(id).isPresent()){
-            res.put("code",200);
-            res.put("data",competitionService.findById(id).get());
-            res.put("message","Success");
-            return  JSON.toJSON(res);
+            return  competitionService.findById(id).get();
         }else {
-            res.put("code",400);
-            res.put("message","Null");
-            return  JSON.toJSON(res);
+
+            return  null;
         }
     }
 }

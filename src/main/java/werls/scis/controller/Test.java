@@ -1,5 +1,6 @@
 package werls.scis.controller;
 
+import com.alibaba.fastjson.JSON;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author : LiJiWei
@@ -25,7 +28,10 @@ public class Test {
     @RequestMapping("/login/invalid")
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public String session(){
-        return "session 过期";
+        Map<String, Object> res = new ConcurrentHashMap<>();
+        res.put("code",403);
+        res.put("message","session 过期");
+        return JSON.toJSONString(res);
     }
 
     @Cacheable(value = "admin",key = "2")

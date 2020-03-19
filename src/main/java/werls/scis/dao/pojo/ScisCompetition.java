@@ -1,16 +1,20 @@
 package werls.scis.dao.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.oracle.webservices.internal.api.databinding.DatabindingMode;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
  * 竞赛
+ *
  * @author : LiJiWei
  * @version V1.0
  * @Project: scis
@@ -23,20 +27,25 @@ import java.util.List;
 public class ScisCompetition implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(name="competition_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "competition_id")
     private Integer id;
     @Column(name = "competition_name")
     private String name;
     @Column(name = "competition_status")
     private String status;
     @Column(name = "competition_start_time")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH-mm-ss")
     private Date startTime;
     @Column(name = "competition_end_time")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH-mm-ss")
+
     private Date endTime;
+    @Column(name = "competition_apply_time")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH-mm-ss")
+    private Date applyTime;
     @Column(name = "competition_content")
     private String content;
-
     @Column(name = "competition_author")
     private String author;
     @Column(name = "competition_level")
@@ -51,54 +60,49 @@ public class ScisCompetition implements Serializable {
     private String type;
     @Column(name = "competition_isTeam")
     private Boolean team;
+    @Column(name = "competition_notification")
+    private Boolean notification;
     /**
      * 个人报名
      */
     @Fetch(FetchMode.SUBSELECT)
-    @OneToMany(mappedBy = "competition",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "competition", fetch = FetchType.EAGER)
     @JsonIgnore
     private List<ScisApplyFrom> applyFromList;
     /**
      * 团体报名
      */
     @Fetch(FetchMode.SUBSELECT)
-    @OneToMany(mappedBy = "competition",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "competition", fetch = FetchType.EAGER)
     @JsonIgnore
     private List<ScisTeamApply> teamApplyList;
     /**
      * 竞赛作品
      */
     @Fetch(FetchMode.SUBSELECT)
-    @OneToMany(mappedBy = "competition",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "competition", fetch = FetchType.EAGER)
     @JsonIgnore
     private List<ScisWorks> works;
 
     @Fetch(FetchMode.SUBSELECT)
-    @OneToMany(mappedBy = "competition",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "competition", fetch = FetchType.EAGER)
     @JsonIgnore
     private List<ScisProblem> problems;
 
-    @Override
-    public String toString() {
-        return "ScisCompetition{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", status='" + status + '\'' +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                ", content='" + content + '\'' +
-                ", author='" + author + '\'' +
-                ", level='" + level + '\'' +
-                ", organizer='" + organizer + '\'' +
-                ", numLimit='" + numLimit + '\'' +
-                ", place='" + place + '\'' +
-                ", type='" + type + '\'' +
-                ", team=" + team +
-                ", applyFromList=" + applyFromList +
-                ", teamApplyList=" + teamApplyList +
-                ", works=" + works +
-                ", problems=" + problems +
-                '}';
+    public Boolean getNotification() {
+        return notification;
+    }
+
+    public void setNotification(Boolean notification) {
+        this.notification = notification;
+    }
+
+    public Date getApplyTime() {
+        return applyTime;
+    }
+
+    public void setApplyTime(Date applyTime) {
+        this.applyTime = applyTime;
     }
 
     public Boolean getTeam() {
@@ -125,7 +129,7 @@ public class ScisCompetition implements Serializable {
         this.place = place;
     }
 
-    @JsonIgnore
+
     public List<ScisProblem> getProblems() {
         return problems;
     }
@@ -135,7 +139,6 @@ public class ScisCompetition implements Serializable {
     }
 
 
-    @JsonIgnore
     public List<ScisTeamApply> getTeamApplyList() {
         return teamApplyList;
     }
@@ -144,7 +147,7 @@ public class ScisCompetition implements Serializable {
         this.teamApplyList = teamApplyList;
     }
 
-    @JsonIgnore
+
     public List<ScisWorks> getWorks() {
         return works;
     }
@@ -233,7 +236,7 @@ public class ScisCompetition implements Serializable {
         this.numLimit = numLimit;
     }
 
-    @JsonIgnore
+
     public List<ScisApplyFrom> getApplyFromList() {
         return applyFromList;
     }

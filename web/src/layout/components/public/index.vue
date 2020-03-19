@@ -6,7 +6,7 @@
                  text-color="#303133"
                  active-text-color="#409eff"
                  @select="handleSelect">
-            <el-menu-item index="1">处理中心</el-menu-item>
+            <el-menu-item index="1">首页</el-menu-item>
 
             <el-submenu index="2">
 
@@ -33,7 +33,12 @@
             </el-submenu>
             <el-menu-item index="3" disabled>消息中心</el-menu-item>
 
-            <el-menu-item index="4">订单管理</el-menu-item>
+            <el-menu-item index="4">赛事进程</el-menu-item>
+
+            <el-menu-item class="right" index="5">
+                <router-link to="/login">登录</router-link>
+            </el-menu-item>
+
 
             <div class="right-menu">
                 <template v-if="device!=='mobile'">
@@ -41,7 +46,6 @@
                     <search id="header-search" class="right-menu-item"/>
 
                 </template>
-
                 <el-dropdown class="avatar-container" trigger="click">
 
                     <el-tooltip class="item" effect="dark" content="个人中心" placement="left-end">
@@ -50,12 +54,12 @@
                             <img :src="avatar" class="user-avatar">
                             <i class="el-icon-caret-bottom"/>
                         </div>
-                    </el-tooltip>
 
+                    </el-tooltip>
                     <el-dropdown-menu slot="dropdown" class="user-dropdown">
                         <router-link to="/home">
                             <el-dropdown-item>
-                                Home
+                                首页
                             </el-dropdown-item>
                         </router-link>
 
@@ -65,12 +69,12 @@
 
                         <div v-if="islogin === false">
                             <el-dropdown-item divided @click.native="login">
-                                <span style="display:block;">Login</span>
+                                <span style="display:block;">登录</span>
                             </el-dropdown-item>
                         </div>
                         <div v-else>
                             <el-dropdown-item divided @click.native="logout">
-                                <span style="display:block;">Log Out</span>
+                                <span style="display:block;">退出</span>
                             </el-dropdown-item>
                         </div>
 
@@ -100,7 +104,6 @@
         components: {
             Search
         },
-
         computed: {
             key() {
                 return this.$route.path
@@ -113,7 +116,9 @@
         data() {
             return {
                 activeIndex: '',
-                islogin: false
+                islogin: false,
+                keys: null,
+                keyPath: null,
             }
         },
         mounted() {
@@ -124,10 +129,11 @@
         },
         methods: {
             handleSelect(key, keyPath) {
-
+                this.keys = key;
+                this.keyPath = keyPath;
             },
-            login(){
-                this.$router.push({path:'/login'})
+            login() {
+                this.$router.push({path: '/login'})
             },
             async logout() {
                 await this.$store.dispatch('user/logout')
@@ -137,7 +143,11 @@
         }
     }
 </script>
-
+<style scoped>
+    .right {
+        float: right;
+    }
+</style>
 <style lang="scss" scoped>
     .top {
         position: fixed;

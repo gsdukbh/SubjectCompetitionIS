@@ -47,20 +47,29 @@
             </el-button>
 
             <div style="position:relative">
+
                 <div class="tips">
                     <span> <el-link type="primary" @click="toHome">返回首页</el-link></span>
+                    <span >  <el-link type="warning" @click="passwordRecover">忘记密码</el-link></span>
+                </div>
 
+                <div class="tips">
+                    <span> 默认root : root</span>
+                    <span> 密码 : 123456</span>
                 </div>
                 <div class="tips">
-                    <span style="margin-right:18px;">
-                        <el-link type="primary" >{{msg}}</el-link>
-                    </span>
+                    <span> 学生测试账号 : stu</span>
+                    <span> 密码 : 123456</span>
+                </div>
+                <div class="tips">
+                    <span> 教师测试账号 : tea</span>
+                    <span> 密码 : 123456</span>
                 </div>
 
-                <el-button class="thirdparty-button" type="primary" @click="passwordRecover">
-                    忘记密码
-                </el-button>
-
+                <!--oath2 验证-->
+<!--                <el-button class="thirdparty-button" type="primary" @click="showDialog=true">-->
+<!--                    Or connect with-->
+<!--                </el-button>-->
             </div>
 
         </el-form>
@@ -282,10 +291,15 @@
             cursor: pointer;
             user-select: none;
         }
+        .right{
+            right: 0;
+
+        }
         .thirdparty-button {
             position: absolute;
             right: 0;
             bottom: 6px;
+
         }
         @media only screen and (max-width: 470px) {
             .thirdparty-button {

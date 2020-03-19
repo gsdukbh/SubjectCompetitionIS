@@ -59,17 +59,8 @@ public class ScisProblem implements Serializable {
     @JoinColumn(name = "works_id")
     private ScisWorks worksList;
 
-    @Override
-    public String toString() {
-        return "ScisProblem{" +
-                "id=" + id +
-                ", time=" + time +
-                ", type='" + type + '\'' +
-                ", title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                '}';
-    }
 
+    @JsonIgnore
     public ScisWorks getWorksList() {
         return worksList;
     }
@@ -78,6 +69,7 @@ public class ScisProblem implements Serializable {
         this.worksList = worksList;
     }
 
+    @JsonIgnore
     public ScisUser getScisUser() {
         return scisUser;
     }
@@ -86,6 +78,7 @@ public class ScisProblem implements Serializable {
         this.scisUser = scisUser;
     }
 
+    @JsonIgnore
     public ScisCompetition getCompetition() {
         return competition;
     }

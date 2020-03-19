@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
 import Login from '../views/login'
 import Layout from '../layout'
 import publicLayout from '../layout/components/public'
@@ -47,6 +46,11 @@ export const publicRoutes = [
         ]
 
     },
+    {
+        path:'/',
+        redirect: '/public',
+        hidden: true,
+    },
 
     /*公开的页面*/
     {
@@ -66,7 +70,7 @@ export const publicRoutes = [
 export const asyncRoutes = [
     {
         path: '/home',
-        name: 'dashboard',
+        redirect:'/home/user',
         component: Layout,
         meta: {
             title: '首页',
@@ -75,11 +79,30 @@ export const asyncRoutes = [
         },
         children: [
             {
-                path: '/user',
-                name: 'scc',
-                component: Home,
+                path: 'user',
+                name: 'home',
+                component: ()=>import('../views/dashboard/Home'),
                 meta: {
-                    title: 's',
+                    title: '我的仪表盘',
+                    roles: ['ROLE_STU']
+                }
+            },
+            {
+                path: 'user',
+                name: 'home',
+                component: ()=>import('../views/dashboard/admin'),
+                meta: {
+                    title: '我的仪表盘',
+                    roles: ['ROLE_ADMIN']
+                }
+            },
+            {
+                path: 'user',
+                name: 'home',
+                component: ()=>import('../views/dashboard/teacher'),
+                meta: {
+                    title: '我的仪表盘',
+                    roles: ['ROLE_TEA']
                 }
             }
         ]
@@ -87,7 +110,6 @@ export const asyncRoutes = [
     {
         path: '/competition',
         component: Layout,
-        alwaysShow: true,
         name: 'competition',
         meta: {
             title: '竞赛管理',
@@ -147,7 +169,7 @@ export const asyncRoutes = [
 ]
 
 const createRouter = () => new VueRouter({
-    mode: 'history',
+    // mode: 'history',
     base: process.env.BASE_URL,
     scrollBehavior: () => ({y: 0}),
     routes: publicRoutes

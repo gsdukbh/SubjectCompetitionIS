@@ -8,6 +8,8 @@ const name = defaultSettings.title
 module.exports = {
     publicPath:'/',
     devServer:{
+
+        disableHostCheck: true,
         port:8002,
         proxy:{
             '/api':{

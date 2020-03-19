@@ -55,14 +55,17 @@
                     prop="id"
                     label="ID"
                     sortable
-                    width="180">
+                    width="60">
             </el-table-column>
 
             <el-table-column
                     prop="startTime"
                     label="开始日期"
                     sortable
-                    width="180">
+                    width="150">
+                <template slot-scope="{row}">
+                    <span>{{formatTimeA(row.startTime) }}</span>
+                </template>
             </el-table-column>
 
             <el-table-column
@@ -84,6 +87,28 @@
                     label="举办地点">
             </el-table-column>
 
+            <el-table-column
+
+                    label="赛事级别"
+                    width="100"
+                    :filters="[
+                    { text: '校级', value: '校级' },
+                    { text: '院级', value: '院级' },
+                    { text: '市级', value: '市级' },
+                    { text: '区级/省级', value: '区级/省级' },
+                    { text: '国级', value: '国级' }]"
+                    :filter-method="filterTag"
+                    filter-placement="bottom-end">
+                <template slot-scope="{row}">
+                    <el-tag
+                            :type="row.level === '校级' ? 'primary' : 'success'"
+                            disable-transitions>{{row.level}}
+                    </el-tag>
+                </template>
+
+            </el-table-column>
+
+
             <el-table-column label="操作" align="center" width="350" class-name="small-padding fixed-width">
                 <template slot-scope="{row,$index}">
                     <router-link :to="'/competition/edit/'+row.id">
@@ -100,22 +125,34 @@
                         </el-button>
                     </router-link>
 
-                    <el-button style="margin-left: 10px;" v-if="row.status!=='published'" size="mini" type="success"
-                               @click="handleModifyStatus(row,'published')">
+                    <el-button style="margin-left: 10px;" v-if="row.status==='草稿'" size="mini" type="success"
+                               @click="handleModifyStatus(row.id,'公开')">
                         发布
                     </el-button>
-                    <el-button style="margin-left: 10px;" v-if="row.status!=='draft'" size="mini"
-                               @click="handleModifyStatus(row,'draft')">
+
+                    <el-button style="margin-left: 10px;" v-if="row.status==='公开'" size="mini"
+                               @click="handleModifyStatus(row.id,'草稿')">
                         草稿
                     </el-button>
+
+                    <el-button disabled style="margin-left: 10px;" v-if="row.status==='进行中'" size="mini">
+                        进行中
+                    </el-button>
+
+                    <el-button disabled style="margin-left: 10px;" v-if="row.status==='已结束'" size="mini">
+                        已结束
+                    </el-button>
+
                     <el-button v-if="row.status!=='deleted'" size="mini" type="danger"
-                               @click="handleDelete(row,$index)">
+                               @click="handleDelete(row.id,$index)">
                         删除
                     </el-button>
                 </template>
+
             </el-table-column>
 
         </el-table>
+
         <div class="center">
             <el-pagination
                     @size-change="handleSizeChange"
@@ -134,8 +171,8 @@
 </template>
 
 <script>
-    import {getData, getJson, postFrom} from "../../api/api";
-
+    import {getData, getJson, postFrom, postJson} from "../../api/api";
+    import {parseTime} from '../../utils/index'
     export default {
         name: "index",
         data() {
@@ -149,6 +186,7 @@
                         status: null,
                         startTime: null,
                         endTime: null,
+                        applyTime:null,
                         content: null,
                         author: null,
                         level: null,
@@ -159,6 +197,7 @@
                         team: null
                     }
                 ],
+                temSave: null,
                 page: {
                     size: 20,
                     page: 0,
@@ -175,6 +214,9 @@
             }
         },
         created() {
+
+        },
+        mounted() {
             getData('/public/competition/findAll')
                 .then(response => {
                     this.tableData = response.data.content;
@@ -184,10 +226,6 @@
                 .catch(error => {
                     this.$message.error("出现了一些问题" + error)
                 })
-
-
-        },
-        mounted() {
             getJson('/public/college/findAll')
                 .then(response => {
                     this.college = response.data.content;
@@ -197,6 +235,9 @@
                 })
         },
         methods: {
+            formatTimeA(time){
+                return parseTime(time,'{y}-{m}-{d} {h}:{i}')
+            },
             handleSizeChange(val) {
                 this.page.size = val;
                 this.loading = true;
@@ -215,23 +256,76 @@
                 this.loading = true;
                 this.getDataPage();
             },
-            handleModifyStatus() {
-
+            filterTag(value, row) {
+                return row.type === value;
             },
-            handleDelete() {
-
+            handleModifyStatus(id, status) {
+                getJson('/public/competition/findById/' + id)
+                    .then(response => {
+                        if (response.data.code === 200) {
+                            this.temSave = response.data.data;
+                            this.temSave.status = status;
+                            postJson('/tea/competition/save', this.temSave)
+                                .then(response => {
+                                    if (response.data.code === 200) {
+                                        this.$notify({
+                                            title: '成功',
+                                            message: '更改成功',
+                                            type: 'success'
+                                        });
+                                        this.getDataPage();
+                                    }
+                                })
+                                .catch(error => {
+                                    this.$message.error("出现了一些问题" + error)
+                                })
+                        }
+                    })
+                    .catch(error => {
+                        this.$message.error("出现了一些问题" + error)
+                    });
             },
+            handleDelete(id, index) {
+                this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    postJson('/tea/competition/deleteById/' + id)
+                        .then(response => {
+                            if (response.data.code === 200) {
+                                this.$notify({
+                                    title: '成功',
+                                    message: '删除成功',
+                                    type: 'success'
+                                });
+                                this.tableData.splice(index, 1);
+                                this.page.totalElements -= 1;
+                            }
+                        })
+                        .catch(error => {
+                            this.$message.error("出现了一些问题" + error)
+                        });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+
             getExcel() {
                 /*获得excel文件*/
                 this.downloadLoading = true;
-                import('../../utils/excel').then(excel=>{
-                    const  tHeader=['id','竞赛名称','状态','开始时间','结束时间','详细内容','发布者','赛事级别','承办单位','举办地点','人数限制','比赛类型','是否团队赛'];
+                import('../../utils/excel').then(excel => {
+                    const tHeader = ['id', '竞赛名称', '状态', '开始时间', '结束时间', '报名时间','详细内容', '发布者', '赛事级别', '承办单位', '举办地点', '人数限制', '比赛类型', '是否团队赛'];
                     const file = [
                         "id",
                         "name",
                         "status",
                         "startTime",
                         "endTime",
+                        "applyTime",
                         "content",
                         "author",
                         "level",
@@ -240,20 +334,26 @@
                         "place",
                         "type",
                         "team"
-                    ]
-                    const data=this.jsonToArray(file);
+                    ];
+                    const data = this.jsonToArray(file);
                     excel.export_json_to_excel({
                         header: tHeader, //表头 必填
                         data, //具体数据 必填
                         filename: 'excel-list', //非必填
-                    })
+                    });
                     this.downloadLoading = false;
                 })
             },
             jsonToArray(data) {
-                return this.tableData.map(v => data.map(j => {
-                    return v[j]
-                }))
+                if (this.multipleSelection !== null) {
+                    return this.multipleSelection.map(v => data.map(j => {
+                        return v[j]
+                    }))
+                } else {
+                    return this.tableData.map(v => data.map(j => {
+                        return v[j]
+                    }))
+                }
             },
             getDataPage() {
                 postFrom('/public/competition/findAll', this.page)
@@ -266,8 +366,9 @@
                     this.$message.error("出现了一些问题" + error)
                 })
             }
-        }
 
+
+        }
     }
 </script>
 

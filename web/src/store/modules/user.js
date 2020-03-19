@@ -6,7 +6,7 @@ import { resetRouter } from '../../router'
 const state = {
   token: getToken(),
   name: '',
-  avatar: 'https://avatars3.githubusercontent.com/u/43371824?s=460&v=4',
+  avatar: 'https://img.werls.top/images/2020/03/18/389a94e79010d272cf5c2b55e3960a48.png',
   introduction: '',
   roles: []/*做权限管理*/
 }
@@ -60,10 +60,10 @@ const actions = {
           reject('验证失败，请重新登录.')
         }else if(data.code === 0 ){
           reject(data.message)
-         
+          this.resetToken(commit)
         }
 
-      const { role, message, avatar } = data
+      const { role, message} = data
 
         // 角色必须是非空数组
 
@@ -73,7 +73,7 @@ const actions = {
 
         commit('SET_ROLES', role)
         commit('SET_NAME', data.data.name)
-        commit('SET_AVATAR', avatar)
+        // commit('SET_AVATAR', avatar)
         // commit('SET_INTRODUCTION', introduction)
 
         resolve(data)

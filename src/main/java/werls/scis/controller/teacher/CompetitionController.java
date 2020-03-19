@@ -26,8 +26,8 @@ public class CompetitionController {
     @Autowired
     CompetitionServiceImpl competitionService;
 
-    @PostMapping("/tea/competition/save")
-    public String save(@RequestBody ScisCompetition competition) {
+    @PostMapping("/competition/save")
+    public String save(ScisCompetition competition) {
         Map<String, Object> res = new ConcurrentHashMap<>(10);
         if (competition != null) {
             res.put("code", 200);

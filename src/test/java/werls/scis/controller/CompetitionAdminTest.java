@@ -1,5 +1,6 @@
 package werls.scis.controller;
 
+import org.hibernate.annotations.Persister;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -50,6 +51,7 @@ class CompetitionAdminTest {
 //    }
 
     @Test
+
     void findById() throws Exception {
         MockMvc  mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
         MvcResult mvcResult= mockMvc.perform(MockMvcRequestBuilders.get("/public/competition/findById/5")
@@ -59,5 +61,9 @@ class CompetitionAdminTest {
 
                 .andReturn();
 
+    }
+    @Test
+    void  findByIds(){
+        System.out.println(competitionService.findById(5).get().getEndTime());;
     }
 }
