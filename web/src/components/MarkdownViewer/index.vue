@@ -26,6 +26,7 @@
             initEditor(){
                 this.html = new Viewer({
                     el: document.querySelector('#editSection'),
+                    viewer: true,
                     initialEditType: 'markdown',
                     previewStyle: 'vertical',
                 })},

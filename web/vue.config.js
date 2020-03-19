@@ -29,6 +29,8 @@ module.exports = {
             }
         }
     },
+
+
     chainWebpack(config){
         // set svg-sprite-loader
         config.module

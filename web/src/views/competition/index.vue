@@ -109,7 +109,7 @@
             </el-table-column>
 
 
-            <el-table-column label="操作" align="center" width="350" class-name="small-padding fixed-width">
+            <el-table-column label="操作" align="center" width="350px" class-name="small-padding fixed-width">
                 <template slot-scope="{row,$index}">
                     <router-link :to="'/competition/edit/'+row.id">
 

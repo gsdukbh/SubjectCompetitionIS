@@ -68,6 +68,7 @@ public class ScisAnnouncement implements Serializable {
     @JsonIgnore
     private ScisUser scisUser;
 
+    
     @Override
     public String toString() {
         return "ScisAnnouncement{" +

@@ -75,4 +75,9 @@ export const getJson =(url)=>{
         url:'/api'+url,
     })
 }
-
+export const getPoem=(url)=>{
+    return axios({
+        method:'get',
+        url:url
+    })
+}

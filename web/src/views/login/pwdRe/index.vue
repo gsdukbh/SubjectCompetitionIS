@@ -55,7 +55,7 @@
 
                         </el-popover>
 
-                        <el-button @click="resetForm('ruleForm')">重置</el-button>
+                        <el-button style="margin-left: 10px" @click="resetForm('ruleForm')">重置</el-button>
                     </el-form-item>
 
                 </el-form>

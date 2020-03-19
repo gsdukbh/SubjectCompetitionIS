@@ -14,66 +14,80 @@
 
             <div class="leftColumn">
 
-                <el-card class="box-card top left">
-                    左边详细内容
+                <el-card class="box-card top left" id="viewer" shadow="hover">
+                    <h1>内容详情
+                        <el-tag>{{showData.level}}</el-tag>
+                    </h1>
+
+                    <el-divider content-position="right">昨夜星辰昨夜风</el-divider>
+                    <!--markdown-->
+                    <el-row v-loading="loading">
+                        <div class="markdown" id="markdownViewer"></div>
+                    </el-row>
+
                 </el-card>
 
             </div>
             <div class="rightColumn">
 
-                <el-card class="box-card top right">
-                    <el-collapse>
-                        <el-collapse-item title="比赛进程" name="1">
-                            <div class="block">
+                <el-card class="box-card top right" shadow="hover">
+                    <h3>承办单位</h3>
+                    <el-divider content-position="right">画楼西畔桂堂东</el-divider>
 
-                                <el-timeline>
+                    <router-link to="#">
 
-                                    <el-timeline-item :timestamp="formatTimeA(showData.applyTime)" placement="top">
-                                        <el-card>
-                                            <h4>开始报名</h4>
-                                            <p>参赛者可以进行报名</p>
-                                        </el-card>
-                                    </el-timeline-item>
+                        <el-tooltip class="item" effect="dark" :content="'查看更多'+showData.organizer+'举办的竞赛'"
+                                    placement="bottom">
+                            <span><el-link type="primary">{{showData.organizer}}</el-link></span>
+                        </el-tooltip>
 
-                                    <el-timeline-item :timestamp="formatTimeA(showData.startTime)" placement="top">
-                                        <el-card>
-                                            <h4>比赛开始</h4>
-                                            <p>王小虎 提交于 2018/4/3 20:46</p>
-                                        </el-card>
-                                    </el-timeline-item>
-                                    <el-timeline-item timestamp="2018/4/2" placement="top">
-                                        <el-card>
-                                            <h4>更新 Github 模板</h4>
-                                            <p>王小虎 提交于 2018/4/2 20:46</p>
-                                        </el-card>
-                                    </el-timeline-item>
+                    </router-link>
 
-                                </el-timeline>
-                            </div>
-                        </el-collapse-item>
-                        <el-collapse-item title="反馈 Feedback" name="2">
-                            <div>控制反馈：通过界面样式和交互动效让用户可以清晰的感知自己的操作；</div>
-                            <div>页面反馈：操作后，通过页面元素的变化清晰地展现当前状态。</div>
-                        </el-collapse-item>
-                        <el-collapse-item title="效率 Efficiency" name="3">
-                            <div>简化流程：设计简洁直观的操作流程；</div>
-                            <div>清晰明确：语言表达清晰且表意明确，让用户快速理解进而作出决策；</div>
-                            <div>帮助用户识别：界面简单直白，让用户快速识别而非回忆，减少用户记忆负担。</div>
-                        </el-collapse-item>
-                        <el-collapse-item title="可控 Controllability" name="4">
-                            <div>用户决策：根据场景可给予用户操作建议或安全提示，但不能代替用户进行决策；</div>
-                            <div>结果可控：用户可以自由的进行操作，包括撤销、回退和终止当前操作等。</div>
-                        </el-collapse-item>
-                    </el-collapse>
+                </el-card>
+
+                <el-card class="box-card top right" shadow="hover" v-if="showData.place !==''">
+                    <h3>举办地点</h3>
+                    <el-divider content-position="right">身无彩凤双飞翼</el-divider>
+                    <span><el-link type="primary">{{showData.place}}</el-link></span>
+                </el-card>
+
+                <el-card class="box-card top right" shadow="hover">
+                    <h3>比赛进程</h3>
+                    <el-divider content-position="right">隔座送钩春酒暖</el-divider>
+                    <div class="block">
+
+                        <el-timeline>
+
+                            <el-timeline-item :timestamp="formatTimeA(showData.applyTime)" placement="top">
+                                <el-card>
+                                    <h4>开始报名</h4>
+                                    <p>参赛者可以进行报名</p>
+                                </el-card>
+                            </el-timeline-item>
+
+                            <el-timeline-item :timestamp="formatTimeA(showData.startTime)" placement="top">
+                                <el-card>
+                                    <h4>比赛开始</h4>
+                                    <p>王小虎 提交于 2018/4/3 20:46</p>
+                                </el-card>
+                            </el-timeline-item>
+                            <el-timeline-item timestamp="2018/4/2" placement="top">
+                                <el-card>
+                                    <h4>更新 Github 模板</h4>
+                                    <p>王小虎 提交于 2018/4/2 20:46</p>
+                                </el-card>
+                            </el-timeline-item>
+
+                        </el-timeline>
+                    </div>
                 </el-card>
 
 
-
-                <el-card class="box-card top right">
+                <el-card class="box-card top right" shadow="hover">
                     报名信息
                 </el-card>
 
-                <el-card class="box-card top right">
+                <el-card class="box-card top right" shadow="hover">
                     问题
                 </el-card>
 
@@ -89,6 +103,10 @@
     import Sticky from '@/components/Sticky'
     import {getJson} from "../../api/api";
     import {parseTime} from '../../utils/index'
+    import 'tui-editor/dist/tui-editor-contents.css' // editor content
+    import 'highlight.js/styles/github.css';
+    import Viewer from 'tui-editor/dist/tui-editor-Viewer'
+
     export default {
         name: "detail",
         components: {Sticky},
@@ -96,9 +114,10 @@
             return {
                 id: '',
                 showData: {},
-                loading: false,
+                loading: true,
                 tempRoute: {},
-
+                markdown: null,
+                poem: null,
             }
         },
         created() {
@@ -106,8 +125,25 @@
             this.id = this.$route.params.id;
             this.fetchData(this.id);
             this.tempRoute = Object.assign({}, this.$route);
+
+        },
+        mounted() {
+            setTimeout(() => {
+                this.markdownViewer();
+            }, 2000)
         },
         methods: {
+
+            markdownViewer() {
+                this.markdown = new Viewer({
+                    el: document.querySelector('#markdownViewer'),
+                    initialEditType: 'markdown',
+                    previewStyle: 'vertical',
+                    initialValue: this.showData.content,
+                });
+                this.loading = false;
+            },
+
             async fetchData(id) {
                 getJson('/public/competition/findById/' + id)
                     .then(response => {
@@ -127,19 +163,20 @@
                 const title = this.showData.name;
                 document.title = `${title} - ${this.id}`
             },
-            formatTimeA(time){
-                return parseTime(time,'{y}-{m}-{d} {h}:{i}')
+            formatTimeA(time) {
+                return parseTime(time, '{y}-{m}-{d} {h}:{i}')
             },
         }
-
     }
+
 </script>
 
 <style scoped>
 
-.main{
-    background-color: #83c9ba;
-}
+    .main {
+        background-color: #76baff;
+    }
+
     .top {
         margin-top: 20px;
     }
@@ -167,5 +204,9 @@
     .leftColumn {
         float: left;
         width: 75%;
+    }
+
+    #h1 {
+
     }
 </style>

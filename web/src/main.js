@@ -11,7 +11,10 @@ import '@/styles/index.scss'
 
 import './permission'
 
-Vue.config.productionTip = false
+import live2d from 'live2d-vue'
+Vue.use(live2d);
+
+Vue.config.productionTip = false;
 
 
 
