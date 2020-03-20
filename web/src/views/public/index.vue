@@ -10,10 +10,10 @@
 
 
 <script>
-    import Girl from "../../components/girl/index";
+
     export default {
         name: "index",
-        components: {Girl},
+
         mounted() {
 
         }

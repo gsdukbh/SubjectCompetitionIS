@@ -70,41 +70,22 @@ export const publicRoutes = [
 export const asyncRoutes = [
     {
         path: '/home',
-        redirect:'/home/user',
+        redirect:'/home/index',
         component: Layout,
         meta: {
-            title: '首页',
             icon: 'dashboard',
             // roles: ['ROLE_ADMIN'],
         },
         children: [
             {
-                path: 'user',
+                path: 'index',
                 name: 'home',
                 component: ()=>import('../views/dashboard/Home'),
                 meta: {
                     title: '我的仪表盘',
-                    roles: ['ROLE_STU']
+                    affix: true
                 }
             },
-            {
-                path: 'user',
-                name: 'home',
-                component: ()=>import('../views/dashboard/admin'),
-                meta: {
-                    title: '我的仪表盘',
-                    roles: ['ROLE_ADMIN']
-                }
-            },
-            {
-                path: 'user',
-                name: 'home',
-                component: ()=>import('../views/dashboard/teacher'),
-                meta: {
-                    title: '我的仪表盘',
-                    roles: ['ROLE_TEA']
-                }
-            }
         ]
     },
     {

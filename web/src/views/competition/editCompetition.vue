@@ -90,7 +90,7 @@
                         </el-radio-group>
                     </el-form-item>
 
-                    <el-form-item label="举办地点">
+                    <el-form-item label="举办地点" v-if="ruleForm.type === 'offline'">
                         <el-input
                                 placeholder="请输入内容"
                                 v-model="ruleForm.place"

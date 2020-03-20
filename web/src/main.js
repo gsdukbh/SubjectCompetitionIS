@@ -11,8 +11,6 @@ import '@/styles/index.scss'
 
 import './permission'
 
-import live2d from 'live2d-vue'
-Vue.use(live2d);
 
 Vue.config.productionTip = false;
 

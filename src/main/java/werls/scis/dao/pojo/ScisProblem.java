@@ -1,6 +1,7 @@
 package werls.scis.dao.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -37,7 +38,8 @@ public class ScisProblem implements Serializable {
     /**
      * 用户反馈问题
      */
-    @JsonIgnore
+
+    @JsonIgnoreProperties({"problems"})
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private ScisUser scisUser;
@@ -47,20 +49,20 @@ public class ScisProblem implements Serializable {
      */
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JsonIgnore
+    @JsonIgnoreProperties({"problems"})
     @JoinColumn(name = "competition_id")
     private ScisCompetition competition;
 
     /**
      * 作品问题
      */
-    @JsonIgnore
+    @JsonIgnoreProperties({"problems"})
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "works_id")
     private ScisWorks worksList;
 
 
-    @JsonIgnore
+
     public ScisWorks getWorksList() {
         return worksList;
     }
@@ -69,7 +71,7 @@ public class ScisProblem implements Serializable {
         this.worksList = worksList;
     }
 
-    @JsonIgnore
+
     public ScisUser getScisUser() {
         return scisUser;
     }
@@ -78,7 +80,7 @@ public class ScisProblem implements Serializable {
         this.scisUser = scisUser;
     }
 
-    @JsonIgnore
+
     public ScisCompetition getCompetition() {
         return competition;
     }

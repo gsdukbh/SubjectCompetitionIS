@@ -1,6 +1,7 @@
 package werls.scis.dao.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -82,6 +83,7 @@ public class ScisUser implements Serializable {
      * 公告教师，管理员专属，一对多
      */
     @Fetch(FetchMode.SUBSELECT)
+    @JsonIgnoreProperties({"scisUser"})
     @OneToMany(mappedBy = "scisUser",fetch = FetchType.EAGER)
     private List<ScisAnnouncement> announcements;
 
@@ -89,6 +91,7 @@ public class ScisUser implements Serializable {
     private List<ScisTeamApply> teamApplies;
 
     @Fetch(FetchMode.SUBSELECT)
+    @JsonIgnoreProperties({"scisUser"})
     @OneToMany(mappedBy = "scisUser",fetch = FetchType.EAGER,cascade = CascadeType.REFRESH)
     private  List<ScisProblem> problems;
 

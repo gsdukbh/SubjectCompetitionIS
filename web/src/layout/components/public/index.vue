@@ -52,7 +52,7 @@
 
                         <div class="avatar-wrapper">
                             <img :src="avatar" class="user-avatar">
-                            <i class="el-icon-caret-bottom"/>
+                            <i class="el-icon-caret-bottom"></i>
                         </div>
 
                     </el-tooltip>

@@ -1,6 +1,8 @@
 package werls.scis.dao.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -36,7 +38,7 @@ public class ScisAnnouncement implements Serializable {
     /**
      * 公告时间
      */
-//    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH-mm-ss")
     @Column(name = "announcement_time")
     private Date time;
     /**
@@ -65,7 +67,7 @@ public class ScisAnnouncement implements Serializable {
 
     @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(name = "user_id")
-    @JsonIgnore
+    @JsonIgnoreProperties({"announcements"})
     private ScisUser scisUser;
 
     

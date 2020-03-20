@@ -2,9 +2,13 @@
     <div class="main">
 
         <sticky :z-index="10" class-name="sub-navbar">
-            <el-button style="margin-left: 10px;" type="success">
-                publish
-            </el-button>
+
+            <router-link :to="'/competition/edit/'+showData.id">
+                <el-button style="margin-left: 10px;" type="success">
+                    修改
+                </el-button>
+            </router-link>
+
         </sticky>
         <!--标题-->
         <div class="title">
@@ -16,7 +20,10 @@
 
                 <el-card class="box-card top left" id="viewer" shadow="hover">
                     <h1>内容详情
-                        <el-tag>{{showData.level}}</el-tag>
+                        <svg-icon icon-class="content"></svg-icon>
+                        <el-tag style="margin-left: 10px">{{showData.level}}</el-tag>
+                        <el-tag style="margin-left: 10px" v-if="showData.type === 'online'">线上比赛</el-tag>
+
                     </h1>
 
                     <el-divider content-position="right">昨夜星辰昨夜风</el-divider>
@@ -31,7 +38,7 @@
             <div class="rightColumn">
 
                 <el-card class="box-card top right" shadow="hover">
-                    <h3>承办单位</h3>
+                    <h3>承办单位 <svg-icon icon-class="college"></svg-icon></h3>
                     <el-divider content-position="right">画楼西畔桂堂东</el-divider>
 
                     <router-link to="#">
@@ -48,11 +55,16 @@
                 <el-card class="box-card top right" shadow="hover" v-if="showData.place !==''">
                     <h3>举办地点</h3>
                     <el-divider content-position="right">身无彩凤双飞翼</el-divider>
-                    <span><el-link type="primary">{{showData.place}}</el-link></span>
+                    <span><el-link type="primary">比赛地点 {{showData.place}}</el-link></span>
                 </el-card>
 
                 <el-card class="box-card top right" shadow="hover">
-                    <h3>比赛进程</h3>
+
+                    <h3>比赛进程
+                        <svg-icon icon-class="match"></svg-icon>
+
+                    </h3>
+
                     <el-divider content-position="right">隔座送钩春酒暖</el-divider>
                     <div class="block">
 
@@ -61,21 +73,22 @@
                             <el-timeline-item :timestamp="formatTimeA(showData.applyTime)" placement="top">
                                 <el-card>
                                     <h4>开始报名</h4>
-                                    <p>参赛者可以进行报名</p>
+                                    <p>参赛者可以进行报名 时间：{{formatTimeA(showData.applyTime)}}</p>
                                 </el-card>
                             </el-timeline-item>
 
                             <el-timeline-item :timestamp="formatTimeA(showData.startTime)" placement="top">
                                 <el-card>
                                     <h4>比赛开始</h4>
-                                    <p>王小虎 提交于 2018/4/3 20:46</p>
+                                    <p>比赛开始于： {{formatTimeA(showData.startTime)}} </p>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="2018/4/2" placement="top">
+                            <el-timeline-item :timestamp="formatTimeA(showData.endTime)" placement="top">
                                 <el-card>
-                                    <h4>更新 Github 模板</h4>
-                                    <p>王小虎 提交于 2018/4/2 20:46</p>
+                                    <h4>比赛结束</h4>
+                                    <p>比赛于：{{formatTimeA(showData.endTime)}} 结束</p>
                                 </el-card>
+
                             </el-timeline-item>
 
                         </el-timeline>

@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @date Date : 2020年03月08日 0:27
  */
 @RestController
-@RequestMapping("/public")
+@RequestMapping("/public/competition")
 public class CompetitionAdmin {
 
     @Autowired
@@ -40,7 +40,7 @@ public class CompetitionAdmin {
      * @param size 每页大小
      * @return Page
      */
-    @RequestMapping("/competition/findAll")
+    @RequestMapping("/findAll")
 //    @Cacheable(value = "CompetitionAll", key = "'page:'+#page+'size:'+#size+'name:'+#name+'organizer:'+#organizer", unless = "#result == null ")
     public Page<ScisCompetition> findByAll(@RequestParam(name = "page", defaultValue = "0") Integer page,
                                            @RequestParam(name = "size", defaultValue = "20") Integer size,
@@ -64,8 +64,8 @@ public class CompetitionAdmin {
     }
 
 
-//    @Cacheable(value = "CompetitionAll", key = "'id:'+#id", unless = "#result == null ")
-    @GetMapping("/competition/findById/{id}")
+    @Cacheable(value = "CompetitionAll", key = "'id:'+#id", unless = "#result == null ")
+    @GetMapping("/findById/{id}")
     public ScisCompetition findById(@PathVariable Integer id){
 
         if (competitionService.findById(id).isPresent()){

@@ -33,13 +33,13 @@ public class MyInfo {
 
     @Cacheable(value = "uInfo",key = "#info",unless = "#result == null")
     @PostMapping(value = "/i")
-    public String getUserInfo(@Param("info") String info) {
+    public Map<String, Object> getUserInfo(@Param("info") String info) {
         ScisUser user = this.userService.findByLoginOrPhoneOrIdentityOrEmail(info);
         Map<String, Object> res = new ConcurrentHashMap<>();
         if (user == null) {
             res.put("code", 404);
             res.put("message", "null");
-            return JSON.toJSONString(res);
+            return res;
         } else {
             res.put("code", 200);
             res.put("message", "success");
@@ -53,7 +53,7 @@ public class MyInfo {
             res.put("role",role);
             user.setPassword("");
             user.setRoles(null);
-            return JSON.toJSONString(res);
+            return res;
         }
     }
 
