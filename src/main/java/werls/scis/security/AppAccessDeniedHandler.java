@@ -46,7 +46,7 @@ public class AppAccessDeniedHandler implements AccessDeniedHandler {
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         PrintWriter out = response.getWriter();
         Map<String,Object> map = new ConcurrentHashMap<>();
-        map.put("code",403);
+        map.put("status",403);
         map.put("message", "权限不足");
         out.write(objectMapper.writeValueAsString(map));
         out.flush();

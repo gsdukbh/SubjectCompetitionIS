@@ -75,5 +75,13 @@ public class ProblemServiceImpl {
     public void deleteById(Integer id){
         this.problemRepository.deleteById(id);
     }
-
+    /**
+     * 按照竞赛id进行查询
+     * @param id id
+     * @param pageable pageable
+     * @return   Page<ScisProblem>
+     */
+    public Page<ScisProblem> findByCompetitionId(Integer id,Pageable pageable){
+        return problemRepository.findByCompetitionId(id,pageable);
+    }
 }

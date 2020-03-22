@@ -15,6 +15,7 @@ import werls.scis.service.CompetitionServiceImpl;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -66,13 +67,18 @@ public class CompetitionAdmin {
 
     @Cacheable(value = "CompetitionAll", key = "'id:'+#id", unless = "#result == null ")
     @GetMapping("/findById/{id}")
-    public ScisCompetition findById(@PathVariable Integer id){
-
-        if (competitionService.findById(id).isPresent()){
-            return  competitionService.findById(id).get();
+    public Map<String, Object> findById(@PathVariable Integer id){
+        Map<String, Object> res=new ConcurrentHashMap<>(10);
+        Optional<ScisCompetition> competition=competitionService.findById(id);
+        if (competition.isPresent()){
+            res.put("status",200);
+            res.put("message","Success");
+            res.put("data",competition.get());
+            return res;
         }else {
-
-            return  null;
+            res.put("status",404);
+            res.put("message","fail");
+            return res;
         }
     }
 }

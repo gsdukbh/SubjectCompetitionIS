@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 import werls.scis.dao.pojo.ScisCompetition;
 import werls.scis.service.CompetitionServiceImpl;
@@ -27,26 +28,27 @@ public class CompetitionController {
     CompetitionServiceImpl competitionService;
 
     @PostMapping("/competition/save")
-    public String save(ScisCompetition competition) {
+    public  Map<String, Object> save( @RequestParam ScisCompetition competition) {
         Map<String, Object> res = new ConcurrentHashMap<>(10);
         if (competition != null) {
-            res.put("code", 200);
+            res.put("status", 200);
             res.put("message", "ok");
-            competitionService.save(competition);
-            return JSON.toJSONString(res);
+            System.out.println(competition.toString());
+//            competitionService.save(competition);
+            return res;
         } else {
-            res.put("code", 404);
+            res.put("status", 404);
             res.put("message", "fail");
-            return JSON.toJSONString(res);
+            return res;
         }
     }
     @CacheEvict(value = "CompetitionAll", key = "'id:'+#id")
     @PostMapping("/competition/deleteById/{id}")
-    public Object deleteById(@PathVariable Integer id){
+    public Map<String, Object> deleteById(@PathVariable Integer id){
         Map<String, Object> res = new ConcurrentHashMap<>();
-        res.put("code",200);
+        res.put("status",200);
         res.put("message","Success");
         competitionService.deleteById(id);
-        return JSON.toJSON(res);
+        return res;
     }
 }

@@ -37,11 +37,11 @@ public class MyInfo {
         ScisUser user = this.userService.findByLoginOrPhoneOrIdentityOrEmail(info);
         Map<String, Object> res = new ConcurrentHashMap<>();
         if (user == null) {
-            res.put("code", 404);
+            res.put("status", 404);
             res.put("message", "null");
             return res;
         } else {
-            res.put("code", 200);
+            res.put("status", 200);
             res.put("message", "success");
             res.put("data", user);
             List<String> role= new ArrayList<>();

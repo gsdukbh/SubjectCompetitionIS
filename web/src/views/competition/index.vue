@@ -125,12 +125,12 @@
                         </el-button>
                     </router-link>
 
-                    <el-button style="margin-left: 10px;" v-if="row.status==='草稿'" size="mini" type="success"
+                    <el-button :loading="loading1" style="margin-left: 10px;" v-if="row.status ==='草稿'" size="mini" type="success"
                                @click="handleModifyStatus(row.id,'公开')">
                         发布
                     </el-button>
 
-                    <el-button style="margin-left: 10px;" v-if="row.status==='公开'" size="mini"
+                    <el-button :loading="loading1" style="margin-left: 10px;" v-if="row.status==='公开'" size="mini"
                                @click="handleModifyStatus(row.id,'草稿')">
                         草稿
                     </el-button>
@@ -143,7 +143,7 @@
                         已结束
                     </el-button>
 
-                    <el-button v-if="row.status!=='deleted'" size="mini" type="danger"
+                    <el-button style="margin-left: 10px;" v-if="row.status!=='deleted'" size="mini" type="danger"
                                @click="handleDelete(row.id,$index)">
                         删除
                     </el-button>
@@ -179,6 +179,7 @@
             return {
                 html: null,
                 loading: true,
+                loading1:false,
                 tableData: [
                     {
                         id: null,
@@ -238,6 +239,9 @@
             formatTimeA(time){
                 return parseTime(time,'{y}-{m}-{d} {h}:{i}')
             },
+            formatTimeB(time){
+                return parseTime(time)
+            },
             handleSizeChange(val) {
                 this.page.size = val;
                 this.loading = true;
@@ -260,28 +264,35 @@
                 return row.type === value;
             },
             handleModifyStatus(id, status) {
+                this.loading1=true;
                 getJson('/public/competition/findById/' + id)
-                    .then(response => {
-                        if (response.data.code === 200) {
-                            this.temSave = response.data.data;
-                            this.temSave.status = status;
-                            postJson('/tea/competition/save', this.temSave)
                                 .then(response => {
-                                    if (response.data.code === 200) {
-                                        this.$notify({
-                                            title: '成功',
-                                            message: '更改成功',
-                                            type: 'success'
-                                        });
-                                        this.getDataPage();
+                                    if (response.data.status === 200) {
+                                        this.temSave = response.data.data;
+                                        this.temSave.status = status;
+                                        // this.temSave.startTime=this.formatTimeB(this.temSave.startTime);
+                                        // this.temSave.endTime=this.formatTimeB(this.temSave.endTime);
+                                        // this.temSave.applyTime=this.formatTimeB(this.temSave.applyTime);
+                                        postJson('/tea/competition/save', this.temSave)
+                                            .then(response => {
+                                                if (response.data.status === 200) {
+                                                    this.$notify({
+                                                        title: '成功',
+                                                        message: '更改成功',
+                                                        type: 'success'
+                                                    });
+                                                    this.getDataPage();
+                                                    this.loading1=false;
+                                                }
+                                            })
+                                            .catch(error => {
+                                                this.loading1=false;
+                                                this.$message.error("出现了一些问题" + error)
+                                            })
                                     }
-                                })
-                                .catch(error => {
-                                    this.$message.error("出现了一些问题" + error)
-                                })
-                        }
                     })
                     .catch(error => {
+                        this.loading1=false;
                         this.$message.error("出现了一些问题" + error)
                     });
             },
@@ -293,7 +304,7 @@
                 }).then(() => {
                     postJson('/tea/competition/deleteById/' + id)
                         .then(response => {
-                            if (response.data.code === 200) {
+                            if (response.data.status === 200) {
                                 this.$notify({
                                     title: '成功',
                                     message: '删除成功',

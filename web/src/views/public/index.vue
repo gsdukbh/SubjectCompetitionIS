@@ -2,9 +2,6 @@
     <div >
 
         这里是首页
-<girl>
-
-</girl>
     </div>
 </template>
 
@@ -13,7 +10,11 @@
 
     export default {
         name: "index",
+        data(){
+            return{
 
+            }
+        },
         mounted() {
 
         }

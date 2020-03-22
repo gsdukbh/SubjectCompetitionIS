@@ -34,11 +34,11 @@ public class AnnouncementController {
         Map<String, Object> res = new ConcurrentHashMap<>(10);
         if (announcement != null){
             service.save(announcement);
-            res.put("code",200);
+            res.put("status",200);
             res.put("message","Success");
             return JSON.toJSONString(res);
         }else {
-            res.put("code",400);
+            res.put("status",400);
             res.put("message","Null");
             return  JSON.toJSONString(res);
         }

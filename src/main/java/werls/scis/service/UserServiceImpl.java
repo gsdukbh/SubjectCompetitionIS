@@ -70,6 +70,10 @@ public class UserServiceImpl implements UserDetailsService {
     public Page<ScisUser> findAll(Pageable pageable) {
         return userRepository.findAll(pageable);
     }
+
+    public Page<ScisUser> findByRoleName(String name,Pageable pageable){
+        return userRepository.findByRoleName(name,pageable);
+    }
     /**
      * 通过用户查询
      * @param login login

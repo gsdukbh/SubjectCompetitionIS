@@ -239,7 +239,7 @@
                 NProgress.start()
                 postFrom('/public/password/recover/find', this.ruleForm)
                     .then(response => {
-                        if (response.data.code === 200) {
+                        if (response.data.status === 200) {
                             this.getData.email = response.data.email || '';
                             this.getData.phone = response.data.phone || '';
                             this.active = 1;
@@ -285,7 +285,7 @@
                 NProgress.start()
                 await postFrom('/public/password/recover/email', this.getData)
                     .then(response => {
-                        if (response.data.code === 200) {
+                        if (response.data.status === 200) {
                             this.$notify({
                                 title: '发送成功',
                                 message: response.data.message,
@@ -294,7 +294,7 @@
                             this.recover.email = this.getData.email;
                             this.loading = false;
                             NProgress.done()
-                        } else if (response.data.code === 404) {
+                        } else if (response.data.status === 404) {
                             this.$notify({
                                 title: '警告',
                                 message: response.data.message,
@@ -313,7 +313,7 @@
                     if (valid) {
                         postFrom('/public/password/recover/email/code',this.recover)
                         .then(response=>{
-                            if (response.data.code === 200) {
+                            if (response.data.status === 200) {
                                 this.$notify({
                                     title: '成功',
                                     message: response.data.message,
@@ -327,7 +327,7 @@
                                     this.$router.push({path: '/login' || '/'})
                                 }, 3000 * Math.random());
                                 NProgress.done()
-                            }else if (response.data.code === 404){
+                            }else if (response.data.status === 404){
                                 this.$notify.error({
                                     title: '超时',
                                     message: response.data.message,

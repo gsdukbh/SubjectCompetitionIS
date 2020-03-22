@@ -159,7 +159,7 @@
 
 <script>
     import MarkdownEditor from '@/components/MarkdownEditor'
-    import {getJson, postFrom} from "../../api/api";
+    import {getJson, postJson} from "../../api/api";
 
     export default {
         name: "editCompetition",
@@ -234,9 +234,9 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    postFrom('/tea/competition/save', this.ruleForm)
+                    postJson('/tea/competition/save', this.ruleForm)
                         .then(response => {
-                            if (response.data.code === 200) {
+                            if (response.data.status === 200) {
                                 this.$message({
                                     message: '提交成功',
                                     type: 'success'
@@ -248,10 +248,6 @@
                             this.$message.error("出现了一些问题" + error)
                         });
 
-                    this.$message({
-                        type: 'success',
-                        message: '提交成功!'
-                    });
                 }).catch(() => {
                     this.$message({
                         type: 'info',

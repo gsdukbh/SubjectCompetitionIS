@@ -1,6 +1,7 @@
 package werls.scis.dao.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -37,7 +38,7 @@ public class ScisApplyFrom implements Serializable {
 
     @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(name = "user_id")
-    @JsonIgnore
+    @JsonIgnoreProperties({"applyFroms"})
     private ScisUser scisUser;
 
     /**
@@ -45,7 +46,7 @@ public class ScisApplyFrom implements Serializable {
      */
     @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(name = "competition_id")
-    @JsonIgnore
+    @JsonIgnoreProperties({"applyFromList"})
     private ScisCompetition competition;
 
     @Override

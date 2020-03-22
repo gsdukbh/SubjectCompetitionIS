@@ -160,7 +160,7 @@
             async fetchData(id) {
                 getJson('/public/competition/findById/' + id)
                     .then(response => {
-                        this.showData = response.data;
+                        this.showData = response.data.data;
                         this.setTagsViewTitle();
                         this.setPageTitle();
                     })

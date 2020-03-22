@@ -39,4 +39,11 @@ public interface ProblemRepository extends JpaRepository<ScisProblem,Integer> {
      */
     Page<ScisProblem>findByTitleLike(String title, Pageable pageable);
 
+    /**
+     * 按照竞赛id进行查询
+     * @param id id
+     * @param pageable pageable
+     * @return   Page<ScisProblem>
+     */
+    Page<ScisProblem> findByCompetitionId(Integer id,Pageable pageable);
 }

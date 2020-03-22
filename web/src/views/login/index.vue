@@ -145,13 +145,13 @@
                         this.$store.dispatch('user/login', this.loginForm)
                             .then(response => {
 
-                                if (response.data.code === 401) {
+                                if (response.data.status === 401) {
                                     this.$notify.error({
                                         title: '错误',
                                         message: response.data.message
                                     });
 
-                                } else if (response.data.code === 200) {
+                                } else if (response.data.status === 200) {
                                     this.$notify.success({
                                         title: '登录成功',
                                         message: response.data.message

@@ -78,6 +78,7 @@ public class ScisUser implements Serializable {
      */
     @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "scisUser",fetch = FetchType.EAGER)
+    @JsonIgnoreProperties({"scisUser"})
     private List<ScisApplyFrom>applyFroms;
     /**
      * 公告教师，管理员专属，一对多
@@ -85,9 +86,11 @@ public class ScisUser implements Serializable {
     @Fetch(FetchMode.SUBSELECT)
     @JsonIgnoreProperties({"scisUser"})
     @OneToMany(mappedBy = "scisUser",fetch = FetchType.EAGER)
+
     private List<ScisAnnouncement> announcements;
 
     @ManyToMany(mappedBy = "scisUserList",fetch = FetchType.EAGER)
+    @JsonIgnoreProperties({"scisUserList"})
     private List<ScisTeamApply> teamApplies;
 
     @Fetch(FetchMode.SUBSELECT)

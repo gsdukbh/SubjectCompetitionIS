@@ -1,6 +1,8 @@
 package werls.scis.dao.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.oracle.webservices.internal.api.databinding.DatabindingMode;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -39,7 +41,6 @@ public class ScisCompetition implements Serializable {
     private Date startTime;
     @Column(name = "competition_end_time")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH-mm-ss")
-
     private Date endTime;
     @Column(name = "competition_apply_time")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH-mm-ss")
@@ -67,27 +68,52 @@ public class ScisCompetition implements Serializable {
      */
     @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "competition", fetch = FetchType.EAGER)
-    @JsonIgnore
+    @JsonIgnoreProperties({"competition"})
     private List<ScisApplyFrom> applyFromList;
     /**
      * 团体报名
      */
     @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "competition", fetch = FetchType.EAGER)
-    @JsonIgnore
+    @JsonIgnoreProperties({"competition"})
     private List<ScisTeamApply> teamApplyList;
     /**
      * 竞赛作品
      */
     @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "competition", fetch = FetchType.EAGER)
-    @JsonIgnore
+    @JsonIgnoreProperties({"competition"})
     private List<ScisWorks> works;
 
     @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "competition", fetch = FetchType.EAGER)
-    @JsonIgnore
+    @JsonIgnoreProperties({"competition"})
     private List<ScisProblem> problems;
+
+    @Override
+    public String toString() {
+        return "ScisCompetition{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", status='" + status + '\'' +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", applyTime=" + applyTime +
+                ", content='" + content + '\'' +
+                ", author='" + author + '\'' +
+                ", level='" + level + '\'' +
+                ", organizer='" + organizer + '\'' +
+                ", numLimit='" + numLimit + '\'' +
+                ", place='" + place + '\'' +
+                ", type='" + type + '\'' +
+                ", team=" + team +
+                ", notification=" + notification +
+                ", applyFromList=" + applyFromList +
+                ", teamApplyList=" + teamApplyList +
+                ", works=" + works +
+                ", problems=" + problems +
+                '}';
+    }
 
     public Boolean getNotification() {
         return notification;

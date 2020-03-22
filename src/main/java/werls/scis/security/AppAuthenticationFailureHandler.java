@@ -49,7 +49,7 @@ public class AppAuthenticationFailureHandler implements AuthenticationFailureHan
         response.setContentType("application/json;charset=utf-8");
         PrintWriter out = response.getWriter();
         Map<String,Object> map = new ConcurrentHashMap<>();
-        map.put("code",401);
+        map.put("status",401);
         if (exception instanceof UsernameNotFoundException || exception instanceof BadCredentialsException) {
             map.put("message","用户名或密码错误");
         } else if (exception instanceof DisabledException) {

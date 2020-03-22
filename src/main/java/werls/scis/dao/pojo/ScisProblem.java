@@ -1,14 +1,11 @@
 package werls.scis.dao.pojo;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
-import java.util.List;
 
 /**
  * 问题反馈
@@ -28,6 +25,7 @@ public class ScisProblem implements Serializable {
     @Column(name="problem_id")
     private Integer id;
     @Column(name = "problem_time")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH-mm-ss")
     private Date time;
     @Column(name = "problem_type")
     private String type;
@@ -61,7 +59,18 @@ public class ScisProblem implements Serializable {
     @JoinColumn(name = "works_id")
     private ScisWorks worksList;
 
+    @OneToOne(cascade=CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private ScisReply reply;
 
+
+    public ScisReply getReply() {
+        return reply;
+    }
+
+    public void setReply(ScisReply reply) {
+        this.reply = reply;
+    }
 
     public ScisWorks getWorksList() {
         return worksList;

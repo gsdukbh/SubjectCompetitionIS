@@ -73,12 +73,12 @@ public class Password {
         Map<String, Object> res = new ConcurrentHashMap<>();
         ScisUser user = userService.findByLoginOrPhoneOrIdentityOrEmail(email);
         if (user == null) {
-            res.put("code", 404);
+            res.put("status", 404);
             res.put("message", "该邮箱没有绑定用户，请请更换方式");
             return JSON.toJSONString(res);
         } else {
             /*发送送验证码*/
-            res.put("code", 200);
+            res.put("status", 200);
             String send = code.code();
             /*redis 保存验证码 5分钟*/
             redisTemplate.opsForValue().set(email, send, 5, TimeUnit.MINUTES);
@@ -99,11 +99,11 @@ public class Password {
         Map<String, Object> res = new ConcurrentHashMap<>();
         String redisCode = redisTemplate.opsForValue().get(email);
         if (redisCode == null) {
-            res.put("code", 404);
+            res.put("status", 404);
             res.put("message", "验证码无效，重新输入");
             return JSON.toJSONString(res);
         } else if (redisCode.equals(code)) {
-            res.put("code", 200);
+            res.put("status", 200);
             res.put("message", "密码修改成功");
             ScisUser user = userService.findByLoginOrPhoneOrIdentityOrEmail(email);
             user.setPassword(new BCryptPasswordEncoder().encode(password));
@@ -111,7 +111,7 @@ public class Password {
             userService.save(user);
             return JSON.toJSONString(res);
         } else {
-            res.put("code", 403);
+            res.put("status", 403);
             res.put("message", "验证码错误");
             return JSON.toJSONString(res);
         }
@@ -123,11 +123,11 @@ public class Password {
         Map<String, Object> res = new HashMap<>();
         ScisUser user = userService.findByLoginOrPhoneOrIdentityOrEmail(phone);
         if (user == null) {
-            res.put("code", 404);
+            res.put("status", 404);
             res.put("message", "没有该用户");
             return JSON.toJSONString(res);
         } else {
-            res.put("code", 200);
+            res.put("status", 200);
             /*通过手机发送验证码*/
             return JSON.toJSONString(res);
         }
@@ -139,12 +139,12 @@ public class Password {
         Map<String, Object> res = new HashMap<>();
         ScisUser user = userService.findByLoginOrPhoneOrIdentityOrEmail(name);
         if (user == null) {
-            res.put("code", 404);
+            res.put("status", 404);
             res.put("message", "没有该用户");
             logger.info("正在查询："+name);
             return JSON.toJSONString(res);
         } else {
-            res.put("code", 200);
+            res.put("status", 200);
             res.put("message", "有该用户");
             String email = user.getEmail() == null ? null : user.getEmail().substring(0, 3) +
                     "****" +
