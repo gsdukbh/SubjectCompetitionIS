@@ -181,7 +181,7 @@
                     place: '',
                     notification: false,
                 },
-                item: 1,
+                item: 2,
                 teamValue: false,
                 college: {
                     id: '',

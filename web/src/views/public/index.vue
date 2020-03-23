@@ -1,23 +1,39 @@
 <template>
-    <div >
+    <div>
 
-        这里是首页
+
+        <markdown-viewer v-bind:content="cda"></markdown-viewer>
+
+      121
     </div>
 </template>
 
 
 <script>
 
+
+
+    import MarkdownViewer from "../../components/MarkdownViewer/index";
     export default {
         name: "index",
-        data(){
-            return{
-
+        components: {MarkdownViewer},
+        data() {
+            return {
+                cda:'```js\n' +
+                    'console.log(\'foo\')\n' +
+                    '```\n' +
+                    '```javascript\n' +
+                    'console.log(\'bar\')\n' +
+                    '```\n' +
+                    '```html\n' +
+                    '<div id="editor"><span>baz</span></div>\n' +
+                    '```'
             }
         },
         mounted() {
 
-        }
+        },
+        methods: {}
     }
 </script>
 

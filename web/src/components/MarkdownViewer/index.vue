@@ -1,37 +1,62 @@
-
 <template>
-    <div id="editSection"></div>
+
+
+    <el-row v-loading="loading">
+        <div id="viewer"></div>
+    </el-row>
 </template>
 
 <script>
-    import 'tui-editor/dist/tui-editor-contents.css' // editor content
+    import '@toast-ui/editor/dist/toastui-editor-viewer.css';
     import 'highlight.js/styles/github.css';
+    import 'tui-chart/dist/tui-chart.css';
+    import defaultOptions from './options'
     import Viewer from 'tui-editor/dist/tui-editor-Viewer'
+
     export default {
         name: "MarkdownViewer",
-        data(){
-            return {
-                html:null,
-                content:'![image](https://uicdn.toast.com/toastui/img/tui-editor-bi.png) \n' +
-                    '' +
-                    '| @cols=2:merged |\n' +
-                    '| --- | --- |\n' +
-                    '| table | table |'
+        props: {
+            content: {
+                type: String,
+                default: ''
             }
         },
-        mounted() {
-         this.initEditor();
+        data() {
+            return {
+                viewer: null,
+                contents: null,
+                loading:true,
+            }
         },
-        methods:{
-            initEditor(){
-                this.html = new Viewer({
-                    el: document.querySelector('#editSection'),
-                    viewer: true,
-                    initialEditType: 'markdown',
-                    previewStyle: 'vertical',
-                })},
-            initialValue(){
-            this.html.setValue(this.content)
+        computed: {
+            editorOptions() {
+                const options = Object.assign({}, defaultOptions, this.options)
+                options.initialEditType = this.mode;
+                options.height = this.height;
+                options.language = this.language;
+                return options
+            }
+        },
+        created(){
+
+        },
+        mounted() {
+            // this.markdownViewer()
+            setTimeout(() => {
+                this.markdownViewer()
+            }, 2000)
+        },
+        methods: {
+
+            markdownViewer() {
+
+                this.viewer = new Viewer({
+                    el: document.getElementById("viewer"),
+                    ...this.editorOptions,
+                    // initialValue: this.contents,
+                });
+                this.viewer.setValue(this.content);
+                this.loading=false;
             }
         }
     }

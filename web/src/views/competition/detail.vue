@@ -10,6 +10,7 @@
             </router-link>
 
         </sticky>
+
         <!--标题-->
         <div class="title">
             <span>{{showData.name}}</span>
@@ -18,7 +19,7 @@
 
             <div class="leftColumn">
 
-                <el-card class="box-card top left" id="viewer" shadow="hover">
+                <el-card class="box-card top left" shadow="hover">
                     <h1>内容详情
                         <svg-icon icon-class="content"></svg-icon>
                         <el-tag style="margin-left: 10px">{{showData.level}}</el-tag>
@@ -28,13 +29,19 @@
 
                     <el-divider content-position="right">昨夜星辰昨夜风</el-divider>
                     <!--markdown-->
+
                     <el-row v-loading="loading">
-                        <div class="markdown" id="markdownViewer"></div>
+
+<!--                        <div id="viewer"></div>-->
+                        <markdown-viewer v-bind:content="showData.content">
+                        </markdown-viewer>
                     </el-row>
 
                 </el-card>
 
             </div>
+
+
             <div class="rightColumn">
 
                 <el-card class="box-card top right" shadow="hover">
@@ -116,21 +123,20 @@
     import Sticky from '@/components/Sticky'
     import {getJson} from "../../api/api";
     import {parseTime} from '../../utils/index'
-    import 'tui-editor/dist/tui-editor-contents.css' // editor content
-    import 'highlight.js/styles/github.css';
-    import Viewer from 'tui-editor/dist/tui-editor-Viewer'
+    import MarkdownViewer from "../../components/MarkdownViewer/index";
 
     export default {
         name: "detail",
-        components: {Sticky},
+        components: {MarkdownViewer, Sticky},
         data() {
             return {
                 id: '',
                 showData: {},
-                loading: true,
+                loading: false,
                 tempRoute: {},
                 markdown: null,
                 poem: null,
+
             }
         },
         created() {
@@ -141,22 +147,9 @@
 
         },
         mounted() {
-            setTimeout(() => {
-                this.markdownViewer();
-            }, 2000)
+
         },
         methods: {
-
-            markdownViewer() {
-                this.markdown = new Viewer({
-                    el: document.querySelector('#markdownViewer'),
-                    initialEditType: 'markdown',
-                    previewStyle: 'vertical',
-                    initialValue: this.showData.content,
-                });
-                this.loading = false;
-            },
-
             async fetchData(id) {
                 getJson('/public/competition/findById/' + id)
                     .then(response => {

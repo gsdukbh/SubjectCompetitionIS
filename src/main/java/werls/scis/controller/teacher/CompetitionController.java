@@ -28,13 +28,28 @@ public class CompetitionController {
     CompetitionServiceImpl competitionService;
 
     @PostMapping("/competition/save")
-    public  Map<String, Object> save( @RequestParam ScisCompetition competition) {
+    public Map<String, Object> save(@RequestBody JSONObject json) {
         Map<String, Object> res = new ConcurrentHashMap<>(10);
-        if (competition != null) {
+        if (json != null) {
             res.put("status", 200);
             res.put("message", "ok");
-            System.out.println(competition.toString());
-//            competitionService.save(competition);
+            ScisCompetition competition1=JSONObject.toJavaObject(json,ScisCompetition.class) ;
+//            competition1.setId(json.getInteger("id"));
+//            competition1.setName(json.getString("name"));
+//            competition1.setStartTime(json.getDate("startTime"));
+//            competition1.setEndTime(json.getDate("endTime"));
+//            competition1.setApplyTime(json.getDate("applyTime"));
+//            competition1.setContent(json.getString("content"));
+//            competition1.setAuthor(json.getString("author"));
+//            competition1.setLevel(json.getString("level"));
+//            competition1.setOrganizer(json.getString("organizer"));
+//            competition1.setNumLimit(json.getString("numLimit"));
+//            competition1.setPlace(json.getString("place"));
+//            competition1.setType(json.getString("type"));
+//            competition1.setTeam(json.getBoolean("team"));
+//            competition1.setNotification(json.getBoolean("notification"));
+
+            competitionService.save(competition1);
             return res;
         } else {
             res.put("status", 404);
@@ -42,12 +57,13 @@ public class CompetitionController {
             return res;
         }
     }
+
     @CacheEvict(value = "CompetitionAll", key = "'id:'+#id")
     @PostMapping("/competition/deleteById/{id}")
-    public Map<String, Object> deleteById(@PathVariable Integer id){
+    public Map<String, Object> deleteById(@PathVariable Integer id) {
         Map<String, Object> res = new ConcurrentHashMap<>();
-        res.put("status",200);
-        res.put("message","Success");
+        res.put("status", 200);
+        res.put("message", "Success");
         competitionService.deleteById(id);
         return res;
     }

@@ -1,4 +1,7 @@
-// doc: https://nhnent.github.io/tui.editor/api/latest/ToastUIEditor.html#ToastUIEditor
+
+import codeSyntaxHightlight from '@toast-ui/editor-plugin-code-syntax-highlight';
+import highlight from 'highlight.js';
+import chart from '@toast-ui/editor-plugin-chart';
 export default {
   minHeight: '200px',
   previewStyle: 'vertical',
@@ -6,6 +9,8 @@ export default {
   useDefaultHTMLSanitizer: true,
   usageStatistics: false,
   hideModeSwitch: false,
+  useCustomSyntax: true,
+  language: 'zh_CN',
   toolbarItems: [
     'heading',
     'bold',
@@ -22,10 +27,12 @@ export default {
     'outdent',
     'divider',
     'table',
-    'image',
+    // 'image',
     'link',
     'divider',
     'code',
-    'codeblock'
-  ]
+    'codeblock',
+  ],
+
+  plugins: [[codeSyntaxHightlight, { highlight }],[chart]]
 }

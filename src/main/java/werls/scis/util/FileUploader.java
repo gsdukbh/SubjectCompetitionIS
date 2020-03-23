@@ -1,0 +1,41 @@
+package werls.scis.util;
+
+import io.minio.MinioClient;
+import io.minio.errors.*;
+import org.springframework.stereotype.Component;
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+
+/**
+ * @author : LiJiWei
+ * @version V1.0
+ * @Project: scis
+ * @Package werls.scis.util
+ * @Description: TODO
+ * @date Date : 2020年03月23日 22:20
+ */
+
+public class FileUploader {
+    private static final String A_KEY ="1361404576";
+    private static final String S_KEY ="lijiawei+520";
+    private static final String ENDPOINT ="https://data.werls.top";
+    MinioClient minioClient = new MinioClient(ENDPOINT, A_KEY, S_KEY);
+
+    public FileUploader() throws Exception {
+
+    }
+
+    public static void main(String[] args) throws Exception {
+        try {
+            MinioClient minioClient = new MinioClient(ENDPOINT, A_KEY, S_KEY);
+            minioClient.putObject("java","4.2.1.zip", "D:\\github\\SubjectCompetitionIS\\README.md");
+        }catch ( MinioException e){
+            System.out.println(e);
+        }
+    }
+
+
+}
