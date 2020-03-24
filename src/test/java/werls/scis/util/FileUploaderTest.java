@@ -5,6 +5,7 @@ import io.minio.errors.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.stereotype.Component;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
@@ -23,10 +24,14 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 @SpringBootTest
 class FileUploaderTest {
-//    @Autowired
-//    FileUploader fileUploader;
+    @Autowired
+    FileUploader fileUploader;
     @Test
-    void putObject() throws IOException, XmlPullParserException, NoSuchAlgorithmException, InvalidKeyException, InvalidArgumentException, ErrorResponseException, NoResponseException, InvalidBucketNameException, InsufficientDataException, InternalException {
-
+    void putObject() {
+      try {
+          fileUploader.makeBucket("img");
+      }catch (Exception e){
+          System.out.println(e);
+      }
     }
 }

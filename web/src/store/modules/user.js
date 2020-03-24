@@ -55,15 +55,15 @@ const actions = {
     return new Promise((resolve, reject) => {
 
       getInfo(state.token).then(response => {
-        const { data } = response
+        const { data } = response;
         if (!data) {
           reject('验证失败，请重新登录.')
         }else if(data.code === 0 ){
-          reject(data.message)
+          reject(data.message);
           this.resetToken(commit)
         }
 
-      const { role, message} = data
+      const { role, message} = data;
 
         // 角色必须是非空数组
 
@@ -71,8 +71,8 @@ const actions = {
           reject(message)
         }
 
-        commit('SET_ROLES', role)
-        commit('SET_NAME', data.data.name)
+        commit('SET_ROLES', role);
+        commit('SET_NAME', data.data.name);
         // commit('SET_AVATAR', avatar)
         // commit('SET_INTRODUCTION', introduction)
 
@@ -87,13 +87,11 @@ const actions = {
   logout({ commit, state, dispatch }) {
     return new Promise((resolve, reject) => {
       logout(state.token).then(() => {
-        commit('SET_TOKEN', '')
-        commit('SET_ROLES', [])
-        removeToken()
-        resetRouter()
+        commit('SET_TOKEN', null);
+        commit('SET_ROLES', []);
+        removeToken();
+        resetRouter();
 
-        // 重置访问的视图和缓存的视图
-        // 固定 https://github.com/PanJiaChen/vue-element-admin/issues/2485
         dispatch('tagsView/delAllViews', null, { root: true })
 
         resolve()
@@ -104,16 +102,17 @@ const actions = {
   },
 
   // 删除令牌
-  resetToken({ commit }) {
+  resetToken({ commit ,dispatch}) {
     return new Promise(resolve => {
-      commit('SET_TOKEN', '')
-      commit('SET_ROLES', [])
-      removeToken()
-      resolve()
+      dispatch('tagsView/delAllViews', null, { root: true })
+      commit('SET_TOKEN', null);
+      commit('SET_ROLES', []);
+      removeToken();
+      resolve();
     })
   },
 
-}
+};
 
 export default {
   namespaced: true,

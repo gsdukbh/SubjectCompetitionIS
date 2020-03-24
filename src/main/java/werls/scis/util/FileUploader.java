@@ -2,6 +2,7 @@ package werls.scis.util;
 
 import io.minio.MinioClient;
 import io.minio.errors.*;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -17,7 +18,7 @@ import java.security.NoSuchAlgorithmException;
  * @Description: TODO
  * @date Date : 2020年03月23日 22:20
  */
-
+@Component
 public class FileUploader {
     private static final String A_KEY ="1361404576";
     private static final String S_KEY ="lijiawei+520";
@@ -25,7 +26,7 @@ public class FileUploader {
     MinioClient minioClient = new MinioClient(ENDPOINT, A_KEY, S_KEY);
 
     public FileUploader() throws Exception {
-
+        super();
     }
 
     public static void main(String[] args) throws Exception {
@@ -36,6 +37,8 @@ public class FileUploader {
             System.out.println(e);
         }
     }
-
+    public void makeBucket(String bucketName) throws Exception {
+        minioClient.makeBucket(bucketName);
+    }
 
 }
