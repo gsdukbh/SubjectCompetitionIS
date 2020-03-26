@@ -34,4 +34,13 @@ class FileUploaderTest {
           System.out.println(e);
       }
     }
+
+    @Test
+    void getObject() {
+        try {
+            fileUploader.getObject("img","wa.jpg","wa.jpg");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 }

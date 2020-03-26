@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import werls.scis.dao.pojo.ScisCompetition;
 import werls.scis.service.CompetitionServiceImpl;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -30,7 +31,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequestMapping("/public/competition")
 public class CompetitionAdmin {
 
-    @Autowired
+    @Resource
     CompetitionServiceImpl competitionService;
 
 
@@ -72,7 +73,7 @@ public class CompetitionAdmin {
         Optional<ScisCompetition> competition=competitionService.findById(id);
         if (competition.isPresent()){
             res.put("status",200);
-            res.put("message","Success");
+            res.put("message","success");
             res.put("data",competition.get());
             return res;
         }else {

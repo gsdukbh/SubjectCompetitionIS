@@ -38,9 +38,10 @@ const actions = {
 
       postFrom("/login", userInfo)
           .then(response => {
-            const {data} = response
-            commit('SET_TOKEN', data.token)//使用用户名
-            setToken(data.token)
+            const {data} = response;
+            commit('SET_TOKEN', data.token);//使用用户名
+            commit('SET_NAME', data.name);
+            setToken(data.token);
             resolve(response)
             // this.getInfo(commit)
           })
@@ -54,7 +55,7 @@ const actions = {
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
 
-      getInfo(state.token).then(response => {
+      getInfo(state.name).then(response => {
         const { data } = response;
         if (!data) {
           reject('验证失败，请重新登录.')

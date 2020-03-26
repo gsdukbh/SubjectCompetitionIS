@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -50,7 +51,8 @@ public class AppAuthenticationSuccessHandler  implements AuthenticationSuccessHa
         Map<String, Object> map = new ConcurrentHashMap<>();
         map.put("status", 200);
         map.put("message", "登录成功,正在转跳");
-        map.put("token",authentication.getName());
+        map.put("token",UUID.randomUUID());
+        map.put("name",authentication.getName());
         map.put("role",authentication.getAuthorities());
         response.setContentType("application/json;charset=utf-8");
         PrintWriter out = response.getWriter();

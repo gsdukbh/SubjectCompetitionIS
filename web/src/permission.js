@@ -9,7 +9,6 @@ import getPageTitle from './utils/get-page-title'
 import {whiteList} from './utils/validate'
 NProgress.configure({showSpinner: false});
 
-// const whiteList = ['/login','/','/password/recover']
 
 
 router.beforeEach(async (to, from, next) => {
