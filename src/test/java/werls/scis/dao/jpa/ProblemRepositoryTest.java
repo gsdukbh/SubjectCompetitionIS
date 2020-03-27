@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import werls.scis.service.ProblemServiceImpl;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,10 +21,10 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class ProblemRepositoryTest {
     @Autowired
-    ProblemRepository repository;
+    ProblemServiceImpl repository;
     @Test
     void findByCompetitionId() {
-        Pageable pageable1= PageRequest.of(0, 20);
-        System.out.println(repository.findByCompetitionId(8,pageable1).getContent().get(1).getContent());
+        Pageable pageable1= PageRequest.of(0, 20,Sort.by("problem_time"));
+        System.out.println(repository.findByCompetitionId(8,pageable1).getContent().toString());
     }
 }

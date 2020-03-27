@@ -3,6 +3,7 @@ package werls.scis.dao.jpa;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import werls.scis.dao.pojo.ScisProblem;
 
 import java.sql.Date;
@@ -45,5 +46,10 @@ public interface ProblemRepository extends JpaRepository<ScisProblem,Integer> {
      * @param pageable pageable
      * @return   Page<ScisProblem>
      */
-    Page<ScisProblem> findByCompetitionId(Integer id,Pageable pageable);
+    @Query(nativeQuery = true,value =
+            "select * " +
+            "from Is_problem " +
+            "where competition_id=?1"
+    )
+    Page<ScisProblem> myFindCompetitionId(Integer id,Pageable pageable);
 }

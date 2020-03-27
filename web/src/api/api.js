@@ -1,6 +1,7 @@
 import axios from 'axios'
 import  qs from 'qs'
 
+
 /**
  * JSON
  * @param url
@@ -14,7 +15,7 @@ export const postJson = (url,params)=>{
         header:{
         }
     })
-}
+};
 
 /**]
  * From
@@ -33,21 +34,21 @@ export const postFrom =(url,params)=>{
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
         })
-}
+};
 export const getData = (url,params)=>{
     return axios({
         method:'get',
         url:'/api'+url,
         data:params,
     })
-}
+};
 export const getLogout= (url)=>{
     return axios({
             method:'get',
             url:url,
 
 })
-}
+};
 export const getInfo = (info)=>{
     return axios({
         method:'post',
@@ -62,22 +63,31 @@ export const getInfo = (info)=>{
             'Content-Type': 'application/x-www-form-urlencoded'
         }
     })
-}
+};
 export const logout= ()=>{
     return axios({
         method:'get',
         url:"/api/logout",
     })
-}
+};
 export const getJson =(url)=>{
     return axios({
         method:'get',
         url:'/api'+url,
     })
-}
-export const getPoem=(url)=>{
+};
+export const download =(url,data)=>{
     return axios({
-        method:'get',
-        url:url
+        method:'post',
+        url:'/api'+url,
+        data:data,
+        transformRequest:[function (data) {
+            return qs.stringify(data)
+        }],
+        responseType: "blob",
+        header: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'filename':'utf-8'
+        }
     })
-}
+};

@@ -1,15 +1,15 @@
 import {getInfo, logout, postFrom} from '../../api/api'
-import { getToken, setToken, removeToken } from '../../utils/auth'
+import {getToken, setToken, removeToken, getName, setName, removeName} from '../../utils/auth'
 import { resetRouter } from '../../router'
 
 
 const state = {
   token: getToken(),
-  name: '',
-  avatar: 'https://img.werls.top/images/2020/03/18/389a94e79010d272cf5c2b55e3960a48.png',
+  name: getName(),
+  avatar: 'https://data.werls.top/img/9544f13f3aec41ada4154e35c527485c-12.png',
   introduction: '',
   roles: []/*做权限管理*/
-}
+};
 
 const mutations = {
   SET_TOKEN: (state, token) => {
@@ -42,8 +42,9 @@ const actions = {
             commit('SET_TOKEN', data.token);//使用用户名
             commit('SET_NAME', data.name);
             setToken(data.token);
-            resolve(response)
-            // this.getInfo(commit)
+            setName(data.name);
+            resolve(response);
+            this.getInfo(commit)
           })
           .catch(errors => {
             reject(errors)
@@ -54,14 +55,14 @@ const actions = {
   // 获取用户信息
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-
       getInfo(state.name).then(response => {
         const { data } = response;
         if (!data) {
+
           reject('验证失败，请重新登录.')
-        }else if(data.code === 0 ){
+        }else if(data.status === 0 ){
           reject(data.message);
-          this.resetToken(commit)
+          // this.resetToken(commit)
         }
 
       const { role, message} = data;
@@ -92,8 +93,8 @@ const actions = {
         commit('SET_ROLES', []);
         removeToken();
         resetRouter();
-
-        dispatch('tagsView/delAllViews', null, { root: true })
+        removeName();
+        dispatch('tagsView/delAllViews', null, { root: true });
 
         resolve()
       }).catch(error => {
@@ -105,10 +106,11 @@ const actions = {
   // 删除令牌
   resetToken({ commit ,dispatch}) {
     return new Promise(resolve => {
-      dispatch('tagsView/delAllViews', null, { root: true })
+      dispatch('tagsView/delAllViews', null, { root: true });
       commit('SET_TOKEN', null);
       commit('SET_ROLES', []);
       removeToken();
+      removeName();
       resolve();
     })
   },

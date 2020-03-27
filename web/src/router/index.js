@@ -60,13 +60,13 @@ export const publicRoutes = [
         redirect: '/public/index',
         children: [
             {
-                path: '/public/index',
+                path: 'index',
                 component: () => import('../views/public/index')
             }
         ]
     },
 
-]
+];
 export const asyncRoutes = [
     {
         path: '/home',
@@ -156,10 +156,10 @@ const createRouter = () => new VueRouter({
     routes: publicRoutes
 })
 
-const router = createRouter()
+const router = createRouter();
 
 export function resetRouter() {
-    const newRouter = createRouter()
+    const newRouter = createRouter();
     router.matcher = newRouter.matcher
 }
 

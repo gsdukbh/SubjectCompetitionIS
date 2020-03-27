@@ -29,3 +29,5 @@ export function parseTime(time, cFormat) {
         return value.toString().padStart(2, '0');
     });
 }
+
+

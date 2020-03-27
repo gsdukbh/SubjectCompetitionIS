@@ -82,6 +82,6 @@ public class ProblemServiceImpl {
      * @return   Page<ScisProblem>
      */
     public Page<ScisProblem> findByCompetitionId(Integer id,Pageable pageable){
-        return problemRepository.findByCompetitionId(id,pageable);
+        return problemRepository.myFindCompetitionId(id,pageable);
     }
 }

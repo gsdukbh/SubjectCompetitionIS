@@ -55,7 +55,7 @@ router.beforeEach(async (to, from, next) => {
                     //删除令牌并转到登录页面以重新登录
                     await store.dispatch('user/resetToken');
 
-                    Message.error(error || 'Has Error');
+                    Message.error("error" || 'Has Error');
 
                     next(`/login?redirect=${to.path}`);
                     NProgress.done()
@@ -80,9 +80,9 @@ router.beforeEach(async (to, from, next) => {
         }
 
     }
-})
+});
 
 router.afterEach(() => {
     // 完成进度栏
     NProgress.done()
-})
+});

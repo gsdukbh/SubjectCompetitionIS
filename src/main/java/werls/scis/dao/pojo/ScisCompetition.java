@@ -69,6 +69,7 @@ public class ScisCompetition implements Serializable {
     @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "competition", fetch = FetchType.EAGER)
     @JsonIgnoreProperties({"competition"})
+    @JsonIgnore
     private List<ScisApplyFrom> applyFromList;
     /**
      * 团体报名
@@ -76,6 +77,7 @@ public class ScisCompetition implements Serializable {
     @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "competition", fetch = FetchType.EAGER)
     @JsonIgnoreProperties({"competition"})
+    @JsonIgnore
     private List<ScisTeamApply> teamApplyList;
     /**
      * 竞赛作品
@@ -83,11 +85,13 @@ public class ScisCompetition implements Serializable {
     @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "competition", fetch = FetchType.EAGER)
     @JsonIgnoreProperties({"competition"})
+    @JsonIgnore
     private List<ScisWorks> works;
 
     @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "competition", fetch = FetchType.EAGER)
     @JsonIgnoreProperties({"competition"})
+    @JsonIgnore
     private List<ScisProblem> problems;
 
     @Override

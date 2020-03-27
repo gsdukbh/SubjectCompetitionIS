@@ -155,8 +155,8 @@ export function export_json_to_excel({
                                          bookType = 'xlsx'
                                      } = {}) {
     /* 原始数据 */
-    filename = filename || 'excel-list'
-    data = [...data]
+    filename = filename || 'excel-list';
+    data = [...data];
     data.unshift(header);
 
     for (let i = multiHeader.length - 1; i > -1; i--) {
@@ -193,7 +193,7 @@ export function export_json_to_excel({
                     'wch': val.toString().length
                 };
             }
-        }))
+        }));
         /*以第一行为初始值*/
         let result = colWidth[0];
         for (let i = 1; i < colWidth.length; i++) {

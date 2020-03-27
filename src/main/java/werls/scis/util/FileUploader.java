@@ -28,7 +28,8 @@ public class FileUploader {
     private Logger logger = LoggerFactory.getLogger(getClass());
     private static final String A_KEY = "1361404576";
     private static final String S_KEY = "lijiawei+520";
-    public static final String ENDPOINT = "https://data.werls.top";
+    public static final String URL = "https://data.werls.top";
+    public static final String ENDPOINT = "http://120.78.148.61:9000";
     private static final String IMGBUCKET = "img";
     MinioClient minioClient = new MinioClient(ENDPOINT, A_KEY, S_KEY);
     
@@ -62,7 +63,7 @@ public class FileUploader {
         return minioClient.getObject(bucketName,objectName);
     }
     public String URl(){
-        return ENDPOINT;
+        return URL;
     }
     public void getObject(String bucketName, String objectName,String fileName) throws Exception{
         minioClient.getObject(bucketName,objectName,fileName);

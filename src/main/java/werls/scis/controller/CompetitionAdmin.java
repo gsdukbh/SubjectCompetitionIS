@@ -1,5 +1,6 @@
 package werls.scis.controller;
 
+
 import com.alibaba.druid.sql.visitor.functions.Isnull;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -11,12 +12,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import werls.scis.dao.pojo.ScisCompetition;
+import werls.scis.dao.pojo.ScisProblem;
 import werls.scis.service.CompetitionServiceImpl;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**

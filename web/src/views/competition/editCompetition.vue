@@ -48,22 +48,22 @@
 
                         <el-form-item prop="startTime">
                             <el-date-picker type="datetime" placeholder="选择日期时间" v-model="ruleForm.startTime"
-                                            value-format="yyyy-MM-dd HH-mm-ss"
+
                                             style="width: 30%;"></el-date-picker>
                         </el-form-item>
 
                     </el-form-item>
                     <el-form-item label="结束时间" prop="endTime">
                         <el-date-picker type="datetime" placeholder="选择日期时间" v-model="ruleForm.endTime"
-                                        value-format="yyyy-MM-dd HH-mm-ss"
+
                                         style="width: 30%;"></el-date-picker>
                     </el-form-item>
-
+<!--  value-format="yyyy-MM-dd HH-mm-ss"-->
 
                     <el-form-item label="报名时间" prop="applyTime">
                         <el-form-item prop="startTime">
                             <el-date-picker type="datetime" placeholder="选择日期" v-model="ruleForm.applyTime"
-                                            value-format="yyyy-MM-dd HH-mm-ss"
+
                                             style="width: 30%;"></el-date-picker>
                         </el-form-item>
                     </el-form-item>
@@ -100,13 +100,13 @@
 
                     <el-form-item label="团队比赛">
                         <el-switch
-                                v-model="teamValue"
+                                v-model="ruleForm.team"
                                 active-text="团队比赛"
                                 inactive-text="个人比赛">
                         </el-switch>
                     </el-form-item>
 
-                    <el-form-item label="人数限制" prop="type" v-if="teamValue">
+                    <el-form-item label="人数限制" prop="type" v-if="ruleForm.team">
                         <el-input-number v-model="ruleForm.numLimit" :min="1" :max="10" label="描述文字"></el-input-number>
                     </el-form-item>
 
@@ -179,10 +179,10 @@
                     content: '',
                     numLimit: 1,
                     place: '',
+                    team: false,
                     notification: false,
                 },
-                item: 2,
-                teamValue: false,
+                item: 1,
                 college: {
                     id: '',
                     collegeName: '',
@@ -298,9 +298,11 @@
         align-content: center;
         text-align: center;
     }
-        .button{
-            margin-top: 20px;
-        }
+
+    .button {
+        margin-top: 20px;
+    }
+
     .p {
         text-align: center;
     }

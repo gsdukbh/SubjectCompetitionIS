@@ -1,4 +1,5 @@
 <template>
+
     <div class="center">
         <el-card shadow="hover" class="card">
             <!--card 头-->
@@ -10,6 +11,7 @@
             <el-steps :active="item" align-center>
                 <el-step title="基本信息" icon="el-icon-edit"></el-step>
                 <el-step title="详情描述" icon="el-icon-edit-outline"></el-step>
+                <el-step title="公告" icon="el-icon-finished"></el-step>
             </el-steps>
             <el-divider></el-divider>
 
@@ -27,6 +29,9 @@
                         <el-select v-model="ruleForm.level" placeholder="请选择竞赛级别">
                             <el-option label="校级" value="校级"></el-option>
                             <el-option label="院级" value="院级"></el-option>
+                            <el-option label="市级" value="市级"></el-option>
+                            <el-option label="区级/省级" value="区级/省级"></el-option>
+                            <el-option label="国级" value="国级"></el-option>
                         </el-select>
                     </el-form-item>
 
@@ -40,37 +45,42 @@
 
                     </el-form-item>
 
-                    <el-form-item label="竞赛时间" required>
+                    <el-form-item label="竞赛开始时间" required>
 
-                        <el-col :span="3">
-                            <el-form-item prop="startTime">
-                                <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.startTime"
-                                                value-format="yyyy-MM-dd"
-                                                style="width: 100%;"></el-date-picker>
-                            </el-form-item>
-                        </el-col>
-
-                        <el-col :span="2">
-                            <p class="p">结束时间： </p>
-                        </el-col>
-
-                        <el-col :span="5">
-                            <el-form-item prop="endTime">
-                                <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.endTime"
-                                                value-format="yyyy-MM-dd"
-                                                style="width: 80%;"></el-date-picker>
-                            </el-form-item>
-
-                        </el-col>
+                        <el-form-item prop="startTime">
+                            <el-date-picker type="datetime" placeholder="选择日期时间" v-model="ruleForm.startTime"
+                                            value-format="yyyy-MM-dd HH-mm-ss"
+                                            style="width: 30%;"></el-date-picker>
+                        </el-form-item>
 
                     </el-form-item>
+                    <el-form-item label="结束时间" prop="endTime">
+                        <el-date-picker type="datetime" placeholder="选择日期时间" v-model="ruleForm.endTime"
+                                        value-format="yyyy-MM-dd HH-mm-ss"
+                                        style="width: 30%;"></el-date-picker>
+                    </el-form-item>
 
+
+                    <el-form-item label="报名时间" prop="applyTime">
+                        <el-form-item prop="startTime">
+                            <el-date-picker type="datetime" placeholder="选择日期" v-model="ruleForm.applyTime"
+                                            value-format="yyyy-MM-dd HH-mm-ss"
+                                            style="width: 30%;"></el-date-picker>
+                        </el-form-item>
+                    </el-form-item>
+                    <el-form-item label="邮件通知比赛信息">
+                        <el-switch
+                                v-model="ruleForm.notification"
+                                active-color="#13ce66"
+                                inactive-color="#ff4949">
+                        </el-switch>
+                    </el-form-item>
                     <el-form-item label="状态" prop="status">
                         <el-select v-model="ruleForm.status" placeholder="请选择">
-                            <el-option label="草稿" value="draft"></el-option>
-                            <el-option label="公开" value="published"></el-option>
-                            <el-option label="进行中" disabled value="processing"></el-option>
-                            <el-option label="已结束" disabled value="over"></el-option>
+                            <el-option label="草稿" value="草稿"></el-option>
+                            <el-option label="公开" value="公开"></el-option>
+                            <el-option label="进行中" disabled value="进行中"></el-option>
+                            <el-option label="已结束" disabled value="已结束"></el-option>
                         </el-select>
                     </el-form-item>
 
@@ -81,7 +91,7 @@
                         </el-radio-group>
                     </el-form-item>
 
-                    <el-form-item label="举办地点" prop="place">
+                    <el-form-item label="举办地点" v-if="ruleForm.type === 'offline'">
                         <el-input
                                 placeholder="请输入内容"
                                 v-model="ruleForm.place"
@@ -91,13 +101,13 @@
 
                     <el-form-item label="团队比赛">
                         <el-switch
-                                v-model="teamValue"
+                                v-model="ruleForm.team"
                                 active-text="团队比赛"
                                 inactive-text="个人比赛">
                         </el-switch>
                     </el-form-item>
 
-                    <el-form-item label="人数限制" prop="type" v-if="teamValue">
+                    <el-form-item label="人数限制" prop="type" v-if="ruleForm.team">
                         <el-input-number v-model="ruleForm.numLimit" :min="1" :max="10" label="描述文字"></el-input-number>
                     </el-form-item>
 
@@ -117,7 +127,9 @@
                 </el-form>
             </div>
             <div v-if="item === 2">
-                <el-button style="float: right; padding: 3px " round  icon="el-icon-check" type="primary" @click="submit()">提交</el-button>
+                <el-button style="float: right; padding: 3px " round icon="el-icon-check" type="primary"
+                           @click="submit()">提交
+                </el-button>
 
                 <el-tag style="font-size: medium">详细内容</el-tag>
                 <span style="font-size: 14px"> 使用markdown编辑  <el-link target="_blank"
@@ -127,6 +139,19 @@
 
             </div>
 
+            <div v-if="item === 3">
+                <div class="info">
+                    <el-alert
+
+                            title="竞赛信息发布成功！！！赶紧去发布公告吧"
+                            type="success">
+                    </el-alert>
+                    <router-link>
+                        <el-button class="button" type="primary" round>前往发布</el-button>
+                    </router-link>
+                </div>
+
+            </div>
 
         </el-card>
 
@@ -134,11 +159,181 @@
 </template>
 
 <script>
+    import MarkdownEditor from '@/components/MarkdownEditor'
+    import {getJson, postJson} from "../../api/api";
+
     export default {
-        name: "edit"
+        name: "edit",
+        components: {MarkdownEditor},
+        data() {
+            return {
+                id: '',
+                ruleForm: {
+                    name: '',
+                    level: '',
+                    startTime: null,
+                    endTime: null,
+                    applyTime: null,
+                    organizer: '',
+                    status: '',
+                    type: '',
+                    author: '',
+                    content: '',
+                    numLimit: 1,
+                    place: '',
+                    team: false,
+                    notification: false,
+                },
+                item: 1,
+                college: {
+                    id: '',
+                    collegeName: '',
+                },
+                rules: {
+                    name: [
+                        {required: true, message: '请输入活动名称', trigger: 'blur'}
+                    ],
+                    level: [
+                        {required: true, message: '请选择竞赛级别', trigger: 'change'}
+                    ],
+                    startTime: [
+                        {required: true, message: '请选择日期', trigger: 'change'}
+                    ],
+                    endTime: [
+                        {required: true, message: '请选择结束日期', trigger: 'change'}
+                    ],
+                    organizer: [
+                        {required: true, message: '请选择举办单位', trigger: 'change'}
+                    ],
+                    status: [{required: true, message: '请选择', trigger: 'change'}],
+                    author: [
+                        {required: true, message: '请输入负责人', trigger: 'blur'},
+                    ],
+                    applyTime: [{
+                        required: true, message: '请选择开始报名时间', trigger: 'change'
+                    }],
+                    type: [{
+                        required: true, message: '请选择', trigger: 'change'
+                    }],
+
+                }
+            }
+        },
+        created() {
+
+            this.id = this.$route.params.id;
+            this.fetchData(this.id);
+            this.tempRoute = Object.assign({}, this.$route);
+            getJson('/public/college/findAll')
+                .then(response => {
+                    this.college = response.data.content;
+                })
+                .catch(error => {
+                    this.$message.error("出现了一些问题" + error)
+                })
+        },
+        mounted() {
+
+        },
+        methods: {
+            async fetchData(id) {
+                getJson('/public/competition/findById/' + id)
+                    .then(response => {
+                        this.ruleForm = response.data.data;
+                        this.setTagsViewTitle();
+                        this.setPageTitle();
+                    })
+                    .catch(() => {
+                    });
+
+            },
+            setTagsViewTitle() {
+                const title = this.ruleForm.name;
+                const route = Object.assign({}, this.tempRoute, {title: `${title}-修改`});
+                this.$store.dispatch('tagsView/updateVisitedView', route);
+            },
+            setPageTitle() {
+                const title = this.ruleForm.name;
+                document.title = `${title} - 修改`
+            },
+            submit() {
+                this.ruleForm.content = this.$refs.markdownEditor.getMarkdown();
+                this.$confirm('确认提交, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    postJson('/tea/competition/save', this.ruleForm)
+                        .then(response => {
+                            if (response.data.status === 200) {
+                                this.$message({
+                                    message: '提交成功',
+                                    type: 'success'
+                                });
+                                this.item = 3;
+                            }
+                        })
+                        .catch(error => {
+                            this.$message.error("出现了一些问题" + error)
+                        });
+
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消'
+                    });
+                });
+            },
+            next(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        if (this.ruleForm.startTime > this.ruleForm.endTime) {
+                            this.$notify.error({
+                                message: '开始时间不能再结束时间之后',
+                                title: '错误',
+                            });
+                        } else {
+                            // this.$refs.markdownEditor.setValue( this.ruleForm.content);
+                            this.item = 2;
+                        }
+
+                    } else {
+                        this.$notify.error({
+                            message: '请检查你的输入',
+                            title: '错误',
+                        });
+                        return false;
+                    }
+                });
+            },
+            resetForm(formName) {
+                this.$refs[formName].resetFields();
+            },
+
+
+        }
     }
 </script>
 
 <style scoped>
+    .card {
+        align-items: center;
+        width: 90%;
+        margin: 0 auto;
+        padding-top: 10px;
+    }
 
+    .info {
+
+        align-content: center;
+        text-align: center;
+    }
+
+    .button {
+        margin-top: 20px;
+    }
+
+    .p {
+        text-align: center;
+    }
 </style>

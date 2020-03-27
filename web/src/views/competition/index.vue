@@ -247,11 +247,13 @@
                 this.loading = true;
                 this.getDataPage();
             },
+            /*当前页数*/
             handleCurrentChange(val) {
                 /*页面切换*/
-                this.page.size = val;
+                this.page.page = val;
                 this.getDataPage()
             },
+
             handleSelectionChange(val) {
                 this.multipleSelection = val
             },
@@ -270,9 +272,6 @@
                                     if (response.data.status === 200) {
                                         this.temSave = response.data.data;
                                         this.temSave.status = status;
-                                        // this.temSave.startTime=this.formatTimeB(this.temSave.startTime);
-                                        // this.temSave.endTime=this.formatTimeB(this.temSave.endTime);
-                                        // this.temSave.applyTime=this.formatTimeB(this.temSave.applyTime);
                                         postJson('/tea/competition/save', this.temSave)
                                             .then(response => {
                                                 if (response.data.status === 200) {
