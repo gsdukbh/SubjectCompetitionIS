@@ -22,9 +22,20 @@ import static org.junit.jupiter.api.Assertions.*;
 class ProblemRepositoryTest {
     @Autowired
     ProblemServiceImpl repository;
+    Pageable pageable1= PageRequest.of(0, 20,Sort.by("problem_time"));
     @Test
     void findByCompetitionId() {
-        Pageable pageable1= PageRequest.of(0, 20,Sort.by("problem_time"));
-        System.out.println(repository.findByCompetitionId(8,pageable1).getContent().toString());
+        System.out.println(repository.findByCompetitionId(8,pageable1).getContent().get(1).getReply());
+    }
+
+
+    @Test
+    void myFindCompetitionId() {
+        System.out.println(repository.findByCompetitionId(8,pageable1));
+    }
+
+    @Test
+    void myFindByReply() {
+        System.out.println(repository.findByReply(8,8,pageable1));
     }
 }

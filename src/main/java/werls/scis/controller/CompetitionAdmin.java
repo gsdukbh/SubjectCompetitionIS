@@ -46,40 +46,41 @@ public class CompetitionAdmin {
 //    @Cacheable(value = "CompetitionAll", key = "'page:'+#page+'size:'+#size+'name:'+#name+'organizer:'+#organizer", unless = "#result == null ")
     public Page<ScisCompetition> findByAll(@RequestParam(name = "page", defaultValue = "0") Integer page,
                                            @RequestParam(name = "size", defaultValue = "20") Integer size,
-                                           @RequestParam(name = "name",defaultValue = "") String name,
-                                           @RequestParam(name = "organizer",defaultValue = "") String organizer) {
+                                           @RequestParam(name = "name", defaultValue = "") String name,
+                                           @RequestParam(name = "organizer", defaultValue = "") String organizer,
+                                           @RequestParam(name = "level", defaultValue = "") String level) {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("startTime"));
-        if ( !"".equals(organizer) && !"".equals(name)){
-
-            return competitionService.findByNameLikeAndOrganizer(name,organizer,pageable);
-        }else if(!"".equals(name)){
-
-            return competitionService.findByNameLike(name,pageable);
-        }else if (!"".equals(organizer)){
-
-            return competitionService.findByOrganizer(organizer,pageable);
-        }else {
-
+        if (!"".equals(organizer) && !"".equals(name)) {
+            return competitionService.findByNameLikeAndOrganizer(name, organizer, pageable);
+        } else if (!"".equals(name)) {
+            return competitionService.findByNameLike(name, pageable);
+        } else if (!"".equals(organizer)) {
+            return competitionService.findByOrganizer(organizer, pageable);
+        } else if (!"".equals(level)){
+            return competitionService.findByLevel(level,pageable);
+        }
+        else {
             return competitionService.findAll(pageable);
         }
     }
 
 
-    @Cacheable(value = "CompetitionAll", key = "'id:'+#id", unless = "#result == null ")
+    //    @Cacheable(value = "CompetitionAll", key = "'id:'+#id", unless = "#result == null ")
     @GetMapping("/findById/{id}")
-    public Map<String, Object> findById(@PathVariable Integer id){
-        Map<String, Object> res=new ConcurrentHashMap<>(10);
-        Optional<ScisCompetition> competition=competitionService.findById(id);
-        if (competition.isPresent()){
-            res.put("status",200);
-            res.put("message","success");
-            res.put("data",competition.get());
+    public Map<String, Object> findById(@PathVariable Integer id) {
+        Map<String, Object> res = new ConcurrentHashMap<>(10);
+        Optional<ScisCompetition> competition = competitionService.findById(id);
+        if (competition.isPresent()) {
+            res.put("status", 200);
+            res.put("message", "success");
+            res.put("data", competition.get());
             return res;
-        }else {
-            res.put("status",404);
-            res.put("message","fail");
+        } else {
+            res.put("status", 404);
+            res.put("message", "fail");
             return res;
         }
     }
+
 }

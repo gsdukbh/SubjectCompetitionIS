@@ -84,4 +84,7 @@ public class ProblemServiceImpl {
     public Page<ScisProblem> findByCompetitionId(Integer id,Pageable pageable){
         return problemRepository.myFindCompetitionId(id,pageable);
     }
+    public Page<ScisProblem> findByReply(Integer isReply,Integer id,Pageable pageable){
+        return problemRepository.findByMyReply(isReply, id,pageable);
+    }
 }

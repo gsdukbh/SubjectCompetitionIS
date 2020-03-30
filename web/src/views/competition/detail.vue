@@ -114,55 +114,71 @@
             </el-tab-pane>
 
 
-            <el-tab-pane label="问题反馈" lazy name="2">
+            <el-tab-pane label="问题反馈" name="2">
 
                 <div class="content">
 
                     <el-card shadow="hover" class="box-card  left right2">
 
+
+                        <el-badge :value="noReply" :max="99" class="item">
+                            <el-button size="small" @click="HandNoReply">未回复</el-button>
+                        </el-badge>
+                        <el-badge :max="10" class="item">
+                            <el-button size="small" @click="HandReply">已回复</el-button>
+                        </el-badge>
+
+                        <el-divider v-if="isReply === true" content-position="left">未回复</el-divider>
+                        <el-divider v-if="isReply === false " content-position="left">已回复</el-divider>
+
                         <el-table
+                                stripe
+                                highlight-current-row
                                 v-loading="loading1"
                                 :data="tableDataProblem "
                                 style="width: 100%">
-                            <el-table-column type="expand">
-                                <template slot-scope="props">
-                                    <el-form label-position="left" inline class="demo-table-expand">
-                                        <el-form-item label="商品名称">
-                                            <span>{{ props.row.name }}</span>
-                                        </el-form-item>
-                                        <el-form-item label="所属店铺">
-                                            <span>{{ props.row.shop }}</span>
-                                        </el-form-item>
-                                        <el-form-item label="商品 ID">
-                                            <span>{{ props.row.id }}</span>
-                                        </el-form-item>
-                                        <el-form-item label="店铺 ID">
-                                            <span>{{ props.row.shopId }}</span>
-                                        </el-form-item>
-                                        <el-form-item label="商品分类">
-                                            <span>{{ props.row.category }}</span>
-                                        </el-form-item>
-                                        <el-form-item label="店铺地址">
-                                            <span>{{ props.row.address }}</span>
-                                        </el-form-item>
-                                        <el-form-item label="商品描述">
-                                            <span>{{ props.row.desc }}</span>
-                                        </el-form-item>
-                                    </el-form>
+                            <el-table-column
+                                    type="index"
+                                    width="50">
+                            </el-table-column>
+                            <el-table-column
+                                    sortable
+                                    label="时间"
+                                    prop="time"
+                            >
+                                <template slot-scope="{row}">
+                                    <span>{{formatTimeA(row.time) }}</span>
                                 </template>
                             </el-table-column>
                             <el-table-column
-                                    label="商品 ID"
-                                    prop="id">
+                                    label="标题"
+                                    sortable
+                                    prop="title">
                             </el-table-column>
                             <el-table-column
-                                    label="商品名称"
-                                    prop="name">
+                                    label="内容"
+                                    prop="content">
                             </el-table-column>
-                            <el-table-column
-                                    label="描述"
-                                    prop="desc">
+
+                            <el-table-column label="操作" align="center" width="350px"
+                                             class-name="small-padding fixed-width">
+                                <template slot-scope="{row}">
+
+                                    <el-button v-if=" row.myReply === 1" type="primary" size="mini" icon="el-icon-edit"
+                                               @click="replyProblem(row)">
+                                        回复
+                                    </el-button>
+
+                                    <el-button style="margin-left: 10px;" type="primary" size="mini"
+                                               icon="el-icon-reading" @click="detailReply(row)">
+                                        详情
+                                    </el-button>
+
+
+                                </template>
+
                             </el-table-column>
+
                         </el-table>
 
                         <div class="center">
@@ -191,7 +207,76 @@
 
         </el-tabs>
 
+        <!--对话窗-->
+        <el-dialog
+                title="详情"
+                :visible.sync="dialogVisible"
+                width="50%"
+        >
+            <div style="margin: 20px;"></div>
+                    <el-form label-width="80px" :model="replyUp">
+                        <el-form-item label="id：">
+                            <span>{{replyUp.id}}</span>
+                        </el-form-item>
+                        <el-form-item label="时间：">
+                            <span>{{formatTimeA(replyUp.time)}}</span>
+                        </el-form-item>
+                        <el-form-item label="类型：">
+                            <span>{{replyUp.type}}</span>
+                        </el-form-item>
+                        <el-form-item label="标题：">
+                            <span>{{replyUp.title}}</span>
+                        </el-form-item>
+                        <el-form-item label="内容：">
+                            <span>{{replyUp.content}}</span>
+                        </el-form-item>
+                        <el-form-item label="回复：">
+                            <el-input
+                            type="textarea"
+                            placeholder="请输入回复内容"
+                            v-model="reply.content"
+                            maxlength="500"
+                            show-word-limit
+                    >
+                    </el-input>
+                </el-form-item>
 
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                    <el-button @click="dialogVisible = false">取 消</el-button>
+                        <el-button type="primary" @click="replyProblemUp">回 复</el-button>
+             </span>
+        </el-dialog>
+
+        <el-dialog
+                title="详情"
+                :visible.sync="dialogVisible1"
+                width="50%"
+        >
+            <div style="margin: 20px;"></div>
+            <el-form label-width="80px" :model="replyUp">
+                <el-form-item label="id：">
+                    <span>{{replyUp.id}}</span>
+                </el-form-item>
+                <el-form-item label="时间：">
+                    <span>{{formatTimeA(replyUp.time)}}</span>
+                </el-form-item>
+                <el-form-item label="类型：">
+                    <span>{{replyUp.type}}</span>
+                </el-form-item>
+                <el-form-item label="标题：">
+                    <span>{{replyUp.title}}</span>
+                </el-form-item>
+                <el-form-item label="内容：">
+                    <span>{{replyUp.content}}</span>
+                </el-form-item>
+                <el-form-item label="回复：">
+                    <span>{{reply.content}}</span>
+                </el-form-item>
+            </el-form>
+
+
+        </el-dialog>
         <el-tooltip placement="top" content="返回顶部">
             <back-to-top :visibility-height="300" :back-position="50" transition-name="fade"/>
         </el-tooltip>
@@ -201,15 +286,21 @@
 <script>
 
     import Sticky from '@/components/Sticky'
-    import {getJson} from "../../api/api";
+    import {getJson, postFrom, postJson} from "../../api/api";
     import {parseTime} from '../../utils/index'
     import MarkdownViewer from "../../components/MarkdownViewer/index";
     import BackToTop from "../../components/BackTop/index";
+    import {mapGetters} from "vuex";
 
 
     export default {
         name: "detail",
         components: {BackToTop, MarkdownViewer, Sticky},
+        computed: {
+            ...mapGetters([
+                'name'
+            ])
+        },
         data() {
             return {
                 id: '',
@@ -218,13 +309,24 @@
                 loading1: true,
                 tempRoute: {},
                 markdown: null,
-                poem: null,
-                tableDataProblem: null,
+                isReply: true,
+                reply: {
+                    problemId: null,
+                    content: '',
+                    author: ''
+                },
+                dialogVisible: false,
+                dialogVisible1: false,
+                multipleSelection: null,
+                tableDataProblem: [{}],
+                replyUp: {},
+                noReply: 0,
                 page: {
                     size: 20,
                     page: 0,
                     organizer: null,
                     name: null,
+                    isReply: 1,
                     totalElements: 100,
                 },
             }
@@ -252,26 +354,24 @@
             },
             setTagsViewTitle() {
                 const title = this.showData.name;
-                const route = Object.assign({}, this.tempRoute, {title: `${title}-详情`});
+                const route = Object.assign({}, this.tempRoute, {title: `${title} - 详情`});
                 this.$store.dispatch('tagsView/updateVisitedView', route);
             },
             setPageTitle() {
                 const title = this.showData.name;
-                document.title = `${title} - 修改`
+                document.title = `${title} - 详情`
             },
             formatTimeA(time) {
                 return parseTime(time, '{y}-{m}-{d} {h}:{i}')
             },
             handleClick(tab) {
-                console.log(tab.index)
-            },
-            loadingProblem(id) {
-                getJson("/public/problem/find/competition/" + id)
-                    .then(response => {
-                        if (response.data.status === 200) {
+                if (tab.name === "2") {
+                    this.loadingProblem();
+                }
 
-                        }
-                    })
+            },
+            loadingProblem() {
+                this.getDataPage();
             },
             handleSizeChange(val) {
                 this.page.size = val;
@@ -284,10 +384,75 @@
                 this.page.page = val;
                 this.getDataPage()
             },
-
             handleSelectionChange(val) {
                 this.multipleSelection = val
             },
+            /*打开回复对话框*/
+            replyProblem(val) {
+                this.dialogVisible = true;
+                this.reply.problemId = val.id;
+                this.reply.author = this.name;
+                this.replyUp = val;
+            },
+            /*回复问题*/
+            replyProblemUp() {
+                this.dialogVisible = false;
+                this.replyUp.myReply = 0;
+                postJson('/tea/competition/problem/reply/save', this.reply)
+                    .then(response => {
+                        if (response.data.status === 200) {
+                            this.$notify.success({
+                                title: '成功',
+                                message: '回复成功'
+                            })
+                        }
+                    }).catch(error => {
+                    this.$notify.error({
+                        title: '错误',
+                        message: error
+                    })
+                });
+                postJson('/public/problem/save', this.replyUp);
+                this.getDataPage();
+            },
+            /*未回复列表*/
+            HandNoReply() {
+                this.page.isReply=1;
+                this.isReply = true;
+
+                this.getDataPage();
+
+            },
+            /*已回复列表*/
+            HandReply() {
+                this.isReply = false;
+                this.page.isReply=0;
+                this.getDataPage();
+                this.loading1 = true;
+            },
+            /*已回复详情*/
+            detailReply(val){
+                this.dialogVisible1 = true;
+                this.replyUp = val;
+
+            },
+            getDataPage() {
+                this.loading1 = true;
+                getJson('/tea/problem/find/competition/noReply/'+this.id)
+                .then(response=>{
+                    this.noReply = response.data.total;
+                });
+                postFrom('/public/problem/find/competition/' + this.id, this.page)
+                    .then(response => {
+                        if (response.status === 200) {
+                            this.tableDataProblem = response.data.data;
+                            this.page.totalElements = response.data.totalElements;
+                            this.loading1 = false;
+                        } else {
+                            this.loading1 = false;
+                        }
+                    })
+            }
         }
     }
 
@@ -341,5 +506,15 @@
 
     .right2 {
         margin-right: 20px;
+    }
+
+    .center {
+        text-align: center;
+        align-content: center;
+    }
+
+    .item {
+        margin-top: 10px;
+        margin-right: 40px;
     }
 </style>

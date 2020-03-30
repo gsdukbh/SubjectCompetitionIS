@@ -1,11 +1,15 @@
 package werls.scis.dao.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 
 /**
  * 问题反馈
@@ -24,15 +28,22 @@ public class ScisProblem implements Serializable {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="problem_id")
     private Integer id;
+
     @Column(name = "problem_time")
+    @CreatedDate
     @DateTimeFormat(pattern = "yyyy-MM-dd HH-mm-ss")
     private Date time;
+
     @Column(name = "problem_type")
     private String type;
     @Column(name = "problem_title")
     private String title;
     @Column(name = "problem_content")
     private String content;
+
+    @Column(name = "problem_isReply")
+    private Integer myReply;
+
     /**
      * 用户反馈问题
      */
@@ -49,20 +60,31 @@ public class ScisProblem implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnoreProperties({"problems"})
     @JoinColumn(name = "competition_id")
+//    @JsonIgnore
     private ScisCompetition competition;
 
     /**
      * 作品问题
      */
+
     @JsonIgnoreProperties({"problems"})
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "works_id")
+    @JsonIgnore
     private ScisWorks worksList;
 
+
     @OneToOne(cascade=CascadeType.ALL)
-    @PrimaryKeyJoinColumn
+//    @JsonIgnoreProperties({"problem"})
     private ScisReply reply;
 
+    public Integer getMyReply() {
+        return myReply;
+    }
+
+    public void setMyReply(Integer myReply) {
+        this.myReply = myReply;
+    }
 
     public ScisReply getReply() {
         return reply;

@@ -30,19 +30,20 @@ public class ProblemController {
     ProblemServiceImpl service;
 
 
-    @GetMapping("/find/competition/{id}")
+    @PostMapping("/find/competition/{id}")
 //    @Cacheable(value = "problemCompetition",key = "'key:'+#id",unless = "#result ==null")
     public Map<String, Object> findByCompetitionId(@PathVariable Integer id,
                                                    @RequestParam(name = "size", defaultValue = "20") Integer size,
-                                                   @RequestParam(name = "page", defaultValue = "0") Integer page){
+                                                   @RequestParam(name = "page", defaultValue = "0") Integer page,
+                                                   @RequestParam(name = "isReply",defaultValue = "1")Integer isReply){
         Map<String, Object> res=new ConcurrentHashMap<>(10);
         Pageable pageable= PageRequest.of(page, size, Sort.by("problem_time"));
-        Page<ScisProblem> problems=service.findByCompetitionId(id,pageable);
+        Page<ScisProblem> problems = service.findByReply(isReply,id,pageable);
         if (problems!=null){
             res.put("status",200);
             res.put("message","success");
             res.put("totalElements",problems.getTotalElements());
-            res.put("content",problems.getContent());
+            res.put("data",problems.getContent());
             return res;
         }else {
             res.put("status",403);
@@ -66,4 +67,5 @@ public class ProblemController {
             return res;
         }
     }
+
 }

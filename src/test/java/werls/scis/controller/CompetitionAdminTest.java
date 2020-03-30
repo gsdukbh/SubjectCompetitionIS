@@ -20,9 +20,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import werls.scis.service.CompetitionServiceImpl;
 
-import javax.swing.*;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author : LiJiWei
@@ -52,15 +50,30 @@ class CompetitionAdminTest {
 
     @Test
 
-    void findById() throws Exception {
-        MockMvc  mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
-        MvcResult mvcResult= mockMvc.perform(MockMvcRequestBuilders.get("/public/competition/findById/5")
-                .accept(MediaType.APPLICATION_JSON_UTF8))
+    void findById() {
+        new Thread(() -> {
+            System.out.println("wod ");
+                MockMvc  mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
+            try {
+                MvcResult mvcResult= mockMvc.perform(MockMvcRequestBuilders.get("/public/competition/findById/5")
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
 //                .andExpect(MockMvcResultMatchers.status().isOk())             //等同于Assert.assertEquals(200,status);
-                .andDo(MockMvcResultHandlers.print())
-
-                .andReturn();
-
+                        .andDo(MockMvcResultHandlers.print())
+                        .andReturn();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
+//        try {
+//            MockMvc  mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
+//            MvcResult mvcResult= mockMvc.perform(MockMvcRequestBuilders.get("/public/competition/findById/5")
+//                    .accept(MediaType.APPLICATION_JSON_UTF8))
+////                .andExpect(MockMvcResultMatchers.status().isOk())             //等同于Assert.assertEquals(200,status);
+//                    .andDo(MockMvcResultHandlers.print())
+//                    .andReturn();
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
     }
     @Test
     void  findByIds(){

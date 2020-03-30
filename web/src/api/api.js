@@ -13,6 +13,7 @@ export const postJson = (url,params)=>{
         url:'/api'+url,
         data:params,
         header:{
+
         }
     })
 };
@@ -74,6 +75,19 @@ export const getJson =(url)=>{
     return axios({
         method:'get',
         url:'/api'+url,
+    })
+};
+export const getDateForm =(url,data)=>{
+    return axios({
+        method:'get',
+        url:'/api'+url,
+        data:data,
+        transformRequest:[function (data) {
+            return qs.stringify(data)
+        }],
+        header: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
     })
 };
 export const download =(url,data)=>{

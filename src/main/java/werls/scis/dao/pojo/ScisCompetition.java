@@ -91,7 +91,7 @@ public class ScisCompetition implements Serializable {
     @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "competition", fetch = FetchType.EAGER)
     @JsonIgnoreProperties({"competition"})
-    @JsonIgnore
+//    @JsonIgnore
     private List<ScisProblem> problems;
 
     @Override

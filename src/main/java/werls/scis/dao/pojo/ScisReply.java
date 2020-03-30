@@ -1,6 +1,9 @@
 package werls.scis.dao.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -16,6 +19,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "Is_reply")
+@EntityListeners(AuditingEntityListener.class)
 public class ScisReply implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -27,14 +31,37 @@ public class ScisReply implements Serializable {
     @Column(name="reply_created_time")
     private Date time;
 
+    @LastModifiedDate
+    @Column(name = "reply_reply_time")
+    private Date replyTime;
     @Column(name = "reply_content")
     private String content;
     @Column(name = "reply_author")
     private String author;
 
+    @Column(name = "problem_id")
+    private Integer problemId;
+
     @OneToOne(mappedBy="reply",cascade=CascadeType.ALL)
-    @JoinColumn(name="problem_id")
+    @JoinColumn(name="problem_id",referencedColumnName = "problem_id")
+//    @JsonIgnoreProperties({"reply"})
     private ScisProblem problem;
+
+    public Integer getProblemId() {
+        return problemId;
+    }
+
+    public void setProblemId(Integer problemId) {
+        this.problemId = problemId;
+    }
+
+    public Date getReplyTime() {
+        return replyTime;
+    }
+
+    public void setReplyTime(Date replyTime) {
+        this.replyTime = replyTime;
+    }
 
     public Date getTime() {
         return time;
