@@ -26,8 +26,8 @@ public class ReplyServiceImpl {
      * 保存
      * @param reply ScisReply 对象
      */
-    public void save(ScisReply reply){
-        replyRepository.save(reply);
+    public ScisReply save(ScisReply reply){
+       return replyRepository.save(reply);
     }
     public Optional<ScisReply> findId(Integer id){
         return replyRepository.findById(id);

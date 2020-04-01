@@ -1,6 +1,7 @@
 package werls.scis.controller.teacher;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import werls.scis.dao.pojo.ScisAnnouncement;
+import werls.scis.dao.pojo.ScisReply;
 import werls.scis.service.AnnouncementServiceImpl;
 
 import java.util.Map;
@@ -30,12 +32,13 @@ public class AnnouncementController {
 
 
     @PostMapping("/announcement/save")
-    public String save(ScisAnnouncement announcement){
+    public String save(@RequestBody JSONObject json){
+        ScisAnnouncement announcement=JSONObject.toJavaObject(json, ScisAnnouncement.class);
         Map<String, Object> res = new ConcurrentHashMap<>(10);
         if (announcement != null){
-            service.save(announcement);
             res.put("status",200);
             res.put("message","Success");
+            res.put("result", service.save(announcement));
             return JSON.toJSONString(res);
         }else {
             res.put("status",400);

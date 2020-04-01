@@ -31,7 +31,7 @@
                     </el-form-item>
 
 
-                    <el-form-item class="button">
+                    <el-form-item class="button" >
 
                         <!--完成验证码 Popover 弹出框-->
                         <el-popover
@@ -55,7 +55,7 @@
 
                         </el-popover>
 
-                        <el-button style="margin-left: 10px" @click="resetForm('ruleForm')">重置</el-button>
+                        <el-button style="margin-left: 10px" native-type="reset">重置</el-button>
                     </el-form-item>
 
                 </el-form>

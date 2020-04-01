@@ -42,6 +42,7 @@
 </template>
 
 <script>
+    /*https://github.com/nhn/tui.editor*/
     // 编辑部
     import 'codemirror/lib/codemirror.css' // codemirror
     import 'tui-editor/dist/tui-editor.css' // MyEditor ui
@@ -59,6 +60,10 @@
         name: 'MarkdownEditor',
 
         props: {
+            content:{
+                type:String,
+                default:''
+            },
             value: {
                 type: String,
                 default: ''
@@ -139,8 +144,9 @@
             initEditor() {
                 this.editor = new Editor({
                     el: document.getElementById(this.id),
-                    ...this.editorOptions
+                    ...this.editorOptions,
                 });
+                this.editor.setMarkdown(this.content);
                 if (this.value) {
                     this.editor.setValue(this.value)
                 }
@@ -165,7 +171,7 @@
                         $el: `<div class="custom-button"><i class="el-icon-picture"></i></div>`,
                         name: 'customize',
                         className: 'custom-button',
-                        tooltip: 'Apple',
+                        tooltip: '图片',
                         event: 'clickCustomButton'
                     }
                 });
@@ -198,7 +204,7 @@
                 this.editor.remove();
             },
             setValue(value) {
-                this.editor.setValue(value)
+                this.editor.setMarkdown(value)
             },
             getValue() {
                 return this.editor.getValue()

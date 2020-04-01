@@ -3,7 +3,9 @@ import {getToken, setToken, removeToken, getName, setName, removeName} from '../
 import { resetRouter } from '../../router'
 
 
+
 const state = {
+  userId:'',
   token: getToken(),
   name: getName(),
   avatar: 'https://data.werls.top/img/9544f13f3aec41ada4154e35c527485c-12.png',
@@ -12,6 +14,9 @@ const state = {
 };
 
 const mutations = {
+  SET_ID:(state,userId)=>{
+    state.userId=userId;
+  },
   SET_TOKEN: (state, token) => {
     state.token = token
   },
@@ -74,6 +79,7 @@ const actions = {
         }
 
         commit('SET_ROLES', role);
+        commit('SET_ID',data.data.id);
         commit('SET_NAME', data.data.name);
         // commit('SET_AVATAR', avatar)
         // commit('SET_INTRODUCTION', introduction)

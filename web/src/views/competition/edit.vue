@@ -135,7 +135,7 @@
                 <span style="font-size: 14px"> 使用markdown编辑  <el-link target="_blank"
                                                                       href="https://github.com/nhn/tui.editor"
                                                                       type="info">详情</el-link> </span>
-                <markdown-editor ref="markdownEditor" title="请输入详细内容 " placeholder="wd" height="600px"/>
+                <markdown-editor ref="markdownEditor" title="请输入详细内容 " v-bind:content="ruleForm.content" height="600px"/>
 
             </div>
 
@@ -220,7 +220,6 @@
             }
         },
         created() {
-
             this.id = this.$route.params.id;
             this.fetchData(this.id);
             this.tempRoute = Object.assign({}, this.$route);

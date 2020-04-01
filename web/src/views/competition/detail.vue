@@ -1,7 +1,7 @@
 <template>
     <div class="main">
 
-        <sticky :z-index="10" class-name="sub-navbar">
+        <sticky :z-index="10" class-name="sub-navbar" >
 
             <router-link :to="'/competition/edit/'+showData.id">
                 <el-button style="margin-left: 10px;" type="success">
@@ -117,6 +117,14 @@
             <el-tab-pane label="问题反馈" name="2">
 
                 <div class="content">
+                    <!--搜索框-->
+
+<!--                    <div>-->
+<!--                        <el-input placeholder="名称" style="width: 200px;" v-model="page.name"/>-->
+<!--                        <el-button class="filter-item" type="primary" style="margin-left: 10px;" icon="el-icon-search" @click="handleFilter">-->
+<!--                            搜索-->
+<!--                        </el-button>-->
+<!--                    </div>-->
 
                     <el-card shadow="hover" class="box-card  left right2">
 
@@ -169,7 +177,7 @@
                                         回复
                                     </el-button>
 
-                                    <el-button style="margin-left: 10px;" type="primary" size="mini"
+                                    <el-button v-if="row.myReply === 0 " style="margin-left: 10px;" type="primary" size="mini"
                                                icon="el-icon-reading" @click="detailReply(row)">
                                         详情
                                     </el-button>
@@ -209,25 +217,39 @@
 
         <!--对话窗-->
         <el-dialog
-                title="详情"
+                title="问题详情"
                 :visible.sync="dialogVisible"
                 width="50%"
         >
             <div style="margin: 20px;"></div>
-                    <el-form label-width="80px" :model="replyUp">
-                        <el-form-item label="id：">
-                            <span>{{replyUp.id}}</span>
-                        </el-form-item>
-                        <el-form-item label="时间：">
-                            <span>{{formatTimeA(replyUp.time)}}</span>
-                        </el-form-item>
-                        <el-form-item label="类型：">
-                            <span>{{replyUp.type}}</span>
-                        </el-form-item>
-                        <el-form-item label="标题：">
-                            <span>{{replyUp.title}}</span>
-                        </el-form-item>
-                        <el-form-item label="内容：">
+                    <el-form label-width="100px" :model="replyUp">
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="问题id：">
+                                    <span>{{replyUp.id}}</span>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="12">
+                                <el-form-item label="时间：">
+                                    <span>{{formatTimeA(replyUp.time)}}</span>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="类型：">
+                                    <span>{{replyUp.type}}</span>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="12">
+                                <el-form-item label="标题：">
+                                    <span>{{replyUp.title}}</span>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+
+
+                        <el-form-item label="问题内容：">
                             <span>{{replyUp.content}}</span>
                         </el-form-item>
                         <el-form-item label="回复：">
@@ -254,24 +276,41 @@
                 width="50%"
         >
             <div style="margin: 20px;"></div>
-            <el-form label-width="80px" :model="replyUp">
-                <el-form-item label="id：">
-                    <span>{{replyUp.id}}</span>
-                </el-form-item>
-                <el-form-item label="时间：">
-                    <span>{{formatTimeA(replyUp.time)}}</span>
-                </el-form-item>
-                <el-form-item label="类型：">
-                    <span>{{replyUp.type}}</span>
-                </el-form-item>
-                <el-form-item label="标题：">
-                    <span>{{replyUp.title}}</span>
-                </el-form-item>
-                <el-form-item label="内容：">
+
+            <el-form label-width="100px" :model="replyUp">
+
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="问题id：">
+                            <span>{{replyUp.id}}</span>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="时间：">
+                            <span>{{formatTimeA(replyUp.time)}}</span>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="类型：">
+                            <span>{{replyUp.type}}</span>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="标题：">
+                            <span>{{replyUp.title}}</span>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+                <el-form-item label="问题内容：">
                     <span>{{replyUp.content}}</span>
                 </el-form-item>
-                <el-form-item label="回复：">
-                    <span>{{reply.content}}</span>
+
+                <el-form-item label="回复内容：">
+                    <span>{{replyDetail.content}}</span>
+
                 </el-form-item>
             </el-form>
 
@@ -298,7 +337,8 @@
         components: {BackToTop, MarkdownViewer, Sticky},
         computed: {
             ...mapGetters([
-                'name'
+                'name',
+                'userId'
             ])
         },
         data() {
@@ -315,11 +355,14 @@
                     content: '',
                     author: ''
                 },
+                replyDetail:{},
                 dialogVisible: false,
                 dialogVisible1: false,
                 multipleSelection: null,
                 tableDataProblem: [{}],
-                replyUp: {},
+                replyUp: {
+
+                },
                 noReply: 0,
                 page: {
                     size: 20,
@@ -434,6 +477,10 @@
             detailReply(val){
                 this.dialogVisible1 = true;
                 this.replyUp = val;
+                getJson('/tea/competition/problem/reply/find/'+val.id)
+                .then(response=>{
+                    this.replyDetail=response.data.data;
+                })
 
             },
             getDataPage() {
@@ -517,4 +564,5 @@
         margin-top: 10px;
         margin-right: 40px;
     }
+
 </style>

@@ -2,11 +2,15 @@ package werls.scis.dao.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
+
 
 /**
  * 公告
@@ -19,6 +23,7 @@ import java.sql.Date;
  */
 @Entity
 @Table(name = "Is_announcement")
+@EntityListeners(AuditingEntityListener.class)
 public class ScisAnnouncement implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -38,6 +43,7 @@ public class ScisAnnouncement implements Serializable {
     /**
      * 公告时间
      */
+    @LastModifiedDate
     @DateTimeFormat(pattern = "yyyy-MM-dd HH-mm-ss")
     @Column(name = "announcement_time")
     private Date time;

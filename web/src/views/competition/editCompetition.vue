@@ -1,6 +1,7 @@
 <template>
     <div class="center">
-        <el-card shadow="hover" class="card">
+
+        <el-card shadow="hover" class="card top">
             <!--card 头-->
             <div slot="header" class="clearfix">
                 <span>填写信息</span>
@@ -71,7 +72,7 @@
                         <el-switch
                                 v-model="ruleForm.notification"
                                 active-color="#13ce66"
-                                inactive-color="#ff4949">
+                            inactive-color="#ff4949">
                         </el-switch>
                     </el-form-item>
                     <el-form-item label="状态" prop="status">
@@ -302,7 +303,9 @@
     .button {
         margin-top: 20px;
     }
-
+    .top {
+        margin-top: 20px;
+    }
     .p {
         text-align: center;
     }

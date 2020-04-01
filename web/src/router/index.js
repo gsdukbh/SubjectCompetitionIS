@@ -47,7 +47,7 @@ export const publicRoutes = [
 
     },
     {
-        path:'/',
+        path: '/',
         redirect: '/public',
         hidden: true,
     },
@@ -70,7 +70,7 @@ export const publicRoutes = [
 export const asyncRoutes = [
     {
         path: '/home',
-        redirect:'/home/index',
+        redirect: '/home/index',
         component: Layout,
         meta: {
             icon: 'dashboard',
@@ -80,7 +80,7 @@ export const asyncRoutes = [
             {
                 path: 'index',
                 name: 'home',
-                component: ()=>import('../views/dashboard/Home'),
+                component: () => import('../views/dashboard/Home'),
                 meta: {
                     title: '我的仪表盘',
                     affix: true
@@ -137,8 +137,45 @@ export const asyncRoutes = [
             }
         ]
     },
+    {
+        path: '/announcement',
+        name: 'announcement',
+        component:Layout,
+        meta:{
+            title:'公告',
+            icon:'announcement'
+        },
+        children:[
+            {
+                path:'publish',
+                name:'announcementPublish',
+                component:()=>import('../views/Announcement/publish'),
+                meta:{
+                    title:'发布公告',
+                    roles:['ROLE_ADMIN', 'ROLE_TEA']
+                }
+            },
+            {
+              path:'list',
+              name:'announcementList',
+              component:()=>import('../views/Announcement/list'),
+                meta:{
+                    title:'公告信息',
+                }
+            },
+            {
+                path:'detail/:id(\\d+)',
+                name:'announcementDetail',
+                hidden: true,
+                component:()=>import('../views/Announcement/detail'),
+                meta:{
+                    title:'公告详情',
+                }
+            }
 
 
+        ]
+    },
     {
         path: '*',
         redirect: '/404',
@@ -147,7 +184,7 @@ export const asyncRoutes = [
             title: '404'
         }
     }
-]
+];
 
 const createRouter = () => new VueRouter({
     // mode: 'history',

@@ -34,6 +34,7 @@ public class ScisReply implements Serializable {
     @LastModifiedDate
     @Column(name = "reply_reply_time")
     private Date replyTime;
+
     @Column(name = "reply_content")
     private String content;
     @Column(name = "reply_author")

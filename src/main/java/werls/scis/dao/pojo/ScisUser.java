@@ -92,7 +92,7 @@ public class ScisUser implements Serializable {
     @ManyToMany(mappedBy = "scisUserList",fetch = FetchType.EAGER)
     @JsonIgnoreProperties({"scisUserList"})
     private List<ScisTeamApply> teamApplies;
-
+    /*提出的问题*/
     @Fetch(FetchMode.SUBSELECT)
     @JsonIgnoreProperties({"scisUser"})
     @OneToMany(mappedBy = "scisUser",fetch = FetchType.EAGER,cascade = CascadeType.REFRESH)

@@ -33,6 +33,7 @@ public class ReplyController {
             replyService.save(reply);
             res.put("status", 200);
             res.put("message", "success");
+            res.put("result",replyService.save(reply));
             return res;
         }else {
             res.put("status", 403);

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -22,6 +23,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "Is_problem")
+@EntityListeners(AuditingEntityListener.class)
 public class ScisProblem implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
