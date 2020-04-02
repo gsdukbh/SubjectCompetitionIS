@@ -46,20 +46,31 @@ public class AnnouncementController {
                                        @RequestParam(name = "from", defaultValue = "") String from) {
         Map<String, Object> res = new ConcurrentHashMap<>(10);
         Pageable pageable = PageRequest.of(page, size, Sort.by("time").descending());
+        System.out.println("t:" + title + "ty:" + type + "fr:" + from);
         Page<ScisAnnouncement> announcements;
         if (!"".equals(title) && !"".equals(type) && !"".equals(from)) {
+
             announcements = service.findByTitleContainingAndTypeContainingAndFrom(title, type, from, pageable);
         } else if (!"".equals(title) && !"".equals(type)) {
+
             announcements = service.findByTitleContainingAndTypeContaining(title, type, pageable);
         } else if (!"".equals(title) && !"".equals(from)) {
+
             announcements = service.findByTitleContainingAndFrom(title, from, pageable);
         } else if (!"".equals(type) && !"".equals(from)) {
+
             announcements = service.findByTypeContainingAndFrom(type, from, pageable);
-        } else if (!"".equals(type) || !"".equals(from) || "".equals(title)) {
-            announcements = service.findByTitleContainingOrTypeContainingOrFrom(title, type, from, pageable);
+        } else if (!"".equals(type)) {
+            announcements = service.findByTypeContaining(type, pageable);
+        } else if (!"".equals(from)) {
+            announcements = service.findByFrom(from, pageable);
+        } else if (!"".equals(title)) {
+            announcements = service.findByTitleContaining(title, pageable);
         } else {
+
             announcements = service.findAll(pageable);
         }
+//        System.out.println(announcements.getContent().get(0).getTitle());
         res.put("status", 200);
         res.put("message", "Success");
         res.put("content", announcements.getContent());
@@ -84,6 +95,7 @@ public class AnnouncementController {
             return res;
         }
     }
+
     @GetMapping("/findTitle")
     public Map<String, Object> findTitle() {
         Map<String, Object> res = new ConcurrentHashMap<>(10);
@@ -100,7 +112,7 @@ public class AnnouncementController {
             type.put("value", string);
             ret.add(type);
         }
-        res.put("type", ret);
+        res.put("data", ret);
         return res;
     }
 }

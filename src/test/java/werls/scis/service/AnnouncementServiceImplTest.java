@@ -14,6 +14,7 @@ import javax.xml.ws.soap.Addressing;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -51,29 +52,13 @@ class AnnouncementServiceImplTest {
         System.out.println(jpaRepository.findByTime(date1,pageable1).getContent().toString());
     }
 
-    @Test
-    void findByTimeBefore() {
-    }
 
-    @Test
-    void findByTimeBetween() {
-
-    }
-
-    @Test
-    void findByFrom() {
-    }
-
-    @Test
-    void findByTypeLike() {
-    }
-
-    @Test
-    void findByAuthorLike() {
-    }
 
     @Test
     void findByTitleLike() {
+        Iterator<ScisAnnouncement> announcementIterator=jpaRepository.findByTitleContainingOrTypeContainingOrFrom("","","",pageable1).getContent().iterator();
+
+        System.out.println();
     }
 
     @Test

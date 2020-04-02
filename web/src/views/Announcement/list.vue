@@ -30,6 +30,10 @@
             <el-button style="margin-left: 10px;" type="primary" icon="el-icon-search" @click="handleFilter()">
                 搜索
             </el-button>
+            <el-button class="filter-item" type="primary" style="margin-left: 10px;" icon="el-icon-refresh-left"
+                       @click="handleRefresh">
+                重置搜索
+            </el-button>
         </sticky>
 
         <!--表格-->
@@ -145,6 +149,7 @@
                 loading: true,
                 college: null,
                 temType: null,
+                temTitle:null,
                 buttonLoading: false,
                 tempA: null,
                 page: {
@@ -250,23 +255,38 @@
             querySearchAsync(queryString, cb) {
                 getJson('/public/announcement/findType')
                     .then(response => {
-                        this.temType = response.data.type;
+                        this.temType = response.data.data;
                     });
                 const temType = this.temType;
-                const res = queryString ? temType.filter(this.createStateFilter(queryString)) : temType;
+                const res = queryString ? temType.filter(this.createTypeFilter(queryString)) : temType;
 
                 clearTimeout(this.timeout);
                 this.timeout = setTimeout(() => {
                     cb(res);
                 }, 3000 * Math.random());
             },
-            createStateFilter(queryString) {
+            createTypeFilter(queryString) {
                 return (temType) => {
                     return (temType.value.toLowerCase().indexOf(queryString.toLowerCase()) !== -1);
                 };
             },
-            querySearchAsyncTitle(){
+            querySearchAsyncTitle(queryString, cb){
+                getJson('/public/announcement/findTitle')
+                .then(response=>{
+                    this.temTitle=response.data.data;
+                });
+                const temTitle = this.temTitle;
+                const res = queryString ? temTitle.filter(this.createTitleFilter(queryString)) : temTitle;
 
+                clearTimeout(this.timeout);
+                this.timeout = setTimeout(() => {
+                    cb(res);
+                }, 3000 * Math.random());
+            },
+            createTitleFilter(queryString) {
+                return (temTitle) => {
+                    return (temTitle.value.toLowerCase().indexOf(queryString.toLowerCase()) !== -1);
+                };
             },
             handleSizeChange(val) {
                 this.page.size = val;
@@ -288,6 +308,15 @@
                 /*搜索*/
                 this.loading = true;
                 this.getDataPage();
+                console.log(this.page)
+            },
+            handleRefresh() {
+                this.page.title = null;
+                this.page.from = null;
+                this.page.type = null;
+                this.loading = true;
+                this.getDataPage();
+
             },
             async getDataPage() {
 

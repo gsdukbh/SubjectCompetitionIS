@@ -50,26 +50,34 @@ public class CompetitionAdmin {
                                            @RequestParam(name = "organizer", defaultValue = "") String organizer,
                                            @RequestParam(name = "level", defaultValue = "") String level) {
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by("startTime"));
+        Pageable pageable = PageRequest.of(page, size, Sort.by("startTime").descending());
+
 
         if (!"".equals(organizer) && !"".equals(name) && !"".equals(level)) {
-            return competitionService.findByNameContainingAndLevelAndOrganizer(name,level,organizer,pageable);
-        }else if (!"".equals(organizer) && !"".equals(name)) {
-            return competitionService.findByNameContainingAndOrganizer(name,organizer, pageable);
+
+            return competitionService.findByNameContainingAndLevelAndOrganizer(name, level, organizer, pageable);
+        } else if (!"".equals(organizer) && !"".equals(name)) {
+
+            return competitionService.findByNameContainingAndOrganizer(name, organizer, pageable);
         } else if (!"".equals(level) && !"".equals(name)) {
-            return competitionService.findByNameContainingAndLevel(name,level, pageable);
-        }else if(!"".equals(organizer) && !"".equals(level)){
-            return competitionService.findByOrganizerAndLevel(organizer,level,pageable);
-        }
-        else if (!"".equals(name) || !"".equals(organizer) || !"".equals(level)) {
-            return competitionService.findByNameContainingOrOrganizerOrLevel(name,organizer,level,pageable);
+
+            return competitionService.findByNameContainingAndLevel(name, level, pageable);
+        } else if (!"".equals(organizer) && !"".equals(level)) {
+
+            return competitionService.findByOrganizerAndLevel(organizer, level, pageable);
+        } else if (!"".equals(name)) {
+            return competitionService.findByNameLike(name, pageable);
+        } else if (!"".equals(organizer)) {
+            return competitionService.findByOrganizer(organizer, pageable);
+        } else if (!"".equals(level)) {
+            return competitionService.findByLevel(level, pageable);
         } else {
+            System.out.println(6);
             return competitionService.findAll(pageable);
         }
     }
 
 
-    //    @Cacheable(value = "CompetitionAll", key = "'id:'+#id", unless = "#result == null ")
     @GetMapping("/findById/{id}")
     public Map<String, Object> findById(@PathVariable Integer id) {
         Map<String, Object> res = new ConcurrentHashMap<>(10);

@@ -1,5 +1,6 @@
 package werls.scis.dao.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -31,28 +32,20 @@ public class ScisCollege implements Serializable {
      */
     @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "college",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-//    @JoinColumn(name = "college_id",referencedColumnName = "college_id")
+    @JsonIgnoreProperties({"college"})
     private List<ScisMajor> majors;
     /**
      * 学院教师
      */
     @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "college",fetch = FetchType.EAGER)
+    @JsonIgnoreProperties({"college"})
     private List<ScisUser> scisUserList;
 
     public ScisCollege() {
         super();
     }
 
-    @Override
-    public String toString() {
-        return "ScisCollege{" +
-                "id=" + id +
-                ", collegeName='" + collegeName + '\'' +
-                ", majors=" + majors +
-                ", scisUserList=" + scisUserList +
-                '}';
-    }
 
     public List<ScisUser> getScisUserList() {
         return scisUserList;

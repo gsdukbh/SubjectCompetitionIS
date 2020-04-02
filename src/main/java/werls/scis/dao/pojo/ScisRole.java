@@ -1,6 +1,7 @@
 package werls.scis.dao.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -35,7 +36,8 @@ public class ScisRole implements Serializable {
      */
     @Column(name = "role_name")
     private String name;
-    @JsonIgnore
+
+    @JsonIgnoreProperties({"roles"})
     @Fetch(FetchMode.SUBSELECT)
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name="Is_role_user",
@@ -43,26 +45,7 @@ public class ScisRole implements Serializable {
             inverseJoinColumns={@JoinColumn(name="role_id")})
     private List<ScisUser> scisUserList;
 
-    /**
-     * 角色拥有的菜单
-     */
-    @Fetch(FetchMode.SUBSELECT)
-    @ManyToMany(cascade = {CascadeType.REFRESH},fetch = FetchType.EAGER)
-    @JoinTable(name="Is_role_menu",
-            joinColumns={@JoinColumn(name="role_id")},
-            inverseJoinColumns={@JoinColumn(name="menu_id")})
-    private List<ScisMenu> menuList;
 
-    @Override
-    public String toString() {
-        return "ScisRole{" +
-                "id=" + id +
-                ", authority='" + authority + '\'' +
-                ", name='" + name + '\'' +
-                ", scisUserList=" + scisUserList +
-                ", menuList=" + menuList +
-                '}';
-    }
 
    @JsonIgnore
     public List<ScisUser> getScisUserList() {
@@ -81,13 +64,6 @@ public class ScisRole implements Serializable {
         this.name = name;
     }
 
-    public List<ScisMenu> getMenuList() {
-        return menuList;
-    }
-
-    public void setMenuList(List<ScisMenu> menuList) {
-        this.menuList = menuList;
-    }
 
     public Integer getId() {
         return id;

@@ -121,7 +121,7 @@ public class AnnouncementServiceImpl {
      * @return Page<ScisAnnouncement>
      */
 
-    public Page<ScisAnnouncement> findByTitleLike(String titleLike, Pageable pageable) {
+    public Page<ScisAnnouncement> findByTitleContaining(String titleLike, Pageable pageable) {
         return announcementJpaRepository.findByTitleContaining(titleLike, pageable);
     }
 

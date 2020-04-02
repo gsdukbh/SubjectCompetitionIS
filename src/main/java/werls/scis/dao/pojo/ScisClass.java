@@ -35,23 +35,13 @@ public class ScisClass implements Serializable {
      */
     @ManyToOne(fetch =FetchType.EAGER,optional = false)
     @JoinColumn(name = "major_id",referencedColumnName = "major_id")
-    @JsonIgnoreProperties({"college"})
+    @JsonIgnoreProperties({"classList"})
     private ScisMajor major;
 
     @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "scisClass",fetch = FetchType.EAGER)
     @JsonIgnoreProperties({"scisClass"})
     private  List<ScisUser> scisUserList;
-
-    @Override
-    public String toString() {
-        return "ScisClass{" +
-                "id=" + id +
-                ", grade='" + grade + '\'' +
-                ", name='" + name + '\'' +
-                ", userList=" + scisUserList +
-                '}';
-    }
 
     public List<ScisUser> getScisUserList() {
         return scisUserList;

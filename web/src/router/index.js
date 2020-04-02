@@ -134,6 +134,15 @@ export const asyncRoutes = [
                     title: '竞赛发布',
                     roles: ['ROLE_ADMIN', 'ROLE_TEA'],
                 }
+            },
+            {
+                path:'myResponsible',
+                name:'my-responsible',
+                component:()=>import('../views/competition/myResponsible'),
+                meta:{
+                    title:'我负责的竞赛',
+
+                }
             }
         ]
     },
@@ -182,7 +191,7 @@ export const asyncRoutes = [
                     title: '公告信息修改',
                     roles: ['ROLE_ADMIN', 'ROLE_TEA']
                 }
-            }
+            },
 
         ]
     },
