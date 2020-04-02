@@ -45,7 +45,7 @@ public class ScisReply implements Serializable {
 
     @OneToOne(mappedBy="reply",cascade=CascadeType.ALL)
     @JoinColumn(name="problem_id",referencedColumnName = "problem_id")
-//    @JsonIgnoreProperties({"reply"})
+    @JsonIgnoreProperties({"reply"})
     private ScisProblem problem;
 
     public Integer getProblemId() {

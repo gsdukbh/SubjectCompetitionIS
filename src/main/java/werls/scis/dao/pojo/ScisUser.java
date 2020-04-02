@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -31,6 +33,7 @@ public class ScisUser implements Serializable {
     private Integer id;
     @Column(name = "user_login")
     private String login;
+    @JsonIgnore
     @Column(name = "user_password")
     private String password;
     @Column(name = "user_name")
@@ -55,6 +58,7 @@ public class ScisUser implements Serializable {
     @JoinTable(name="Is_role_user",
             joinColumns={@JoinColumn(name="user_id")},
             inverseJoinColumns={@JoinColumn(name="role_id")})
+    @JsonIgnoreProperties({"scisUserList"})
     private List<ScisRole> roles ;
 
     /**
@@ -62,7 +66,7 @@ public class ScisUser implements Serializable {
      */
     @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(name = "class_id",referencedColumnName = "class_id")
-    @JsonIgnore
+    @JsonIgnoreProperties({"scisUserList"})
     private ScisClass scisClass;
 
     /**
@@ -70,7 +74,7 @@ public class ScisUser implements Serializable {
      */
     @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(name = "college_id",referencedColumnName = "college_id")
-    @JsonIgnore
+    @JsonIgnoreProperties({"scisUserList"})
     private ScisCollege college;
 
     /**
@@ -86,36 +90,30 @@ public class ScisUser implements Serializable {
     @Fetch(FetchMode.SUBSELECT)
     @JsonIgnoreProperties({"scisUser"})
     @OneToMany(mappedBy = "scisUser",fetch = FetchType.EAGER)
-
     private List<ScisAnnouncement> announcements;
 
     @ManyToMany(mappedBy = "scisUserList",fetch = FetchType.EAGER)
     @JsonIgnoreProperties({"scisUserList"})
     private List<ScisTeamApply> teamApplies;
+
     /*提出的问题*/
     @Fetch(FetchMode.SUBSELECT)
     @JsonIgnoreProperties({"scisUser"})
     @OneToMany(mappedBy = "scisUser",fetch = FetchType.EAGER,cascade = CascadeType.REFRESH)
     private  List<ScisProblem> problems;
 
-    @Override
-    public String toString() {
-        return "ScisUser{" +
-                "id=" + id +
-                ", login='" + login + '\'' +
-                ", password='" + password + '\'' +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
-                ", sex='" + sex + '\'' +
-                ", status='" + status + '\'' +
-                ", identity='" + identity + '\'' +
-                ", roles=" + roles +
-                ", applyFroms=" + applyFroms +
-                ", announcements=" + announcements +
-                ", teamApplies=" + teamApplies +
-                ", problems=" + problems +
-                '}';
+
+    @Fetch(FetchMode.SUBSELECT)
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "user")
+    @JsonIgnoreProperties({"user"})
+    private List<ScisCompetition> competitionList;
+
+    public List<ScisCompetition> getCompetitionList() {
+        return competitionList;
+    }
+
+    public void setCompetitionList(List<ScisCompetition> competitionList) {
+        this.competitionList = competitionList;
     }
 
     public List<ScisRole> getRoles() {

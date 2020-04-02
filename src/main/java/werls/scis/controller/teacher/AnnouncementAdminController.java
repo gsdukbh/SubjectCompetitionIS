@@ -25,13 +25,13 @@ import java.util.concurrent.ConcurrentHashMap;
  * @date Date : 2020年03月15日 16:28
  */
 @RestController
-@RequestMapping("/tea")
-public class AnnouncementController {
+@RequestMapping("/tea/announcement")
+public class AnnouncementAdminController {
     @Autowired
     AnnouncementServiceImpl service;
 
 
-    @PostMapping("/announcement/save")
+    @PostMapping("/save")
     public String save(@RequestBody JSONObject json){
         ScisAnnouncement announcement=JSONObject.toJavaObject(json, ScisAnnouncement.class);
         Map<String, Object> res = new ConcurrentHashMap<>(10);
@@ -46,11 +46,12 @@ public class AnnouncementController {
             return  JSON.toJSONString(res);
         }
     }
-
-    @GetMapping("/announcement/findAll")
-    public Page<ScisAnnouncement> findAll(@RequestParam(name = "page", defaultValue = "0") Integer page,
-                                          @RequestParam(name = "size", defaultValue = "20") Integer size){
-        Pageable pageable = PageRequest.of(page, size, Sort.by("time"));
-        return service.findAll(pageable);
+    @GetMapping("/deleteById/{id}")
+    public  Map<String, Object> deleteById(@PathVariable Integer id){
+        Map<String, Object> res = new ConcurrentHashMap<>(10);
+        res.put("status",200);
+        res.put("message","Success");
+        service.deleteById(id);
+        return res;
     }
 }

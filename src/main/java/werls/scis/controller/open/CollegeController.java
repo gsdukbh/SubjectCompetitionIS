@@ -1,4 +1,4 @@
-package werls.scis.controller;
+package werls.scis.controller.open;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;

@@ -1,4 +1,4 @@
-package werls.scis.controller;
+package werls.scis.controller.open;
 
 
 import com.alibaba.druid.sql.visitor.functions.Isnull;
@@ -51,16 +51,19 @@ public class CompetitionAdmin {
                                            @RequestParam(name = "level", defaultValue = "") String level) {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("startTime"));
-        if (!"".equals(organizer) && !"".equals(name)) {
-            return competitionService.findByNameLikeAndOrganizer(name, organizer, pageable);
-        } else if (!"".equals(name)) {
-            return competitionService.findByNameLike(name, pageable);
-        } else if (!"".equals(organizer)) {
-            return competitionService.findByOrganizer(organizer, pageable);
-        } else if (!"".equals(level)){
-            return competitionService.findByLevel(level,pageable);
+
+        if (!"".equals(organizer) && !"".equals(name) && !"".equals(level)) {
+            return competitionService.findByNameContainingAndLevelAndOrganizer(name,level,organizer,pageable);
+        }else if (!"".equals(organizer) && !"".equals(name)) {
+            return competitionService.findByNameContainingAndOrganizer(name,organizer, pageable);
+        } else if (!"".equals(level) && !"".equals(name)) {
+            return competitionService.findByNameContainingAndLevel(name,level, pageable);
+        }else if(!"".equals(organizer) && !"".equals(level)){
+            return competitionService.findByOrganizerAndLevel(organizer,level,pageable);
         }
-        else {
+        else if (!"".equals(name) || !"".equals(organizer) || !"".equals(level)) {
+            return competitionService.findByNameContainingOrOrganizerOrLevel(name,organizer,level,pageable);
+        } else {
             return competitionService.findAll(pageable);
         }
     }
@@ -72,9 +75,15 @@ public class CompetitionAdmin {
         Map<String, Object> res = new ConcurrentHashMap<>(10);
         Optional<ScisCompetition> competition = competitionService.findById(id);
         if (competition.isPresent()) {
+            ScisCompetition scisCompetition = competition.get();
+            scisCompetition.setUser(null);
+            scisCompetition.setApplyFromList(null);
+            scisCompetition.setProblems(null);
+            scisCompetition.setTeamApplyList(null);
+            scisCompetition.setWorks(null);
             res.put("status", 200);
             res.put("message", "success");
-            res.put("data", competition.get());
+            res.put("data", scisCompetition);
             return res;
         } else {
             res.put("status", 404);

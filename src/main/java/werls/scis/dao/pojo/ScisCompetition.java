@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.oracle.webservices.internal.api.databinding.DatabindingMode;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -49,6 +51,8 @@ public class ScisCompetition implements Serializable {
     private String content;
     @Column(name = "competition_author")
     private String author;
+    @Column(name = "competition_principal")
+    private  String principal;
     @Column(name = "competition_level")
     private String level;
     @Column(name = "competition_organizer")
@@ -89,34 +93,32 @@ public class ScisCompetition implements Serializable {
     private List<ScisWorks> works;
 
     @Fetch(FetchMode.SUBSELECT)
-    @OneToMany(mappedBy = "competition", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "competition", fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @JsonIgnoreProperties({"competition"})
 //    @JsonIgnore
     private List<ScisProblem> problems;
 
-    @Override
-    public String toString() {
-        return "ScisCompetition{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", status='" + status + '\'' +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                ", applyTime=" + applyTime +
-                ", content='" + content + '\'' +
-                ", author='" + author + '\'' +
-                ", level='" + level + '\'' +
-                ", organizer='" + organizer + '\'' +
-                ", numLimit='" + numLimit + '\'' +
-                ", place='" + place + '\'' +
-                ", type='" + type + '\'' +
-                ", team=" + team +
-                ", notification=" + notification +
-                ", applyFromList=" + applyFromList +
-                ", teamApplyList=" + teamApplyList +
-                ", works=" + works +
-                ", problems=" + problems +
-                '}';
+    @NotFound(action= NotFoundAction.IGNORE)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id",referencedColumnName = "user_id")
+    @JsonIgnoreProperties({"competitionList"})
+    private ScisUser user;
+
+
+    public String getPrincipal() {
+        return principal;
+    }
+
+    public void setPrincipal(String principal) {
+        this.principal = principal;
+    }
+
+    public ScisUser getUser() {
+        return user;
+    }
+
+    public void setUser(ScisUser user) {
+        this.user = user;
     }
 
     public Boolean getNotification() {

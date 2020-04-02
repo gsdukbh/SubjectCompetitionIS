@@ -64,5 +64,45 @@ public interface CompetitionRepository extends JpaRepository<ScisCompetition, In
      * @param pageable  Pageable
      * @return  Page<ScisCompetition>
      */
-    Page<ScisCompetition> findByNameLikeAndOrganizer(String name,String organizer,Pageable pageable);
+    Page<ScisCompetition> findByNameContainingAndOrganizer(String name,String organizer,Pageable pageable);
+
+    /**
+     * ..
+     * @param name String
+     * @param organizer String
+     * @param level String
+     * @param pageable  Pageable
+     * @return  Page<ScisCompetition>
+     */
+    Page<ScisCompetition> findByNameContainingOrOrganizerOrLevel(String name,String organizer,String level,Pageable pageable);
+
+    /**
+     * ..
+     * @param name String
+     * @param level String
+     * @param organizer String
+     * @param pageable  Pageable
+     * @return  Page<ScisCompetition>
+     */
+    Page<ScisCompetition> findByNameContainingAndLevelAndOrganizer(String name,String level,String organizer,Pageable pageable);
+
+
+    /**
+     * 11
+     * @param level String
+     * @param name String
+     * @param pageable Pageable
+     * @return  Page<ScisCompetition>
+     */
+    Page<ScisCompetition> findByNameContainingAndLevel(String name,String level,Pageable pageable);
+
+    /**
+     * 11
+     * @param organizer String
+     * @param name String
+     * @param pageable Pageable
+     * @return  Page<ScisCompetition>
+     */
+    Page<ScisCompetition> findByOrganizerAndLevel(String organizer,String name ,Pageable pageable);
+
 }

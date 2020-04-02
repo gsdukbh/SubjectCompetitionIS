@@ -2,6 +2,8 @@ package werls.scis.dao.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -43,6 +45,7 @@ public class ScisAnnouncement implements Serializable {
     /**
      * 公告时间
      */
+
     @LastModifiedDate
     @DateTimeFormat(pattern = "yyyy-MM-dd HH-mm-ss")
     @Column(name = "announcement_time")
@@ -71,25 +74,18 @@ public class ScisAnnouncement implements Serializable {
      * 用户多对一
      */
 
-    @ManyToOne(fetch = FetchType.EAGER,optional = false)
-    @JoinColumn(name = "user_id")
+    /**
+     * 无法解决 javax.persistence.EntityNotFoundException: Unable to find 类 with id
+     * 直接返回 Pege 对象不行 可以使用 map
+     * https://stackoverflow.com/questions/13539050/entitynotfoundexception-in-hibernate-many-to-one-mapping-however-data-exist
+     */
+    @NotFound(action= NotFoundAction.IGNORE)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id",referencedColumnName = "user_id")
     @JsonIgnoreProperties({"announcements"})
     private ScisUser scisUser;
 
-    
-    @Override
-    public String toString() {
-        return "ScisAnnouncement{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                ", time=" + time +
-                ", author='" + author + '\'' +
-                ", from='" + from + '\'' +
-                ", status='" + status + '\'' +
-                ", type='" + type + '\'' +
-                '}';
-    }
+
 
     public String getTitle() {
         return title;

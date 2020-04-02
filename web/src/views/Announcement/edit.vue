@@ -1,85 +1,90 @@
 <template>
-    <div class="main">
+    <div>
+        <div v-if="Page404===false" class="main">
 
-        <!--固定头部-->
-        <sticky :z-index="10" class-name="sub-navbar">
+            <!--固定头部-->
+            <sticky :z-index="10" class-name="sub-navbar">
+
+                <el-button style="margin-left: 10px;" type="primary" @click="submitPublish('announcement')">
+                    发布
+                </el-button>
+                <el-button style="margin-left: 10px;" type="warning" @click="draftForm('announcement')">
+                    草稿
+                </el-button>
+            </sticky>
+
+            <div class="leftColumn">
+
+                <el-card class="top left" shadow="hover">
+                    <el-row>
+                        <el-col :span="24">
+                            <el-form ref="announcement" :model="announcement" :rules="rules">
+                                <el-form-item style="margin-bottom: 40px;" prop="title">
+                                    <MdInput v-model="announcement.title" name="name" required>
+                                        标题
+                                    </MdInput>
+                                </el-form-item>
+                            </el-form>
+                        </el-col>
+
+                    </el-row>
+                    <markdown-editor ref="markdownEditor" title="请输入详细内容 " v-bind:content="announcement.content"
+                                     height="auto"/>
+                </el-card>
+            </div>
+
+            <div class="rightColumn">
+
+                <el-card class="right top" shadow="hover">
+                    <el-row>
+                        <el-col :span="24">
+                            <el-row>
+                                <el-col :span="24">
+                                    <span> 上次修改的作者: {{announcement.author}}</span>
+                                </el-col>
+                            </el-row>
+
+                            <el-form label-position="top" ref="announcement" status-icon label-width="80px"
+                                     :rules="rules"
+                                     :model="announcement">
+                                <el-form-item label="类型" prop="type">
+                                    <!--                                <el-select v-model="announcement.type" placeholder="请选择" style="width: 100%">-->
+                                    <!--                                    <el-option label="考试信息" value="考试信息"></el-option>-->
+                                    <!--                                    <el-option label="竞赛新闻" value="竞赛新闻"></el-option>-->
+                                    <!--                                </el-select>-->
+                                    <el-autocomplete
+                                            style="width: 100%"
+                                            v-model="announcement.type"
+                                            :fetch-suggestions="querySearchAsync"
+                                            placeholder="请输入内容"
+                                    ></el-autocomplete>
+
+                                </el-form-item>
+                                <el-form-item label="来源" prop="from">
+                                    <el-select v-model="announcement.from" placeholder="请选择" style="width: 100%">
+                                        <div v-for="item in college" v-bind:key="item.id">
+                                            <el-option :label=item.collegeName :value=item.collegeName></el-option>
+                                        </div>
+                                    </el-select>
+                                </el-form-item>
+
+                            </el-form>
+
+                        </el-col>
+
+                    </el-row>
+
+                </el-card>
+
+            </div>
 
 
-            <el-button style="margin-left: 10px;" type="primary" @click="submitPublish('announcement')">
-                发布
-            </el-button>
-            <el-button style="margin-left: 10px;" type="warning" @click="draftForm('announcement')">
-                草稿
-            </el-button>
-        </sticky>
-
-        <div class="leftColumn">
-
-            <el-card class="top left" shadow="hover">
-                <el-row>
-                    <el-col :span="24">
-                        <el-form ref="announcement" :model="announcement" :rules="rules">
-                            <el-form-item style="margin-bottom: 40px;" prop="title">
-                                <MdInput v-model="announcement.title" name="name" required>
-                                    标题
-                                </MdInput>
-                            </el-form-item>
-                        </el-form>
-                    </el-col>
-
-                </el-row>
-                <markdown-editor ref="markdownEditor" title="请输入详细内容 " height="auto"/>
-            </el-card>
+            <!--返回顶部-->
+            <el-tooltip placement="top" content="返回顶部">
+                <back-to-top :visibility-height="300" :back-position="50" transition-name="fade"/>
+            </el-tooltip>
         </div>
-
-        <div class="rightColumn">
-
-            <el-card class="right top" shadow="hover">
-                <el-row>
-                    <el-col :span="24">
-                        <el-form ref="announcement" status-icon :model="announcement" :rules="rules">
-                            <el-form-item prop="author" label="作者：">
-                                {{name}}
-                            </el-form-item>
-                        </el-form>
-                        <el-form label-position="top" ref="announcement" status-icon label-width="80px" :rules="rules"
-                                 :model="announcement">
-                            <el-form-item label="类型" prop="type">
-                                <!--                                <el-select v-model="announcement.type" placeholder="请选择" style="width: 100%">-->
-                                <!--                                    <el-option label="考试信息" value="考试信息"></el-option>-->
-                                <!--                                    <el-option label="竞赛新闻" value="竞赛新闻"></el-option>-->
-                                <!--                                </el-select>-->
-                                <el-autocomplete
-                                        style="width: 100%"
-                                        v-model="announcement.type"
-                                        :fetch-suggestions="querySearchAsync"
-                                        placeholder="请输入内容"
-                                ></el-autocomplete>
-
-                            </el-form-item>
-                            <el-form-item label="来源" prop="from">
-                                <el-select v-model="announcement.from" placeholder="请选择" style="width: 100%">
-                                    <div v-for="item in college" v-bind:key="item.id">
-                                        <el-option :label=item.collegeName :value=item.collegeName></el-option>
-                                    </div>
-                                </el-select>
-                            </el-form-item>
-
-                        </el-form>
-
-                    </el-col>
-
-                </el-row>
-
-            </el-card>
-
-        </div>
-
-
-        <!--返回顶部-->
-        <el-tooltip placement="top" content="返回顶部">
-            <back-to-top :visibility-height="300" :back-position="50" transition-name="fade"/>
-        </el-tooltip>
+        <page404 v-if="  Page404===true"></page404>
     </div>
 </template>
 
@@ -90,10 +95,11 @@
     import MdInput from "../../components/MDinput/index";
     import MarkdownEditor from '@/components/MarkdownEditor'
     import {getJson, postJson} from "../../api/api";
+    import Page404 from "../error-page/404";
 
     export default {
-        name: "publish",
-        components: {MarkdownEditor, MdInput, BackToTop, Sticky},
+        name: "edit",
+        components: {Page404, MarkdownEditor, MdInput, BackToTop, Sticky},
         computed: {
             /*https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Spread_syntax*/
             /*https://vuex.vuejs.org/zh/guide/getters.html*/
@@ -111,7 +117,9 @@
                 }
             };
             return {
+                Page404: null,
                 temType: [],
+                id: '',
                 announcement: {
                     id: null,
                     title: '',
@@ -142,7 +150,11 @@
                 })
                 .catch(error => {
                     this.$message.error("出现了一些问题" + error)
-                })
+                });
+            this.id = this.$route.params.id;
+            this.fetchData(this.id);
+            this.tempRoute = Object.assign({}, this.$route);
+
         },
         mounted() {
             getJson('/public/announcement/findType')
@@ -151,6 +163,39 @@
                 });
         },
         methods: {
+            async fetchData(id) {
+                await getJson('/public/announcement/findById/' + id)
+                    .then(response => {
+                        if (response.data.status === 200) {
+                            this.announcement = response.data.data;
+                            this.Page404 = false;
+                            this.loading = false;
+                            this.setTagsViewTitle();
+                            this.setPageTitle();
+                            this.PageLoading.close();
+                        } else if (response.data.status === 404) {
+                            this.loading = false;
+                            this.Page404 = true;
+                            this.PageLoading.close();
+                            this.$notify.warning({
+                                title: '警告',
+                                message: '资源不存在'
+                            })
+                        }
+                    })
+                    .catch(() => {
+                    });
+
+            },
+            setTagsViewTitle() {
+                const title = this.announcement.title;
+                const route = Object.assign({}, this.tempRoute, {title: `${title}-修改`});
+                this.$store.dispatch('tagsView/updateVisitedView', route);
+            },
+            setPageTitle() {
+                const title = this.announcement.title;
+                document.title = `${title} - 修改`
+            },
             /*https://element.eleme.cn/#/zh-CN/component/input*/
             querySearchAsync(queryString, cb) {
                 getJson('/public/announcement/findType')
@@ -238,7 +283,6 @@
                 });
             },
 
-
         }
     }
 </script>
@@ -272,5 +316,4 @@
     .right {
         margin-right: 10px;
     }
-
 </style>

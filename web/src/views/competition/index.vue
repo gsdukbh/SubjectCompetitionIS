@@ -1,9 +1,9 @@
 <template>
     <div>
         <!--搜索-->
-        <div>
+        <div style="margin-top: 10px;">
 
-            <el-input placeholder="名称" style="width: 200px;" v-model="page.name"/>
+            <el-input placeholder="名称" style="width: 200px;margin-left: 10px;" v-model="page.name"/>
 
             <el-select style="margin-left: 10px;" v-model="page.organizer" filterable placeholder="请选择承办单位">
                 <el-option
@@ -16,17 +16,21 @@
 
             <el-select style="margin-left: 10px;" v-model="page.level" filterable placeholder="请选择竞赛级别">
                 <el-option label="" value=""></el-option>
-              <el-option label="校级" value="校级"></el-option>
+                <el-option label="校级" value="校级"></el-option>
                 <el-option label="院级" value="院级"></el-option>
                 <el-option label="市级" value="市级"></el-option>
                 <el-option label="区级/省级" value="区级/省级"></el-option>
                 <el-option label="国级" value="国级"></el-option>
             </el-select>
 
-            <el-button class="filter-item" type="primary" style="margin-left: 10px;" icon="el-icon-search" @click="handleFilter">
+            <el-button class="filter-item" type="primary" style="margin-left: 10px;" icon="el-icon-search"
+                       @click="handleFilter">
                 搜索
             </el-button>
-
+            <el-button class="filter-item" type="primary" style="margin-left: 10px;" icon="el-icon-refresh-left"
+                       @click="handleRefresh">
+                重置搜索
+            </el-button>
             <router-link :to="'/competition/publish'">
                 <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit">
                     添加赛事
@@ -52,7 +56,7 @@
                 border
                 @selection-change="handleSelectionChange"
                 v-loading="loading"
-                style="width: 100%">
+                style="width: 100%;margin-top: 10px;">
 
             <el-table-column
                     type="selection"
@@ -99,7 +103,7 @@
 
                     label="赛事级别"
                     width="100"
-                  >
+            >
                 <template slot-scope="{row}">
                     <el-tag
                             :type="row.level === '校级' ? 'primary' : 'success'"
@@ -206,7 +210,7 @@
                     page: 0,
                     organizer: null,
                     name: null,
-                    level:null,
+                    level: null,
                     totalElements: 100,
                 },
                 college: {
@@ -242,9 +246,6 @@
             formatTimeA(time) {
                 return parseTime(time, '{y}-{m}-{d} {h}:{i}')
             },
-            formatTimeB(time) {
-                return parseTime(time)
-            },
             handleSizeChange(val) {
                 this.page.size = val;
                 this.loading = true;
@@ -263,6 +264,12 @@
             handleFilter() {
                 /*搜索*/
                 this.loading = true;
+                this.getDataPage();
+            },
+            handleRefresh() {
+                this.page.level = null;
+                this.page.organizer = null;
+                this.page.name = null;
                 this.getDataPage();
             },
             handleModifyStatus(id, status) {
@@ -285,6 +292,7 @@
                                     }
                                 })
                                 .catch(error => {
+                                    this.getDataPage();
                                     this.loading1 = false;
                                     this.$message.error("出现了一些问题" + error)
                                 })
@@ -295,8 +303,8 @@
                         this.$message.error("出现了一些问题" + error)
                     });
             },
-            handleDelete(id, index) {
-                this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+            handleDelete(id) {
+                this.$confirm('此操作将永久删除, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
@@ -309,8 +317,9 @@
                                     message: '删除成功',
                                     type: 'success'
                                 });
-                                this.tableData.splice(index, 1);
-                                this.page.totalElements -= 1;
+                                // this.tableData.splice(index, 1);
+                                // this.page.totalElements -= 1;
+                                this.getDataPage();
                             }
                         })
                         .catch(error => {

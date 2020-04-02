@@ -1,7 +1,8 @@
 <template>
 
     <div class="center">
-        <el-card shadow="hover" class="card">
+
+        <el-card v-loading="loading" v-if="Page404===false" shadow="hover" class="card">
             <!--card 头-->
             <div slot="header" class="clearfix">
                 <span>填写信息</span>
@@ -112,11 +113,22 @@
                     </el-form-item>
 
                     <el-form-item label="负责人" prop="author">
-                        <el-input
-                                placeholder="请输入内容"
-                                v-model="ruleForm.author"
-                                style="width: 30%">
-                        </el-input>
+                        <!--                        <el-input-->
+                        <!--                                placeholder="请输入内容"-->
+                        <!--                                v-model="ruleForm.author"-->
+                        <!--                                style="width: 30%">-->
+                        <!--                        </el-input>-->
+
+                        <el-tooltip class="item" content="请从下面的搜索结果输入，否则默认负责人是当前用户" placement="top-start">
+                            <el-autocomplete
+                                    style="width: 30%"
+                                    v-model="ruleForm.principal"
+                                    :value="ruleForm.principal"
+                                    :fetch-suggestions="querySearchAsync"
+                                    placeholder="请输入内容"
+                                    @select="handleSelect"
+                            ></el-autocomplete>
+                        </el-tooltip>
                     </el-form-item>
 
                     <el-form-item>
@@ -135,7 +147,8 @@
                 <span style="font-size: 14px"> 使用markdown编辑  <el-link target="_blank"
                                                                       href="https://github.com/nhn/tui.editor"
                                                                       type="info">详情</el-link> </span>
-                <markdown-editor ref="markdownEditor" title="请输入详细内容 " v-bind:content="ruleForm.content" height="600px"/>
+                <markdown-editor ref="markdownEditor" title="请输入详细内容 " v-bind:content="ruleForm.content"
+                                 height="600px"/>
 
             </div>
 
@@ -154,20 +167,24 @@
             </div>
 
         </el-card>
-
+        <page404 v-loading="loading" v-if="Page404 ===true"></page404>
     </div>
 </template>
 
 <script>
-    import MarkdownEditor from '@/components/MarkdownEditor'
+    import MarkdownEditor from '@/components/MarkdownEditor';
     import {getJson, postJson} from "../../api/api";
+    import Page404 from '../error-page/404';
 
     export default {
         name: "edit",
-        components: {MarkdownEditor},
+        components: {Page404, MarkdownEditor},
         data() {
             return {
                 id: '',
+                Page404: null,
+                loading: true,
+                PageLoading: null,
                 ruleForm: {
                     name: '',
                     level: '',
@@ -178,6 +195,7 @@
                     status: '',
                     type: '',
                     author: '',
+                    principal: '',
                     content: '',
                     numLimit: 1,
                     place: '',
@@ -230,17 +248,43 @@
                 .catch(error => {
                     this.$message.error("出现了一些问题" + error)
                 })
+            getJson('/tea/user/findByRoleName/teacher')
+                .then(response => {
+                    this.userInfo = response.data.userInfo;
+                })
+                .catch(error => {
+                    this.$message.error("出现了一些问题" + error)
+                });
+            this.PageLoading = this.$loading({
+                lock: true,
+                text: '拼命加载中...',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+            });
         },
         mounted() {
 
         },
         methods: {
             async fetchData(id) {
-                getJson('/public/competition/findById/' + id)
+                await getJson('/public/competition/findById/' + id)
                     .then(response => {
-                        this.ruleForm = response.data.data;
-                        this.setTagsViewTitle();
-                        this.setPageTitle();
+                        if (response.data.status === 200) {
+                            this.ruleForm = response.data.data;
+                            this.Page404 = false;
+                            this.loading = false;
+                            this.setTagsViewTitle();
+                            this.setPageTitle();
+                            this.PageLoading.close();
+                        } else if (response.data.status === 404) {
+                            this.loading = false;
+                            this.Page404 = true;
+                            this.PageLoading.close();
+                            this.$notify.warning({
+                                title: '警告',
+                                message: '资源不存在'
+                            })
+                        }
                     })
                     .catch(() => {
                     });
@@ -255,8 +299,28 @@
                 const title = this.ruleForm.name;
                 document.title = `${title} - 修改`
             },
+            querySearchAsync(queryString, cb) {
+                getJson('/tea/user/findByRoleName/teacher').then(response => {
+                    this.userInfo = response.data.userInfo;
+                });
+                const userInfo = this.userInfo;
+                const res = queryString ? userInfo.filter(this.createStateFilter(queryString)) : userInfo;
+                clearTimeout(this.timeout);
+                this.timeout = setTimeout(() => {
+                    cb(res);
+                }, 3000 * Math.random());
+            },
+            createStateFilter(queryString) {
+                return (userInfo) => {
+                    return (userInfo.value.toLowerCase().indexOf(queryString.toLowerCase()) !== -1);
+                };
+            },
+            handleSelect(item) {
+                this.ruleForm.user.id = item.id;
+            },
             submit() {
                 this.ruleForm.content = this.$refs.markdownEditor.getMarkdown();
+                this.ruleForm.author = this.name;
                 this.$confirm('确认提交, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',

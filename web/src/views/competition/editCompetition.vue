@@ -20,7 +20,7 @@
 
                     <el-form-item label="竞赛名称" prop="name">
 
-                        <el-tooltip class="item" effect="dark" content="为了避免重复，请使用第**届，作为前缀命名" placement="top-start">
+                        <el-tooltip class="item" content="为了避免重复，请使用第**届，作为前缀命名" placement="top-start">
                             <el-input v-model="ruleForm.name" style="width: 30%"></el-input>
                         </el-tooltip>
                     </el-form-item>
@@ -59,7 +59,7 @@
 
                                         style="width: 30%;"></el-date-picker>
                     </el-form-item>
-<!--  value-format="yyyy-MM-dd HH-mm-ss"-->
+                    <!--  value-format="yyyy-MM-dd HH-mm-ss"-->
 
                     <el-form-item label="报名时间" prop="applyTime">
                         <el-form-item prop="startTime">
@@ -72,7 +72,7 @@
                         <el-switch
                                 v-model="ruleForm.notification"
                                 active-color="#13ce66"
-                            inactive-color="#ff4949">
+                                inactive-color="#ff4949">
                         </el-switch>
                     </el-form-item>
                     <el-form-item label="状态" prop="status">
@@ -112,11 +112,21 @@
                     </el-form-item>
 
                     <el-form-item label="负责人" prop="author">
-                        <el-input
-                                placeholder="请输入内容"
-                                v-model="ruleForm.author"
-                                style="width: 30%">
-                        </el-input>
+
+                        <!--                        <el-input-->
+                        <!--                                placeholder="请输入内容"-->
+                        <!--                                v-model="ruleForm.author"-->
+                        <!--                                style="width: 30%">-->
+                        <!--                        </el-input>-->
+                        <el-tooltip class="item" content="请从下面的搜索结果输入，否则默认负责人是当前用户" placement="top-start">
+                            <el-autocomplete
+                                    style="width: 30%"
+                                    v-model="ruleForm.principal"
+                                    :fetch-suggestions="querySearchAsync"
+                                    placeholder="请输入内容"
+                                    @select="handleSelect"
+                            ></el-autocomplete>
+                        </el-tooltip>
                     </el-form-item>
 
                     <el-form-item>
@@ -142,11 +152,13 @@
             <div v-if="item === 3">
                 <div class="info">
                     <el-alert
-
+                            center
+                            show-icon
                             title="竞赛信息发布成功！！！赶紧去发布公告吧"
                             type="success">
                     </el-alert>
-                    <router-link>
+
+                    <router-link to="/announcement/publish">
                         <el-button class="button" type="primary" round>前往发布</el-button>
                     </router-link>
                 </div>
@@ -161,12 +173,20 @@
 <script>
     import MarkdownEditor from '@/components/MarkdownEditor'
     import {getJson, postJson} from "../../api/api";
+    import {mapGetters} from "vuex";
 
     export default {
         name: "editCompetition",
         components: {MarkdownEditor},
+        computed: {
+            ...mapGetters([
+                'userId',
+                'name'
+            ])
+        },
         data() {
             return {
+                userInfo: [],
                 ruleForm: {
                     name: '',
                     level: '',
@@ -177,12 +197,17 @@
                     status: '',
                     type: '',
                     author: '',
+                    principal: '',
                     content: '',
                     numLimit: 1,
                     place: '',
                     team: false,
                     notification: false,
+                    user: {
+                        id: null,
+                    }
                 },
+
                 item: 1,
                 college: {
                     id: '',
@@ -225,11 +250,39 @@
                 })
                 .catch(error => {
                     this.$message.error("出现了一些问题" + error)
+                });
+            getJson('/tea/user/findByRoleName/teacher')
+                .then(response => {
+                    this.userInfo = response.data.userInfo;
+                })
+                .catch(error => {
+                    this.$message.error("出现了一些问题" + error)
                 })
         },
         methods: {
+            querySearchAsync(queryString, cb) {
+                getJson('/tea/user/findByRoleName/teacher').then(response => {
+                    this.userInfo = response.data.userInfo;
+                });
+                const userInfo = this.userInfo;
+                const res = queryString ? userInfo.filter(this.createStateFilter(queryString)) : userInfo;
+                clearTimeout(this.timeout);
+                this.timeout = setTimeout(() => {
+                    cb(res);
+                }, 3000 * Math.random());
+            },
+            createStateFilter(queryString) {
+                return (userInfo) => {
+                    return (userInfo.value.toLowerCase().indexOf(queryString.toLowerCase()) !== -1);
+                };
+            },
+            handleSelect(item) {
+                this.ruleForm.user.id = item.id;
+            },
             submit() {
                 this.ruleForm.content = this.$refs.markdownEditor.getMarkdown();
+                this.ruleForm.author = this.name;
+                // this.ruleForm.user.id = this.userId;
                 this.$confirm('确认提交, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -259,6 +312,10 @@
             next(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
+                        /*过滤数据*/
+                        if (this.ruleForm.type === 'online') {
+                            this.ruleForm.place = '';
+                        }
                         if (this.ruleForm.startTime > this.ruleForm.endTime) {
                             this.$notify.error({
                                 message: '开始时间不能再结束时间之后',
@@ -303,9 +360,11 @@
     .button {
         margin-top: 20px;
     }
+
     .top {
         margin-top: 20px;
     }
+
     .p {
         text-align: center;
     }

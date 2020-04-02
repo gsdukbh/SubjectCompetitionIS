@@ -140,39 +140,49 @@ export const asyncRoutes = [
     {
         path: '/announcement',
         name: 'announcement',
-        component:Layout,
-        meta:{
-            title:'公告',
-            icon:'announcement'
+        component: Layout,
+        meta: {
+            title: '公告',
+            icon: 'announcement'
         },
-        children:[
+        children: [
             {
-                path:'publish',
-                name:'announcementPublish',
-                component:()=>import('../views/Announcement/publish'),
-                meta:{
-                    title:'发布公告',
-                    roles:['ROLE_ADMIN', 'ROLE_TEA']
+                path: 'publish',
+                name: 'announcementPublish',
+                component: () => import('../views/Announcement/publish'),
+                meta: {
+                    title: '发布公告',
+                    roles: ['ROLE_ADMIN', 'ROLE_TEA']
                 }
             },
             {
-              path:'list',
-              name:'announcementList',
-              component:()=>import('../views/Announcement/list'),
-                meta:{
-                    title:'公告信息',
+                path: 'list',
+                name: 'announcementList',
+                component: () => import('../views/Announcement/list'),
+                meta: {
+                    title: '公告信息',
+                    roles: ['ROLE_ADMIN', 'ROLE_TEA']
                 }
             },
             {
-                path:'detail/:id(\\d+)',
-                name:'announcementDetail',
+                path: 'detail/:id(\\d+)',
+                name: 'announcementDetail',
                 hidden: true,
-                component:()=>import('../views/Announcement/detail'),
-                meta:{
-                    title:'公告详情',
+                component: () => import('../views/Announcement/detail'),
+                meta: {
+                    title: '公告详情',
+                }
+            },
+            {
+                path: 'edit/:id(\\d+)',
+                name: 'announcementEdit',
+                hidden: true,
+                component: () => import('../views/Announcement/edit'),
+                meta: {
+                    title: '公告信息修改',
+                    roles: ['ROLE_ADMIN', 'ROLE_TEA']
                 }
             }
-
 
         ]
     },

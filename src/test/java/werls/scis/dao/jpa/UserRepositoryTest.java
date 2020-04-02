@@ -60,7 +60,11 @@ class UserRepositoryTest {
     @Test
     void findByRole() {
         Pageable pageable1= PageRequest.of(0, 20);
-        System.out.println(repository.findByRoleName("超级管理",pageable1).getContent());
+        System.out.println(repository.findByRoleName("教师",pageable1).getContent().get(0).getName());
 
+    }
+
+    @Test
+    void findByRoleName() {
     }
 }

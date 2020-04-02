@@ -1,4 +1,4 @@
-package werls.scis.controller;
+package werls.scis.controller.open;
 
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,9 +8,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
+import werls.scis.dao.pojo.ScisCompetition;
 import werls.scis.dao.pojo.ScisProblem;
 import werls.scis.service.ProblemServiceImpl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -40,10 +43,17 @@ public class ProblemController {
         Pageable pageable= PageRequest.of(page, size, Sort.by("problem_time"));
         Page<ScisProblem> problems = service.findByReply(isReply,id,pageable);
         if (problems!=null){
+            List<ScisProblem> tem=new ArrayList<>();
+            for (ScisProblem t:problems.getContent() ){
+                ScisCompetition competition=new ScisCompetition();
+                competition.setId(t.getCompetition().getId());
+                t.setCompetition(competition);
+                tem.add(t);
+            }
             res.put("status",200);
             res.put("message","success");
             res.put("totalElements",problems.getTotalElements());
-            res.put("data",problems.getContent());
+            res.put("data",tem);
             return res;
         }else {
             res.put("status",403);

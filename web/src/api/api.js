@@ -36,11 +36,10 @@ export const postFrom =(url,params)=>{
             }
         })
 };
-export const getData = (url,params)=>{
+export const getData = (url)=>{
     return axios({
         method:'get',
         url:'/api'+url,
-        data:params,
     })
 };
 export const getLogout= (url)=>{

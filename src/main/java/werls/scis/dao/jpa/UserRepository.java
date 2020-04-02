@@ -68,6 +68,13 @@ public interface UserRepository extends JpaRepository<ScisUser,Integer> {
     ScisUser findByLoginOrPhoneOrIdentityOrEmail(String login,String phone,String identity,String email);
 
     /**
+     * 按照名字
+     * @param name String
+     * @param pageable Pageable
+     * @return Page<ScisUser>
+     */
+    Page<ScisUser> findByName(String name,Pageable pageable);
+    /**
      * find by role name
      * @param name  role name
      * @param pageable pageable
@@ -77,4 +84,14 @@ public interface UserRepository extends JpaRepository<ScisUser,Integer> {
             " b.role_name=?1 and b.role_id =c.role_id and " +
             " a.user_id=c.user_id")
     Page<ScisUser> findByRoleName(String name,Pageable pageable);
+
+    /**
+     * find by role name
+     * @param name String
+     * @return  List<ScisUser>
+     */
+    @Query(nativeQuery = true,value = "SELECT * FROM Is_user a , Is_role b , Is_role_user c WHERE " +
+            " b.role_name=?1 and b.role_id =c.role_id and " +
+            " a.user_id=c.user_id")
+    List<ScisUser> findByRoleName(String name);
 }

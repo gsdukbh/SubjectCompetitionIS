@@ -77,7 +77,7 @@ public class ScisProblem implements Serializable {
 
 
     @OneToOne(cascade=CascadeType.ALL)
-//    @JsonIgnoreProperties({"problem"})
+    @JsonIgnoreProperties({"problem"})
     private ScisReply reply;
 
     public Integer getMyReply() {

@@ -29,11 +29,12 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class AnnouncementServiceImplTest {
     @Autowired
-    private  AnnouncementJpaRepository jpaRepository;
+    private  AnnouncementServiceImpl jpaRepository;
 
+    Pageable pageable1= PageRequest.of(0, 20, Sort.by("time"));
     @Test
     void findByTimeAfter() {
-        Pageable pageable1= PageRequest.of(0, 2, Sort.by("time"));
+
         Date date=new Date();
         java.sql.Date date1=new java.sql.Date(date.getTime());
         System.out.println(jpaRepository.findByTimeAfter(date1,pageable1).getContent().toString());
@@ -43,7 +44,6 @@ class AnnouncementServiceImplTest {
 
     @Test
     void findByTime() {
-        Pageable pageable1= PageRequest.of(0, 2, Sort.by("time"));
         Date date=new Date();
         Calendar c1 = Calendar.getInstance();
         c1.set(2009, Calendar.JULY,25);
@@ -74,5 +74,15 @@ class AnnouncementServiceImplTest {
 
     @Test
     void findByTitleLike() {
+    }
+
+    @Test
+    void findAll() {
+        System.out.println(jpaRepository.findAll(pageable1).getContent().get(1));
+    }
+
+    @Test
+    void testFindByTypeLike() {
+        System.out.println(jpaRepository.findType().toString());
     }
 }

@@ -1,14 +1,8 @@
 package werls.scis.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -17,16 +11,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import werls.scis.dao.jpa.AnnouncementJpaRepository;
-import werls.scis.dao.jpa.ClassJpaRepository;
-import werls.scis.dao.jpa.CollegeJpaRepository;
 import werls.scis.dao.jpa.UserRepository;
 import werls.scis.dao.pojo.*;
 
-import javax.sound.midi.SoundbankResource;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 登录验证
@@ -43,9 +33,14 @@ public class UserServiceImpl implements UserDetailsService {
 
     @Autowired
     UserRepository userRepository;
-
-
-
+    /**
+     * find by role name
+     * @param name String
+     * @return  List<ScisUser>
+     */
+    public List<ScisUser> findByRoleName(String name){
+        return userRepository.findByRoleName(name);
+    }
     /**
      * 保存，修改用户时调用
      * 需要完整的user
@@ -99,7 +94,9 @@ public class UserServiceImpl implements UserDetailsService {
     public  Page<ScisUser> findByStatus(String status, Pageable pageable){
         return userRepository.findByStatus(status, pageable);
     }
-
+    public Optional<ScisUser> findById(Integer id){
+        return userRepository.findById(id);
+    }
     public void delete(ScisUser user){
         this.userRepository.delete(user);
     }
@@ -113,7 +110,6 @@ public class UserServiceImpl implements UserDetailsService {
     }
 
     /*查询时非常的久*/
-
     public ScisUser findByLoginOrPhoneOrIdentityOrEmail(String login){
         return this.userRepository.findByLoginOrPhoneOrIdentityOrEmail(login,login,login,login);
     }

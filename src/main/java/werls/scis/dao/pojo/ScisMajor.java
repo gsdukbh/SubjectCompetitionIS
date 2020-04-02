@@ -37,6 +37,7 @@ public class ScisMajor implements Serializable {
 
     @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "major",fetch = FetchType.EAGER)
+
     private List<ScisClass> classList;
 
     @Override

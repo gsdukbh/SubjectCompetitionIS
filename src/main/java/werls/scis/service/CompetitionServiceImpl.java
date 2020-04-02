@@ -46,64 +46,98 @@ public class CompetitionServiceImpl {
     public Page<ScisCompetition> findByStatus(String status, Pageable pageable) {
         return competitionRepository.findByStatus(status, pageable);
     }
+
     /**
      * 按照发布者模糊查询
+     *
      * @param authorLike String 发布者
-     * @param pageable Pageable
-     * @return  Page<ScisCompetition>
+     * @param pageable   Pageable
+     * @return Page<ScisCompetition>
      */
-    public Page<ScisCompetition> findByAuthorLike(String authorLike,Pageable pageable){
+    public Page<ScisCompetition> findByAuthorLike(String authorLike, Pageable pageable) {
         return competitionRepository.findByAuthorLike(authorLike, pageable);
     }
+
     /**
      * 竞赛级别
-     * @param level String 竞赛级别
-     * @param pageable Pageable
-     * @return  Page<ScisCompetition>
-     */
-    public Page<ScisCompetition> findByLevel(String level, Pageable pageable){
-        return competitionRepository.findByLevel(level, pageable);
-    }
-    /**
-     * 举办单位
-     * @param organizer String 举办单位
+     *
+     * @param level    String 竞赛级别
      * @param pageable Pageable
      * @return Page<ScisCompetition>
      */
-    public Page<ScisCompetition> findByOrganizer(String organizer, Pageable pageable){
+    public Page<ScisCompetition> findByLevel(String level, Pageable pageable) {
+        return competitionRepository.findByLevel(level, pageable);
+    }
+
+    /**
+     * 举办单位
+     *
+     * @param organizer String 举办单位
+     * @param pageable  Pageable
+     * @return Page<ScisCompetition>
+     */
+    public Page<ScisCompetition> findByOrganizer(String organizer, Pageable pageable) {
         return competitionRepository.findByOrganizer(organizer, pageable);
     }
 
-    public void save(ScisCompetition scisCompetition){
+    public void save(ScisCompetition scisCompetition) {
         competitionRepository.save(scisCompetition);
     }
-    public void saveAll(List<ScisCompetition> scisCompetition){
+
+    public void saveAll(List<ScisCompetition> scisCompetition) {
         competitionRepository.saveAll(scisCompetition);
     }
-    public Page<ScisCompetition> findAll(Pageable pageable){
+
+    public Page<ScisCompetition> findAll(Pageable pageable) {
         return competitionRepository.findAll(pageable);
     }
-    public void delete(ScisCompetition scisCompetition){
+
+    public void delete(ScisCompetition scisCompetition) {
         this.competitionRepository.delete(scisCompetition);
     }
-    public void deleteAll(List<ScisCompetition> scisCompetition){
+
+    public void deleteAll(List<ScisCompetition> scisCompetition) {
         this.competitionRepository.deleteAll(scisCompetition);
     }
-    public void deleteById(Integer id){
+
+    public void deleteById(Integer id) {
         this.competitionRepository.deleteById(id);
     }
-    public Optional<ScisCompetition> findById(Integer id){
-        return  competitionRepository.findById(id);
+
+    public Optional<ScisCompetition> findById(Integer id) {
+        return competitionRepository.findById(id);
+    }
+
+    /**
+     * 通过名称和举办单位查询
+     *
+     * @param name      String 赛事名称
+     * @param organizer String 举办单位
+     * @param pageable  Pageable
+     * @return Page<ScisCompetition>
+     */
+    public Page<ScisCompetition> findByNameContainingAndOrganizer(String name, String organizer, Pageable pageable) {
+        return competitionRepository.findByNameContainingAndOrganizer(name, organizer, pageable);
     }
     /**
      * 通过名称和举办单位查询
-     * @param name String 赛事名称
-     * @param organizer String 举办单位
+     * @param name String
+     * @param organizer String
+     * @param level String
      * @param pageable  Pageable
      * @return  Page<ScisCompetition>
      */
-    public  Page<ScisCompetition> findByNameLikeAndOrganizer(String name,String organizer,Pageable pageable){
-        return competitionRepository.findByNameLikeAndOrganizer(name,organizer,pageable);
+    public Page<ScisCompetition> findByNameContainingOrOrganizerOrLevel(String name, String organizer, String level, Pageable pageable) {
+        return competitionRepository.findByNameContainingOrOrganizerOrLevel(name, organizer, level, pageable);
     }
 
+    public   Page<ScisCompetition> findByNameContainingAndLevelAndOrganizer(String name,String level,String organizer,Pageable pageable){
+        return competitionRepository.findByNameContainingAndLevelAndOrganizer(name, level, organizer, pageable);
+    }
+    public Page<ScisCompetition> findByNameContainingAndLevel(String name,String level,Pageable pageable){
+        return competitionRepository.findByNameContainingAndLevel(name, level, pageable);
+    }
+    public Page<ScisCompetition> findByOrganizerAndLevel(String organizer,String name ,Pageable pageable){
+        return competitionRepository.findByOrganizerAndLevel(organizer, name, pageable);
+    }
 }
