@@ -44,6 +44,10 @@
                 stripe
                 style="width: 100%">
             <el-table-column
+                    type="index"
+                    >
+            </el-table-column>
+            <el-table-column
                     sortable
                     prop="time"
                     label="日期"

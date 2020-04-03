@@ -10,6 +10,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import werls.scis.dao.pojo.ScisRole;
 import werls.scis.dao.pojo.ScisUser;
 import werls.scis.service.EmailServiceImpl;
 import werls.scis.service.UserServiceImpl;
@@ -17,7 +18,9 @@ import werls.scis.util.EmailTemplate;
 import werls.scis.util.VerificationCode;
 
 import javax.xml.ws.soap.Addressing;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -48,19 +51,6 @@ public class Password {
 
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
-
-    @GetMapping(value = "/1")
-    public String te(@RequestParam("me") String test ,@RequestParam("sdddd") String sd ) {
-        Map<String, Object> res = new HashMap<>();
-        res.put("code", 200);
-        res.put("message", test + sd);
-        return JSON.toJSONString(res);
-    }
-    @GetMapping(value = "/kk")
-    public String test(@RequestBody JSONObject jsonParam ) {
-
-        return JSON.toJSONString(jsonParam);
-    }
 
     /**
      * 邮箱重置
@@ -134,14 +124,14 @@ public class Password {
     }
 
     @PostMapping(value = "/password/recover/find")
-    @Cacheable(value = "pwdReByAny",key = "#name",unless = "#result == null ")
+    @Cacheable(value = "pwdReByAny", key = "#name", unless = "#result == null ")
     public String pwdReByAny(@Param("name") String name) {
         Map<String, Object> res = new HashMap<>();
         ScisUser user = userService.findByLoginOrPhoneOrIdentityOrEmail(name);
         if (user == null) {
             res.put("status", 404);
             res.put("message", "没有该用户");
-            logger.info("正在查询："+name);
+            logger.info("正在查询：" + name);
             return JSON.toJSONString(res);
         } else {
             res.put("status", 200);
@@ -154,8 +144,65 @@ public class Password {
                     user.getPhone().substring(7);
             res.put("email", email);
             res.put("phone", phone);
-            logger.info("查询："+name+"成功");
+            logger.info("查询：" + name + "成功");
             return JSON.toJSONString(res);
         }
     }
+
+    @PostMapping("/repeat")
+    public Map<String, Object> findLogin(@RequestParam("login") String login) {
+        Map<String, Object> res = new ConcurrentHashMap<>(10);
+        res.put("status", 200);
+        res.put("message", "success");
+        String str = userService.finByLogin(login);
+        if (str != null && str.equals(login)) {
+            res.put("data","true");
+        }else{
+            res.put("data","false");
+        }
+        return res;
+    }
+    @PostMapping("/register/sendEmail")
+    public Map<String, Object> sendEmail(@RequestParam("email") String email){
+        Map<String, Object> res = new ConcurrentHashMap<>(10);
+        res.put("status", 200);
+        String co= code.code();
+        /*redis 保存验证码 5分钟*/
+        redisTemplate.opsForValue().set(email, co, 5, TimeUnit.MINUTES);
+        emailService.sendHtmlEmail(email,
+                "身份验证",
+                emailTemplate.sandCode(co,
+                        "注册"));
+        res.put("message", "验证码已经发送，5分钟内有效，注意查看邮箱");
+        return  res;
+    }
+    @PostMapping("/register")
+    public Map<String, Object> registerUser (@RequestBody JSONObject json){
+        Map<String, Object> res = new ConcurrentHashMap<>(10);
+        ScisUser user=new ScisUser();
+        ScisRole role=new ScisRole();
+        List<ScisRole>roleList=new ArrayList<>();
+        role.setId(2);
+        roleList.add(role);
+        user.setRoles(roleList);
+        user.setLogin(json.getString("login"));
+        user.setPassword(new BCryptPasswordEncoder().encode(json.getString("password")));
+        String redisCode = redisTemplate.opsForValue().get(json.getString("email"));
+        if (redisCode == null){
+            res.put("status", 403);
+            res.put("message", "验证码过期");
+            return res;
+        }else if (redisCode.equals(json.getString("code"))){
+            res.put("status", 200);
+            res.put("message", "注册成功,请完善个人信息");
+            userService.save(user);
+            return res;
+        }else {
+            res.put("status", 403);
+            res.put("message", "验证码错误 ");
+            return  res;
+        }
+    }
+
+
 }

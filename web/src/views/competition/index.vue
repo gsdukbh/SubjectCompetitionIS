@@ -97,6 +97,12 @@
             <el-table-column
                     prop="place"
                     label="举办地点">
+                <template slot-scope="{row}">
+                    <span>
+                        <el-tag v-if="row.type ==='online'">线上比赛</el-tag>
+                        <span v-if="row.type ==='offline'">{{row.place}}</span>
+                    </span>
+                </template>
             </el-table-column>
 
             <el-table-column

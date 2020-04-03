@@ -12,6 +12,7 @@ import java.util.List;
 
 /**
  * 用户jpa
+ *
  * @author : LiJiWei
  * @version V1.0
  * @Project: scis
@@ -19,30 +20,34 @@ import java.util.List;
  * @Description: TODO
  * @date Date : 2020年02月21日 23:33
  */
-public interface UserRepository extends JpaRepository<ScisUser,Integer> {
+public interface UserRepository extends JpaRepository<ScisUser, Integer> {
     /**
      * 登录名/学号/工号
+     *
      * @param login 登录名/学号/工号
      * @return 用户
      */
-    ScisUser findByLogin (String login);
+    ScisUser findByLogin(String login);
 
     /**
      * 手机号查询
+     *
      * @param phone 手机号码
      * @return 用户
      */
-    ScisUser findByPhone (String phone);
+    ScisUser findByPhone(String phone);
 
     /**
      * 身份证查询
+     *
      * @param identity 身份证
      * @return 用户
      */
-    ScisUser findByIdentity (String identity);
+    ScisUser findByIdentity(String identity);
 
     /**
      * 邮箱查询
+     *
      * @param email 邮箱
      * @return 用户
      */
@@ -51,7 +56,8 @@ public interface UserRepository extends JpaRepository<ScisUser,Integer> {
 
     /**
      * 查看用户是否激活
-     * @param status 状态 String
+     *
+     * @param status   状态 String
      * @param pageable Pageable
      * @return Page<ScisUser>
      */
@@ -59,39 +65,48 @@ public interface UserRepository extends JpaRepository<ScisUser,Integer> {
 
     /**
      * 登录时调用，
-     * @param login login String
-     * @param phone phone String
+     *
+     * @param login    login String
+     * @param phone    phone String
      * @param identity identity String
-     * @param email email  String
+     * @param email    email  String
      * @return ScisUser
      */
-    ScisUser findByLoginOrPhoneOrIdentityOrEmail(String login,String phone,String identity,String email);
+    ScisUser findByLoginOrPhoneOrIdentityOrEmail(String login, String phone, String identity, String email);
 
     /**
      * 按照名字
-     * @param name String
+     *
+     * @param name     String
      * @param pageable Pageable
      * @return Page<ScisUser>
      */
-    Page<ScisUser> findByName(String name,Pageable pageable);
-    /**
-     * find by role name
-     * @param name  role name
-     * @param pageable pageable
-     * @return  Page<ScisUser>
-     */
-    @Query(nativeQuery = true,value = "SELECT * FROM Is_user a , Is_role b , Is_role_user c WHERE " +
-            " b.role_name=?1 and b.role_id =c.role_id and " +
-            " a.user_id=c.user_id")
-    Page<ScisUser> findByRoleName(String name,Pageable pageable);
+    Page<ScisUser> findByName(String name, Pageable pageable);
 
     /**
      * find by role name
-     * @param name String
-     * @return  List<ScisUser>
+     *
+     * @param name     role name
+     * @param pageable pageable
+     * @return Page<ScisUser>
      */
-    @Query(nativeQuery = true,value = "SELECT * FROM Is_user a , Is_role b , Is_role_user c WHERE " +
+    @Query(nativeQuery = true, value = "SELECT * FROM Is_user a , Is_role b , Is_role_user c WHERE " +
+            " b.role_name=?1 and b.role_id =c.role_id and " +
+            " a.user_id=c.user_id")
+    Page<ScisUser> findByRoleName(String name, Pageable pageable);
+
+    /**
+     * find by role name
+     *
+     * @param name String
+     * @return List<ScisUser>
+     */
+    @Query(nativeQuery = true, value = "SELECT * FROM Is_user a , Is_role b , Is_role_user c WHERE " +
             " b.role_name=?1 and b.role_id =c.role_id and " +
             " a.user_id=c.user_id")
     List<ScisUser> findByRoleName(String name);
+
+    @Query(nativeQuery = true,
+            value = "select user_login from Is_user where user_login = ?1")
+    String finByLogin(String login);
 }

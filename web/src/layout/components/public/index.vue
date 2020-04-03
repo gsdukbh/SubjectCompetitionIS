@@ -6,6 +6,8 @@
                  text-color="#303133"
                  active-text-color="#409eff"
                  @select="handleSelect">
+
+
             <el-menu-item index="1">首页</el-menu-item>
 
             <el-submenu index="2">
@@ -39,13 +41,8 @@
                 <router-link to="/login">登录</router-link>
             </el-menu-item>
 
-
             <div class="right-menu">
-                <template v-if="device!=='mobile'">
 
-                    <search id="header-search" class="right-menu-item"/>
-
-                </template>
                 <el-dropdown class="avatar-container" trigger="click">
 
                     <el-tooltip class="item" effect="dark" content="个人中心" placement="left-end">
@@ -86,7 +83,7 @@
 
         </el-menu>
 
-        <div class="con">
+        <div class="main">
             <router-view :key="key"/>
         </div>
 
@@ -96,14 +93,11 @@
 
 <script>
     import {getToken} from '@/utils/auth'
-    import Search from '@/components/HeaderSearch'
+
     import {mapGetters} from "vuex";
 
     export default {
         name: "publicLayout",
-        components: {
-            Search
-        },
         computed: {
             key() {
                 return this.$route.path
@@ -122,7 +116,7 @@
             }
         },
         mounted() {
-            const hasToken = getToken()
+            const hasToken = getToken();
             if (hasToken) {
                 this.islogin = true
             }
@@ -143,19 +137,18 @@
         }
     }
 </script>
+
 <style scoped>
-    .right {
-        float: right;
-    }
+  .top{
+      align-content: center;
+      padding-right: 10%;
+      padding-left: 10%;
+  }
+
 </style>
+
 <style lang="scss" scoped>
-    .top {
-        position: fixed;
-        width: 100%;
-        height: auto;
-        z-index: 9;
-        text-align: center;
-    }
+
 
     .con {
         padding-top: 60px;

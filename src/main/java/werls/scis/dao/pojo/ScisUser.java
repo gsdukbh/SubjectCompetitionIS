@@ -67,6 +67,7 @@ public class ScisUser implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(name = "class_id",referencedColumnName = "class_id")
     @JsonIgnoreProperties({"scisUserList"})
+    @JsonIgnore
     private ScisClass scisClass;
 
     /**
@@ -75,6 +76,7 @@ public class ScisUser implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(name = "college_id",referencedColumnName = "college_id")
     @JsonIgnoreProperties({"scisUserList"})
+    @JsonIgnore
     private ScisCollege college;
 
     /**
@@ -83,6 +85,7 @@ public class ScisUser implements Serializable {
     @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "scisUser",fetch = FetchType.EAGER)
     @JsonIgnoreProperties({"scisUser"})
+    @JsonIgnore
     private List<ScisApplyFrom>applyFroms;
     /**
      * 公告教师，管理员专属，一对多
@@ -90,22 +93,26 @@ public class ScisUser implements Serializable {
     @Fetch(FetchMode.SUBSELECT)
     @JsonIgnoreProperties({"scisUser"})
     @OneToMany(mappedBy = "scisUser",fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<ScisAnnouncement> announcements;
 
     @ManyToMany(mappedBy = "scisUserList",fetch = FetchType.EAGER)
     @JsonIgnoreProperties({"scisUserList"})
+    @JsonIgnore
     private List<ScisTeamApply> teamApplies;
 
     /*提出的问题*/
     @Fetch(FetchMode.SUBSELECT)
     @JsonIgnoreProperties({"scisUser"})
     @OneToMany(mappedBy = "scisUser",fetch = FetchType.EAGER,cascade = CascadeType.REFRESH)
+    @JsonIgnore
     private  List<ScisProblem> problems;
 
 
     @Fetch(FetchMode.SUBSELECT)
     @OneToMany(fetch = FetchType.EAGER,mappedBy = "user")
     @JsonIgnoreProperties({"user"})
+    @JsonIgnore
     private List<ScisCompetition> competitionList;
 
     public List<ScisCompetition> getCompetitionList() {

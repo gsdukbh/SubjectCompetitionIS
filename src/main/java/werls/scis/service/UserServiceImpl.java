@@ -33,6 +33,11 @@ public class UserServiceImpl implements UserDetailsService {
 
     @Autowired
     UserRepository userRepository;
+
+
+    public String finByLogin(String login){
+        return userRepository.finByLogin(login);
+    }
     /**
      * find by role name
      * @param name String
@@ -48,8 +53,8 @@ public class UserServiceImpl implements UserDetailsService {
      */
 
     @Transactional(rollbackFor = Exception.class)
-    public void save(ScisUser user) {
-        userRepository.save(user);
+    public ScisUser save(ScisUser user) {
+        return  userRepository.save(user);
     }
 
     @Transactional(rollbackFor = Exception.class)

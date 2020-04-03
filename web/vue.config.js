@@ -1,28 +1,29 @@
 'use strict'
 const path = require('path')
 const defaultSettings = require('./src/settings.js')
+
 function resolve(dir) {
     return path.join(__dirname, dir)
 }
-const name = defaultSettings.title
-module.exports = {
-    publicPath:'/',
-    devServer:{
 
+const name = defaultSettings.title;
+module.exports = {
+    publicPath: '/',
+    devServer: {
         disableHostCheck: true,
-        port:8002,
-        proxy:{
-            '/api':{
-                target:'http://localhost:8080',
+        port: 8002,
+        proxy: {
+            '/api': {
+                target: 'http://localhost:8080',
                 changeOrigin: true,
-                pathRewrite:{
-                    '^/api':''
+                pathRewrite: {
+                    '^/api': ''
                 }
             }
         }
     },
-    configureWebpack:{
-        name:name,
+    configureWebpack: {
+        name: name,
         resolve: {
             alias: {
                 '@': resolve('src')
@@ -31,7 +32,7 @@ module.exports = {
     },
 
 
-    chainWebpack(config){
+    chainWebpack(config) {
         // set svg-sprite-loader
         config.module
             .rule('svg')

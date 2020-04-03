@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Login from '../views/login'
 import Layout from '../layout'
 import publicLayout from '../layout/components/public'
+import userRouter from "./user";
 
 
 Vue.use(VueRouter)
@@ -17,10 +18,11 @@ export const publicRoutes = [
             title: '登录'
         }
     },
+
     {
         path: '/404',
         name: '404',
-        component: import('../views/error-page/404'),
+        component:()=> import('../views/error-page/404'),
         hidden: true,
         meta: {
             title: '404'
@@ -40,7 +42,7 @@ export const publicRoutes = [
 
                 path: "/password/recover/index",
                 component: () => import('../views/login/pwdRe/index'),
-                name: '密码重置',
+                name: 'recover',
 
             }
         ]
@@ -62,7 +64,16 @@ export const publicRoutes = [
             {
                 path: 'index',
                 component: () => import('../views/public/index')
-            }
+            },
+            {
+                path:'register',
+                name:'register',
+                component:()=>import('../views/register'),
+                meta:{
+                    title:'注册',
+                }
+            },
+
         ]
     },
 
@@ -195,6 +206,7 @@ export const asyncRoutes = [
 
         ]
     },
+    userRouter,
     {
         path: '*',
         redirect: '/404',

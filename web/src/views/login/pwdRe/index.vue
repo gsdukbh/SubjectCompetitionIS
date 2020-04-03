@@ -27,11 +27,11 @@
                 <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
 
                     <el-form-item class="item" label="账号" prop="name">
-                        <el-input class="input" v-model="ruleForm.name" placeholder="请输入学号/工号/身份号/手机/邮箱"></el-input>
+                        <el-input class="input"  v-model="ruleForm.name" placeholder="请输入学号/工号/身份号/手机/邮箱"></el-input>
                     </el-form-item>
 
 
-                    <el-form-item class="button" >
+                    <el-form-item class="button">
 
                         <!--完成验证码 Popover 弹出框-->
                         <el-popover
@@ -133,7 +133,7 @@
                         <el-button type="primary" @click="recoverForm('recover')">提交</el-button>
                         <el-button native-type="reset">重置</el-button>
                     </el-form-item>
-                    <el-button  type="primary" style="width:30%;margin-bottom:30px;"
+                    <el-button type="primary" style="width:30%;margin-bottom:30px;"
                                @click.native.prevent="re">没有收到验证码?
                     </el-button>
                 </el-form>
@@ -151,6 +151,8 @@
     import {postFrom} from '../../../api/api'
     import NProgress from 'nprogress'
     import 'nprogress/nprogress.css'
+
+
     Vue.use(SlideVerify);
     export default {
         name: "password",
@@ -158,7 +160,7 @@
             const checkCode = (rule, value, callback) => {
                 if (!value) {
                     callback(new Error('验证码不能为空'));
-                }else {
+                } else {
                     callback()
                 }
             };
@@ -197,10 +199,10 @@
                     email: '',
                     phone: ''
                 },
-                recover:{
-                    password:'',
-                    email:'',
-                    checkPass:'',
+                recover: {
+                    password: '',
+                    email: '',
+                    checkPass: '',
                     code: ''
 
                 },
@@ -209,9 +211,27 @@
                         {required: true, message: '请输入账号信息', trigger: 'blur'},
                         {min: 3, message: '长度在 3 个字符 以上', trigger: 'blur'}
                     ],
-                    password: [{ validator: validatePass, trigger: 'blur' }],
-                    checkPass: [{ validator: validatePass2, trigger: 'blur' }],
-                    code: [{ validator: checkCode, trigger: 'blur' }]
+                    password: [
+                        {min: 6, max: 16, message: '长度在 2 到 20 个字符', trigger: 'blur'},
+                        {
+                            required: true,
+                            pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{6,16}$/,
+                            message: '包括至少1个大写字母，1个小写字母，1个数字，',
+                            trigger: 'blur'
+                        },
+                        {validator: validatePass, trigger: 'blur'}
+                        ],
+                    email:[
+                        {required: true, message: '请检查你的邮箱', trigger: 'blur'},
+                        {
+                            required: true,
+                            pattern: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
+                            message: '请输入正确的邮箱',
+                            trigger: 'blur'
+                        },
+                    ],
+                    checkPass: [{validator: validatePass2, trigger: 'blur'}],
+                    code: [{validator: checkCode, trigger: 'blur'}]
                 }
             }
         },
@@ -236,7 +256,7 @@
                     message: '验证成功',
                     type: 'success'
                 });
-                NProgress.start()
+                NProgress.start();
                 postFrom('/public/password/recover/find', this.ruleForm)
                     .then(response => {
                         if (response.data.status === 200) {
@@ -255,7 +275,7 @@
                     })
                     .catch(error => {
                         this.$message.error("出现了一些问题" + error)
-                    })
+                    });
                 NProgress.done()
             },
             onFail() {
@@ -271,7 +291,7 @@
                 this.active = 2;
 
             },
-            re(){
+            re() {
 
                 this.active = 1;
             },
@@ -307,33 +327,33 @@
                     })
                 NProgress.done()
             },
-           recoverForm(formName) {
+            recoverForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     NProgress.start()
                     if (valid) {
-                        postFrom('/public/password/recover/email/code',this.recover)
-                        .then(response=>{
-                            if (response.data.status === 200) {
-                                this.$notify({
-                                    title: '成功',
-                                    message: response.data.message,
-                                    type: 'success'
-                                });
-                                this.$notify.info({
-                                    title: '前往登录中',
-                                    message: ''
-                                });
-                                setTimeout(() => {
-                                    this.$router.push({path: '/login' || '/'})
-                                }, 3000 * Math.random());
-                                NProgress.done()
-                            }else if (response.data.status === 404){
-                                this.$notify.error({
-                                    title: '超时',
-                                    message: response.data.message,
-                                });
-                            }
-                        }).catch(error=>{
+                        postFrom('/public/password/recover/email/code', this.recover)
+                            .then(response => {
+                                if (response.data.status === 200) {
+                                    this.$notify({
+                                        title: '成功',
+                                        message: response.data.message,
+                                        type: 'success'
+                                    });
+                                    this.$notify.info({
+                                        title: '前往登录中',
+                                        message: ''
+                                    });
+                                    setTimeout(() => {
+                                        this.$router.push({path: '/login' || '/'})
+                                    }, 3000 * Math.random());
+                                    NProgress.done()
+                                } else if (response.data.status === 404) {
+                                    this.$notify.error({
+                                        title: '超时',
+                                        message: response.data.message,
+                                    });
+                                }
+                            }).catch(error => {
                             this.$message.error("出现了一些问题" + error)
                         })
                     } else {

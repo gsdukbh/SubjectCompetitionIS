@@ -83,6 +83,7 @@ public class ScisAnnouncement implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id",referencedColumnName = "user_id")
     @JsonIgnoreProperties({"announcements"})
+    @JsonIgnore
     private ScisUser scisUser;
 
 

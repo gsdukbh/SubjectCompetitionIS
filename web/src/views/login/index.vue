@@ -50,7 +50,11 @@
 
                 <div class="tips">
                     <span> <el-link type="primary" @click="toHome">返回首页</el-link></span>
-                    <span > <el-link type="primary" >注 册</el-link></span>
+
+                    <span > <router-link to="/public/register">
+                        <el-link type="primary"  >注 册</el-link>
+                    </router-link></span>
+
                     <span style="margin-left: 10px">  <el-link type="warning" @click="passwordRecover">忘记密码</el-link></span>
                 </div>
 

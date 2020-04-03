@@ -22,12 +22,12 @@ import java.util.concurrent.ConcurrentHashMap;
  * @date Date : 2020年03月15日 13:43
  */
 @RestController
-@RequestMapping("/tea")
+@RequestMapping("/tea/competition")
 public class CompetitionController {
     @Autowired
     CompetitionServiceImpl competitionService;
 
-    @PostMapping("/competition/save")
+    @PostMapping("/save")
     public Map<String, Object> save(@RequestBody JSONObject json) {
         Map<String, Object> res = new ConcurrentHashMap<>(10);
         if (json != null) {
@@ -58,13 +58,22 @@ public class CompetitionController {
         }
     }
 
-    @CacheEvict(value = "CompetitionAll", key = "'id:'+#id")
-    @PostMapping("/competition/deleteById/{id}")
+    @CacheEvict(value = "findById", key = "'id:'+#id")
+    @PostMapping("/deleteById/{id}")
     public Map<String, Object> deleteById(@PathVariable Integer id) {
         Map<String, Object> res = new ConcurrentHashMap<>();
         res.put("status", 200);
         res.put("message", "Success");
         competitionService.deleteById(id);
+        return res;
+    }
+    @PostMapping("/findMyResponsible/{id}")
+    public Map<String, Object> findMyResponsible(@PathVariable Integer id,
+                                                 @RequestParam(name = "page", defaultValue = "0") Integer page,
+                                                 @RequestParam(name = "size", defaultValue = "20") Integer size){
+        Map<String, Object> res = new ConcurrentHashMap<>();
+        res.put("status", 200);
+
         return res;
     }
 }

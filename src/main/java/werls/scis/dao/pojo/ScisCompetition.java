@@ -95,13 +95,14 @@ public class ScisCompetition implements Serializable {
     @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "competition", fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @JsonIgnoreProperties({"competition"})
-//    @JsonIgnore
+    @JsonIgnore
     private List<ScisProblem> problems;
 
     @NotFound(action= NotFoundAction.IGNORE)
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id",referencedColumnName = "user_id")
     @JsonIgnoreProperties({"competitionList"})
+    @JsonIgnore
     private ScisUser user;
 
 

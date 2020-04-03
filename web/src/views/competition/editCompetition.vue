@@ -89,6 +89,7 @@
                             <el-radio label="offline">线下比赛</el-radio>
                             <el-radio label="online">线上比赛（提交作品）</el-radio>
                         </el-radio-group>
+
                     </el-form-item>
 
                     <el-form-item label="举办地点" v-if="ruleForm.type === 'offline'">

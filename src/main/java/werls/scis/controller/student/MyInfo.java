@@ -30,8 +30,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MyInfo {
     @Autowired
     UserServiceImpl userService;
-
-    @Cacheable(value = "uInfo",key = "#info",unless = "#result == null")
     @PostMapping(value = "/i")
     public Map<String, Object> getUserInfo(@Param("info") String info) {
         ScisUser user = this.userService.findByLoginOrPhoneOrIdentityOrEmail(info);
