@@ -47,9 +47,14 @@ class AnnouncementServiceImplTest {
     void findByTime() {
         Date date=new Date();
         Calendar c1 = Calendar.getInstance();
+        Date n=c1.getTime();
+        c1.add(Calendar.HOUR,2);
+        System.out.println(n);
+        System.out.println(c1.getTime().toString());
         c1.set(2009, Calendar.JULY,25);
-        java.sql.Date date1=new java.sql.Date(c1.getTime().getTime());
-        System.out.println(jpaRepository.findByTime(date1,pageable1).getContent().toString());
+        System.out.println(c1.getTime());
+//        java.sql.Date date1=new java.sql.Date(c1.getTime().getTime());
+//        System.out.println(jpaRepository.findByTime(date1,pageable1).getContent().toString());
     }
 
 

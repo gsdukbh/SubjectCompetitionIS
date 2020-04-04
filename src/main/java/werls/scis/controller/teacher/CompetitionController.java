@@ -5,11 +5,16 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 import werls.scis.dao.pojo.ScisCompetition;
 import werls.scis.service.CompetitionServiceImpl;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -69,11 +74,17 @@ public class CompetitionController {
     }
     @PostMapping("/findMyResponsible/{id}")
     public Map<String, Object> findMyResponsible(@PathVariable Integer id,
+                                                 @RequestParam(name = "name", defaultValue = "") String name,
                                                  @RequestParam(name = "page", defaultValue = "0") Integer page,
                                                  @RequestParam(name = "size", defaultValue = "20") Integer size){
         Map<String, Object> res = new ConcurrentHashMap<>();
+        Pageable pageable = PageRequest.of(page, size, Sort.by("startTime").descending());
+        Page<ScisCompetition> tem=competitionService.findByNameContainingAndUserId(name,id,pageable);
+        res.put("content",tem.getContent());
+        res.put("totalElements",tem.getTotalElements());
         res.put("status", 200);
-
+        res.put("message", "Success");
         return res;
     }
+
 }

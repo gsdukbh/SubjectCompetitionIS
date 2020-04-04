@@ -5,7 +5,7 @@
 
             <el-autocomplete
                     style="margin-left: 10px"
-                    v-model="page.title"
+                    v-model="page.name"
                     :fetch-suggestions="querySearchAsyncTitle"
                     placeholder="请输入标题"
             ></el-autocomplete>
@@ -17,6 +17,14 @@
                        @click="handleRefresh">
                 重置搜索
             </el-button>
+            <el-tooltip content="请选择要导出的信息，默认当前页" placement="bottom">
+                <el-button :loading="downloadLoading" style="margin-left: 10px;" class="filter-item" type="primary"
+                           icon="el-icon-download"
+                           @click="getExcel">
+                    导出
+                </el-button>
+
+            </el-tooltip>
         </sticky>
         <!--内容-->
 
@@ -28,6 +36,7 @@
                 style="width: 100%;margin-top: 10px;">
 
             <el-table-column
+
                     type="selection"
                     width="55">
             </el-table-column>
@@ -90,14 +99,6 @@
 
             <el-table-column label="操作" align="center" width="350px" class-name="small-padding fixed-width">
                 <template slot-scope="{row,$index}">
-                    <router-link :to="'/competition/edit/'+row.id">
-
-                        <el-button type="primary" size="mini" icon="el-icon-edit">
-                            编辑
-                        </el-button>
-
-                    </router-link>
-
                     <router-link :to="'/competition/detail/'+row.id">
                         <el-button style="margin-left: 10px;" type="primary" size="mini" icon="el-icon-reading">
                             详情
@@ -160,9 +161,10 @@
 
 <script>
     import Sticky from "../../components/Sticky/index";
-    import {getJson} from "../../api/api";
+    import {getJson, postFrom, postJson} from "../../api/api";
     import BackToTop from "../../components/BackTop/index";
     import {mapGetters} from "vuex";
+    import {parseTime} from '../../utils/index'
 
     export default {
         name: "myResponsible",
@@ -175,24 +177,175 @@
         },
         data() {
             return {
+                loading: false,
+                loading1: false,
                 college: null,
                 temTitle: '',
-                tableData: null,
+                tableData: [],
+                downloadLoading: false,
+                multipleSelection: [],
                 page: {
                     size: 20,
                     page: 0,
-                    title: null,
+                    name: null,
                     totalElements: 100,
                 },
             }
         },
         created() {
-
+            this.getDataPage();
 
         },
         methods: {
+            handleModifyStatus(id, status) {
+                this.loading1 = true;
+                this.$confirm('此操作将更改竞赛的状态, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    getJson('/public/competition/findById/' + id)
+                        .then(response => {
+                            if (response.data.status === 200) {
+                                this.temSave = response.data.data;
+                                this.temSave.status = status;
+                                postJson('/tea/competition/save', this.temSave)
+                                    .then(response => {
+                                        if (response.data.status === 200) {
+                                            this.$notify({
+                                                title: '成功',
+                                                message: '更改成功',
+                                                type: 'success'
+                                            });
+                                            this.getDataPage();
+                                            this.loading1 = false;
+                                        }
+                                    })
+                                    .catch(error => {
+                                        this.getDataPage();
+                                        this.loading1 = false;
+                                        this.$message.error("出现了一些问题" + error)
+                                    })
+                            }
+                        })
+                        .catch(error => {
+                            this.loading1 = false;
+                            this.$message.error("出现了一些问题" + error)
+                        })
+                })
+
+            },
+            handleDelete(id) {
+                this.$confirm('此操作将永久删除, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    postJson('/tea/competition/deleteById/' + id)
+                        .then(response => {
+                            if (response.data.status === 200) {
+                                this.$notify({
+                                    title: '成功',
+                                    message: '删除成功',
+                                    type: 'success'
+                                });
+                                // this.tableData.splice(index, 1);
+                                // this.page.totalElements -= 1;
+                                this.getDataPage();
+                            }
+                        })
+                        .catch(error => {
+                            this.$message.error("出现了一些问题" + error)
+                        });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            getExcel() {
+                /*获得excel文件*/
+                this.downloadLoading = true;
+                import('../../utils/excel').then(excel => {
+                    const tHeader = ['id',
+                        '竞赛名称',
+                        '状态',
+                        '开始时间',
+                        '结束时间',
+                        '报名时间',
+                        '详细内容',
+                        '发布者',
+                        '赛事级别',
+                        '承办单位',
+                        '举办地点',
+                        '人数限制',
+                        '比赛类型',
+                        '是否团队赛'];
+                    const file = [
+                        "id",
+                        "name",
+                        "status",
+                        "startTime",
+                        "endTime",
+                        "applyTime",
+                        "content",
+                        "author",
+                        "level",
+                        "organizer",
+                        "numLimit",
+                        "place",
+                        "type",
+                        "team"
+                    ];
+                    const data = this.jsonToArray(file);
+                    excel.export_json_to_excel({
+                        header: tHeader,
+                        data,//具体数据 必填
+                        filename: 'excel-list',
+                    });
+                    this.downloadLoading = false;
+                })
+            },
+            jsonToArray(data) {
+                if (this.multipleSelection.length !== 0) {
+
+                    return this.multipleSelection.map(v => data.map(j => {
+                        if (j === 'startTime' || j === 'endTime' || j === 'applyTime') {
+                            return parseTime(v[j])
+                        } else {
+                            return v[j]
+                        }
+                    }))
+                } else {
+                    return this.tableData.map(v => data.map(j => {
+                        if (j === 'startTime' || j === 'endTime' || j === 'applyTime') {
+                            return parseTime(v[j])
+                        } else {
+                            return v[j]
+                        }
+                    }))
+                }
+            },
+            formatTimeA(time) {
+                return parseTime(time, '{y}-{m}-{d} {h}:{i}')
+            },
+            async getDataPage() {
+                this.loading = true;
+                postFrom('/tea/competition/findMyResponsible/' + this.userId, this.page)
+                    .then(response => {
+
+                        this.tableData = response.data.content;
+
+                        this.page.totalElements = response.data.totalElements;
+                        this.loading = false;
+                    }).catch(error => {
+                    this.loading = false;
+                    this.$message.error("出现了一些问题" + error)
+                })
+            },
             querySearchAsyncTitle(queryString, cb) {
-                getJson('/public/announcement/findTitle')
+                getJson('/public/competition/findName')
                     .then(response => {
                         this.temTitle = response.data.data;
                     });

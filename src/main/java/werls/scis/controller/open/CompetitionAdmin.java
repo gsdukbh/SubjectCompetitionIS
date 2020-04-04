@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import werls.scis.dao.pojo.ScisCompetition;
 import werls.scis.dao.pojo.ScisProblem;
 import werls.scis.service.CompetitionServiceImpl;
+import werls.scis.util.Tools;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -33,8 +34,8 @@ public class CompetitionAdmin {
 
     @Resource
     CompetitionServiceImpl competitionService;
-
-
+    @Autowired
+    Tools tools;
     /**
      * 默认 开始时间降序排序
      *
@@ -51,8 +52,6 @@ public class CompetitionAdmin {
                                            @RequestParam(name = "level", defaultValue = "") String level) {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("startTime").descending());
-
-
         if (!"".equals(organizer) && !"".equals(name) && !"".equals(level)) {
 
             return competitionService.findByNameContainingAndLevelAndOrganizer(name, level, organizer, pageable);
@@ -72,7 +71,6 @@ public class CompetitionAdmin {
         } else if (!"".equals(level)) {
             return competitionService.findByLevel(level, pageable);
         } else {
-            System.out.println(6);
             return competitionService.findAll(pageable);
         }
     }
@@ -99,6 +97,14 @@ public class CompetitionAdmin {
             res.put("message", "fail");
             return res;
         }
+    }
+    @GetMapping("/findName")
+    public Map<String, Object> findName(){
+        Map<String, Object> res = new ConcurrentHashMap<>(10);
+        List<Map<String, Object>> ret = new ArrayList<>();
+        List<String> strings =competitionService.findName();
+        res.put("status",200);
+        return tools.getStringObjectMap(res, ret, strings);
     }
 
 }

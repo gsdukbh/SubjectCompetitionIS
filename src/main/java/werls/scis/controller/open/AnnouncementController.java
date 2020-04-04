@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import werls.scis.dao.pojo.ScisAnnouncement;
 import werls.scis.dao.pojo.ScisUser;
 import werls.scis.service.AnnouncementServiceImpl;
+import werls.scis.util.Tools;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,7 +28,8 @@ public class AnnouncementController {
 
     @Autowired
     AnnouncementServiceImpl service;
-
+    @Autowired
+    Tools tools;
     @GetMapping("/findType")
     public Map<String, Object> findType() {
         Map<String, Object> res = new ConcurrentHashMap<>(10);
@@ -35,7 +37,7 @@ public class AnnouncementController {
         res.put("message", "Success");
         List<Map<String, Object>> ret = new ArrayList<>();
         List<String> t = service.findType();
-        return getStringObjectMap(res, ret, t);
+        return tools.getStringObjectMap(res, ret, t);
     }
 
     @PostMapping("/findAll")
@@ -103,16 +105,8 @@ public class AnnouncementController {
         res.put("status", 200);
         res.put("message", "Success");
         List<String> strings = service.findTitle();
-        return getStringObjectMap(res, ret, strings);
+        return tools.getStringObjectMap(res, ret, strings);
     }
 
-    private Map<String, Object> getStringObjectMap(Map<String, Object> res, List<Map<String, Object>> ret, List<String> strings) {
-        for (String string : strings) {
-            Map<String, Object> type = new ConcurrentHashMap<>(1);
-            type.put("value", string);
-            ret.add(type);
-        }
-        res.put("data", ret);
-        return res;
-    }
+
 }

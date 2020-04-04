@@ -4,9 +4,10 @@ import Login from '../views/login'
 import Layout from '../layout'
 import publicLayout from '../layout/components/public'
 import userRouter from "./user";
+import myInfo from "./myInfo";
 
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 export const publicRoutes = [
     {
@@ -85,7 +86,7 @@ export const asyncRoutes = [
         component: Layout,
         meta: {
             icon: 'dashboard',
-            // roles: ['ROLE_ADMIN'],
+           roles: ['ROLE_ADMIN','ROLE_TEA','ROLE_STU'],
         },
         children: [
             {
@@ -109,6 +110,15 @@ export const asyncRoutes = [
             icon: 'competition'
         },
         children: [
+            {
+                path:'user',
+                name:'studentCompetition',
+                component:()=>import('../views/competition/studentCompetition'),
+                meta:{
+                    title:'竞赛项目',
+                    roles:['ROLE_STU']
+                }
+            },
             {
                 path: 'index',
                 component: () => import('../views/competition/index'),
@@ -152,7 +162,6 @@ export const asyncRoutes = [
                 component:()=>import('../views/competition/myResponsible'),
                 meta:{
                     title:'我负责的竞赛',
-
                 }
             }
         ]
@@ -162,7 +171,7 @@ export const asyncRoutes = [
         name: 'announcement',
         component: Layout,
         meta: {
-            title: '公告',
+            title: '公告管理',
             icon: 'announcement'
         },
         children: [
@@ -207,6 +216,7 @@ export const asyncRoutes = [
         ]
     },
     userRouter,
+    myInfo,
     {
         path: '*',
         redirect: '/404',

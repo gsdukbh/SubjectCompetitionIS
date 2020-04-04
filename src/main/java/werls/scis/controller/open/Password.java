@@ -186,7 +186,7 @@ public class Password {
         roleList.add(role);
         user.setRoles(roleList);
         user.setLogin(json.getString("login"));
-        user.setPassword(new BCryptPasswordEncoder().encode(json.getString("password")));
+        user.setPassword(json.getString("password"));
         String redisCode = redisTemplate.opsForValue().get(json.getString("email"));
         if (redisCode == null){
             res.put("status", 403);

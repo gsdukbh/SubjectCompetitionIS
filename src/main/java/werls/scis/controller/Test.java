@@ -27,11 +27,11 @@ public class Test {
 
     @RequestMapping("/login/invalid")
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public String session(){
+    public  Map<String, Object> session(){
         Map<String, Object> res = new ConcurrentHashMap<>();
         res.put("code",403);
         res.put("message","session 过期");
-        return JSON.toJSONString(res);
+        return res;
     }
 
     @Cacheable(value = "admin",key = "2")

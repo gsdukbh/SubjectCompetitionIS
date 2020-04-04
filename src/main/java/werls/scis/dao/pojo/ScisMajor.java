@@ -27,9 +27,9 @@ public class ScisMajor implements Serializable {
     @Column(name = "major_id")
     private Integer id;
     @Column(name = "major_name")
-    private String majorName;
+    private String name;
     @Column(name = "education_level")
-    private String majorLevel;
+    private String level;
 
     @ManyToOne(cascade = {CascadeType.REFRESH},fetch = FetchType.EAGER,optional = false)
     @JoinColumn(name = "college_id")
@@ -41,15 +41,6 @@ public class ScisMajor implements Serializable {
     @JsonIgnoreProperties({"major"})
     private List<ScisClass> classList;
 
-    @Override
-    public String toString() {
-        return "ScisMajor{" +
-                "id=" + id +
-                ", majorName='" + majorName + '\'' +
-                ", majorLevel='" + majorLevel + '\'' +
-                ", classList=" + classList +
-                '}';
-    }
 
     public List<ScisClass> getClassList() {
         return classList;
@@ -67,20 +58,20 @@ public class ScisMajor implements Serializable {
         this.id = id;
     }
 
-    public String getMajorName() {
-        return majorName;
+    public String getName() {
+        return name;
     }
 
-    public void setMajorName(String majorName) {
-        this.majorName = majorName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getMajorLevel() {
-        return majorLevel;
+    public String getLevel() {
+        return level;
     }
 
-    public void setMajorLevel(String majorLevel) {
-        this.majorLevel = majorLevel;
+    public void setLevel(String level) {
+        this.level = level;
     }
 
     public ScisCollege getCollege() {

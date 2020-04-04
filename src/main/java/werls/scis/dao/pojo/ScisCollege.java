@@ -26,7 +26,7 @@ public class ScisCollege implements Serializable {
     @Column(name = "college_id")
     private Integer id;
     @Column(name = "college_name")
-    private String collegeName;
+    private String name;
     /**
      *开设的专业
      */
@@ -63,12 +63,12 @@ public class ScisCollege implements Serializable {
         this.id = id;
     }
 
-    public String getCollegeName() {
-        return collegeName;
+    public String getName() {
+        return name;
     }
 
-    public void setCollegeName(String collegeName) {
-        this.collegeName = collegeName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public List<ScisMajor> getMajors() {

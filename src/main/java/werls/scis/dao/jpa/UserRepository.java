@@ -109,4 +109,24 @@ public interface UserRepository extends JpaRepository<ScisUser, Integer> {
     @Query(nativeQuery = true,
             value = "select user_login from Is_user where user_login = ?1")
     String finByLogin(String login);
+
+    /**
+     * 查找所以的名
+     *
+     * @return List<String>
+     */
+    @Query(nativeQuery = true, value = "select distinct user_name from Is_user")
+    List<String> findName();
+
+    /**
+     * @param name String
+     * @return Page<ScisUser>
+     */
+    Page<ScisUser> findByScisClassName(String name, Pageable pageable);
+
+    List<ScisUser> findByScisClassMajorCollegeName(String scisClassMajorCollegeName);
+
+    List<ScisUser> findByCollegeName(String name);
+
+    List<ScisUser> findByScisClassMajorCollegeNameOrCollegeName(String string,String name);
 }

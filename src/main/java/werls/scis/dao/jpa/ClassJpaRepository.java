@@ -42,20 +42,4 @@ public interface ClassJpaRepository extends JpaRepository<ScisClass,Integer> {
      */
     Page<ScisClass> findByNameLike(String name,Pageable pageable);
 
-
-    /**
-     * 使用年级查询,可在pageable 加入 Sort,分页查询
-     * @param grade 年级
-     * @param pageable Pageable
-     * @return Page<ScisClass>
-     */
-    Page<ScisClass> findByGrade(String grade,Pageable pageable);
-
-    /**
-     * 模糊查询，可在pageable 加入 Sort,分页查询
-     * @param grade 年级
-     * @param pageable Pageable
-     * @return Page<ScisClass>
-     */
-    Page<ScisClass> findByGradeLike(String grade,Pageable pageable);
 }

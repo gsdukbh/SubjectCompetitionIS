@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import werls.scis.dao.pojo.ScisUser;
 import werls.scis.service.UserServiceImpl;
+import werls.scis.util.Tools;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class UserCntroller {
     @Autowired
     UserServiceImpl service;
+    @Autowired
+    Tools tools;
 
     @GetMapping("/findByRoleName/teacher")
     public Map<String, Object> findByRoleName() {
@@ -36,14 +39,39 @@ public class UserCntroller {
         List<ScisUser> users = service.findByRoleName(name);
         for (ScisUser user : users) {
             Map<String, Object> type = new ConcurrentHashMap<>(1);
-            String college = (user.getCollege().getCollegeName() == null || user.getCollege().getCollegeName().isEmpty()) ? "" : user.getCollege().getCollegeName();
-            String getName=(user.getName() == null || user.getName().isEmpty() ? "" : user.getName());
-            String value =getName+"-"+college;
+            String college = (user.getCollege().getName() == null || user.getCollege().getName().isEmpty()) ? "" : user.getCollege().getName();
+            String getName = (user.getName() == null || user.getName().isEmpty() ? "" : user.getName());
+            String value = getName + "-" + college;
             type.put("value", value);
             type.put("id", user.getId());
             ret.add(type);
         }
         res.put("userInfo", ret);
         return res;
+    }
+
+    @PostMapping("/find/student")
+    public Map<String, Object> findStudent(JSONObject jsonObject) {
+        Map<String, Object> res = new ConcurrentHashMap<>(10);
+        String college = jsonObject.getString("college");
+        String major = jsonObject.getString("major");
+        String name = jsonObject.getString("name");
+        String className = jsonObject.getString("className");
+        if (college != null&& college.isEmpty()){
+
+        }
+            res.put("status", 200);
+        return res;
+    }
+
+    @GetMapping("/find/name")
+    public Map<String, Object> findName() {
+        Map<String, Object> res = new ConcurrentHashMap<>(10);
+        List<String> list = service.findName();
+        List<Map<String, Object>> ret = new ArrayList<>();
+        res.put("message", "Success");
+        res.put("status", 200);
+        res.put("totalElements", list.size());
+        return tools.getStringObjectMap(res, ret, list);
     }
 }

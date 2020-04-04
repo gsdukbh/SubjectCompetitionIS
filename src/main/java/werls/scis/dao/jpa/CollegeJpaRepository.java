@@ -22,7 +22,7 @@ public interface CollegeJpaRepository extends JpaRepository<ScisCollege,Integer>
      * @param collegeName 学院名称
      * @return 学院
      */
-    ScisCollege findByCollegeName(String collegeName);
+    ScisCollege findByName(String collegeName);
 
 
     /**
@@ -31,6 +31,6 @@ public interface CollegeJpaRepository extends JpaRepository<ScisCollege,Integer>
      * @param pageable Pageable
      * @return Page<ScisCollege>
      */
-    Page<ScisCollege> findByCollegeNameLike(String collegeName, Pageable pageable);
+    Page<ScisCollege> findByNameLike(String collegeName, Pageable pageable);
 
 }

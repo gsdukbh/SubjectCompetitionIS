@@ -5,26 +5,18 @@ const userRouter={
     component:Layout,
     name:'user',
     meta:{
-        title:'用户',
-        icon: 'user'
+        title:'用户管理',
+        icon: 'userAdmin'
+
     },
     children:[
-        {
-            path: 'index',
-            name:'myInfo',
-            component: ()=>import('../views/user/info'),
-            meta:{
-                title:'我的信息',
-                icon: 'myInfo'
-            },
-        },
         {
             path: 'admin',
             name: 'adminUser',
             component: ()=>import('../views/user/admin'),
             meta:{
-                title:'用户管理',
-                icon: 'users',
+                title:'用户信息',
+                icon: 'list',
                 roles: ['ROLE_ADMIN', 'ROLE_TEA']
             },
         },

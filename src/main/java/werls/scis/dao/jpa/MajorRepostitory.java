@@ -19,13 +19,13 @@ public interface MajorRepostitory extends JpaRepository<ScisMajor,Integer> {
      * @param majorLevel String 培养层次
      * @return Page<ScisMajor>
      */
-    Page<ScisMajor> findByMajorLevel(String majorLevel, Pageable pageable);
+    Page<ScisMajor> findByLevel(String majorLevel, Pageable pageable);
 
     /***
      * 按照专业名字查询
      * @param majorName 专业名字
      * @return ScisMajor
      */
-    ScisMajor findByMajorName(String majorName);
+    ScisMajor findByName(String majorName);
 
 }

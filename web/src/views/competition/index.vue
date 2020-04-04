@@ -44,7 +44,6 @@
                     导出
                 </el-button>
 
-
             </el-tooltip>
 
         </div>
@@ -247,6 +246,7 @@
                 .catch(error => {
                     this.$message.error("出现了一些问题" + error)
                 })
+
         },
         methods: {
             formatTimeA(time) {
@@ -280,34 +280,41 @@
             },
             handleModifyStatus(id, status) {
                 this.loading1 = true;
-                getJson('/public/competition/findById/' + id)
-                    .then(response => {
-                        if (response.data.status === 200) {
-                            this.temSave = response.data.data;
-                            this.temSave.status = status;
-                            postJson('/tea/competition/save', this.temSave)
-                                .then(response => {
-                                    if (response.data.status === 200) {
-                                        this.$notify({
-                                            title: '成功',
-                                            message: '更改成功',
-                                            type: 'success'
-                                        });
-                                        this.getDataPage();
-                                        this.loading1 = false;
-                                    }
-                                })
-                                .catch(error => {
-                                    this.getDataPage();
-                                    this.loading1 = false;
-                                    this.$message.error("出现了一些问题" + error)
-                                })
-                        }
+                this.$confirm('此操作将更改竞赛的状态, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                        getJson('/public/competition/findById/' + id)
+                            .then(response => {
+                                if (response.data.status === 200) {
+                                    this.temSave = response.data.data;
+                                    this.temSave.status = status;
+                                    postJson('/tea/competition/save', this.temSave)
+                                        .then(response => {
+                                            if (response.data.status === 200) {
+                                                this.$notify({
+                                                    title: '成功',
+                                                    message: '更改成功',
+                                                    type: 'success'
+                                                });
+                                                this.getDataPage();
+                                                this.loading1 = false;
+                                            }
+                                        })
+                                        .catch(error => {
+                                            this.getDataPage();
+                                            this.loading1 = false;
+                                            this.$message.error("出现了一些问题" + error)
+                                        })
+                                }
+                            })
+                            .catch(error => {
+                                this.loading1 = false;
+                                this.$message.error("出现了一些问题" + error)
+                            })
                     })
-                    .catch(error => {
-                        this.loading1 = false;
-                        this.$message.error("出现了一些问题" + error)
-                    });
+
             },
             handleDelete(id) {
                 this.$confirm('此操作将永久删除, 是否继续?', '提示', {

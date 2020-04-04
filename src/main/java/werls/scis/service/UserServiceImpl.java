@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import werls.scis.dao.jpa.UserRepository;
@@ -20,6 +21,7 @@ import java.util.Optional;
 
 /**
  * 登录验证
+ *
  * @author : LiJiWei
  * @version V1.0
  * @Project: scis
@@ -34,36 +36,49 @@ public class UserServiceImpl implements UserDetailsService {
     @Autowired
     UserRepository userRepository;
 
+    public Page<ScisUser> findByScisClassName(String name, Pageable pageable) {
+        return userRepository.findByScisClassName(name, pageable);
+    }
 
-    public String finByLogin(String login){
+    public List<String> findName() {
+        return userRepository.findName();
+    }
+
+    public String finByLogin(String login) {
         return userRepository.finByLogin(login);
     }
+
     /**
      * find by role name
+     *
      * @param name String
-     * @return  List<ScisUser>
+     * @return List<ScisUser>
      */
-    public List<ScisUser> findByRoleName(String name){
+    public List<ScisUser> findByRoleName(String name) {
         return userRepository.findByRoleName(name);
     }
+
     /**
      * 保存，修改用户时调用
      * 需要完整的user
+     *
      * @param user 用户
      */
 
     @Transactional(rollbackFor = Exception.class)
     public ScisUser save(ScisUser user) {
-        return  userRepository.save(user);
+        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        return userRepository.save(user);
     }
 
     @Transactional(rollbackFor = Exception.class)
     public void saveAll(List<ScisUser> user) {
         userRepository.saveAll(user);
     }
+
     @Transactional(rollbackFor = Exception.class)
     public List<ScisUser> findAll() {
-       return userRepository.findAll();
+        return userRepository.findAll();
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -71,11 +86,13 @@ public class UserServiceImpl implements UserDetailsService {
         return userRepository.findAll(pageable);
     }
 
-    public Page<ScisUser> findByRoleName(String name,Pageable pageable){
-        return userRepository.findByRoleName(name,pageable);
+    public Page<ScisUser> findByRoleName(String name, Pageable pageable) {
+        return userRepository.findByRoleName(name, pageable);
     }
+
     /**
      * 通过用户查询
+     *
      * @param login login
      * @return ScisUser
      */
@@ -84,41 +101,42 @@ public class UserServiceImpl implements UserDetailsService {
         return userRepository.findByLogin(login);
     }
 
-    public ScisUser findByPhone (String phone){
+    public ScisUser findByPhone(String phone) {
         return userRepository.findByPhone(phone);
     }
 
-    public ScisUser findByIdentity(String identity){
+    public ScisUser findByIdentity(String identity) {
         return userRepository.findByIdentity(identity);
     }
 
-    public ScisUser findByEmail(String email){
+    public ScisUser findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
-    public  Page<ScisUser> findByStatus(String status, Pageable pageable){
+    public Page<ScisUser> findByStatus(String status, Pageable pageable) {
         return userRepository.findByStatus(status, pageable);
     }
-    public Optional<ScisUser> findById(Integer id){
+
+    public Optional<ScisUser> findById(Integer id) {
         return userRepository.findById(id);
     }
-    public void delete(ScisUser user){
+
+    public void delete(ScisUser user) {
         this.userRepository.delete(user);
     }
 
-    public void deleteAll(List<ScisUser> user){
+    public void deleteAll(List<ScisUser> user) {
         this.userRepository.deleteAll(user);
     }
 
-    public void deleteById(Integer id){
+    public void deleteById(Integer id) {
         this.userRepository.deleteById(id);
     }
 
     /*查询时非常的久*/
-    public ScisUser findByLoginOrPhoneOrIdentityOrEmail(String login){
-        return this.userRepository.findByLoginOrPhoneOrIdentityOrEmail(login,login,login,login);
+    public ScisUser findByLoginOrPhoneOrIdentityOrEmail(String login) {
+        return this.userRepository.findByLoginOrPhoneOrIdentityOrEmail(login, login, login, login);
     }
-
 
 
     /**

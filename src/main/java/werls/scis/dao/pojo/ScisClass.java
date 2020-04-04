@@ -26,8 +26,6 @@ public class ScisClass implements Serializable {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="class_id")
     private Integer id;
-    @Column(name = "class_grade")
-    private String grade;
     @Column(name = "class_name")
     private String name;
     /**
@@ -59,13 +57,7 @@ public class ScisClass implements Serializable {
         this.id = id;
     }
 
-    public String getGrade() {
-        return grade;
-    }
 
-    public void setGrade(String grade) {
-        this.grade = grade;
-    }
 
     public String getName() {
         return name;

@@ -33,4 +33,5 @@ public class CollegeController {
             Pageable pageable1= PageRequest.of(0, 20, Sort.by("collegeName"));
             return  service.findAll(pageable1);
     }
+
 }

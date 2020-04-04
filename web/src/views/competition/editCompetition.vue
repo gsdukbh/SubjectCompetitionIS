@@ -68,13 +68,6 @@
                                             style="width: 30%;"></el-date-picker>
                         </el-form-item>
                     </el-form-item>
-                    <el-form-item label="邮件通知比赛信息">
-                        <el-switch
-                                v-model="ruleForm.notification"
-                                active-color="#13ce66"
-                                inactive-color="#ff4949">
-                        </el-switch>
-                    </el-form-item>
                     <el-form-item label="状态" prop="status">
                         <el-select v-model="ruleForm.status" placeholder="请选择">
                             <el-option label="草稿" value="草稿"></el-option>
@@ -203,7 +196,7 @@
                     numLimit: 1,
                     place: '',
                     team: false,
-                    notification: false,
+
                     user: {
                         id: null,
                     }
@@ -317,7 +310,12 @@
                         if (this.ruleForm.type === 'online') {
                             this.ruleForm.place = '';
                         }
-                        if (this.ruleForm.startTime > this.ruleForm.endTime) {
+                        if (this.ruleForm.applyTime > this.ruleForm.startTime) {
+                            this.$notify.error({
+                                message: '报名时间不能再开始时间之后',
+                                title: '错误',
+                            });
+                        } else if (this.ruleForm.startTime > this.ruleForm.endTime) {
                             this.$notify.error({
                                 message: '开始时间不能再结束时间之后',
                                 title: '错误',

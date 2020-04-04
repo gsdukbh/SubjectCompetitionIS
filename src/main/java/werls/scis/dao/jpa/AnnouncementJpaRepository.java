@@ -168,9 +168,12 @@ public interface AnnouncementJpaRepository extends JpaRepository<ScisAnnouncemen
 
     /**
      * 标题
+     *
      * @return List<String>
      */
     @Query(nativeQuery = true,
             value = "select announcement_title from Is_announcement")
     List<String> findTitle();
+
+
 }

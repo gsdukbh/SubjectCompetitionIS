@@ -67,7 +67,7 @@ public class ScisUser implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(name = "class_id",referencedColumnName = "class_id")
     @JsonIgnoreProperties({"scisUserList"})
-    @JsonIgnore
+
     private ScisClass scisClass;
 
     /**
@@ -76,7 +76,7 @@ public class ScisUser implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(name = "college_id",referencedColumnName = "college_id")
     @JsonIgnoreProperties({"scisUserList"})
-    @JsonIgnore
+
     private ScisCollege college;
 
     /**

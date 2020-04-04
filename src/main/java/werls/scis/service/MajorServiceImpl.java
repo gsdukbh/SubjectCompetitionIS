@@ -24,13 +24,17 @@ import java.util.List;
 public class MajorServiceImpl {
     @Autowired
     private MajorRepostitory major;
+
+    public List<ScisMajor> findByAll(){
+        return major.findAll();
+    }
     /**
      *
      * @param majorLevel String 培养层次
      * @return Page<ScisMajor>
      */
    public Page<ScisMajor> findByMajorLevel(String majorLevel, Pageable pageable){
-       return major.findByMajorLevel(majorLevel, pageable);
+       return major.findByLevel(majorLevel, pageable);
    }
     /***
      * 按照专业名字查询
@@ -38,7 +42,7 @@ public class MajorServiceImpl {
      * @return ScisMajor
      */
     public ScisMajor findByMajorName(String majorName){
-        return major.findByMajorName(majorName);
+        return major.findByName(majorName);
     }
     public void save(ScisMajor major){
         this.major.save(major);

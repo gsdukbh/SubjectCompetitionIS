@@ -33,7 +33,7 @@ public class CollegeServiceImpl {
      * @return 学院
      */
     public  ScisCollege findByCollegeName(String collegeName){
-        return collegeJpaRepository.findByCollegeName(collegeName);
+        return collegeJpaRepository.findByName(collegeName);
     }
     /**
      * 通过学院名称查询 模糊 分页 排序
@@ -42,7 +42,7 @@ public class CollegeServiceImpl {
      * @return Page<ScisCollege>
      */
     public Page<ScisCollege> findByCollegeNameLike(String collegeName, Pageable pageable){
-        return collegeJpaRepository.findByCollegeNameLike(collegeName, pageable);
+        return collegeJpaRepository.findByNameLike(collegeName, pageable);
     }
     @CachePut(value = "college",unless = "#result == null ",key = "'college'")
     public void save (ScisCollege college){

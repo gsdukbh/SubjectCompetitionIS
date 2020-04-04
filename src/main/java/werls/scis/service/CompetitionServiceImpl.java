@@ -1,5 +1,6 @@
 package werls.scis.service;
 
+import org.hibernate.annotations.SQLUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import werls.scis.dao.jpa.CompetitionRepository;
 import werls.scis.dao.pojo.ScisCompetition;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +26,25 @@ import java.util.Optional;
 public class CompetitionServiceImpl {
     @Autowired
     private CompetitionRepository competitionRepository;
+
+    public List<ScisCompetition> findByStartTimeAfter(Date date){
+        return competitionRepository.findByStartTimeAfter(date);
+    }
+    public List<ScisCompetition> findByStartTimeBefore(Date date){
+        return competitionRepository.findByStartTimeBefore(date);
+    }
+    public void upStatusA(){
+         competitionRepository.upStatusA();
+    }
+    public void  upStatus(){
+         competitionRepository.upStatus();
+    }
+    public  Page<ScisCompetition> findByNameContainingAndUserId(String name,Integer userId,Pageable pageable){
+        return competitionRepository.findByNameContainingAndUserId(name, userId, pageable);
+    }
+    public List<String> findName(){
+        return  competitionRepository.findName();
+    }
 
     /**
      * 模糊查询竞赛名称

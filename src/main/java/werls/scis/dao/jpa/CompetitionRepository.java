@@ -1,12 +1,15 @@
 package werls.scis.dao.jpa;
 
+import org.hibernate.annotations.SQLUpdate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.security.core.parameters.P;
 import werls.scis.dao.pojo.ScisCompetition;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -119,10 +122,53 @@ public interface CompetitionRepository extends JpaRepository<ScisCompetition, In
 
     /**
      * 查找标题
-     * @param name String
-     * @return   List<String>
+     *
+     * @return List<String>
      */
     @Query(nativeQuery = true,
             value = "select distinct competition_name from Is_competition;")
-    List<String> findName(String name);
+    List<String> findName();
+
+    /**
+     * 用户&&name
+     *
+     * @param name     String
+     * @param userId   Integer userId
+     * @param pageable Pageable
+     * @return Page<ScisCompetition>
+     */
+    Page<ScisCompetition> findByNameContainingAndUserId(String name, Integer userId, Pageable pageable);
+
+    /**
+     * upStatus
+     */
+    @Modifying
+    @Query(nativeQuery = true,
+            value = "update Is_competition set competition_status='进行中' " +
+                    "where competition_start_time <=NOW()")
+    void upStatus();
+
+    /**
+     * upStatus
+     */
+    @Modifying
+    @Query(nativeQuery = true,
+            value = "update Is_competition set competition_status='已结束'\n" +
+                    "where competition_end_time <=NOW()")
+    void upStatusA();
+
+    /**
+     * 竞赛开始时间在date之后
+     *
+     * @param date Date
+     * @return List<ScisCompetition>
+     */
+    List<ScisCompetition> findByStartTimeAfter(Date date);
+
+    /**
+     * 竞赛开始时间在date之前
+     * @param date Date
+     * @return List<ScisCompetition>
+     */
+    List<ScisCompetition> findByStartTimeBefore(Date date);
 }

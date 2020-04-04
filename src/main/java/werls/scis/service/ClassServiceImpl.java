@@ -27,7 +27,11 @@ public class ClassServiceImpl {
     @Autowired
     ClassJpaRepository classJpaRepository;
 
-    /**
+    public List<ScisClass> findAll(){
+        return classJpaRepository.findAll();
+    }
+
+  /**
      * 使用班级名称查询，全称查询
      * @param name 班级名称
      * @return 班级
@@ -59,28 +63,6 @@ public class ClassServiceImpl {
         return classJpaRepository.findByNameLike(name, pageable);
     }
 
-
-    /**
-     * 使用年级查询,可在pageable 加入 Sort,分页查询
-     * @param grade 年级
-     * @param pageable Pageable
-     * @return Page<ScisClass>
-     */
-
-    public Page<ScisClass> findByGrade(String grade,Pageable pageable){
-        return classJpaRepository.findByGrade(grade, pageable);
-    }
-
-    /**
-     * 模糊查询，可在pageable 加入 Sort,分页查询
-     * @param grade 年级
-     * @param pageable Pageable
-     * @return Page<ScisClass>
-     */
-
-    public Page<ScisClass> findByGradeLike(String grade,Pageable pageable){
-        return classJpaRepository.findByGradeLike(grade, pageable);
-    }
     public ScisClass save(ScisClass scisClass){
         return classJpaRepository.save(scisClass);
     }

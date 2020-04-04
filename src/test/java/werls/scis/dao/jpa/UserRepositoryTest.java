@@ -67,4 +67,16 @@ class UserRepositoryTest {
     @Test
     void findByRoleName() {
     }
+
+    @Test
+    void findByScisClassName() {
+
+    }
+
+    @Test
+    void findByCollegeCollegeNameOrScisClass_Major_College_CollegeName() {
+        System.out.println(repository.findByScisClassMajorCollegeName("计算机科学与工程学院"));
+        System.out.println(repository.findByCollegeName("计算机科学与工程学院"));
+        System.out.println(repository.findByScisClassMajorCollegeNameOrCollegeName("计算机科学与工程学院","计算机科学与工程学院"));
+    }
 }
