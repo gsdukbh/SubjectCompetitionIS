@@ -46,9 +46,8 @@ public class AnnouncementController {
                                        @RequestParam(name = "title", defaultValue = "") String title,
                                        @RequestParam(name = "type", defaultValue = "") String type,
                                        @RequestParam(name = "from", defaultValue = "") String from) {
-        Map<String, Object> res = new ConcurrentHashMap<>(10);
+        Map<String, Object> res = new ConcurrentHashMap<>(16);
         Pageable pageable = PageRequest.of(page, size, Sort.by("time").descending());
-        System.out.println("t:" + title + "ty:" + type + "fr:" + from);
         Page<ScisAnnouncement> announcements;
         if (!"".equals(title) && !"".equals(type) && !"".equals(from)) {
 

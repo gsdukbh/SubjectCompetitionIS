@@ -6,8 +6,8 @@ const userRouter={
     name:'user',
     meta:{
         title:'用户管理',
-        icon: 'userAdmin'
-
+        icon: 'userAdmin',
+        roles: ['ROLE_ADMIN']
     },
     children:[
         {
@@ -15,9 +15,19 @@ const userRouter={
             name: 'adminUser',
             component: ()=>import('../views/user/admin'),
             meta:{
-                title:'用户信息',
+                title:'学生信息',
                 icon: 'list',
-                roles: ['ROLE_ADMIN', 'ROLE_TEA']
+                roles: ['ROLE_ADMIN']
+            },
+        },
+        {
+            path:'tea',
+            name:'teacher info',
+            component:()=>import('../views/user/tea'),
+            meta:{
+                title:'教师信息',
+                icon: 'list',
+                roles: ['ROLE_ADMIN']
             },
         },
         {
@@ -27,7 +37,7 @@ const userRouter={
             meta:{
                 title:'上传用户信息',
                 icon: 'upInfo',
-                roles: ['ROLE_ADMIN', 'ROLE_TEA']
+                roles: ['ROLE_ADMIN']
             },
         },
 

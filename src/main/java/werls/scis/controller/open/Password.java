@@ -187,6 +187,7 @@ public class Password {
         user.setRoles(roleList);
         user.setLogin(json.getString("login"));
         user.setPassword(json.getString("password"));
+        user.setRole("学生");
         String redisCode = redisTemplate.opsForValue().get(json.getString("email"));
         if (redisCode == null){
             res.put("status", 403);

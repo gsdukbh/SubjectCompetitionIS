@@ -48,7 +48,8 @@ public class ScisUser implements Serializable {
     private String status;
     @Column(name = "user_identity")
     private String identity;
-
+    @Column(name = "user_role")
+    private String role;
     /**
      * 用户角色
      */
@@ -114,6 +115,14 @@ public class ScisUser implements Serializable {
     @JsonIgnoreProperties({"user"})
     @JsonIgnore
     private List<ScisCompetition> competitionList;
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     public List<ScisCompetition> getCompetitionList() {
         return competitionList;

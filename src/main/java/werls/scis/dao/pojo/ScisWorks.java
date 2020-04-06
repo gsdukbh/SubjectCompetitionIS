@@ -90,24 +90,6 @@ public class ScisWorks  implements Serializable{
     @JsonIgnoreProperties({"worksList"})
     private List<ScisProblem> problemList;
 
-    @Override
-    public String toString() {
-        return "ScisWorks{" +
-                "id=" + id +
-                ", upTime=" + upTime +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", url='" + url + '\'' +
-                ", download='" + download + '\'' +
-                ", author='" + author + '\'' +
-                ", moder='" + moder + '\'' +
-                ", score=" + score +
-                ", mem='" + mem + '\'' +
-                ", remark='" + remark + '\'' +
-                ", problemList=" + problemList +
-                '}';
-    }
-
     public List<ScisProblem> getProblemList() {
         return problemList;
     }

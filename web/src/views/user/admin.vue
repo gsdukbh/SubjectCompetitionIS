@@ -11,14 +11,16 @@
                         :value="item.name">
                 </el-option>
             </el-select>
+
             <el-select style="margin-left: 10px;" v-model="page.major" filterable placeholder="专业">
                 <el-option
                         v-for="item in major"
                         :key="item.id"
-                        :label="item.majorName"
-                        :value="item.majorName">
+                        :label="item.name"
+                        :value="item.name">
                 </el-option>
             </el-select>
+
             <el-select style="margin-left: 10px;" v-model="page.className" filterable placeholder="年级">
                 <el-option
                         v-for="item in classList"
@@ -27,8 +29,12 @@
                         :value="item.name">
                 </el-option>
             </el-select>
-            <el-input v-model="page.name" placeholder="姓名/学号/工号/身份证号"  style="margin-left: 10px;width: 10%">
-            </el-input>
+
+
+            <el-tooltip class="item" effect="dark" content="请输入完整信息，暂不支持模糊查询" placement="top">
+                <el-input v-model="page.name" placeholder="姓名/学号/身份证号" style="margin-left: 10px;width: 10%">
+                </el-input>
+            </el-tooltip>
 
             <el-button style="margin-left: 10px;" type="primary" icon="el-icon-search" @click="handleFilter()">
                 搜索
@@ -38,14 +44,6 @@
                 重置搜索
             </el-button>
 
-            <el-tooltip content="请选择要导出的信息，默认当前页" placement="bottom">
-                <el-button :loading="downloadLoading" style="margin-left: 10px;" class="filter-item" type="primary"
-                           icon="el-icon-download"
-                           @click="getExcel">
-                    导出
-                </el-button>
-
-            </el-tooltip>
         </sticky>
 
         <!--内容-->
@@ -58,66 +56,97 @@
                 style="width: 100%;margin-top: 10px;">
 
             <el-table-column
-
                     type="selection"
                     width="55">
             </el-table-column>
 
             <el-table-column
-                    prop="id"
-                    label="ID"
-                    sortable
-                    width="60">
-            </el-table-column>
-
-            <el-table-column
-                    prop="startTime"
-                    label="开始日期"
+                    prop="name"
+                    label="名字"
                     sortable
                     width="150">
 
             </el-table-column>
 
             <el-table-column
-                    prop="name"
                     sortable
-                    label="名称"
+
+                    prop="login"
+                    label="学号"
                     width="180">
             </el-table-column>
 
             <el-table-column
-                    sortable
-                    prop="organizer"
-                    label="承办单位"
+                    v-if="special===0"
+                    prop="scisClass.major.college.name"
+                    label="院系"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    v-if="special===0"
+                    label="专业"
+                    width="180">
+                <template slot-scope="{row}">
+                    <span>{{row.scisClass.major.name}}({{row.scisClass.major.level}})</span>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    v-if="special===0"
+                    label="班级"
+                    width="180">
+                <template slot-scope="{row}">
+                    <span>{{row.scisClass.name}}</span>
+                </template>
+            </el-table-column>
+
+            <el-table-column
+                    v-if="special===1"
+                    prop="collegeName"
+                    label="院系"
                     width="180">
             </el-table-column>
 
             <el-table-column
-                    prop="place"
-                    label="举办地点">
-                <template slot-scope="{row}">
-                    <span>
-                        <el-tag v-if="row.type ==='online'">线上比赛</el-tag>
-                        <span v-if="row.type ==='offline'">{{row.place}}</span>
-                    </span>
-                </template>
+                    v-if="special===1"
+                    prop="majorName"
+                    label="专业"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    v-if="special===1"
+                    prop="className"
+                    label="班级"
+                    width="180">
+            </el-table-column>
+
+
+            <el-table-column
+                    prop="sex"
+                    label="性别"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="identity"
+                    label="身份证号码"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="email"
+                    label="邮箱"
+                    width="180">
             </el-table-column>
 
             <el-table-column
-
-                    label="赛事级别"
-                    width="100"
-            >
-                <template slot-scope="{row}">
-                    <el-tag
-                            :type="row.level === '校级' ? 'primary' : 'success'"
-                            disable-transitions>{{row.level}}
-                    </el-tag>
-                </template>
-
+                    prop="phone"
+                    label="手机号码"
+                    width="180">
             </el-table-column>
 
-            <el-table-column label="操作" align="center" width="350px" class-name="small-padding fixed-width">
+            <el-table-column label="操作"
+                             align="center"
+                             width="350px"
+                             fixed="right"
+                             class-name="small-padding fixed-width">
                 <template slot-scope="{row,$index}">
                     <router-link :to="'/competition/detail/'+row.id">
                         <el-button style="margin-left: 10px;" type="primary" size="mini" icon="el-icon-reading">
@@ -161,7 +190,7 @@
 
 <script>
     import Sticky from "../../components/Sticky/index";
-    import {getJson} from "../../api/api";
+    import {getJson, postJson} from "../../api/api";
 
     export default {
         name: "admin",
@@ -173,6 +202,7 @@
                 college: [],
                 tableData: [],
                 major: [],
+                special: 0,
                 downloadLoading: false,
                 loading: false,
                 page: {
@@ -207,12 +237,10 @@
 
                 }).catch(error => {
                 this.$message.error("出现了一些问题" + error)
-            })
+            });
+            this.getDataPage();
         },
         methods: {
-            getExcel() {
-
-            },
             handleDelete() {
 
             },
@@ -236,7 +264,6 @@
                 /*搜索*/
                 this.loading = true;
                 this.getDataPage();
-                console.log(this.page)
             },
             handleRefresh() {
                 this.page = {
@@ -247,6 +274,20 @@
                     name: null,
                     className: null,
                 };
+            },
+            getDataPage() {
+                this.loading = true;
+                postJson('/tea/user/find/student', this.page)
+                    .then(response => {
+                        this.tableData = response.data.data;
+                        this.page.totalElements = response.data.totalElements;
+                        this.loading = false;
+                        this.special = response.data.special;
+                    })
+                    .catch(error => {
+                        this.$message.error("出现了一些问题" + error);
+                        this.loading = false
+                    })
             }
         }
     }

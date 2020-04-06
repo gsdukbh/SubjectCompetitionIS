@@ -1,14 +1,17 @@
 package werls.scis.dao.jpa;
 
+import org.apache.catalina.LifecycleState;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.security.core.parameters.P;
 import werls.scis.dao.pojo.ScisRole;
 import werls.scis.dao.pojo.ScisUser;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 用户jpa
@@ -106,6 +109,7 @@ public interface UserRepository extends JpaRepository<ScisUser, Integer> {
             " a.user_id=c.user_id")
     List<ScisUser> findByRoleName(String name);
 
+
     @Query(nativeQuery = true,
             value = "select user_login from Is_user where user_login = ?1")
     String finByLogin(String login);
@@ -119,14 +123,328 @@ public interface UserRepository extends JpaRepository<ScisUser, Integer> {
     List<String> findName();
 
     /**
+     * 班级名称
+     *
      * @param name String
      * @return Page<ScisUser>
      */
-    Page<ScisUser> findByScisClassName(String name, Pageable pageable);
+    Page<ScisUser> findByScisClassNameAndRole(String name,String role, Pageable pageable);
 
-    List<ScisUser> findByScisClassMajorCollegeName(String scisClassMajorCollegeName);
+    /**
+     * 学院名称
+     *
+     * @param scisClassMajorCollegeName String
+     * @param pageable                  Pageable
+     * @return Page<ScisUser>
+     */
+    Page<ScisUser> findByScisClassMajorCollegeName(String scisClassMajorCollegeName, Pageable pageable);
 
-    List<ScisUser> findByCollegeName(String name);
+    /**
+     * 教师 ，学院名称
+     *
+     * @param name     String
+     * @param pageable Pageable
+     * @return Page<ScisUser>
+     */
+    Page<ScisUser> findByCollegeName(String name, Pageable pageable);
 
-    List<ScisUser> findByScisClassMajorCollegeNameOrCollegeName(String string,String name);
+    /**
+     * 学院名称 身份
+     *
+     * @param name     String
+     * @param role     String
+     * @param pageable Pageable
+     * @return Page<ScisUser>
+     */
+    Page<ScisUser> findByScisClassMajorCollegeNameAndRole(String name, String role, Pageable pageable);
+
+    /**
+     * 通过学生姓名，班级，专业，学院查询
+     *
+     * @param name        String
+     * @param className   String
+     * @param majorName   String
+     * @param collegeName String
+     * @param page        Integer
+     * @param size        Integer
+     * @return List<Map < String, Object>>
+     */
+    @Query(nativeQuery = true,
+            value ="select a.user_id        as id,\n" +
+                    "       user_login       as login,\n" +
+                    "       user_name        as name,\n" +
+                    "       user_email       as email,\n" +
+                    "       user_phone       as phone,\n" +
+                    "       user_sex         as sex,\n" +
+                    "       user_status      as status,\n" +
+                    "       user_identity    as identity,\n" +
+                    "       count(a.user_id) as totalElements,\n" +
+                    "       b.class_name as className ,\n" +
+                    "       c. major_name as majorName,\n" +
+                    "       education_level as level ,\n" +
+                    "       d.college_name as collegeName\n" +
+                    "     \n" +
+                    "from Is_user a,\n" +
+                    "     Is_class b,\n" +
+                    "     Is_major c,\n" +
+                    "     Is_college d\n" +
+                    "where a.class_id = b.class_id\n" +
+                    "  and b.major_id = c.major_id\n" +
+                    "  and c.college_id = d.college_id\n" +
+                    "  and (a.user_name = ?1 or a.user_login = ?1 or a.user_identity = ?1)\n" +
+                    "  and b.class_name = ?2\n" +
+                    "  and c.major_name = ?3\n" +
+                    "  and d.college_name = ?4\n" +
+                    "  and a.user_role = '学生'\n" +
+                    "group by a.user_id\n" +
+                    "limit ?5,?6")
+    List<Map<String, Object>> findNameAndClassNameAndMajorNameAndCollegeName(
+            String name,
+            String className,
+            String majorName,
+            String collegeName,
+            Integer page,
+            Integer size);
+
+    /**
+     * 学院名称和专业
+     *
+     * @param collegeName String
+     * @param majorName   String
+     * @param role        String
+     * @param pageable    Pageable
+     * @return Page<ScisUser>
+     */
+    Page<ScisUser> findByScisClassMajorCollegeNameAndScisClassMajorNameAndRole(
+            String collegeName,
+            String majorName,
+            String role,
+            Pageable pageable);
+
+    /**
+     * 学院 班级
+     *
+     * @param collegeName String
+     * @param className   String
+     * @param role        String
+     * @param pageable    Pageable
+     * @return Page<ScisUser>
+     */
+    Page<ScisUser> findByScisClassMajorCollegeNameAndScisClassNameAndRole(
+            String collegeName,
+            String className,
+            String role,
+            Pageable pageable);
+
+    /**
+     * 专业 班级
+     *
+     * @param major     String
+     * @param className String
+     * @param pageable  Pageable
+     * @param role      String
+     * @return Page<ScisUser>
+     */
+    Page<ScisUser> findByScisClassMajorNameAndScisClassNameAndRole(
+            String major,
+            String className,
+            String role, Pageable pageable);
+
+
+    /**
+     * 专业
+     *
+     * @param majorName String
+     * @param pageable  pageable
+     * @return Page<ScisUser>
+     */
+    Page<ScisUser> findByScisClassMajorName(String majorName, Pageable pageable);
+
+    /**
+     * 专业和角色
+     *
+     * @param majorName String
+     * @param role      String
+     * @param pageable  Pageable
+     * @return Page<ScisUser>
+     */
+    Page<ScisUser> findByScisClassMajorNameAndRole(String majorName, String role, Pageable pageable);
+
+    /**
+     * 名字、学号、身份证
+     *
+     * @param name     String
+     * @param login    String
+     * @param identity String
+     * @param pageable Pageable
+     * @return Page<ScisUser>
+     */
+    Page<ScisUser> findByNameOrLoginOrIdentity(String name, String login, String identity, Pageable pageable);
+
+    /**
+     * 角色名
+     *
+     * @param role     String
+     * @param pageable Pageable
+     * @return Page<ScisUser>
+     */
+    Page<ScisUser> findByRole(String role, Pageable pageable);
+
+    /**
+     * 。。。
+     * @param role String
+     * @param pageable Pageable
+     * @return age<ScisUser>
+     */
+    Page<ScisUser> findByRoleIsNot(String role,Pageable pageable);
+
+    @Query(nativeQuery = true,
+            value = "select a.user_id as id, \n" +
+                    "       user_login as login,\n" +
+                    "       user_name as name,\n" +
+                    "       user_email as email,\n" +
+                    "       user_phone  as phone,\n" +
+                    "       user_sex  as sex,\n" +
+                    "       user_status as status, \n" +
+                    "       user_identity as identity,\n" +
+                    "       count(a.user_id) as totalElements ,\n" +
+                    "       b.class_name as className ,\n" +
+                    "       c. major_name as majorName,\n" +
+                    "       education_level as level ,\n" +
+                    "       d.college_name as collegeName\n" +
+                    "     \n" +
+                    "from Is_user a,\n" +
+                    "     Is_class b,\n" +
+                    "     Is_major c,\n" +
+                    "     Is_college d\n" +
+                    "where a.class_id = b.class_id\n" +
+                    "  and b.major_id = c.major_id\n" +
+                    "  and c.college_id = d.college_id\n" +
+                    "  and a.user_role = ?2\n" +
+                    "  and (a.user_name = ?1 or a.user_login = ?1 or a.user_identity = ?1)\n" +
+                    "group by a.user_id\n" +
+                    "limit ?3,?4")
+    List<Map<String, Object>> findByNameOrLoginOrIdentityAndRole(String name, String role, Integer page, Integer size);
+
+    /**
+     * info and collegeName
+     *
+     * @param info    String
+     * @param college String
+     * @param role    String
+     * @param page    Integer
+     * @param size    Integer
+     * @return List<Map < String, Object>>
+     */
+    @Query(nativeQuery = true,
+            value = "select a.user_id as id,\n" +
+                    "       user_login as login,\n" +
+                    "       user_name as name,\n" +
+                    "       user_email as email,\n" +
+                    "       user_phone as phone,\n" +
+                    "       user_sex as sex,\n" +
+                    "       user_status as status,\n" +
+                    "       user_identity  as identity,\n" +
+                    "       count(a.user_id) as totalElements ,\n" +
+                    "       b.class_name as className ,\n" +
+                    "       c. major_name as majorName,\n" +
+                    "       education_level as level ,\n" +
+                    "       d.college_name as collegeName\n" +
+                    "     \n" +
+                    "from Is_user a,\n" +
+                    "     Is_class b,\n" +
+                    "     Is_major c,\n" +
+                    "     Is_college d\n" +
+                    "where\n" +
+                    "        a.class_id = b.class_id\n" +
+                    "  and b.major_id = c.major_id\n" +
+                    "  and c.college_id = d.college_id\n" +
+                    "  and (a.user_name = ?1 or a.user_login=?1 or a.user_identity=?1)\n" +
+                    "  and d.college_name = ?2\n" +
+                    "  and a.user_role= ?3  " +
+                    "group by a.user_id \n" +
+                    "limit ?4,?5")
+    List<Map<String, Object>> findByInfoAndCollege(
+            String info,
+            String college,
+            String role,
+            Integer page, Integer size);
+
+    /**
+     * ... or className
+     *
+     * @param info      String
+     * @param className String
+     * @param page      Integer
+     * @param size      Integer
+     * @return List<Map < String, Object>>
+     */
+    @Query(nativeQuery = true,
+            value = "select a.user_id as id,\n" +
+                    "       user_login as login, \n" +
+                    "       user_name as name,\n" +
+                    "       user_email as email,\n" +
+                    "       user_phone as phone,\n" +
+                    "       user_sex as sex,\n" +
+                    "       user_status as status,\n" +
+                    "       user_identity as identity ,\n" +
+                    "       count(a.user_id) as totalElements ,\n" +
+                    "       b.class_name as className ,\n" +
+                    "       c. major_name as majorName,\n" +
+                    "       education_level as level ,\n" +
+                    "       d.college_name as collegeName\n" +
+                    "     \n" +
+                    "from Is_user a,\n" +
+                    "     Is_class b,\n" +
+                    "     Is_major c,\n" +
+                    "     Is_college d\n" +
+                    "where\n" +
+                    "        a.class_id = b.class_id\n" +
+                    "  and b.major_id = c.major_id\n" +
+                    "  and c.college_id = d.college_id\n" +
+                    "  and (a.user_name = ?1 or a.user_login=?1 or a.user_identity=?1)\n" +
+                    "  and b.class_name = ?2\n" +
+                    "  and a.user_role='学生' " +
+                    "group by a.user_id\n" +
+                    "limit ?3,?4")
+    List<Map<String, Object>> findByClassNameAndName(String info, String className, Integer page, Integer size);
+
+    /**
+     * ...
+     *
+     * @param info      String
+     * @param majorName String
+     * @param page      Integer
+     * @param size      Integer
+     * @return List<Map < String, Object>>
+     */
+    @Query(nativeQuery = true,
+            value = "select a.user_id as id,\n" +
+                    "       user_login as login,\n" +
+                    "       user_name as name,\n" +
+                    "       user_email as email,\n" +
+                    "       user_phone as phone,\n" +
+                    "       user_sex as sex,\n" +
+                    "       user_status as status, \n" +
+                    "       user_identity as identity,\n" +
+                    "       count(a.user_id) as totalElements ,\n" +
+                    "       b.class_name as className ,\n" +
+                    "       c. major_name as majorName,\n" +
+                    "       education_level as level ,\n" +
+                    "       d.college_name as collegeName \n" +
+                    "     \n" +
+                    "from Is_user a,\n" +
+                    "     Is_class b,\n" +
+                    "     Is_major c,\n" +
+                    "     Is_college d\n" +
+                    "where\n" +
+                    "        a.class_id = b.class_id\n" +
+                    "  and b.major_id = c.major_id\n" +
+                    "  and c.college_id = d.college_id\n" +
+                    "  and (a.user_name = ?1 or a.user_login=?1 or a.user_identity=?1)\n" +
+                    "  and c.major_name = ?2\n" +
+                    "  and a.user_role='学生' " +
+                    "group by a.user_id\n" +
+                    "limit ?3,?4")
+    List<Map<String, Object>> findByInfoAndMajorName(String info, String majorName, Integer page, Integer size);
 }

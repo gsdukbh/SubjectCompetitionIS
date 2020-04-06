@@ -1,5 +1,6 @@
 package werls.scis.dao.jpa;
 
+import org.ehcache.shadow.org.terracotta.offheapstore.paging.Page;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,10 @@ import werls.scis.util.RedisService;
 import javax.annotation.Resource;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -45,7 +49,7 @@ class UserRepositoryTest {
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
     @Autowired
-   UserRepository repository;
+    UserRepository repository;
 
     @Test
     void findByLogin() {
@@ -59,8 +63,8 @@ class UserRepositoryTest {
 
     @Test
     void findByRole() {
-        Pageable pageable1= PageRequest.of(0, 20);
-        System.out.println(repository.findByRoleName("教师",pageable1).getContent().get(0).getName());
+        Pageable pageable1 = PageRequest.of(0, 20);
+        System.out.println(repository.findByRoleName("教师", pageable1).getContent().get(0).getName());
 
     }
 
@@ -70,13 +74,19 @@ class UserRepositoryTest {
 
     @Test
     void findByScisClassName() {
-
+        List<Map<String, Object>> temp = repository.
+                findByClassNameAndName(
+                        "2016070030310",
+                        "软件三班"
+                        , 0, 10);
+        for (Map<String, Object> res : temp) {
+            for (Map.Entry<String, Object> entry : res.entrySet()) {
+                System.out.println(entry.getKey());
+                System.out.println(entry.getValue());
+            }
+        }
     }
 
-    @Test
-    void findByCollegeCollegeNameOrScisClass_Major_College_CollegeName() {
-        System.out.println(repository.findByScisClassMajorCollegeName("计算机科学与工程学院"));
-        System.out.println(repository.findByCollegeName("计算机科学与工程学院"));
-        System.out.println(repository.findByScisClassMajorCollegeNameOrCollegeName("计算机科学与工程学院","计算机科学与工程学院"));
-    }
+
+
 }

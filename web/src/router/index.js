@@ -5,6 +5,9 @@ import Layout from '../layout'
 import publicLayout from '../layout/components/public'
 import userRouter from "./user";
 import myInfo from "./myInfo";
+import worksRouter from "./works";
+import applyRouter from "./apply";
+import achievementRouter from "./achievement";
 
 
 Vue.use(VueRouter);
@@ -116,7 +119,8 @@ export const asyncRoutes = [
                 component:()=>import('../views/competition/studentCompetition'),
                 meta:{
                     title:'竞赛项目',
-                    roles:['ROLE_STU']
+                    roles:['ROLE_STU'],
+                    icon: 'project'
                 }
             },
             {
@@ -125,6 +129,7 @@ export const asyncRoutes = [
                 name: 'PageCompetition',
                 meta: {
                     title: '竞赛项目',
+                    icon: 'project',
                     roles: ['ROLE_ADMIN', 'ROLE_TEA'],
                 }
             },
@@ -153,6 +158,7 @@ export const asyncRoutes = [
                 component: () => import('../views/competition/editCompetition'),
                 meta: {
                     title: '竞赛发布',
+                    icon: 'publish',
                     roles: ['ROLE_ADMIN', 'ROLE_TEA'],
                 }
             },
@@ -162,10 +168,14 @@ export const asyncRoutes = [
                 component:()=>import('../views/competition/myResponsible'),
                 meta:{
                     title:'我负责的竞赛',
+                    icon: 'myre',
                 }
             }
         ]
     },
+    worksRouter,
+    applyRouter,
+    achievementRouter,
     {
         path: '/announcement',
         name: 'announcement',
@@ -181,6 +191,7 @@ export const asyncRoutes = [
                 component: () => import('../views/Announcement/publish'),
                 meta: {
                     title: '发布公告',
+                    icon: 'publish',
                     roles: ['ROLE_ADMIN', 'ROLE_TEA']
                 }
             },
@@ -190,6 +201,7 @@ export const asyncRoutes = [
                 component: () => import('../views/Announcement/list'),
                 meta: {
                     title: '公告信息',
+                    icon: 'info',
                     roles: ['ROLE_ADMIN', 'ROLE_TEA']
                 }
             },

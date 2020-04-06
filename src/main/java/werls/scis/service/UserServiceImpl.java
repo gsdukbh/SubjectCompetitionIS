@@ -17,6 +17,7 @@ import werls.scis.dao.pojo.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -36,8 +37,94 @@ public class UserServiceImpl implements UserDetailsService {
     @Autowired
     UserRepository userRepository;
 
-    public Page<ScisUser> findByScisClassName(String name, Pageable pageable) {
-        return userRepository.findByScisClassName(name, pageable);
+    public Page<ScisUser> findByRoleIsNot(String role, Pageable pageable) {
+        return userRepository.findByRoleIsNot(role, pageable);
+    }
+
+    public Page<ScisUser> findByRole(String role, Pageable pageable) {
+        return userRepository.findByRole(role, pageable);
+    }
+
+    public List<Map<String, Object>> findByNameOrLoginOrIdentityAndRole(String name, String role, Integer page, Integer size) {
+        return userRepository.findByNameOrLoginOrIdentityAndRole(name, role, page, size);
+    }
+
+    public Page<ScisUser> findByScisClassMajorNameAndRole(String majorName, String role, Pageable pageable) {
+        return userRepository.findByScisClassMajorNameAndRole(majorName, role, pageable);
+    }
+
+    public Page<ScisUser> findByCollegeNameAndRole(String name, String role, Pageable pageable) {
+        return userRepository.findByScisClassMajorCollegeNameAndRole(name, role, pageable);
+    }
+
+    public List<Map<String, Object>> findByInfoAndCollege(
+            String info,
+            String college,
+            String role,
+            Integer page, Integer size) {
+        return userRepository.findByInfoAndCollege(info, college, role, page, size);
+    }
+
+    public Page<ScisUser> findByScisClassMajorNameAndScisClassNameAndRole(
+            String major,
+            String className,
+            String role, Pageable pageable) {
+        return userRepository.findByScisClassMajorNameAndScisClassNameAndRole(major, className, role, pageable);
+    }
+
+    public Page<ScisUser> findByScisClassMajorCollegeNameAndScisClassNameAndRole(
+            String collegeName,
+            String className,
+            String role,
+            Pageable pageable) {
+        return userRepository.findByScisClassMajorCollegeNameAndScisClassNameAndRole(collegeName, className, role, pageable);
+    }
+
+    public Page<ScisUser> findByScisClassMajorCollegeNameAndScisClassMajorNameAndRole(
+            String collegeName,
+            String majorName,
+            String role,
+            Pageable pageable) {
+        return userRepository.findByScisClassMajorCollegeNameAndScisClassMajorNameAndRole(collegeName, majorName, role, pageable);
+    }
+
+    public List<Map<String, Object>> findByInfoAndMajorName(String info, String majorName, Integer page, Integer size) {
+        return userRepository.findByInfoAndMajorName(info, majorName, page, size);
+    }
+
+    public List<Map<String, Object>> findByClassNameAndName(String info, String className, Integer page, Integer size) {
+        return userRepository.findByClassNameAndName(info, className, page, size);
+    }
+
+
+    public Page<ScisUser> findByScisClassMajorName(String majorName, Pageable pageable) {
+        return userRepository.findByScisClassMajorName(majorName, pageable);
+    }
+
+    public Page<ScisUser> findByNameOrLoginOrIdentity(String name, String login, String identity, Pageable pageable) {
+        return userRepository.findByNameOrLoginOrIdentity(name, login, identity, pageable);
+    }
+
+    public Page<ScisUser> findByCollegeName(String name, Pageable pageable) {
+        return userRepository.findByCollegeName(name, pageable);
+    }
+
+    public Page<ScisUser> findByScisClassMajorCollegeName(String scisClassMajorCollegeName, Pageable pageable) {
+        return userRepository.findByScisClassMajorCollegeName(scisClassMajorCollegeName, pageable);
+    }
+
+    public List<Map<String, Object>> findNameAndClassNameAndMajorNameAndCollegeName(
+            String name,
+            String className,
+            String majorName,
+            String collegeName,
+            Integer page,
+            Integer size) {
+        return userRepository.findNameAndClassNameAndMajorNameAndCollegeName(name, className, majorName, collegeName, page, size);
+    }
+
+    public Page<ScisUser> findByScisClassNameAndRole(String name, String role,Pageable pageable) {
+        return userRepository.findByScisClassNameAndRole(name, role,pageable);
     }
 
     public List<String> findName() {
