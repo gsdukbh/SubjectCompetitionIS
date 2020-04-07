@@ -34,6 +34,10 @@
                        @click="handleRefresh">
                 重置搜索
             </el-button>
+            <el-button class="filter-item" type="danger" style="margin-left: 10px;" icon="el-icon-delete"
+                       @click="deleteList()">
+                批量删除
+            </el-button>
         </sticky>
 
         <!--表格-->
@@ -42,11 +46,17 @@
                 v-loading="loading"
                 :data="tableData"
                 stripe
+                @selection-change="handleSelectionChange"
                 style="width: 100%">
+            <el-table-column
+                    type="selection"
+                    width="55">
+            </el-table-column>
             <el-table-column
                     type="index"
                     >
             </el-table-column>
+
             <el-table-column
                     sortable
                     prop="time"
@@ -167,6 +177,7 @@
             }
         },
         mounted() {
+
             getJson('/public/college/findAll')
                 .then(response => {
                     this.college = response.data.content;
@@ -189,6 +200,24 @@
 
         },
         methods: {
+            deleteList() {
+                this.loading = true;
+                this.$confirm('此操作将永久删除竞赛, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    postJson('/tea/announcement/deleteAll', this.multipleSelection)
+                        .then(response => {
+                            if (response.data.status === 200) {
+                                this.$notify.success({
+                                    title:'删除成功'
+                                })
+                            }
+                            this.getDataPage();
+                        })
+                });
+            },
             async handleModifyStatus(id, status) {
                 await getJson("/public/announcement/findById/" + id)
                     .then(response => {

@@ -32,28 +32,22 @@ public class CompetitionController {
     @Autowired
     CompetitionServiceImpl competitionService;
 
+    @PostMapping("/deleteAll")
+    public Map<String, Object> deleteAll(@RequestBody List<ScisCompetition> data) {
+        Map<String, Object> res = new ConcurrentHashMap<>(16);
+        res.put("status", 200);
+        res.put("message", "ok");
+        competitionService.deleteAll(data);
+        return res;
+    }
+
     @PostMapping("/save")
     public Map<String, Object> save(@RequestBody JSONObject json) {
-        Map<String, Object> res = new ConcurrentHashMap<>(10);
+        Map<String, Object> res = new ConcurrentHashMap<>(16);
         if (json != null) {
             res.put("status", 200);
             res.put("message", "ok");
-            ScisCompetition competition1=JSONObject.toJavaObject(json,ScisCompetition.class) ;
-//            competition1.setId(json.getInteger("id"));
-//            competition1.setName(json.getString("name"));
-//            competition1.setStartTime(json.getDate("startTime"));
-//            competition1.setEndTime(json.getDate("endTime"));
-//            competition1.setApplyTime(json.getDate("applyTime"));
-//            competition1.setContent(json.getString("content"));
-//            competition1.setAuthor(json.getString("author"));
-//            competition1.setLevel(json.getString("level"));
-//            competition1.setOrganizer(json.getString("organizer"));
-//            competition1.setNumLimit(json.getString("numLimit"));
-//            competition1.setPlace(json.getString("place"));
-//            competition1.setType(json.getString("type"));
-//            competition1.setTeam(json.getBoolean("team"));
-//            competition1.setNotification(json.getBoolean("notification"));
-
+            ScisCompetition competition1 = JSONObject.toJavaObject(json, ScisCompetition.class);
             competitionService.save(competition1);
             return res;
         } else {
@@ -72,16 +66,17 @@ public class CompetitionController {
         competitionService.deleteById(id);
         return res;
     }
+
     @PostMapping("/findMyResponsible/{id}")
     public Map<String, Object> findMyResponsible(@PathVariable Integer id,
                                                  @RequestParam(name = "name", defaultValue = "") String name,
                                                  @RequestParam(name = "page", defaultValue = "0") Integer page,
-                                                 @RequestParam(name = "size", defaultValue = "20") Integer size){
+                                                 @RequestParam(name = "size", defaultValue = "20") Integer size) {
         Map<String, Object> res = new ConcurrentHashMap<>();
         Pageable pageable = PageRequest.of(page, size, Sort.by("startTime").descending());
-        Page<ScisCompetition> tem=competitionService.findByNameContainingAndUserId(name,id,pageable);
-        res.put("content",tem.getContent());
-        res.put("totalElements",tem.getTotalElements());
+        Page<ScisCompetition> tem = competitionService.findByNameContainingAndUserId(name, id, pageable);
+        res.put("content", tem.getContent());
+        res.put("totalElements", tem.getTotalElements());
         res.put("status", 200);
         res.put("message", "Success");
         return res;

@@ -43,10 +43,15 @@
                        @click="handleRefresh">
                 重置搜索
             </el-button>
-
+            <el-button v-loading="loading2" class="filter-item" type="danger" style="margin-left: 10px;"
+                       icon="el-icon-delete"
+                       @click="deleteList()">
+                批量删除
+            </el-button>
         </sticky>
 
         <!--内容-->
+
 
         <el-table
                 :data="tableData"
@@ -54,12 +59,17 @@
                 @selection-change="handleSelectionChange"
                 v-loading="loading"
                 style="width: 100%;margin-top: 10px;">
-
             <el-table-column
+                    fixed="left"
                     type="selection"
                     width="55">
             </el-table-column>
-
+            <el-table-column
+                    sortable
+                    prop="login"
+                    label="学号"
+                    width="180">
+            </el-table-column>
             <el-table-column
                     prop="name"
                     label="名字"
@@ -67,64 +77,39 @@
                     width="150">
 
             </el-table-column>
-
             <el-table-column
-                    sortable
 
-                    prop="login"
-                    label="学号"
-                    width="180">
-            </el-table-column>
-
-            <el-table-column
-                    v-if="special===0"
-                    prop="scisClass.major.college.name"
                     label="院系"
                     width="180">
-            </el-table-column>
-            <el-table-column
-                    v-if="special===0"
-                    label="专业"
-                    width="180">
                 <template slot-scope="{row}">
-                    <span>{{row.scisClass.major.name}}({{row.scisClass.major.level}})</span>
-                </template>
-            </el-table-column>
-            <el-table-column
-                    v-if="special===0"
-                    label="班级"
-                    width="180">
-                <template slot-scope="{row}">
-                    <span>{{row.scisClass.name}}</span>
+                    <span v-if="special===1">{{row.collegeName}}</span>
+                    <span v-if="special===0">{{row.scisClass.major.college.name}}</span>
                 </template>
             </el-table-column>
 
             <el-table-column
-                    v-if="special===1"
-                    prop="collegeName"
-                    label="院系"
-                    width="180">
-            </el-table-column>
-
-            <el-table-column
-                    v-if="special===1"
-                    prop="majorName"
                     label="专业"
                     width="180">
+                <template slot-scope="{row}">
+                    <span v-if="special===1">{{row.majorName}}</span>
+                    <span v-if="special===0">{{row.scisClass.major.name}}({{row.scisClass.major.level}})</span>
+                </template>
             </el-table-column>
+
             <el-table-column
-                    v-if="special===1"
-                    prop="className"
                     label="班级"
                     width="180">
+                <template slot-scope="{row}">
+                    <span v-if="special===1">{{row.className}}</span>
+                    <span v-if="special===0">{{row.scisClass.name}}</span>
+                </template>
             </el-table-column>
-
-
             <el-table-column
                     prop="sex"
                     label="性别"
                     width="180">
             </el-table-column>
+
             <el-table-column
                     prop="identity"
                     label="身份证号码"
@@ -141,18 +126,17 @@
                     label="手机号码"
                     width="180">
             </el-table-column>
-
             <el-table-column label="操作"
                              align="center"
-                             width="350px"
+                             width="200px"
                              fixed="right"
                              class-name="small-padding fixed-width">
                 <template slot-scope="{row,$index}">
-                    <router-link :to="'/competition/detail/'+row.id">
-                        <el-button style="margin-left: 10px;" type="primary" size="mini" icon="el-icon-reading">
-                            详情
-                        </el-button>
-                    </router-link>
+
+                    <el-button style="margin-left: 10px;" type="primary" size="mini" icon="el-icon-reading">
+                        详情
+                    </el-button>
+
 
                     <el-button style="margin-left: 10px;" v-if="row.status!=='deleted'" size="mini" type="danger"
                                @click="handleDelete(row.id,$index)">
@@ -161,9 +145,18 @@
                 </template>
 
             </el-table-column>
-
         </el-table>
 
+
+        <!--对话框-->
+
+        <el-dialog title="收货地址" :visible.sync="dialogTableVisible">
+            <el-table>
+                <el-table-column property="date" label="日期" width="150"></el-table-column>
+                <el-table-column property="name" label="姓名" width="200"></el-table-column>
+                <el-table-column property="address" label="地址"></el-table-column>
+            </el-table>
+        </el-dialog>
 
         <!--分页-->
         <div class="center">
@@ -197,11 +190,14 @@
         components: {Sticky},
         data() {
             return {
+                dialogTableVisible: false,
                 multipleSelection: [],
                 classList: [],
                 college: [],
                 tableData: [],
+                tableData1: [],
                 major: [],
+                loading2: false,
                 special: 0,
                 downloadLoading: false,
                 loading: false,
@@ -217,6 +213,7 @@
             }
         },
         mounted() {
+
             getJson('/public/college/findAll')
                 .then(response => {
                     this.college = response.data.content;
@@ -241,6 +238,25 @@
             this.getDataPage();
         },
         methods: {
+
+            deleteList() {
+                this.loading2 = true;
+                this.$confirm('此操作将永久删除竞赛, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    postJson('/tea/user/deleteAll', this.multipleSelection)
+                        .then(response => {
+                            if (response.data.status === 200) {
+                                this.$notify.success({
+                                    title: '删除成功'
+                                })
+                            }
+                            this.getDataPage();
+                        })
+                });
+            },
             handleDelete() {
 
             },
@@ -258,6 +274,7 @@
             },
 
             handleSelectionChange(val) {
+                console.log(val)
                 this.multipleSelection = val
             },
             handleFilter() {

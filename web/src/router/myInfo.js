@@ -28,7 +28,7 @@ const myInfo = {
             },
         },
         {
-            path:'my',
+            path:'my/grades',
             name:'my grades',
             component:()=>import('../views/Achievement/my'),
             meta:{
@@ -37,7 +37,7 @@ const myInfo = {
             },
         },
         {
-            path:'my',
+            path:'my/works',
             name:'my works',
             component:()=>import('../views/works/my'),
             meta: {

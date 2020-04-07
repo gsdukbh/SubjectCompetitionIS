@@ -5,7 +5,10 @@ import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import werls.scis.service.UserServiceImpl;
+import werls.scis.webSocket.WebSocket;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -19,6 +22,7 @@ import java.util.List;
  * @Description: TODO
  * @date Date : 2020年04月06日 22:06
  */
+
 public class ExcelToObject extends AnalysisEventListener<UserUpObject> {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -27,16 +31,30 @@ public class ExcelToObject extends AnalysisEventListener<UserUpObject> {
 
     List<UserUpObject> list = new ArrayList<>();
 
+    int i = 0;
+
     UserServiceImpl userService;
+
+    Integer adminUser;
+
+
+    WebSocket webSocket;
 
     public ExcelToObject(UserServiceImpl userService) {
         this.userService = userService;
     }
 
+    public ExcelToObject(Integer adminUser) {
+        this.adminUser = adminUser;
+    }
+
     public ExcelToObject() {
 
     }
-
+    public ExcelToObject(Integer adminUser,WebSocket webSocket ) {
+        this.webSocket=webSocket;
+        this.adminUser = adminUser;
+    }
     /**
      * 这个每一条数据解析都会来调用
      *
@@ -46,7 +64,9 @@ public class ExcelToObject extends AnalysisEventListener<UserUpObject> {
     @Override
     public void invoke(UserUpObject userUpObject, AnalysisContext analysisContext) {
         logger.info("解析到一条数据:{}", JSON.toJSONString(userUpObject));
-
+        list.add(userUpObject);
+        webSocket.sendOneMessage(adminUser.toString(),JSON.toJSONString(userUpObject));
+        System.out.println(i++);
     }
 
     /**
@@ -58,6 +78,7 @@ public class ExcelToObject extends AnalysisEventListener<UserUpObject> {
     public void doAfterAllAnalysed(AnalysisContext analysisContext) {
         logger.info("所有数据解析完成！");
     }
+
 }
 
 

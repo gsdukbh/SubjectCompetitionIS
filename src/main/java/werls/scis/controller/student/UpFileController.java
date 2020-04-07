@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -63,7 +64,7 @@ public class UpFileController {
             return res;
         } else {
             res.put("status", 403);
-            res.put("message", "错误的文件类型："+file.getContentType());
+            res.put("message", "错误的文件类型：" + file.getContentType());
         }
         return res;
     }
@@ -74,16 +75,12 @@ public class UpFileController {
             HttpServletRequest request,
             @RequestParam("bucketName") String bucketName,
             @RequestParam("objectName") String objectName) throws Exception {
-
-//        response.setCharacterEncoding("utf-8");
-//        response.setContentType("APPLICATION/OCTET-STREAM");
-//        response.setHeader("Content-Disposition", "attachment;fileName=" + objectName);
         InputStream inputStream = fileUploader.getObject(bucketName, objectName);
-        byte[]   bytes =new byte[2048];
+        byte[] bytes = new byte[2048];
         int length;
-        ByteArrayOutputStream res= new ByteArrayOutputStream();
-        while ((length=inputStream.read(bytes))>0){
-            res.write(bytes,0,length);
+        ByteArrayOutputStream res = new ByteArrayOutputStream();
+        while ((length = inputStream.read(bytes)) > 0) {
+            res.write(bytes, 0, length);
         }
         inputStream.close();
 
@@ -95,22 +92,21 @@ public class UpFileController {
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         return new ResponseEntity<byte[]>(res.toByteArray(),
                 headers, HttpStatus.OK);
-//        return null;
     }
 
     public String getFilename(HttpServletRequest request,
                               String filename) throws Exception {
         // IE不同版本User-Agent中出现的关键词
-        String[] IEBrowserKeyWords = {"MSIE", "Trident", "Edge"};
+        String[] iEBrowserKeyWords = {"MSIE", "Trident", "Edge"};
         // 获取请求头代理信息
         String userAgent = request.getHeader("User-Agent");
-        for (String keyWord : IEBrowserKeyWords) {
+        for (String keyWord : iEBrowserKeyWords) {
             if (userAgent.contains(keyWord)) {
                 //IE内核浏览器，统一为UTF-8编码显示
                 return URLEncoder.encode(filename, "UTF-8");
             }
         }
-        //火狐等其它浏览器统一为ISO-8859-1编码显示
-        return new String(filename.getBytes("UTF-8"), "ISO-8859-1");
+
+        return new String(filename.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
     }
 }

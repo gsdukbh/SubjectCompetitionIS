@@ -14,29 +14,29 @@ import lombok.Data;
 @Data
 public class UserUpObject {
 
-//    @ExcelProperty(value = "学号")
+    @ExcelProperty(value = "学号")
     private String login;
 
-//    @ExcelProperty(value = "名字")
+    @ExcelProperty(value = "名字")
     private String name;
-//    @ExcelProperty(value = "性别")
+    @ExcelProperty(value = "性别")
     private String sex;
-//    @ExcelProperty(value = "院系")
+    @ExcelProperty(value = "院系")
     private String college;
-//    @ExcelProperty(value = "专业")
+    @ExcelProperty(value = "专业")
     private String majorName;
-//    @ExcelProperty(value = "培养层次")
+    @ExcelProperty(value = "培养层次")
     private String level;
-//    @ExcelProperty(value = "班级")
+    @ExcelProperty(value = "班级")
     private String className;
-//    @ExcelProperty(value = "身份证号")
+    @ExcelProperty(value = "身份证号")
     private String identity;
-//    @ExcelProperty(value = "手机号码")
-//    private String phone;
-//    @ExcelProperty(value = "邮箱")
-//    private String email;
-//    @ExcelProperty(value = "身份")
-//    private String role;
+    @ExcelProperty(value = "手机号码")
+    private String phone;
+    @ExcelProperty(value = "邮箱")
+    private String email;
+    @ExcelProperty(value = "身份")
+    private String role;
 
 
 

@@ -46,6 +46,10 @@
 
             </el-tooltip>
 
+            <el-button class="filter-item" type="danger" style="margin-left: 10px;" icon="el-icon-delete"
+                       @click="deleteList()">
+                批量删除
+            </el-button>
         </div>
 
         <!--表格-->
@@ -249,6 +253,24 @@
 
         },
         methods: {
+            deleteList() {
+                this.loading = true;
+                this.$confirm('此操作将永久删除竞赛, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    postJson('/tea/competition/deleteAll', this.multipleSelection)
+                        .then(response => {
+                            if (response.data.status === 200) {
+                                this.$notify.success({
+                                    title:'删除成功'
+                                })
+                            }
+                            this.getDataPage();
+                        })
+                });
+            },
             formatTimeA(time) {
                 return parseTime(time, '{y}-{m}-{d} {h}:{i}')
             },
@@ -265,7 +287,7 @@
             },
 
             handleSelectionChange(val) {
-                this.multipleSelection = val
+                this.multipleSelection = val;
             },
             handleFilter() {
                 /*搜索*/
@@ -285,35 +307,35 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                        getJson('/public/competition/findById/' + id)
-                            .then(response => {
-                                if (response.data.status === 200) {
-                                    this.temSave = response.data.data;
-                                    this.temSave.status = status;
-                                    postJson('/tea/competition/save', this.temSave)
-                                        .then(response => {
-                                            if (response.data.status === 200) {
-                                                this.$notify({
-                                                    title: '成功',
-                                                    message: '更改成功',
-                                                    type: 'success'
-                                                });
-                                                this.getDataPage();
-                                                this.loading1 = false;
-                                            }
-                                        })
-                                        .catch(error => {
+                    getJson('/public/competition/findById/' + id)
+                        .then(response => {
+                            if (response.data.status === 200) {
+                                this.temSave = response.data.data;
+                                this.temSave.status = status;
+                                postJson('/tea/competition/save', this.temSave)
+                                    .then(response => {
+                                        if (response.data.status === 200) {
+                                            this.$notify({
+                                                title: '成功',
+                                                message: '更改成功',
+                                                type: 'success'
+                                            });
                                             this.getDataPage();
                                             this.loading1 = false;
-                                            this.$message.error("出现了一些问题" + error)
-                                        })
-                                }
-                            })
-                            .catch(error => {
-                                this.loading1 = false;
-                                this.$message.error("出现了一些问题" + error)
-                            })
-                    })
+                                        }
+                                    })
+                                    .catch(error => {
+                                        this.getDataPage();
+                                        this.loading1 = false;
+                                        this.$message.error("出现了一些问题" + error)
+                                    })
+                            }
+                        })
+                        .catch(error => {
+                            this.loading1 = false;
+                            this.$message.error("出现了一些问题" + error)
+                        })
+                })
 
             },
             handleDelete(id) {

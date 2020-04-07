@@ -13,6 +13,7 @@ import werls.scis.dao.pojo.ScisAnnouncement;
 import werls.scis.dao.pojo.ScisReply;
 import werls.scis.service.AnnouncementServiceImpl;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -31,26 +32,37 @@ public class AnnouncementAdminController {
     AnnouncementServiceImpl service;
 
 
+    @PostMapping("/deleteAll")
+    public Map<String, Object> deleteAll( @RequestBody  List<ScisAnnouncement> announcementList) {
+        Map<String, Object> res = new ConcurrentHashMap<>(16);
+        res.put("status", 200);
+        res.put("message", "Success");
+        service.deleteAll(announcementList);
+        return res;
+
+    }
+
     @PostMapping("/save")
-    public String save(@RequestBody JSONObject json){
-        ScisAnnouncement announcement=JSONObject.toJavaObject(json, ScisAnnouncement.class);
-        Map<String, Object> res = new ConcurrentHashMap<>(10);
-        if (announcement != null){
-            res.put("status",200);
-            res.put("message","Success");
+    public String save(@RequestBody JSONObject json) {
+        ScisAnnouncement announcement = JSONObject.toJavaObject(json, ScisAnnouncement.class);
+        Map<String, Object> res = new ConcurrentHashMap<>(16);
+        if (announcement != null) {
+            res.put("status", 200);
+            res.put("message", "Success");
             res.put("result", service.save(announcement));
             return JSON.toJSONString(res);
-        }else {
-            res.put("status",400);
-            res.put("message","Null");
-            return  JSON.toJSONString(res);
+        } else {
+            res.put("status", 400);
+            res.put("message", "Null");
+            return JSON.toJSONString(res);
         }
     }
+
     @GetMapping("/deleteById/{id}")
-    public  Map<String, Object> deleteById(@PathVariable Integer id){
+    public Map<String, Object> deleteById(@PathVariable Integer id) {
         Map<String, Object> res = new ConcurrentHashMap<>(10);
-        res.put("status",200);
-        res.put("message","Success");
+        res.put("status", 200);
+        res.put("message", "Success");
         service.deleteById(id);
         return res;
     }
