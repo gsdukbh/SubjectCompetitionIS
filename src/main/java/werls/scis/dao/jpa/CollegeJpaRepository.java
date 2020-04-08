@@ -22,7 +22,7 @@ public interface CollegeJpaRepository extends JpaRepository<ScisCollege,Integer>
      * @param collegeName 学院名称
      * @return 学院
      */
-    ScisCollege findByName(String collegeName);
+    Optional< ScisCollege> findByName(String collegeName);
 
 
     /**

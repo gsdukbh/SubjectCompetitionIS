@@ -1,17 +1,14 @@
 package werls.scis.dao.jpa;
 
-import org.apache.catalina.LifecycleState;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.security.core.parameters.P;
-import werls.scis.dao.pojo.ScisRole;
 import werls.scis.dao.pojo.ScisUser;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 用户jpa
@@ -24,6 +21,12 @@ import java.util.Map;
  * @date Date : 2020年02月21日 23:33
  */
 public interface UserRepository extends JpaRepository<ScisUser, Integer> {
+    /**
+     * @return
+     */
+    @Query(nativeQuery = true, value = "select * from Is_user where user_id=?1")
+    ScisUser finById(Integer id);
+
     /**
      * 登录名/学号/工号
      *
@@ -128,7 +131,7 @@ public interface UserRepository extends JpaRepository<ScisUser, Integer> {
      * @param name String
      * @return Page<ScisUser>
      */
-    Page<ScisUser> findByScisClassNameAndRole(String name,String role, Pageable pageable);
+    Page<ScisUser> findByScisClassNameAndRole(String name, String role, Pageable pageable);
 
     /**
      * 学院名称
@@ -170,7 +173,7 @@ public interface UserRepository extends JpaRepository<ScisUser, Integer> {
      * @return List<Map < String, Object>>
      */
     @Query(nativeQuery = true,
-            value ="select a.user_id        as id,\n" +
+            value = "select a.user_id        as id,\n" +
                     "       user_login       as login,\n" +
                     "       user_name        as name,\n" +
                     "       user_email       as email,\n" +
@@ -292,11 +295,12 @@ public interface UserRepository extends JpaRepository<ScisUser, Integer> {
 
     /**
      * 。。。
-     * @param role String
+     *
+     * @param role     String
      * @param pageable Pageable
      * @return age<ScisUser>
      */
-    Page<ScisUser> findByRoleIsNot(String role,Pageable pageable);
+    Page<ScisUser> findByRoleIsNot(String role, Pageable pageable);
 
     @Query(nativeQuery = true,
             value = "select a.user_id as id, \n" +
@@ -325,6 +329,26 @@ public interface UserRepository extends JpaRepository<ScisUser, Integer> {
                     "group by a.user_id\n" +
                     "limit ?3,?4")
     List<Map<String, Object>> findByNameOrLoginOrIdentityAndRole(String name, String role, Integer page, Integer size);
+
+    @Query(nativeQuery = true,
+            value = "select a.user_id as id, \n" +
+                    "       user_login as login,\n" +
+                    "       user_name as name,\n" +
+                    "       user_email as email,\n" +
+                    "       user_phone  as phone,\n" +
+                    "       user_sex  as sex,\n" +
+                    "       user_status as status, \n" +
+                    "       user_identity as identity,\n" +
+                    "       count(a.user_id) as totalElements ,\n" +
+                    "       b.college_name as collegeName\n" +
+                    "from Is_user a," +
+                    "  Is_college b " +
+                    "where " +
+                    " b.college_id = a.college_id " +
+                    "  and (a.user_name = ?1 or a.user_login = ?1 or a.user_identity = ?1)\n" +
+                    "group by a.user_id\n" +
+                    "limit ?2,?3")
+    List<Map<String, Object>> findByNameOrLoginOrIdentityAndRole(String name, Integer page, Integer size);
 
     /**
      * info and collegeName
@@ -371,6 +395,41 @@ public interface UserRepository extends JpaRepository<ScisUser, Integer> {
             Integer page, Integer size);
 
     /**
+     * s
+     *
+     * @param info    String
+     * @param college String
+     * @param page    Integer
+     * @param size    Integer
+     * @return List<Map < String, Object>>
+     */
+    @Query(nativeQuery = true,
+            value = "select a.user_id as id,\n" +
+                    "       user_login as login,\n" +
+                    "       user_name as name,\n" +
+                    "       user_email as email,\n" +
+                    "       user_phone as phone,\n" +
+                    "       user_sex as sex,\n" +
+                    "       user_status as status,\n" +
+                    "       user_identity  as identity,\n" +
+                    "       count(a.user_id) as totalElements ,\n" +
+                    "       b.college_name as collegeName\n" +
+                    "     \n" +
+                    "from Is_user a,\n" +
+                    "     Is_college b \n" +
+                    "where\n" +
+                    "  and a.college_id = b.college_id\n" +
+                    "  and (a.user_name = ?1 or a.user_login=?1 or a.user_identity=?1)\n" +
+                    "  and d.college_name = ?2\n" +
+                    "group by a.user_id \n" +
+                    "limit ?4,?5")
+    List<Map<String, Object>> findByInfoAndCollege(
+            String info,
+            String college,
+            Integer page, Integer size);
+
+
+    /**
      * ... or className
      *
      * @param info      String
@@ -404,7 +463,6 @@ public interface UserRepository extends JpaRepository<ScisUser, Integer> {
                     "  and c.college_id = d.college_id\n" +
                     "  and (a.user_name = ?1 or a.user_login=?1 or a.user_identity=?1)\n" +
                     "  and b.class_name = ?2\n" +
-                    "  and a.user_role='学生' " +
                     "group by a.user_id\n" +
                     "limit ?3,?4")
     List<Map<String, Object>> findByClassNameAndName(String info, String className, Integer page, Integer size);
@@ -443,7 +501,6 @@ public interface UserRepository extends JpaRepository<ScisUser, Integer> {
                     "  and c.college_id = d.college_id\n" +
                     "  and (a.user_name = ?1 or a.user_login=?1 or a.user_identity=?1)\n" +
                     "  and c.major_name = ?2\n" +
-                    "  and a.user_role='学生' " +
                     "group by a.user_id\n" +
                     "limit ?3,?4")
     List<Map<String, Object>> findByInfoAndMajorName(String info, String majorName, Integer page, Integer size);

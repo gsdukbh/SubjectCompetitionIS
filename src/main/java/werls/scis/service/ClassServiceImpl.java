@@ -3,14 +3,13 @@ package werls.scis.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import werls.scis.dao.jpa.ClassJpaRepository;
-import werls.scis.dao.pojo.ScisApplyFrom;
 import werls.scis.dao.pojo.ScisClass;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author : LiJiWei
@@ -37,7 +36,7 @@ public class ClassServiceImpl {
      * @return 班级
      */
 
-    public ScisClass findByName(String name){
+    public Optional<ScisClass> findByName(String name){
         return classJpaRepository.findByName(name);
     }
 

@@ -1,45 +1,55 @@
 import Layout from "../layout"
 
-const userRouter={
-    path:'/user',
-    component:Layout,
-    name:'user',
-    meta:{
-        title:'用户管理',
+const userRouter = {
+    path: '/user',
+    component: Layout,
+    name: 'user',
+    meta: {
+        title: '用户管理',
         icon: 'userAdmin',
         roles: ['ROLE_ADMIN']
     },
-    children:[
+    children: [
         {
             path: 'admin',
             name: 'adminUser',
-            component: ()=>import('../views/user/admin'),
-            meta:{
-                title:'学生信息',
+            component: () => import('../views/user/admin'),
+            meta: {
+                title: '学生信息',
                 icon: 'list',
                 roles: ['ROLE_ADMIN']
             },
         },
         {
-            path:'tea',
-            name:'teacher info',
-            component:()=>import('../views/user/tea'),
-            meta:{
-                title:'教师信息',
+            path: 'tea',
+            name: 'teacher info',
+            component: () => import('../views/user/tea'),
+            meta: {
+                title: '教师信息',
                 icon: 'list',
                 roles: ['ROLE_ADMIN']
             },
         },
         {
-            path:'upUserInfo',
-            name:'up user info',
-            component:()=>import('../views/user/upUserInfo'),
-            meta:{
-                title:'上传用户信息',
+            path: 'upUserInfo',
+            name: 'up user info',
+            component: () => import('../views/user/upUserInfo'),
+            meta: {
+                title: '上传用户信息',
                 icon: 'upInfo',
                 roles: ['ROLE_ADMIN']
             },
         },
+        {
+            path: 'edit/:id(\\d+)',
+            name: 'edit user info',
+            hidden: true,
+            component: () => import('../views/user/editInfo'),
+            meta: {
+                title: '修改用户信息',
+                roles: ['ROLE_ADMIN']
+            },
+        }
 
     ]
 

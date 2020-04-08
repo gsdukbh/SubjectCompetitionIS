@@ -28,7 +28,7 @@ export default {
     methods:{
 
         initWebSocket(){
-            this.websocket=new  WebSocket('ws://localhost:8080/public/websocket/12');
+            this.websocket=new  WebSocket('ws://'+location.host+'/socket/12');
 
             this.websocket.onerror = this.setErrorMessage;
             // 连接成功

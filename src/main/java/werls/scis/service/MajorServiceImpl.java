@@ -1,6 +1,9 @@
 package werls.scis.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,8 @@ public class MajorServiceImpl {
     @Autowired
     private MajorRepostitory major;
 
+
+    @Cacheable(value = "ScisMajor",key = "'findByAll'")
     public List<ScisMajor> findByAll(){
         return major.findAll();
     }
@@ -41,15 +46,20 @@ public class MajorServiceImpl {
      * @param majorName 专业名字
      * @return ScisMajor
      */
+    @Cacheable(value = "ScisMajor",key = "majorName")
     public ScisMajor findByMajorName(String majorName){
         return major.findByName(majorName);
     }
-    public void save(ScisMajor major){
-        this.major.save(major);
+
+    @CachePut(value = "ScisMajor",key = "'findByAll'")
+    @CacheEvict(value = "ScisMajor", key = "major.getName()")
+    public ScisMajor save(ScisMajor major){
+        return   this.major.save(major);
     }
     public void saveAll(List<ScisMajor> major){
         this.major.saveAll(major);
     }
+
     public Page<ScisMajor> findAll( Pageable pageable){
         return this.major.findAll(pageable);
     }

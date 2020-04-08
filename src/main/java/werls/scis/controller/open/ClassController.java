@@ -11,6 +11,7 @@ import werls.scis.service.ClassServiceImpl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -37,5 +38,15 @@ public class ClassController {
         return res;
     }
 
+    @GetMapping("/find")
+    public Map<String,Object> findClass(){
+        Map <String, Object> res = new ConcurrentHashMap<>(10);
 
+        res.put("status", 200);
+        res.put("message", "Success");
+        Optional<ScisClass> tem=service.findByName("软件一般");
+        tem.ifPresent(scisClass -> res.put("data", scisClass));
+
+        return res;
+    }
 }

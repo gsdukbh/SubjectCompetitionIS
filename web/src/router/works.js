@@ -5,7 +5,7 @@ const worksRouter = {
     name: 'works',
     component: Layout,
     meta:{
-        title:'竞赛作品',
+        title:'作品',
         icon:'works'
     },
     children: [

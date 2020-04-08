@@ -37,6 +37,22 @@ public class UserServiceImpl implements UserDetailsService {
     @Autowired
     UserRepository userRepository;
 
+
+    public ScisUser finById(Integer id) {
+        return userRepository.finById(id);
+    }
+
+    public List<Map<String, Object>> findByNameOrLoginOrIdentityAndRole(String name, Integer page, Integer size) {
+        return userRepository.findByNameOrLoginOrIdentityAndRole(name, page, size);
+    }
+
+    public List<Map<String, Object>> findByInfoAndCollege(
+            String info,
+            String college,
+            Integer page, Integer size) {
+        return userRepository.findByInfoAndCollege(info, college, page, size);
+    }
+
     public Page<ScisUser> findByRoleIsNot(String role, Pageable pageable) {
         return userRepository.findByRoleIsNot(role, pageable);
     }
@@ -123,8 +139,8 @@ public class UserServiceImpl implements UserDetailsService {
         return userRepository.findNameAndClassNameAndMajorNameAndCollegeName(name, className, majorName, collegeName, page, size);
     }
 
-    public Page<ScisUser> findByScisClassNameAndRole(String name, String role,Pageable pageable) {
-        return userRepository.findByScisClassNameAndRole(name, role,pageable);
+    public Page<ScisUser> findByScisClassNameAndRole(String name, String role, Pageable pageable) {
+        return userRepository.findByScisClassNameAndRole(name, role, pageable);
     }
 
     public List<String> findName() {

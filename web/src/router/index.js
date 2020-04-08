@@ -108,8 +108,7 @@ export const asyncRoutes = [
         component: Layout,
         name: 'competition',
         meta: {
-            title: '竞赛管理',
-            roles: ['ROLE_ADMIN', 'ROLE_TEA'],
+            title: '竞赛',
             icon: 'competition'
         },
         children: [
@@ -169,6 +168,7 @@ export const asyncRoutes = [
                 meta:{
                     title:'我负责的竞赛',
                     icon: 'myre',
+                    roles: [ 'ROLE_TEA'],
                 }
             }
         ]
@@ -181,7 +181,7 @@ export const asyncRoutes = [
         name: 'announcement',
         component: Layout,
         meta: {
-            title: '公告管理',
+            title: '公告',
             icon: 'announcement'
         },
         children: [

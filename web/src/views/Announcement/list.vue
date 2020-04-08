@@ -34,7 +34,8 @@
                        @click="handleRefresh">
                 重置搜索
             </el-button>
-            <el-button class="filter-item" type="danger" style="margin-left: 10px;" icon="el-icon-delete"
+            <el-button :loading="loading1" class="filter-item" type="danger" style="margin-left: 10px;"
+                       icon="el-icon-delete"
                        @click="deleteList()">
                 批量删除
             </el-button>
@@ -54,7 +55,7 @@
             </el-table-column>
             <el-table-column
                     type="index"
-                    >
+            >
             </el-table-column>
 
             <el-table-column
@@ -161,9 +162,10 @@
             return {
                 tableData: null,
                 loading: true,
+                loading1: false,
                 college: null,
                 temType: null,
-                temTitle:null,
+                temTitle: null,
                 buttonLoading: false,
                 tempA: null,
                 page: {
@@ -201,8 +203,8 @@
         },
         methods: {
             deleteList() {
-                this.loading = true;
-                this.$confirm('此操作将永久删除竞赛, 是否继续?', '提示', {
+                this.loading1 = true;
+                this.$confirm('此操作将永久删除, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
@@ -211,11 +213,15 @@
                         .then(response => {
                             if (response.data.status === 200) {
                                 this.$notify.success({
-                                    title:'删除成功'
+                                    title: '删除成功'
                                 })
                             }
+                            this.loading1 = false;
                             this.getDataPage();
                         })
+                }).catch(() => {
+                    this.loading1 = false;
+                    this.getDataPage();
                 });
             },
             async handleModifyStatus(id, status) {
@@ -303,11 +309,11 @@
                     return (temType.value.toLowerCase().indexOf(queryString.toLowerCase()) !== -1);
                 };
             },
-            querySearchAsyncTitle(queryString, cb){
+            querySearchAsyncTitle(queryString, cb) {
                 getJson('/public/announcement/findTitle')
-                .then(response=>{
-                    this.temTitle=response.data.data;
-                });
+                    .then(response => {
+                        this.temTitle = response.data.data;
+                    });
                 const temTitle = this.temTitle;
                 const res = queryString ? temTitle.filter(this.createTitleFilter(queryString)) : temTitle;
 

@@ -46,7 +46,7 @@
 
             </el-tooltip>
 
-            <el-button class="filter-item" type="danger" style="margin-left: 10px;" icon="el-icon-delete"
+            <el-button :loading="loading2" class="filter-item" type="danger" style="margin-left: 10px;" icon="el-icon-delete"
                        @click="deleteList()">
                 批量删除
             </el-button>
@@ -195,6 +195,7 @@
                 html: null,
                 loading: true,
                 loading1: false,
+                loading2:false,
                 tableData: [
                     {
                         id: null,
@@ -254,7 +255,7 @@
         },
         methods: {
             deleteList() {
-                this.loading = true;
+                this.loading2 = true;
                 this.$confirm('此操作将永久删除竞赛, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -267,8 +268,12 @@
                                     title:'删除成功'
                                 })
                             }
+                            this.loading2 = false;
                             this.getDataPage();
                         })
+                }).catch(()=>{
+                    this.loading2 = false;
+                    this.getDataPage();
                 });
             },
             formatTimeA(time) {

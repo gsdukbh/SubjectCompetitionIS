@@ -33,7 +33,9 @@ public class ScisUser implements Serializable {
     private Integer id;
     @Column(name = "user_login")
     private String login;
-    @JsonIgnore
+
+
+//    @JsonIgnore
     @Column(name = "user_password")
     private String password;
     @Column(name = "user_name")
@@ -187,7 +189,7 @@ public class ScisUser implements Serializable {
     public void setLogin(String login) {
         this.login = login;
     }
-
+    @JsonIgnore
     public String getPassword() {
         return password;
     }

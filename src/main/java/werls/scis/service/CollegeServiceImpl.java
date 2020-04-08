@@ -1,6 +1,7 @@
 package werls.scis.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -12,6 +13,7 @@ import werls.scis.dao.pojo.ScisApplyFrom;
 import werls.scis.dao.pojo.ScisCollege;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author : LiJiWei
@@ -32,7 +34,8 @@ public class CollegeServiceImpl {
      * @param collegeName 学院名称
      * @return 学院
      */
-    public  ScisCollege findByCollegeName(String collegeName){
+    @Cacheable(value = "college",unless = "#result == null ",key = "collegeName")
+    public Optional<ScisCollege> findByCollegeName(String collegeName){
         return collegeJpaRepository.findByName(collegeName);
     }
     /**
@@ -44,14 +47,18 @@ public class CollegeServiceImpl {
     public Page<ScisCollege> findByCollegeNameLike(String collegeName, Pageable pageable){
         return collegeJpaRepository.findByNameLike(collegeName, pageable);
     }
+
     @CachePut(value = "college",unless = "#result == null ",key = "'college'")
-    public void save (ScisCollege college){
-        collegeJpaRepository.save(college);
+    @CacheEvict(value = "college", key = "college.getName()")
+    public ScisCollege save (ScisCollege college){
+       return collegeJpaRepository.save(college);
     }
     @CachePut(value = "college",unless = "#result == null ",key = "'college'")
     public void saveAll (List<ScisCollege> college){
         collegeJpaRepository.saveAll(college);
     }
+
+    @Cacheable(value = "college",unless = "#result == null ",key = "'college'")
     public Page<ScisCollege> findAll(Pageable pageable){
         return collegeJpaRepository.findAll(pageable);
     }

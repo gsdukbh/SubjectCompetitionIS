@@ -7,6 +7,7 @@ import werls.scis.dao.pojo.ScisClass;
 import werls.scis.dao.pojo.ScisUser;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 班级 处理
@@ -24,7 +25,7 @@ public interface ClassJpaRepository extends JpaRepository<ScisClass,Integer> {
      * @param name 班级名称
      * @return 班级
      */
-    ScisClass findByName(String name);
+    Optional<ScisClass> findByName(String name);
 
     /**
      * 分页查询，可在pageable 加入 Sort

@@ -1,5 +1,7 @@
 package werls.scis.webSocket;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.web.session.SessionInformationExpiredEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +30,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @Component
 @ServerEndpoint("/public/websocket/{userName}")
 public class WebSocket {
+    private Logger logger = LoggerFactory.getLogger(getClass());
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -47,31 +50,30 @@ public class WebSocket {
 
     private Session session;
     private static CopyOnWriteArraySet<WebSocket> webSockets =new CopyOnWriteArraySet<>();
-    private static Map<String,Session> sessionPool = new HashMap<String,Session>();
+    private static Map<String,Session> sessionPool = new HashMap<>();
 
     @OnOpen
     public void onOpen(Session session, @PathParam(value="userName")String userName) {
         this.session = session;
         webSockets.add(this);
         sessionPool.put(userName, session);
-        System.out.println(userName+"【websocket消息】有新的连接，总数为:"+webSockets.size());
+        logger.info("用户id：{}连接，【websocket消息】有新的连接，总数为:{}",userName,webSockets.size());
     }
 
     @OnClose
     public void onClose() {
         webSockets.remove(this);
-        System.out.println("【websocket消息】连接断开，总数为:"+webSockets.size());
+        logger.info("【websocket消息】连接断开，总数为:{}",webSockets.size());
     }
 
     @OnMessage
     public void onMessage(String message) {
-        System.out.println("【websocket消息】收到客户端消息:"+message);
+
     }
 
     // 此为广播消息
     public void sendAllMessage(String message) {
         for(WebSocket webSocket : webSockets) {
-            System.out.println("【websocket消息】广播消息:"+message);
             try {
                 webSocket.session.getAsyncRemote().sendText(message);
             } catch (Exception e) {
@@ -82,7 +84,6 @@ public class WebSocket {
 
     // 此为单点消息
     public void sendOneMessage(String userName, String message) {
-        System.out.println("【websocket消息】单点消息:"+message);
         Session session = sessionPool.get(userName);
         if (session != null) {
             try {
@@ -92,5 +93,14 @@ public class WebSocket {
             }
         }
     }
-
+    public void sendOneMessage(String userName, Object message) {
+        Session session = sessionPool.get(userName);
+        if (session != null) {
+            try {
+               session.getAsyncRemote().sendObject(message);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

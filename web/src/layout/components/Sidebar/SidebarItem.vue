@@ -52,7 +52,7 @@ export default {
   },
   data() {
 
-    this.onlyOneChild = null
+    this.onlyOneChild = null;
     return {}
   },
   methods: {
@@ -62,10 +62,10 @@ export default {
           return false
         } else {
          //临时集（如果只有一个显示子级，将使用它）
-          this.onlyOneChild = item
+          this.onlyOneChild = item;
           return true
         }
-      })
+      });
 
       //当只有一个子路由器时，默认情况下会显示该子路由器
       if (showingChildren.length === 1) {
@@ -74,7 +74,7 @@ export default {
 
       // 如果没有子路由器要显示，请显示父级
       if (showingChildren.length === 0) {
-        this.onlyOneChild = { ... parent, path: '', noShowingChildren: true }
+        this.onlyOneChild = { ... parent, path: '', noShowingChildren: true };
         return true
       }
 

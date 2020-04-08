@@ -66,6 +66,24 @@ export function isPassword(str) {
  * @returns {boolean}
  */
 export function isId(str) {
-    const reg =/^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
+    const reg = /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
     return reg.test(str)
+}
+
+export function resetPwd() {
+    return String.fromCharCode(randomNum(65, 90)) + String.fromCharCode(randomNum(97, 122)) + randomNum(0, 10) + "" + randomNum(0, 10) + "" + randomNum(0, 10) + "" + randomNum(0, 10);
+}
+
+function randomNum(minNum, maxNum) {
+    switch (arguments.length) {
+        case 1:
+            return parseInt(Math.random() * minNum + 1, 10);
+
+        case 2:
+            return parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10);
+
+        default:
+            return 0;
+
+    }
 }
