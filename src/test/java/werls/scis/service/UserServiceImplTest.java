@@ -5,9 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import werls.scis.dao.pojo.ScisUser;
 
-import javax.xml.ws.soap.Addressing;
 
-import static org.junit.jupiter.api.Assertions.*;
+
+
 
 /**
  * @author : LiJiWei
@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class UserServiceImplTest {
     @Autowired
-    UserServiceImpl userService;
+    UserService userService;
 
     @Test
     void save() {

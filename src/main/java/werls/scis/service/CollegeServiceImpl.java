@@ -34,7 +34,7 @@ public class CollegeServiceImpl {
      * @param collegeName 学院名称
      * @return 学院
      */
-    @Cacheable(value = "college",unless = "#result == null ",key = "collegeName")
+
     public Optional<ScisCollege> findByCollegeName(String collegeName){
         return collegeJpaRepository.findByName(collegeName);
     }
@@ -49,7 +49,6 @@ public class CollegeServiceImpl {
     }
 
     @CachePut(value = "college",unless = "#result == null ",key = "'college'")
-    @CacheEvict(value = "college", key = "college.getName()")
     public ScisCollege save (ScisCollege college){
        return collegeJpaRepository.save(college);
     }

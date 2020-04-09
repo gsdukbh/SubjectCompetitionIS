@@ -5,16 +5,10 @@ import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import werls.scis.dao.pojo.*;
-import werls.scis.service.ClassServiceImpl;
-import werls.scis.service.CollegeServiceImpl;
-import werls.scis.service.MajorServiceImpl;
-import werls.scis.service.UserServiceImpl;
+import werls.scis.service.*;
 import werls.scis.webSocket.WebSocket;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,14 +26,14 @@ public class ExcelToObject extends AnalysisEventListener<UserUpObject> {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    private static final int BATCH_COUNT = 100;
+    private static final int BATCH_COUNT = 5;
 
     List<UserUpObject> list = new ArrayList<>();
 
     int i = 0;
     Integer role;
 
-    UserServiceImpl userService;
+    UserService userService;
 
     ClassServiceImpl classService;
 
@@ -50,7 +44,7 @@ public class ExcelToObject extends AnalysisEventListener<UserUpObject> {
 
     WebSocket webSocket;
 
-    public ExcelToObject(UserServiceImpl userService) {
+    public ExcelToObject(UserService userService) {
         this.userService = userService;
     }
 
@@ -70,7 +64,7 @@ public class ExcelToObject extends AnalysisEventListener<UserUpObject> {
     public ExcelToObject(Integer adminUser,
                          Integer role,
                          WebSocket webSocket,
-                         UserServiceImpl userService
+                         UserService userService
     ) {
         this.webSocket = webSocket;
         this.adminUser = adminUser;
@@ -81,7 +75,7 @@ public class ExcelToObject extends AnalysisEventListener<UserUpObject> {
     public ExcelToObject(Integer adminUser,
                          Integer role,
                          WebSocket webSocket,
-                         UserServiceImpl userService,
+                         UserService userService,
                          ClassServiceImpl classService,
                          MajorServiceImpl majorService,
                          CollegeServiceImpl collegeService) {
@@ -119,17 +113,16 @@ public class ExcelToObject extends AnalysisEventListener<UserUpObject> {
     @Override
     public void doAfterAllAnalysed(AnalysisContext analysisContext) {
         logger.info("所有数据解析完成！");
-
+        save(list);
     }
 
-    public void save(List<UserUpObject> userUpObject) {
-        try {
+    private void sendWebsocket(UserUpObject userUpObject) {
+        webSocket.sendOneMessage(adminUser.toString(),JSON.toJSONString(userUpObject) );
+    }
 
+    private void save(List<UserUpObject> userUpObject) {
+        try {
             for (UserUpObject object : userUpObject) {
-                Optional<ScisClass> scisClass = classService.findByName(object.getClassName());
-                ScisClass tempClass = new ScisClass();
-                ScisMajor temMajor = new ScisMajor();
-                ScisCollege temCollege = new ScisCollege();
                 ScisUser user = new ScisUser();
                 ScisRole role = new ScisRole();
                 List<ScisRole> roleList = new ArrayList<>();
@@ -140,7 +133,7 @@ public class ExcelToObject extends AnalysisEventListener<UserUpObject> {
                 } else if (this.role == 3) {
                     user.setRole("教师");
                 }
-                user.setPassword(object.getIdentity().substring(object.getIdentity().length() - 7));
+                user.setPassword(object.getIdentity().substring(object.getIdentity().length() - 6));
                 user.setLogin(object.getLogin());
                 user.setName(object.getName());
                 user.setSex(object.getSex());
@@ -150,54 +143,76 @@ public class ExcelToObject extends AnalysisEventListener<UserUpObject> {
                 user.setStatus("false");
                 user.setRoles(roleList);
 
-                if (scisClass.isPresent()) {
-                    tempClass = scisClass.get();
-                    if (tempClass.getMajor() != null) {
-                        temMajor = tempClass.getMajor();
-                        if (temMajor.getCollege() != null) {
-                            temCollege = temMajor.getCollege();
-                            user.setScisClass(tempClass);
-                        } else {
-                            /*没用专业对应的学院，创建一个*/
-                            temCollege.setName(object.getCollege());
-                            temCollege = collegeService.save(temCollege);
-                            /*把学院绑定到到专业上*/
-                            temMajor.setCollege(temCollege);
-                        }
-                        /*有专业*/
-                        tempClass.setMajor(temMajor);
+                /*查找是否有该班级信息*/
+                Optional<ScisClass> scisClass = classService.findByName(object.getClassName());
+                Optional<ScisCollege> scisCollege = collegeService.findByCollegeName(object.getCollege());
+                if (this.role == 2) {
+                    if (scisClass.isPresent()) {
+                        isClass(user, scisClass.get(), object);
                     } else {
-                        /*没用对应专业,创建一个,*/
-                        Optional<ScisCollege> college = collegeService.findByCollegeName(object.getCollege());
-                        if (college.isPresent()) {
-                            temCollege = college.get();
-                        }else {
-                            temCollege.setName(object.getCollege());
-                            temCollege=collegeService.save(temCollege);
-                        }
-                        temMajor.setCollege(temCollege);
-                        temMajor.setName(object.getMajorName());
-                        temMajor.setLevel(object.getLevel());
-                        temMajor = majorService.save(temMajor);
-                        tempClass.setMajor(temMajor);
+                        noClass(user, object);
                     }
-
                 } else {
-                    /*没用班级信息*/
-                    Optional<ScisCollege> college = collegeService.findByCollegeName(object.getCollege());
-                    if (college.isPresent()) {
-                        temCollege = college.get();
-
-                    }
+                    ScisCollege temCollege = new ScisCollege();
+                    temCollege = scisCollege.map(this::isCollege).orElseGet(() -> noCollege(object));
+                    user.setCollege(temCollege);
                 }
+                userService.save(user);
+                this.sendWebsocket(object);
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("ssssss");
+
         }
 
     }
+
+    private void isClass(ScisUser user, ScisClass scisClass, UserUpObject object) {
+        ScisMajor major = scisClass.getMajor();
+        major = major != null ? isMajor(major, object) : noMajor(object);
+        scisClass.setMajor(major);
+        user.setScisClass(scisClass);
+    }
+
+    private void noClass(ScisUser user, UserUpObject object) {
+        ScisClass tem = new ScisClass();
+        ScisMajor scisMajor = new ScisMajor();
+        tem.setName(object.getClassName());
+        Optional<ScisMajor> major = majorService.findByMajorName(object.getMajorName());
+        scisMajor = major.map(value -> isMajor(value, object)).orElseGet(() -> noMajor(object));
+        tem.setMajor(scisMajor);
+        tem = classService.save(tem);
+        user.setScisClass(tem);
+    }
+
+    private ScisMajor isMajor(ScisMajor major, UserUpObject object) {
+        ScisCollege college = major.getCollege();
+        college = college != null ? isCollege(college) : noCollege(object);
+        major.setCollege(college);
+        return major;
+    }
+
+    private ScisMajor noMajor(UserUpObject object) {
+        ScisMajor major = new ScisMajor();
+        ScisCollege scisCollege = new ScisCollege();
+        major.setLevel(object.getLevel());
+        major.setName(object.getMajorName());
+        Optional<ScisCollege> college = collegeService.findByCollegeName(object.getCollege());
+        scisCollege = college.map(this::isCollege).orElseGet(() -> noCollege(object));
+        major.setCollege(scisCollege);
+        major = majorService.save(major);
+        return major;
+    }
+
+    private ScisCollege isCollege(ScisCollege college) {
+        return college;
+    }
+
+    private ScisCollege noCollege(UserUpObject object) {
+        ScisCollege college = new ScisCollege();
+        college.setName(object.getCollege());
+        college = collegeService.save(college);
+        return college;
+    }
 }
-
-

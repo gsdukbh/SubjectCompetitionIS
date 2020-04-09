@@ -17,7 +17,7 @@ const userRouter = {
             meta: {
                 title: '学生信息',
                 icon: 'list',
-                roles: ['ROLE_ADMIN']
+
             },
         },
         {
@@ -27,7 +27,7 @@ const userRouter = {
             meta: {
                 title: '教师信息',
                 icon: 'list',
-                roles: ['ROLE_ADMIN']
+
             },
         },
         {
@@ -37,19 +37,9 @@ const userRouter = {
             meta: {
                 title: '上传用户信息',
                 icon: 'upInfo',
-                roles: ['ROLE_ADMIN']
+
             },
         },
-        {
-            path: 'edit/:id(\\d+)',
-            name: 'edit user info',
-            hidden: true,
-            component: () => import('../views/user/editInfo'),
-            meta: {
-                title: '修改用户信息',
-                roles: ['ROLE_ADMIN']
-            },
-        }
 
     ]
 

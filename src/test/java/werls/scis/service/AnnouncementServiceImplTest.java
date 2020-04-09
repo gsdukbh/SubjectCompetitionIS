@@ -10,7 +10,7 @@ import werls.scis.dao.jpa.AnnouncementJpaRepository;
 import werls.scis.dao.pojo.ScisAnnouncement;
 
 import javax.sound.midi.SoundbankResource;
-import javax.xml.ws.soap.Addressing;
+
 
 import java.util.Calendar;
 import java.util.Date;

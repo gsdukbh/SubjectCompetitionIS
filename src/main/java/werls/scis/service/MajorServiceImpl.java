@@ -13,6 +13,7 @@ import werls.scis.dao.pojo.ScisApplyFrom;
 import werls.scis.dao.pojo.ScisMajor;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author : LiJiWei
@@ -46,13 +47,12 @@ public class MajorServiceImpl {
      * @param majorName 专业名字
      * @return ScisMajor
      */
-    @Cacheable(value = "ScisMajor",key = "majorName")
-    public ScisMajor findByMajorName(String majorName){
+    public Optional<ScisMajor> findByMajorName(String majorName){
         return major.findByName(majorName);
     }
 
     @CachePut(value = "ScisMajor",key = "'findByAll'")
-    @CacheEvict(value = "ScisMajor", key = "major.getName()")
+
     public ScisMajor save(ScisMajor major){
         return   this.major.save(major);
     }

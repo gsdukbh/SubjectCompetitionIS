@@ -300,7 +300,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    postJson('/tea/user/deleteAll', this.multipleSelection)
+                    postJson('/admin/user/deleteAll', this.multipleSelection)
                         .then(response => {
                             if (response.data.status === 200) {
                                 this.$notify.success({

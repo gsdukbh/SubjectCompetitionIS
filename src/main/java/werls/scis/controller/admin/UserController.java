@@ -12,10 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import werls.scis.dao.pojo.ScisRole;
 import werls.scis.dao.pojo.ScisUser;
-import werls.scis.service.ClassServiceImpl;
-import werls.scis.service.CollegeServiceImpl;
-import werls.scis.service.MajorServiceImpl;
-import werls.scis.service.UserServiceImpl;
+import werls.scis.service.*;
 import werls.scis.util.ExcelToObject;
 import werls.scis.util.UserUpObject;
 import werls.scis.webSocket.WebSocket;
@@ -39,7 +36,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequestMapping("/admin/user")
 public class UserController {
     @Autowired
-    UserServiceImpl service;
+    UserService service;
     @Autowired
     ClassServiceImpl classService;
     @Autowired
@@ -48,6 +45,8 @@ public class UserController {
     CollegeServiceImpl collegeService;
     @Autowired
     WebSocket webSocket;
+
+    
 
     @PostMapping("/save")
     public Map<String, Object> saveUser(@RequestBody JSONObject jsonObject) {
@@ -112,16 +111,15 @@ public class UserController {
     @PostMapping("/getUserInfo")
     public Map<String, Object> getUserInfo(@RequestBody ScisUser user) {
         Map<String, Object> res = new ConcurrentHashMap<>(16);
-        ScisUser tem = service.findByLogin(user.getLogin());
-        if (tem != null) {
-            List<ScisRole> list = tem.getRoles();
+        Optional<ScisUser> tem = service.findById(user.getId());
+        if (tem.isPresent()) {
+            List<ScisRole> list = tem.get().getRoles();
             res.put("data", list);
             res.put("status", 200);
-            return res;
         } else {
             res.put("status", 403);
-            return res;
         }
+        return res;
     }
 
     @PostMapping("/find/tea")
@@ -275,9 +273,17 @@ public class UserController {
     @PostMapping("/deleteAll")
     public Map<String, Object> deleteAll(@RequestBody List<ScisUser> users) {
         Map<String, Object> res = new ConcurrentHashMap<>(16);
-        res.put("status", 200);
-        res.put("message", "ok");
-        service.deleteAll(users);
+        try {
+            for (ScisUser user : users) {
+                service.deleteById(user.getId());
+                res.put("status", 200);
+                res.put("message", "ok");
+            }
+        }catch (Exception e){
+            res.put("status", 403);
+            e.printStackTrace();
+        }
+
         return res;
     }
 

@@ -29,9 +29,9 @@ public class MajorController {
         Map <String, Object> res = new ConcurrentHashMap<>(10);
         res.put("status", 200);
         res.put("message", "Success");
-        List<ScisMajor> majors=majorService.findByAll();
-        res.put("data",majors);
-        res.put("totalElements",majors.size());
+
+        res.put("data",majorService.findByAll());
+
         return res;
     }
 }

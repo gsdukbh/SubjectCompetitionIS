@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import werls.scis.dao.pojo.ScisRole;
 import werls.scis.dao.pojo.ScisUser;
+import werls.scis.service.UserService;
 import werls.scis.service.UserServiceImpl;
 
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequestMapping("/i")
 public class MyInfo {
     @Autowired
-    UserServiceImpl userService;
+    UserService userService;
     @PostMapping(value = "/i")
     public Map<String, Object> getUserInfo(@Param("info") String info) {
         ScisUser user = this.userService.findByLoginOrPhoneOrIdentityOrEmail(info);

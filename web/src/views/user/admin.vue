@@ -21,7 +21,7 @@
                 </el-option>
             </el-select>
 
-            <el-select style="margin-left: 10px;" v-model="page.className" filterable placeholder="年级">
+            <el-select style="margin-left: 10px;" v-model="page.className" filterable placeholder="班级">
                 <el-option
                         v-for="item in classList"
                         :key="item.id"
@@ -270,11 +270,69 @@
                 </el-col>
             </el-row>
 
+            <el-dialog
+                    width="40%"
+                    title="修改用户信息"
+                    :visible.sync="innerVisible"
+                    append-to-body>
+                <el-form ref="form" :model="editInfo"  label-width="80px">
+
+                    <el-row>
+                        <el-col :span="12">
+                            <el-form-item label="学号:" >
+                                <el-input v-model="editInfo.login" size="small"  disabled :value="detailInfo.login"> </el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="姓名:" >
+                                <el-input style="width: 100%" v-model="editInfo.name" size="small"  :value="detailInfo.name"> </el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+
+
+                    <el-row>
+                        <el-col :span="12">
+                            <el-form-item label="学院:" >
+
+                                <el-select style="width: 100%"  v-model="editInfo.college"  filterable placeholder="学院">
+
+                                    <el-option
+
+                                            v-for="item in college"
+                                            :key="item.id"
+                                            :label="item.name"
+                                            :value="item.name">
+                                    </el-option>
+
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="专业:" >
+
+                                <el-select style="width: 100%" v-model="editInfo.major" filterable placeholder="专业">
+                                    <el-option
+                                            v-for="item in major"
+                                            :key="item.id"
+                                            :label="item.name"
+                                            :value="item.name">
+                                    </el-option>
+                                </el-select>
+
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+
+
+
+                </el-form>
+
+            </el-dialog>
+
             <span slot="footer" class="dialog-footer">
 
-                <router-link :to="'/user/edit/'+detailInfo.id">
-                    <el-button>修改用户信息</el-button>
-                </router-link>
+                    <el-button @click="innerVisible=true">修改用户信息</el-button>
 
               <el-button style="margin-left: 10px" @click="dialogTableVisible = false">取 消</el-button>
                 <el-button type="primary" @click="dialogTableVisible = false">确 定</el-button>
@@ -313,6 +371,15 @@
         components: {Sticky},
         data() {
             return {
+
+                editInfo:{
+                    login:null,
+                    name:null,
+                    college:null,
+                    major:null,
+
+                },
+                innerVisible: false,
                 dialogTableVisible: false,
                 multipleSelection: [],
                 classList: [],
@@ -392,7 +459,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    postJson('/tea/user/deleteAll', this.multipleSelection)
+                    postJson('/admin/user/deleteAll', this.multipleSelection)
                         .then(response => {
                             if (response.data.status === 200) {
                                 this.$notify.success({

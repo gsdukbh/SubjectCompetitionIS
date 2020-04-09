@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.*;
 import werls.scis.dao.pojo.ScisRole;
 import werls.scis.dao.pojo.ScisUser;
 import werls.scis.service.EmailServiceImpl;
+import werls.scis.service.UserService;
 import werls.scis.service.UserServiceImpl;
 import werls.scis.util.EmailTemplate;
 import werls.scis.util.VerificationCode;
 
-import javax.xml.ws.soap.Addressing;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +39,7 @@ import java.util.concurrent.TimeUnit;
 public class Password {
     private Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
-    UserServiceImpl userService;
+    UserService userService;
 
     @Autowired
     EmailServiceImpl emailService;

@@ -5,6 +5,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import werls.scis.dao.pojo.ScisMajor;
 
+import java.util.Optional;
+
 /**
  * @author : LiJiWei
  * @version V1.0
@@ -26,6 +28,6 @@ public interface MajorRepostitory extends JpaRepository<ScisMajor,Integer> {
      * @param majorName 专业名字
      * @return ScisMajor
      */
-    ScisMajor findByName(String majorName);
+    Optional<ScisMajor> findByName(String majorName);
 
 }

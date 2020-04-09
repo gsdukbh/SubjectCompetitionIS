@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import werls.scis.dao.pojo.ScisUser;
+import werls.scis.service.UserService;
 import werls.scis.service.UserServiceImpl;
 import werls.scis.util.Tools;
 
@@ -28,8 +29,9 @@ import java.util.concurrent.ConcurrentHashMap;
 @RestController
 @RequestMapping("/tea/user")
 public class UserCntroller {
+
     @Autowired
-    UserServiceImpl service;
+    UserService service;
 
     @Autowired
     Tools tools;

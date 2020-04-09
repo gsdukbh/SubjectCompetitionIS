@@ -3,7 +3,9 @@ package werls.scis.dao.jpa;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.lang.NonNullApi;
 import werls.scis.dao.pojo.ScisUser;
 
 import java.util.List;
@@ -21,11 +23,26 @@ import java.util.Optional;
  * @date Date : 2020年02月21日 23:33
  */
 public interface UserRepository extends JpaRepository<ScisUser, Integer> {
+
     /**
-     * @return
+     * findById
+     * @param id Integer
+     * @return Optional<ScisUser>
      */
+    @Override
     @Query(nativeQuery = true, value = "select * from Is_user where user_id=?1")
-    ScisUser finById(Integer id);
+    Optional<ScisUser> findById(Integer id);
+
+    /**
+     * deleteById
+     * @param id Integer id
+     */
+    @Modifying
+    @Query(nativeQuery = true, value = "delete from Is_user where user_id=?1")
+    @Override
+    void deleteById(Integer id);
+
+
 
     /**
      * 登录名/学号/工号
