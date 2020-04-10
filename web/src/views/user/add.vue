@@ -2,13 +2,14 @@
 
     <div>
 
-        <el-tabs tab-position="right" class="top">
+        <el-tabs tab-position="right" class="top" type="card">
 
             <el-tab-pane label="添加用户">
 
                 <div class="top main">
 
-                    <el-form :model="userInfo" label-position="left" :rules="rules" ref="userInfo" label-width="auto">
+                    <el-form :model="userInfo" status-icon label-position="left" :rules="rules" ref="userInfo"
+                             label-width="auto">
 
                         <el-row>
                             <el-col :span="12">
@@ -158,24 +159,18 @@
 
 
             <el-tab-pane label="添加学院信息">
-                <div class="top main">
-                    <el-form ref="college" label-position="top" :modal="upCollege" :rules="rules">
-                        <el-form-item label="学院名称" prop="upCollege">
-                            <el-input v-model="upCollege.name"></el-input>
-                        </el-form-item>
-                        <el-button style="width: 20%">
-                            提交
-                        </el-button>
-                    </el-form>
-                </div>
+
+                <college/>
+
             </el-tab-pane>
 
 
-            <el-tab-pane label="角色管理">
-                角色管理
+            <el-tab-pane label="添加专业信息">
+                <major/>
             </el-tab-pane>
-            <el-tab-pane label="定时任务补偿">
-                定时任务补偿
+
+            <el-tab-pane label="添加班级信息">
+                <class-info/>
             </el-tab-pane>
         </el-tabs>
 
@@ -186,9 +181,13 @@
 
 <script>
     import {getJson, postFrom, postJson} from "../../api/api";
+    import College from "./components/college";
+    import Major from "./components/major";
+    import ClassInfo from "./components/classInfo";
 
     export default {
         name: "add",
+        components: {ClassInfo, Major, College},
         data() {
             let validatePass = (rule, value, callback) => {
                 if (value === '') {
@@ -220,24 +219,8 @@
                         }
                     });
             };
-            let validatePass4 = (rule, value, callback) => {
-                const info = {
-                    name: value
-                };
-                postFrom('/admin/college/repeat', info)
-                    .then(response => {
-                        let result = response.data.data === 'true';
-                        if (result) {
-                            callback(new Error('已经存在该消息'));
-                        } else {
-                            callback()
-                        }
-                    });
-            };
+
             return {
-                upCollege: {
-                    name: '',
-                },
                 buttonLoading: false,
                 item: 1,
                 college: [],
@@ -259,7 +242,6 @@
                 classList: [],
                 major: [],
                 rules: {
-
                     level: [
                         {required: true, message: '请输入', trigger: 'change'}
                     ],
@@ -336,6 +318,9 @@
             });
         },
         methods: {
+            upCollegeInfo() {
+
+            },
             commit(form) {
                 this.buttonLoading = true;
                 this.$refs[form].validate((valid) => {

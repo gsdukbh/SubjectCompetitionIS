@@ -29,8 +29,8 @@ public class Test {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public  Map<String, Object> session(){
         Map<String, Object> res = new ConcurrentHashMap<>();
-        res.put("code",403);
-        res.put("message","session 过期");
+        res.put("status",0);
+        res.put("message","session 过期!,请重新登录");
         return res;
     }
 

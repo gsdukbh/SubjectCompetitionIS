@@ -2,8 +2,8 @@ package werls.scis.controller.admin;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import werls.scis.dao.pojo.ScisCollege;
-import werls.scis.service.CollegeServiceImpl;
+import werls.scis.dao.pojo.ScisMajor;
+import werls.scis.service.MajorServiceImpl;
 
 import java.util.Map;
 import java.util.Optional;
@@ -15,29 +15,32 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Project: scis
  * @Package werls.scis.controller.admin
  * @Description: TODO
- * @date Date : 2020年04月10日 21:30
+ * @date Date : 2020年04月10日 23:38
  */
 @RestController
-@RequestMapping("/admin/college")
-public class CollegeAdminController {
+@RequestMapping("/admin/major")
+public class MajorAdminController {
     @Autowired
-    CollegeServiceImpl service;
+    MajorServiceImpl service;
+
 
     @PostMapping("/save")
-    public Map<String, Object> save( @RequestBody ScisCollege college){
+    public Map<String, Object> save(@RequestBody ScisMajor major) {
         Map<String, Object> res = new ConcurrentHashMap<>(16);
         res.put("status",200);
-        res.put("data",service.save(college));
+        res.put("data",service.save(major));
         return res;
     }
+
+
     @PostMapping("/repeat")
-    public Map<String, Object> findByName(@RequestParam("name") String name){
+    public Map<String, Object> findByNameRepeat(@RequestParam("name") String name) {
         Map<String, Object> res = new ConcurrentHashMap<>(16);
-        Optional<ScisCollege> college=service.findByCollegeName(name);
-        if (college.isPresent()){
-            res.put("data","true");
-        }else {
-            res.put("data","false");
+        Optional<ScisMajor> majorOptional = service.findByMajorName(name);
+        if (majorOptional.isPresent()) {
+            res.put("data", "true");
+        } else {
+            res.put("data", "false");
         }
         return res;
     }
