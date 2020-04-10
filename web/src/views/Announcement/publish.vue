@@ -60,7 +60,7 @@
                             <el-form-item label="来源" prop="from">
                                 <el-select v-model="announcement.from" placeholder="请选择" style="width: 100%">
                                     <div v-for="item in college" v-bind:key="item.id">
-                                        <el-option :label=item.collegeName :value=item.collegeName></el-option>
+                                        <el-option :label=item.name :value=item.name></el-option>
                                     </div>
                                 </el-select>
                             </el-form-item>
@@ -111,7 +111,7 @@
                 }
             };
             return {
-                temType: [],
+                temType: null,
                 announcement: {
                     id: null,
                     title: '',
@@ -145,28 +145,30 @@
                 })
         },
         mounted() {
-            getJson('/public/announcement/findType')
-                .then(response => {
-                    this.temType = response.data.type;
-                });
+            // getJson('/public/announcement/findType')
+            //     .then(response => {
+            //         this.temType = response.data.type;
+            //     });
         },
         methods: {
             /*https://element.eleme.cn/#/zh-CN/component/input*/
             querySearchAsync(queryString, cb) {
                 getJson('/public/announcement/findType')
                     .then(response => {
-                        this.temType = response.data.type;
+                        this.temType = response.data.data;
                     });
                 const temType = this.temType;
-                const res = queryString ? temType.filter(this.createStateFilter(queryString)) : temType;
+                const res = queryString ? temType.filter(this.createTypeFilter(queryString)) : temType;
 
                 clearTimeout(this.timeout);
                 this.timeout = setTimeout(() => {
                     cb(res);
                 }, 3000 * Math.random());
             },
-            createStateFilter(queryString) {
+            createTypeFilter(queryString) {
+
                 return (temType) => {
+
                     return (temType.value.toLowerCase().indexOf(queryString.toLowerCase()) !== -1);
                 };
             },

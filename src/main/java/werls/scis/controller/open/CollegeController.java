@@ -29,7 +29,7 @@ public class CollegeController {
 
     @GetMapping("/findAll")
     public Page<ScisCollege> findAll(){
-            Pageable pageable1= PageRequest.of(0, 20, Sort.by("name"));
+            Pageable pageable1= PageRequest.of(0, 20);
             return  service.findAll(pageable1);
     }
 

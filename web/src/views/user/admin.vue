@@ -84,7 +84,7 @@
                     width="180">
                 <template slot-scope="{row}">
                     <span v-if="special===1">{{row.collegeName}}</span>
-                    <span v-if="special===0">{{row.scisClass.major.college.name}}</span>
+                    <span v-if="special===0 ">{{row.scisClass.major.college.name}}</span>
                 </template>
             </el-table-column>
 
@@ -93,7 +93,7 @@
                     width="180">
                 <template slot-scope="{row}">
                     <span v-if="special===1">{{row.majorName}}</span>
-                    <span v-if="special===0">{{row.scisClass.major.name}}({{row.scisClass.major.level}})</span>
+                    <span v-if="special===0 ">{{row.scisClass.major.name}}({{row.scisClass.major.level}})</span>
                 </template>
             </el-table-column>
 
@@ -102,7 +102,7 @@
                     width="180">
                 <template slot-scope="{row}">
                     <span v-if="special===1">{{row.className}}</span>
-                    <span v-if="special===0">{{row.scisClass.name}}</span>
+                    <span v-if="special===0 && row.scisClass.name!=null ">{{row.scisClass.name}}</span>
                 </template>
             </el-table-column>
 
@@ -130,10 +130,12 @@
             </el-table-column>
             <el-table-column label="操作"
                              align="center"
-                             width="350px"
+                             width="400px"
                              fixed="right"
                              class-name="small-padding fixed-width">
                 <template slot-scope="{row}">
+
+                    <el-button @click="showEdit(row)" size="mini" icon="el-icon-edit">修改</el-button>
 
                     <el-button style="margin-left: 10px;" type="primary" size="mini" icon="el-icon-reading"
                                @click="showDetail(row)">
@@ -181,7 +183,7 @@
                         院 系：
                     </span>
                     <span v-if="special===1 && dialogTableVisible===true">{{detailInfo.collegeName}}</span>
-                    <span v-if="special===0  && dialogTableVisible===true">{{detailInfo.scisClass.major.college.name}}</span>
+                    <span v-if="special===0 && dialogTableVisible===true">{{detailInfo.scisClass.major.college.name}}</span>
 
                 </el-col>
             </el-row>
@@ -270,75 +272,143 @@
                 </el-col>
             </el-row>
 
-            <el-dialog
-                    width="40%"
-                    title="修改用户信息"
-                    :visible.sync="innerVisible"
-                    append-to-body>
-                <el-form ref="form" :model="editInfo"  label-width="80px">
-
-                    <el-row>
-                        <el-col :span="12">
-                            <el-form-item label="学号:" >
-                                <el-input v-model="editInfo.login" size="small"  disabled :value="detailInfo.login"> </el-input>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="12">
-                            <el-form-item label="姓名:" >
-                                <el-input style="width: 100%" v-model="editInfo.name" size="small"  :value="detailInfo.name"> </el-input>
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
-
-
-                    <el-row>
-                        <el-col :span="12">
-                            <el-form-item label="学院:" >
-
-                                <el-select style="width: 100%"  v-model="editInfo.college"  filterable placeholder="学院">
-
-                                    <el-option
-
-                                            v-for="item in college"
-                                            :key="item.id"
-                                            :label="item.name"
-                                            :value="item.name">
-                                    </el-option>
-
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="12">
-                            <el-form-item label="专业:" >
-
-                                <el-select style="width: 100%" v-model="editInfo.major" filterable placeholder="专业">
-                                    <el-option
-                                            v-for="item in major"
-                                            :key="item.id"
-                                            :label="item.name"
-                                            :value="item.name">
-                                    </el-option>
-                                </el-select>
-
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
-
-
-
-                </el-form>
-
-            </el-dialog>
 
             <span slot="footer" class="dialog-footer">
-
-                    <el-button @click="innerVisible=true">修改用户信息</el-button>
 
               <el-button style="margin-left: 10px" @click="dialogTableVisible = false">取 消</el-button>
                 <el-button type="primary" @click="dialogTableVisible = false">确 定</el-button>
              </span>
         </el-dialog>
 
+        <el-dialog
+                width="40%"
+                title="修改用户信息"
+                :visible.sync="innerVisible"
+        >
+
+            <el-form :model="editInfo" :rules="rules" ref="editInfo" label-width="100px">
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="学号:">
+                            <el-input v-model="editInfo.login" size="small" disabled
+                                      :value="detailInfo.login">
+                            </el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="姓名:" prop="name" ::roles=" [
+                        {required: true, message: '请输入姓名', trigger: 'change'}
+                    ]">
+                            <el-input style="width: 100%" v-model="editInfo.name" size="small"
+                            >
+                            </el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="学院:" prop="college">
+                            <el-select style="width: 100%" v-model="editInfo.college" filterable placeholder="学院">
+                                <el-option
+                                        v-for="item in college"
+                                        :key="item.id"
+                                        :label="item.name"
+                                        :value="item.name">
+                                </el-option>
+                            </el-select>
+
+                        </el-form-item>
+                    </el-col>
+
+                    <el-col :span="12">
+                        <el-form-item label="专业:" prop="majorName">
+
+                            <el-select style="width: 100%" v-model="editInfo.majorName" filterable placeholder="专业">
+                                <el-option
+                                        v-for="item in major"
+                                        :key="item.id"
+                                        :label="item.name"
+                                        :value="item.name">
+                                </el-option>
+                            </el-select>
+
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+
+                    <el-col :span="12">
+                        <el-form-item label="班级:" prop="className">
+                            <el-select style="width: 100%" v-model="editInfo.className" filterable placeholder="班级">
+                                <el-option
+                                        v-for="item in classList"
+                                        :key="item.id"
+                                        :label="item.name"
+                                        :value="item.name">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+
+                    <el-col :span="12">
+                        <el-form-item label="培养层次:" prop="level">
+                            <el-select v-model="editInfo.level" style="width: 100%" placeholder="请选择">
+                                <el-option label="本科" value="本科"></el-option>
+                                <el-option label="专科" value="专科"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+                <el-row>
+
+                    <el-col :span="12">
+
+                        <el-form-item label="身份证号码:" prop="identity">
+                            <el-input v-model="editInfo.identity" :value="detailInfo.identity"></el-input>
+                        </el-form-item>
+
+                    </el-col>
+
+                    <el-col :span="12">
+                        <el-form-item label="性别:" prop="sex">
+                            <el-select v-model="editInfo.sex" style="width: 100%" placeholder="请选择">
+                                <el-option label="男" value="男"></el-option>
+                                <el-option label="女" value="女"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+
+                </el-row>
+
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="手机号码:" prop="phone">
+                            <el-input v-model="editInfo.phone"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="邮箱:" prop="email">
+                            <el-input v-model="editInfo.email"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+
+            </el-form>
+
+            <div slot="footer" class="dialog-footer">
+
+                <el-button @click="innerVisible=false">
+                    放弃修改
+                </el-button>
+                <el-button :loading="buttonLoading" type="primary" @click="upDataInfo('editInfo')">
+                    提交修改
+                </el-button>
+            </div>
+        </el-dialog>
         <!--分页-->
         <div class="center">
             <el-pagination
@@ -371,14 +441,67 @@
         components: {Sticky},
         data() {
             return {
-
-                editInfo:{
-                    login:null,
-                    name:null,
-                    college:null,
-                    major:null,
-
+                ruleForm: {
+                    name: '',
+                    region: '',
+                    date1: '',
+                    date2: '',
+                    delivery: false,
+                    type: [],
+                    resource: '',
+                    desc: ''
                 },
+                numberValidateForm: {
+                    age: ''
+                },
+                editInfo: {
+                    id: '',
+                    login: '',
+                    name: '',
+                    sex: '',
+                    college: '',
+                    majorName: '',
+                    level: '',
+                    className: '',
+                    identity: '',
+                    phone: '',
+                    email: ''
+                },
+                rules: {
+                    identity:[
+                        {required: true, message: '请输入', trigger: 'change'}
+                    ],
+                    name: [
+                        {required: true, message: '请输入姓名', trigger: 'change'}
+                    ],
+                    sex: [
+                        {required: true, message: '请选择性别', trigger: 'blur'}
+                    ],
+                    college: [
+                        {required: true, message: '请选择学院', trigger: 'blur'}
+                    ],
+                    majorName: [
+                        {required: true, message: '请选择专业', trigger: 'blur'}
+                    ],
+                    className: [
+                        {required: true, message: '请选择班级', trigger: 'blur'}
+                    ],
+                    level: [
+                        {required: true, message: '请选择', trigger: 'blur'}
+                    ],
+                    email: [
+                        {required: true, message: '请检查你的邮箱', trigger: 'blur'},
+                        {
+                            type: 'email',
+                            // required: true,
+                            // pattern: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
+                            message: '请输入正确的邮箱',
+                            trigger: 'blur'
+                        }
+                    ]
+                },
+
+                buttonLoading: false,
                 innerVisible: false,
                 dialogTableVisible: false,
                 multipleSelection: [],
@@ -427,6 +550,38 @@
             this.getDataPage();
         },
         methods: {
+            upDataInfo(form) {
+                this.buttonLoading = true;
+                this.$refs[form].validate((valid) => {
+                    if (valid) {
+                        console.log(this.editInfo)
+                        console.log("sdasdas")
+                        postJson('/admin/user/upData/2', this.editInfo)
+                            .then(response => {
+                                if (response.data.status === 200) {
+                                    this.$notify.success({
+                                        title: '成功',
+                                        message: '信息修改成功',
+                                    });
+                                    this.buttonLoading = false;
+                                    this.innerVisible = false;
+                                    this.getDataPage();
+                                } else {
+                                    this.$notify.error({
+                                        title: '错误',
+                                        message: '服务器可能找不到信息！'
+                                    })
+                                }
+                            })
+                    } else {
+                        this.buttonLoading = false;
+                        this.$message.warning("请检查你的输入！")
+                    }
+
+                });
+
+
+            },
             resetPwd(value) {
                 this.$confirm('此操作将密码重置为：Ab1234, 是否继续?', '提示', {
                     confirmButtonText: '确定',
@@ -447,10 +602,31 @@
 
                 })
             },
-            showDetail(value) {
-                this.detailInfo = value;
-                this.dialogTableVisible = true;
-
+            async showEdit(value) {
+                await getJson('/admin/user/findById/' + value.id)
+                    .then(response => {
+                        if (response.data.status === 200) {
+                            this.editInfo = response.data.data;
+                            this.innerVisible = true;
+                        } else {
+                            this.$message.warning('没有找到该用户数据！')
+                        }
+                    });
+            },
+            async showDetail(value) {
+                // this.detailInfo = value;
+                await getJson('/admin/user/findById/' + value.id)
+                    .then(response => {
+                        if (response.data.status === 200) {
+                            this.detailInfo = response.data.data;
+                            // this.editInfo.id = this.detailInfo.id;
+                            this.editInfo = response.data.data;
+                            this.dialogTableVisible = true;
+                        } else {
+                            this.$message.warning('没有找到该用户数据！')
+                        }
+                    });
+                // this.dialogTableVisible = true;
             },
             deleteList() {
                 this.loading2 = true;

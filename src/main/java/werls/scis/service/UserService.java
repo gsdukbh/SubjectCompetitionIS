@@ -149,12 +149,19 @@ public class UserService {
     }
 
     /**
-     * 保存，修改用户时调用
+     *  更新时使用 不更改密码
+     * @param user  ScisUser
+     * @return  ScisUser
+     */
+    public ScisUser upData(ScisUser user) {
+        return userRepository.save(user);
+    }
+    /**
+     * 保存用户时调用
      * 需要完整的user
      *
      * @param user 用户
      */
-
 
     public ScisUser save(ScisUser user) {
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));

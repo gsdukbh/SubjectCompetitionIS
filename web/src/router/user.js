@@ -11,13 +11,21 @@ const userRouter = {
     },
     children: [
         {
+            path: 'add',
+            name:'add user',
+            component: () => import('../views/user/add'),
+            meta: {
+                title: '添加用户',
+                icon: 'add',
+            },
+        },
+        {
             path: 'admin',
             name: 'adminUser',
             component: () => import('../views/user/admin'),
             meta: {
                 title: '学生信息',
                 icon: 'list',
-
             },
         },
         {

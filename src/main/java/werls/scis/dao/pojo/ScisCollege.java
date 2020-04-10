@@ -1,5 +1,6 @@
 package werls.scis.dao.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -30,6 +31,7 @@ public class ScisCollege implements Serializable {
     /**
      *开设的专业
      */
+    @JsonIgnore
     @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "college",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JsonIgnoreProperties({"college"})
@@ -37,6 +39,7 @@ public class ScisCollege implements Serializable {
     /**
      * 学院教师
      */
+    @JsonIgnore
     @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "college",fetch = FetchType.EAGER)
     @JsonIgnoreProperties({"college"})

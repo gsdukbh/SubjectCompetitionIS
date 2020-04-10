@@ -31,11 +31,12 @@ public class ScisClass implements Serializable {
     /**
      * 班级专业
      */
+
     @ManyToOne(fetch =FetchType.EAGER,optional = false)
     @JoinColumn(name = "major_id",referencedColumnName = "major_id")
     @JsonIgnoreProperties({"classList"})
     private ScisMajor major;
-
+    @JsonIgnore
     @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "scisClass",fetch = FetchType.EAGER)
     @JsonIgnoreProperties({"scisClass"})

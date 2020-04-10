@@ -90,16 +90,18 @@
             </el-table-column>
             <el-table-column label="操作"
                              align="center"
-                             width="350px"
+                             width="400px"
                              class-name="small-padding fixed-width">
                 <template slot-scope="{row}">
-
+                    <el-button size="mini" icon="el-icon-edit" @click="showDetail(row)">
+                        修改
+                    </el-button>
                     <el-button style="margin-left: 10px;" type="primary" size="mini" icon="el-icon-coordinate"
                                @click="Endow(row)">
                         权限管理
                     </el-button>
 
-                    <el-button style="margin-left: 10px;" type="primary" size="mini" icon="el-icon-refresh"
+                    <el-button style="margin-left: 10px;" type="success" size="mini" icon="el-icon-refresh"
                                @click="resetPwd(row)">
                         重置密码
                     </el-button>
@@ -115,7 +117,98 @@
         </el-table>
 
         <!--对话框-->
-        <el-dialog center title="权限赋予" :visible.sync="dialogTableVisible">
+
+        <el-dialog center title="修改" :visible.sync="innerVisible">
+            <el-form ref="form" :model="editInfo" label-width="100px" :rules="rules">
+
+                <el-row>
+                    <el-col :span="12">
+
+                        <el-form-item label="工号:">
+                            <el-input v-model="editInfo.login" size="small" disabled
+                                      :value="detailInfo.login">
+                            </el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="姓名:" prop="name">
+                            <el-input style="width: 100%" v-model="editInfo.name" size="small"
+                                      :value="detailInfo.name">
+                            </el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+
+                <el-row>
+
+                    <el-col :span="12">
+
+                        <el-form-item label="学院:" prop="college">
+
+                            <el-select style="width: 100%" v-model="editInfo.college" filterable placeholder="学院">
+                                <el-option
+                                        v-for="item in college"
+                                        :key="item.id"
+                                        :label="item.name"
+                                        :value="item.name">
+                                </el-option>
+                            </el-select>
+
+                        </el-form-item>
+
+                    </el-col>
+
+                    <el-col :span="12">
+                        <el-form-item label="身份证号码:" prop="identity">
+                            <el-input v-model="editInfo.identity" :value="detailInfo.identity"></el-input>
+                        </el-form-item>
+                    </el-col>
+
+                </el-row>
+
+                <el-row>
+
+                    <el-col :span="12">
+                        <el-form-item label="性别:" prop="sex">
+
+                            <el-select v-model="editInfo.sex"  style="width: 100%" placeholder="请选择">
+                                <el-option label="男" value="男"></el-option>
+                                <el-option label="女" value="女"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+
+                    <el-col :span="12">
+                        <el-form-item label="手机号码:" prop="phone">
+                            <el-input v-model="editInfo.phone" :value="detailInfo.phone"></el-input>
+                        </el-form-item>
+                    </el-col>
+
+                </el-row>
+
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="邮箱:" prop="email">
+                            <el-input v-model="editInfo.email" :value="detailInfo.email"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+                <div style="text-align: center">
+                    <el-button @click="innerVisible=false">
+                        放弃修改
+                    </el-button>
+                    <el-button :loading="buttonLoading" type="primary" @click="upDataInfo()">
+                        提交修改
+                    </el-button>
+                </div>
+
+            </el-form>
+
+        </el-dialog>
+
+        <el-dialog center title="权限赋予" style="width: 40%;margin-left: 30%" :visible.sync="dialogTableVisible">
 
             <div style="text-align: center">
                 <el-switch
@@ -124,6 +217,7 @@
                         inactive-text="撤销管理员">
                 </el-switch>
             </div>
+
             <span slot="footer" class="dialog-footer">
 
                 <el-button style="margin-left: 10px" @click="dialogTableVisible = false">取 消</el-button>
@@ -166,6 +260,19 @@
         components: {BackToTop, Sticky},
         data() {
             return {
+                buttonLoading: false,
+                editInfo: {
+                    id: null,
+                    login: null,
+                    name: null,
+                    sex: null,
+                    college: null,
+                    level: null,
+                    identity: null,
+                    phone: null,
+                    email: null
+                },
+                innerVisible: false,
                 role: false,
                 roleList: [],
                 detailInfo: [],
@@ -185,6 +292,33 @@
                     name: null,
                     totalElements: 100,
                 },
+                rules: {
+                    identity:[
+                        {required: true, message: '请输入', trigger: 'change'}
+                    ],
+                    name: [
+                        {required: true, message: '请输入姓名', trigger: 'change'}
+                    ],
+                    sex: [
+                        {required: true, message: '请选择性别', trigger: 'blur'}
+                    ],
+                    college: [
+                        {required: true, message: '请选择学院', trigger: 'blur'}
+                    ],
+                    phone:[
+                        {required: true, message: '请输入', trigger: 'blur'}
+                    ],
+                    email: [
+                        {required: true, message: '请检查你的邮箱', trigger: 'blur'},
+                        {
+                            type: 'email',
+                            // required: true,
+                            // pattern: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
+                            message: '请输入正确的邮箱',
+                            trigger: 'blur'
+                        }
+                    ]
+                },
             }
         },
 
@@ -199,6 +333,27 @@
             this.getDataPage();
         },
         methods: {
+
+            upDataInfo() {
+                this.buttonLoading = true;
+                postJson('/admin/user/upData/3', this.editInfo)
+                    .then(response => {
+                        if (response.data.status === 200) {
+                            this.$notify.success({
+                                title: '成功',
+                                message: '信息修改成功',
+                            });
+                            this.buttonLoading = true;
+                            this.innerVisible = false;
+                            this.getDataPage();
+                        } else {
+                            this.$notify.error({
+                                title: '错误',
+                                message: '服务器可能找不到信息！'
+                            })
+                        }
+                    })
+            },
             async Endow(value) {
                 this.dataTemp = value;
                 await postJson('/admin/user/getUserInfo', value)
@@ -248,9 +403,17 @@
                     this.dialogTableVisible = false
                 }
             },
-            showDetail(value) {
-                this.detailInfo = value;
-                this.dialogTableVisible = true;
+            async showDetail(value) {
+                await getJson('/admin/user/findById/' + value.id)
+                    .then(response => {
+                        if (response.data.status === 200) {
+                            this.detailInfo = response.data.data;
+                            this.innerVisible = true;
+                            this.editInfo =response.data.data;
+                        } else {
+                            this.$message.warning('没有找到该用户数据！')
+                        }
+                    })
             },
             getDataPage() {
                 this.loading = true;

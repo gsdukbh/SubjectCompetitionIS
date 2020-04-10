@@ -14,6 +14,14 @@ import lombok.Data;
 @Data
 public class UserUpObject {
 
+    @ExcelProperty(value = "状态")
+    private String status;
+    @ExcelProperty(value = "密码")
+    private String password;
+
+    @ExcelProperty(value = "id")
+    private Integer id;
+
     @ExcelProperty(value = "学号")
     private String login;
 

@@ -11,6 +11,7 @@ import java.util.List;
 
 /**
  * 专业
+ *
  * @author : LiJiWei
  * @version V1.0
  * @Project: scis
@@ -31,13 +32,14 @@ public class ScisMajor implements Serializable {
     @Column(name = "education_level")
     private String level;
 
-    @ManyToOne(cascade = {CascadeType.REFRESH},fetch = FetchType.EAGER,optional = false)
+
+    @ManyToOne(cascade = {CascadeType.REFRESH}, fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "college_id")
     @JsonIgnoreProperties({"majors"})
     private ScisCollege college;
-
+    @JsonIgnore
     @Fetch(FetchMode.SUBSELECT)
-    @OneToMany(mappedBy = "major",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "major", fetch = FetchType.EAGER)
     @JsonIgnoreProperties({"major"})
     private List<ScisClass> classList;
 

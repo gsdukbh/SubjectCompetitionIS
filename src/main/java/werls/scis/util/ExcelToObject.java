@@ -35,11 +35,14 @@ public class ExcelToObject extends AnalysisEventListener<UserUpObject> {
 
     UserService userService;
 
+    Tools tools;
+
     ClassServiceImpl classService;
 
     MajorServiceImpl majorService;
 
     CollegeServiceImpl collegeService;
+
     Integer adminUser;
 
     WebSocket webSocket;
@@ -78,7 +81,8 @@ public class ExcelToObject extends AnalysisEventListener<UserUpObject> {
                          UserService userService,
                          ClassServiceImpl classService,
                          MajorServiceImpl majorService,
-                         CollegeServiceImpl collegeService) {
+                         CollegeServiceImpl collegeService,
+                         Tools tools) {
         this.webSocket = webSocket;
         this.adminUser = adminUser;
         this.userService = userService;
@@ -86,6 +90,7 @@ public class ExcelToObject extends AnalysisEventListener<UserUpObject> {
         this.classService = classService;
         this.majorService = majorService;
         this.collegeService = collegeService;
+        this.tools = tools;
     }
 
     /**
@@ -97,6 +102,7 @@ public class ExcelToObject extends AnalysisEventListener<UserUpObject> {
     @Override
     public void invoke(UserUpObject userUpObject, AnalysisContext analysisContext) {
         logger.info("解析到一条数据:{}", JSON.toJSONString(userUpObject));
+        sendWebsocket(userUpObject);
         list.add(userUpObject);
         if (list.size() >= BATCH_COUNT) {
             save(list);
@@ -117,7 +123,7 @@ public class ExcelToObject extends AnalysisEventListener<UserUpObject> {
     }
 
     private void sendWebsocket(UserUpObject userUpObject) {
-        webSocket.sendOneMessage(adminUser.toString(),JSON.toJSONString(userUpObject) );
+        webSocket.sendOneMessage(adminUser.toString(), JSON.toJSONString(userUpObject));
     }
 
     private void save(List<UserUpObject> userUpObject) {
@@ -148,17 +154,16 @@ public class ExcelToObject extends AnalysisEventListener<UserUpObject> {
                 Optional<ScisCollege> scisCollege = collegeService.findByCollegeName(object.getCollege());
                 if (this.role == 2) {
                     if (scisClass.isPresent()) {
-                        isClass(user, scisClass.get(), object);
+                        tools.isClass(user, scisClass.get(), object);
                     } else {
-                        noClass(user, object);
+                        tools.noClass(user, object);
                     }
                 } else {
                     ScisCollege temCollege = new ScisCollege();
-                    temCollege = scisCollege.map(this::isCollege).orElseGet(() -> noCollege(object));
+                    temCollege = scisCollege.map(tools::isCollege).orElseGet(() -> tools.noCollege(object));
                     user.setCollege(temCollege);
                 }
                 userService.save(user);
-                this.sendWebsocket(object);
             }
 
         } catch (Exception e) {
@@ -168,51 +173,4 @@ public class ExcelToObject extends AnalysisEventListener<UserUpObject> {
 
     }
 
-    private void isClass(ScisUser user, ScisClass scisClass, UserUpObject object) {
-        ScisMajor major = scisClass.getMajor();
-        major = major != null ? isMajor(major, object) : noMajor(object);
-        scisClass.setMajor(major);
-        user.setScisClass(scisClass);
-    }
-
-    private void noClass(ScisUser user, UserUpObject object) {
-        ScisClass tem = new ScisClass();
-        ScisMajor scisMajor = new ScisMajor();
-        tem.setName(object.getClassName());
-        Optional<ScisMajor> major = majorService.findByMajorName(object.getMajorName());
-        scisMajor = major.map(value -> isMajor(value, object)).orElseGet(() -> noMajor(object));
-        tem.setMajor(scisMajor);
-        tem = classService.save(tem);
-        user.setScisClass(tem);
-    }
-
-    private ScisMajor isMajor(ScisMajor major, UserUpObject object) {
-        ScisCollege college = major.getCollege();
-        college = college != null ? isCollege(college) : noCollege(object);
-        major.setCollege(college);
-        return major;
-    }
-
-    private ScisMajor noMajor(UserUpObject object) {
-        ScisMajor major = new ScisMajor();
-        ScisCollege scisCollege = new ScisCollege();
-        major.setLevel(object.getLevel());
-        major.setName(object.getMajorName());
-        Optional<ScisCollege> college = collegeService.findByCollegeName(object.getCollege());
-        scisCollege = college.map(this::isCollege).orElseGet(() -> noCollege(object));
-        major.setCollege(scisCollege);
-        major = majorService.save(major);
-        return major;
-    }
-
-    private ScisCollege isCollege(ScisCollege college) {
-        return college;
-    }
-
-    private ScisCollege noCollege(UserUpObject object) {
-        ScisCollege college = new ScisCollege();
-        college.setName(object.getCollege());
-        college = collegeService.save(college);
-        return college;
-    }
 }

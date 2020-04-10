@@ -10,10 +10,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import werls.scis.dao.pojo.ScisClass;
+import werls.scis.dao.pojo.ScisCollege;
 import werls.scis.dao.pojo.ScisRole;
 import werls.scis.dao.pojo.ScisUser;
 import werls.scis.service.*;
 import werls.scis.util.ExcelToObject;
+import werls.scis.util.Tools;
 import werls.scis.util.UserUpObject;
 import werls.scis.webSocket.WebSocket;
 
@@ -45,16 +48,108 @@ public class UserController {
     CollegeServiceImpl collegeService;
     @Autowired
     WebSocket webSocket;
-
-
+    @Autowired
+    Tools tools;
 
     @PostMapping("/save")
-    public Map<String, Object> saveUser(@RequestBody JSONObject jsonObject) {
+    public Map<String, Object> save(@RequestBody JSONObject jsonObject) {
         Map<String, Object> res = new ConcurrentHashMap<>(16);
-        res.put("status", 200);
-        ScisUser user = JSONObject.toJavaObject(jsonObject, ScisUser.class);
-//        ScisUser tem = service.save(user);
-//        res.put("data",tem);
+        UserUpObject userUpObject = JSONObject.toJavaObject(jsonObject, UserUpObject.class);
+        ScisUser user =new ScisUser();
+        user.setRole(userUpObject.getRole());
+        ScisRole role=new ScisRole();
+        List<ScisRole> roleList=new ArrayList<>();
+
+        user.setPassword(userUpObject.getPassword());
+        user.setStatus(userUpObject.getStatus());
+        user.setLogin(userUpObject.getLogin());
+        user.setName(userUpObject.getName());
+        user.setSex(userUpObject.getSex());
+        user.setEmail(userUpObject.getEmail());
+        user.setIdentity(userUpObject.getIdentity());
+        user.setPhone(userUpObject.getPhone());
+
+        Optional<ScisClass> scisClass = classService.findByName(userUpObject.getClassName());
+        Optional<ScisCollege> scisCollege = collegeService.findByCollegeName(userUpObject.getCollege());
+
+        if ("学生".equals(user.getRole())){
+            role.setId(2);
+            roleList.add(role);
+            user.setRoles(roleList);
+            if (scisClass.isPresent()) {
+                tools.isClass(user, scisClass.get(), userUpObject);
+            } else {
+                tools.noClass(user, userUpObject);
+            }
+        }else if ("教师".equals(user.getRole())){
+            role.setId(3);
+            roleList.add(role);
+            user.setRoles(roleList);
+            ScisCollege  temCollege = scisCollege.map(tools::isCollege).orElseGet(() -> tools.noCollege(userUpObject));
+            user.setCollege(temCollege);
+        }else if ("管理员".equals(user.getRole())){
+            role.setId(1);
+            roleList.add(role);
+            user.setRoles(roleList);
+        }else {
+            res.put("status",403);
+            return res;
+        }
+        res.put("status",200);
+        service.save(user);
+        return res;
+    }
+
+    @GetMapping("/findById/{id}")
+    public Map<String, Object> findById(@PathVariable Integer id) {
+        Map<String, Object> res = new ConcurrentHashMap<>(16);
+        Optional<ScisUser> user = service.findById(id);
+        if (user.isPresent()) {
+            res.put("status", 200);
+            res.put("data", user.get());
+        } else {
+            res.put("status", 404);
+        }
+        return res;
+    }
+
+    @PostMapping("/upData/{roleId}")
+    public Map<String, Object> saveUser(@PathVariable Integer roleId, @RequestBody JSONObject jsonObject) {
+        Map<String, Object> res = new ConcurrentHashMap<>(16);
+        ScisUser user = new ScisUser();
+        UserUpObject userUpObject = JSONObject.toJavaObject(jsonObject, UserUpObject.class);
+        Optional<ScisUser> tem = service.findById(userUpObject.getId());
+        if (tem.isPresent()) {
+            user.setId(userUpObject.getId());
+            user.setRole(tem.get().getRole());
+            user.setPassword(tem.get().getPassword());
+            user.setStatus(tem.get().getStatus());
+            user.setLogin(tem.get().getLogin());
+
+            user.setName(userUpObject.getName());
+            user.setSex(userUpObject.getSex());
+            user.setEmail(userUpObject.getEmail());
+            user.setIdentity(userUpObject.getIdentity());
+            user.setPhone(userUpObject.getPhone());
+            Optional<ScisClass> scisClass = classService.findByName(userUpObject.getClassName());
+            Optional<ScisCollege> scisCollege = collegeService.findByCollegeName(userUpObject.getCollege());
+
+            if (roleId == 2) {
+                if (scisClass.isPresent()) {
+                    tools.isClass(user, scisClass.get(), userUpObject);
+                } else {
+                    tools.noClass(user, userUpObject);
+                }
+            } else {
+                ScisCollege  temCollege = scisCollege.map(tools::isCollege).orElseGet(() -> tools.noCollege(userUpObject));
+                user.setCollege(temCollege);
+            }
+            res.put("status", 200);
+            res.put("data", service.upData(user));
+
+        } else {
+            res.put("status", 403);
+        }
         return res;
     }
 
@@ -279,7 +374,7 @@ public class UserController {
                 res.put("status", 200);
                 res.put("message", "ok");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             res.put("status", 403);
             e.printStackTrace();
         }
@@ -314,7 +409,17 @@ public class UserController {
             inputStream.close();
             EasyExcel.read(fileName,
                     UserUpObject.class,
-                    new ExcelToObject(id, role, webSocket, service, classService, majorService, collegeService)).sheet().doRead();
+                    new ExcelToObject(
+                            id,
+                            role,
+                            webSocket,
+                            service,
+                            classService,
+                            majorService,
+                            collegeService,
+                            tools
+                    ))
+                    .sheet().doRead();
             file1.delete();
             res.put("status", 200);
             return res;

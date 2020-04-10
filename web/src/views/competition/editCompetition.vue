@@ -39,7 +39,7 @@
 
                         <el-select v-model="ruleForm.organizer" placeholder="请选择举办单位">
                             <div v-for="item in college" v-bind:key="item.id">
-                                <el-option :label=item.collegeName :value=item.collegeName></el-option>
+                                <el-option :label=item.name :value=item.name></el-option>
                             </div>
                         </el-select>
 
