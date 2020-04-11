@@ -37,13 +37,6 @@ public class CompetitionAdmin {
     @Autowired
     Tools tools;
 
-    /**
-     * 默认 开始时间降序排序
-     *
-     * @param page 分页
-     * @param size 每页大小
-     * @return Page
-     */
 
     @RequestMapping("/findAll/s")
     public Page<ScisCompetition> findByAllS(@RequestParam(name = "page", defaultValue = "0") Integer page,

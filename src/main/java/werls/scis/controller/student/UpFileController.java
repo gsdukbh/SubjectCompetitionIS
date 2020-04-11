@@ -37,9 +37,55 @@ public class UpFileController {
     @Resource
     FileUploader fileUploader;
 
+    @PostMapping("/works")
+    public Map<String, Object> saveWorks(@RequestParam("file") MultipartFile file) {
+        Map<String, Object> res = new ConcurrentHashMap<>(16);
+        String fileName = UUID.randomUUID().toString().replaceAll("-", "") + "-" + file.getOriginalFilename();
+        try {
+            fileUploader.putObject(
+                    "works",
+                    fileName,
+                    file.getInputStream(),
+                    file.getSize(),
+                    file.getContentType()
+            );
+            res.put("status", 200);
+            res.put("bucketName", "works");
+            res.put("objectName", fileName);
+        } catch (Exception e) {
+            res.put("status", 403);
+            e.printStackTrace();
+        }
+        return res;
+    }
+
+    @PostMapping("/annex")
+    public Map<String, Object> saveAnnex(@RequestParam("file") MultipartFile file) {
+        Map<String, Object> res = new ConcurrentHashMap<>(16);
+        String fileName = UUID.randomUUID().toString().replaceAll("-", "") + "-" + file.getOriginalFilename();
+        try {
+            fileUploader.putObject(
+                    "annex",
+                    fileName,
+                    file.getInputStream(),
+                    file.getSize(),
+                    file.getContentType()
+            );
+            res.put("status", 200);
+            res.put("bucketName", "annex");
+            res.put("objectName", fileName);
+
+        } catch (Exception e) {
+            res.put("status", 403);
+            e.printStackTrace();
+        }
+        return res;
+    }
+
+
     @PostMapping("/img")
     public Map<String, Object> saveImg(@RequestParam("file") MultipartFile file) {
-        Map<String, Object> res = new ConcurrentHashMap<>(5);
+        Map<String, Object> res = new ConcurrentHashMap<>(16);
         String regex = "^image.*";
         if (!file.isEmpty() && Objects.requireNonNull(file.getContentType()).matches(regex)) {
             String fileName = UUID.randomUUID().toString().replaceAll("-", "") + "-" + file.getOriginalFilename();

@@ -18,16 +18,7 @@ const myInfo = {
                 icon: 'myInfo'
             },
         },
-        {
-            path:'my/join',
-            name:'studentCompetition',
-            component: ()=>import('../views/competition/studentCompetition'),
-            meta:{
-                title: '我参加的比赛',
-                icon: 'record',
-                roles: ['ROLE_STU']
-            },
-        },
+
         {
             path: 'my/grades',
             name: 'my grades',

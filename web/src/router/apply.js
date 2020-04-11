@@ -10,18 +10,27 @@ const applyRouter={
     },
     children: [
         {
-            path:'index',
-            name:'apply index',
-            component:()=>import('../views/apply/index'),
-            meta:{
+            path: 'index',
+            name: 'apply index',
+            component: () => import('../views/apply/index'),
+            meta: {
                 title: "报名详情",
-                icon:'info'
+                icon: 'info'
             }
         },
         {
-            path:'team',
-            name:'team info',
-            component:()=>import('../views/apply/team'),
+            path: 'apply/:id(\\d+)',
+            name: 'apply competition',
+            component: () => import('../views/apply/apply'),
+            hidden: true,
+            meta: {
+                title: "报名",
+            }
+        },
+        {
+            path: 'team',
+            name: 'team info',
+            component: () => import('../views/apply/team'),
             meta: {
                 title: "团队",
                 icon: 'team'

@@ -26,6 +26,7 @@ const achievementRouter={
             meta: {
                 title: '上传比赛成绩',
                 icon: 'upInfo',
+                roles: ['ROLE_ADMIN', 'ROLE_TEA'],
             }
         }
 

@@ -16,6 +16,7 @@ import java.util.Date;
 
 /**
  * 文档 https://docs.minio.io/cn/
+ *
  * @author : LiJiWei
  * @version V1.0
  * @Project: scis
@@ -25,14 +26,15 @@ import java.util.Date;
  */
 @Component
 public class FileUploader {
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
     private static final String A_KEY = "1361404576";
     private static final String S_KEY = "lijiawei+520";
     public static final String URL = "https://data.werls.top";
     public static final String ENDPOINT = "http://120.78.148.61:9000";
     private static final String IMGBUCKET = "img";
     MinioClient minioClient = new MinioClient(ENDPOINT, A_KEY, S_KEY);
-    
+
     public FileUploader() throws Exception {
         super();
     }
@@ -47,25 +49,37 @@ public class FileUploader {
     }
 
     public void makeBucket(String bucketName) throws Exception {
-        logger.info(new Date().toString()+"创建了存储对象："+bucketName);
+        logger.info(new Date().toString() + "创建了存储对象：" + bucketName);
         minioClient.makeBucket(bucketName);
+    }
+
+    public void putObject(String bucketName,
+                          String objectName,
+                          InputStream stream,
+                          long size,
+                          String contentType) throws Exception {
+        logger.info(new Date().toString() + " 上传了文件：" + objectName + "  文件大小：" + size + " 文件类型：" + contentType);
+        minioClient.putObject(bucketName, objectName, stream, size, contentType);
     }
 
     public void putObjectImg(String objectName,
                              InputStream stream,
                              long size,
                              String contentType) throws Exception {
-        logger.info(new Date().toString()+" 上传了文件："+objectName+"  文件大小："+size+" 文件类型："+contentType);
+        logger.info(new Date().toString() + " 上传了文件：" + objectName + "  文件大小：" + size + " 文件类型：" + contentType);
         minioClient.putObject(IMGBUCKET, objectName, stream, size, contentType);
     }
-    public InputStream getObject(String bucketName, String objectName) throws Exception{
 
-        return minioClient.getObject(bucketName,objectName);
+    public InputStream getObject(String bucketName, String objectName) throws Exception {
+
+        return minioClient.getObject(bucketName, objectName);
     }
-    public String URl(){
+
+    public String URl() {
         return URL;
     }
-    public void getObject(String bucketName, String objectName,String fileName) throws Exception{
-        minioClient.getObject(bucketName,objectName,fileName);
+
+    public void getObject(String bucketName, String objectName, String fileName) throws Exception {
+        minioClient.getObject(bucketName, objectName, fileName);
     }
 }

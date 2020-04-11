@@ -9,8 +9,8 @@
                 <el-option
                         v-for="item in college"
                         :key="item.id"
-                        :label="item.collegeName"
-                        :value="item.collegeName">
+                        :label="item.name"
+                        :value="item.name">
                 </el-option>
             </el-select>
 

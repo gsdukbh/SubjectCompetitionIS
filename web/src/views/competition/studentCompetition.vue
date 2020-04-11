@@ -10,8 +10,8 @@
                 <el-option
                         v-for="item in college"
                         :key="item.id"
-                        :label="item.collegeName"
-                        :value="item.collegeName">
+                        :label="item.name"
+                        :value="item.name">
                 </el-option>
             </el-select>
 
@@ -115,7 +115,7 @@
             <el-table-column label="操作" align="center" width="350px" class-name="small-padding fixed-width">
                 <template slot-scope="{row}">
 
-                    <router-link :to="'/competition/detail/'+row.id">
+                    <router-link :to="'/competition/detailStu/'+row.id">
                         <el-button style="margin-left: 10px;" type="primary" size="mini" icon="el-icon-reading">
                             详情
                         </el-button>
@@ -148,7 +148,7 @@
 </template>
 
 <script>
-    import {getData, getJson} from "../../api/api";
+    import {getData, getJson, postFrom} from "../../api/api";
     import {parseTime} from '../../utils/index'
 
     export default {
@@ -233,6 +233,19 @@
                 this.page.name = null;
                 this.getDataPage();
             },
+            getDataPage() {
+                this.loading = true;
+                postFrom('/public/competition/findAll/s', this.page)
+                    .then(response => {
+                        this.tableData = response.data.content;
+                        this.page.totalElements = response.data.totalElements;
+                        this.loading = false;
+                    }).catch(error => {
+                    this.loading = false;
+                    this.$message.error("出现了一些问题" + error)
+                })
+            }
+
         }
     }
 </script>

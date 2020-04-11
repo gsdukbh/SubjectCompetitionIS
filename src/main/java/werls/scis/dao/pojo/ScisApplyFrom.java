@@ -18,12 +18,15 @@ import java.sql.Date;
  */
 @Entity
 @Table(name = "Is_apply_from")
+
 public class ScisApplyFrom implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="apply_id")
     private Integer id;
+
+
     @Column(name = "apply_time")
     private Date applyTime;
     @Column(name = "apply_rank")

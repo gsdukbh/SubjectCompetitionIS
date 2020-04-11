@@ -8,8 +8,6 @@
                     ref="upload"
                     :data="data"
                     action="/api/admin/user/up/data"
-                    :on-preview="handlePreview"
-                    :on-remove="handleRemove"
                     :on-success="upSuccess"
                     :before-upload="beforeCheck"
                     accept=".xls,.xlsx"
@@ -214,12 +212,7 @@
                 }
                 this.$refs.upload.submit();
             },
-            handleRemove(file, fileList) {
-                console.log(file, fileList);
-            },
-            handlePreview(file) {
-                console.log(file);
-            }
+
         }
     }
 </script>

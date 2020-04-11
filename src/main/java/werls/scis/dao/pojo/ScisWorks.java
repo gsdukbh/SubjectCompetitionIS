@@ -42,16 +42,7 @@ public class ScisWorks  implements Serializable{
      */
     @Column(name = "works_description")
     private String description;
-    /**
-     * 作品永久连接地址
-     */
-    @Column(name = "works_url")
-    private String url;
-    /**
-     * 作品下载地址
-     */
-    @Column(name = "works_download")
-    private String download;
+
     /**
      * 作者
      */
@@ -77,11 +68,18 @@ public class ScisWorks  implements Serializable{
      */
     @Column(name = "works_remark")
     private String remark;
+
+    @Column(name = "works_bucketName")
+    private String bucketName;
+    @Column(name = "works_objectName")
+    private String objectName;
+
+
     /**
      * 所属的竞赛项目
      */
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "competition_id",referencedColumnName = "competition_id")
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "competition_id", referencedColumnName = "competition_id")
     @JsonIgnoreProperties({"works"})
     private ScisCompetition competition;
 
@@ -106,14 +104,22 @@ public class ScisWorks  implements Serializable{
         this.upTime = upTime;
     }
 
-    public String getUrl() {
-        return url;
+
+    public String getBucketName() {
+        return bucketName;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setBucketName(String bucketName) {
+        this.bucketName = bucketName;
     }
 
+    public String getObjectName() {
+        return objectName;
+    }
+
+    public void setObjectName(String objectName) {
+        this.objectName = objectName;
+    }
 
     public String getName() {
         return name;
@@ -131,13 +137,7 @@ public class ScisWorks  implements Serializable{
         this.description = description;
     }
 
-    public String getDownload() {
-        return download;
-    }
 
-    public void setDownload(String download) {
-        this.download = download;
-    }
 
     public String getAuthor() {
         return author;

@@ -135,11 +135,15 @@
                            @click="submit()">提交
                 </el-button>
 
-                <el-tag style="font-size: medium">详细内容</el-tag>
+                <el-tag size="mini">详细内容</el-tag>
                 <span style="font-size: 14px"> 使用markdown编辑  <el-link target="_blank"
+                                                                      style="margin-left: 10px"
                                                                       href="https://github.com/nhn/tui.editor"
-                                                                      type="info">详情</el-link> </span>
-                <markdown-editor ref="markdownEditor" title="请输入详细内容 " placeholder="wd" height="600px"/>
+                                                                      type="info"> 详 情 </el-link> </span>
+                <el-button size="mini" type="success" style="margin-left: 10px" @click="annex = true"><i
+                        class="el-icon-upload2">上传附件</i></el-button>
+                <markdown-editor ref="markdownEditor" title="请输入详细内容 " style="margin-top: 10px" placeholder="wd"
+                                 height="600px"/>
 
             </div>
 
@@ -160,7 +164,30 @@
             </div>
 
         </el-card>
+        <el-dialog
+                center
+                title="提示"
+                :visible.sync="annex"
+                width="30%"
+        >
+            <el-upload
+                    style="margin-left: 15%"
+                    drag
+                    class="upload-demo"
+                    ref="upload"
+                    action="/api/i/upFile/annex"
+                    :on-success="upSuccess"
+                    :auto-upload="false">
+                <i class="el-icon-upload"></i>
+                <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
 
+            </el-upload>
+
+            <span slot="footer" class="dialog-footer">
+                                 <el-button @click="annex = false">关闭</el-button>
+                              <el-button type="primary" @click="submitUpload">上 传</el-button>
+                        </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -180,6 +207,8 @@
         },
         data() {
             return {
+
+                annex: false,
                 userInfo: [],
                 ruleForm: {
                     name: '',
@@ -196,7 +225,8 @@
                     numLimit: 1,
                     place: '',
                     team: false,
-
+                    bucketName: null,
+                    objectName: null,
                     user: {
                         id: null,
                     }
@@ -254,6 +284,24 @@
                 })
         },
         methods: {
+            submitUpload() {
+
+                this.$refs.upload.submit();
+
+            },
+            upSuccess(response) {
+                if (response.status === 200) {
+                    this.$notify.success({
+                        title: '成功',
+                        message: '上传成功'
+                    })
+                    this.ruleForm.objectName = response.objectName;
+                    this.ruleForm.bucketName = response.bucketName;
+                } else {
+
+                    this.$message.error("上传失败");
+                }
+            },
             querySearchAsync(queryString, cb) {
                 getJson('/tea/user/findByRoleName/teacher').then(response => {
                     this.userInfo = response.data.userInfo;

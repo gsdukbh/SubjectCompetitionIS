@@ -113,14 +113,24 @@ export const asyncRoutes = [
         },
         children: [
             {
-                path:'user',
-                name:'studentCompetition',
-                component:()=>import('../views/competition/studentCompetition'),
-                meta:{
-                    title:'竞赛项目',
-                    roles:['ROLE_STU'],
+                path: 'user',
+                name: 'studentCompetition',
+                component: () => import('../views/competition/studentCompetition'),
+                meta: {
+                    title: '学科竞赛',
+                    roles: ['ROLE_STU'],
                     icon: 'project'
                 }
+            },
+            {
+                path: 'my/join',
+                name: 'studentCompetition',
+                component: () => import('../views/competition/myjoin'),
+                meta: {
+                    title: '我参加的比赛',
+                    icon: 'record',
+                    roles: ['ROLE_STU']
+                },
             },
             {
                 path: 'index',
@@ -149,6 +159,17 @@ export const asyncRoutes = [
                 hidden: true,
                 meta: {
                     title: '竞赛详情',
+                    roles: ['ROLE_ADMIN', 'ROLE_TEA']
+                }
+            },
+            {
+                path: 'detailStu/:id(\\d+)',
+                name: 'detail',
+                component: () => import('../views/competition/detailStu'),
+                hidden: true,
+                meta: {
+                    title: '竞赛详情',
+                    roles: ['ROLE_STU']
                 }
             },
             {

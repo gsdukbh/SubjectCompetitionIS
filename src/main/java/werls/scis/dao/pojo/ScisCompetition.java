@@ -66,8 +66,11 @@ public class ScisCompetition implements Serializable {
     private String type;
     @Column(name = "competition_isTeam")
     private Boolean team;
-    @Column(name = "competition_notification")
-    private Boolean notification;
+
+    @Column(name = "competition_bucketName")
+    private String bucketName;
+    @Column(name = "competition_objectName")
+    private String objectName;
     /**
      * 个人报名
      */
@@ -99,13 +102,28 @@ public class ScisCompetition implements Serializable {
     @JsonIgnore
     private List<ScisProblem> problems;
 
-    @NotFound(action= NotFoundAction.IGNORE)
+    @NotFound(action = NotFoundAction.IGNORE)
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id",referencedColumnName = "user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     @JsonIgnoreProperties({"competitionList"})
     @JsonIgnore
     private ScisUser user;
 
+    public String getBucketName() {
+        return bucketName;
+    }
+
+    public void setBucketName(String bucketName) {
+        this.bucketName = bucketName;
+    }
+
+    public String getObjectName() {
+        return objectName;
+    }
+
+    public void setObjectName(String objectName) {
+        this.objectName = objectName;
+    }
 
     public String getPrincipal() {
         return principal;
@@ -121,14 +139,6 @@ public class ScisCompetition implements Serializable {
 
     public void setUser(ScisUser user) {
         this.user = user;
-    }
-
-    public Boolean getNotification() {
-        return notification;
-    }
-
-    public void setNotification(Boolean notification) {
-        this.notification = notification;
     }
 
     public Date getApplyTime() {

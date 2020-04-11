@@ -70,6 +70,12 @@ public class ScisAnnouncement implements Serializable {
      */
     @Column(name = "announcement_type")
     private String type;
+
+    @Column(name = "announcement_bucketName")
+    private String bucketName;
+    @Column(name = "announcement_objectName")
+    private String objectName;
+
     /**
      * 用户多对一
      */
@@ -79,14 +85,29 @@ public class ScisAnnouncement implements Serializable {
      * 直接返回 Pege 对象不行 可以使用 map
      * https://stackoverflow.com/questions/13539050/entitynotfoundexception-in-hibernate-many-to-one-mapping-however-data-exist
      */
-    @NotFound(action= NotFoundAction.IGNORE)
+    @NotFound(action = NotFoundAction.IGNORE)
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id",referencedColumnName = "user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     @JsonIgnoreProperties({"announcements"})
     @JsonIgnore
     private ScisUser scisUser;
 
 
+    public String getBucketName() {
+        return bucketName;
+    }
+
+    public void setBucketName(String bucketName) {
+        this.bucketName = bucketName;
+    }
+
+    public String getObjectName() {
+        return objectName;
+    }
+
+    public void setObjectName(String objectName) {
+        this.objectName = objectName;
+    }
 
     public String getTitle() {
         return title;
