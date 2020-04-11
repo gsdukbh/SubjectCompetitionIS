@@ -74,8 +74,7 @@ public interface UserRepository extends JpaRepository<ScisUser, Integer> {
      * @param email 邮箱
      * @return 用户
      */
-    ScisUser findByEmail(String email);
-
+    Optional<ScisUser> findByEmail(String email);
 
     /**
      * 查看用户是否激活

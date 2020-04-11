@@ -30,6 +30,8 @@ public interface CompetitionRepository extends JpaRepository<ScisCompetition, In
      */
     Page<ScisCompetition> findByNameContaining(String name, Pageable pageable);
 
+    Page<ScisCompetition> findByNameContainingAndStatusIsNot(String name, String status, Pageable pageable);
+
     /**
      * 竞赛状态
      *
@@ -57,6 +59,10 @@ public interface CompetitionRepository extends JpaRepository<ScisCompetition, In
      */
     Page<ScisCompetition> findByLevel(String level, Pageable pageable);
 
+    Page<ScisCompetition> findByLevelAndStatusIsNot(String level, String status, Pageable pageable);
+
+    Page<ScisCompetition> findAllByStatusIsNot(String status, Pageable pageable);
+
     /**
      * 举办单位
      *
@@ -66,6 +72,9 @@ public interface CompetitionRepository extends JpaRepository<ScisCompetition, In
      */
     Page<ScisCompetition> findByOrganizer(String organizer, Pageable pageable);
 
+    Page<ScisCompetition> findByOrganizerAndStatusNot(String organizer, String status, Pageable pageable);
+
+    Page<ScisCompetition> findByOrganizerAndStatusIsNot(String organizer, String status, Pageable pageable);
 
     /**
      * 通过名称和举办单位查询
@@ -76,6 +85,8 @@ public interface CompetitionRepository extends JpaRepository<ScisCompetition, In
      * @return Page<ScisCompetition>
      */
     Page<ScisCompetition> findByNameContainingAndOrganizer(String name, String organizer, Pageable pageable);
+
+    Page<ScisCompetition> findByNameContainingAndOrganizerAndStatusIsNot(String name, String organizer, String status, Pageable pageable);
 
     /**
      * ..
@@ -99,6 +110,18 @@ public interface CompetitionRepository extends JpaRepository<ScisCompetition, In
      */
     Page<ScisCompetition> findByNameContainingAndLevelAndOrganizer(String name, String level, String organizer, Pageable pageable);
 
+    /**
+     * 已经公开的
+     *
+     * @param name      String
+     * @param level     String
+     * @param organizer String
+     * @param status    String
+     * @param pageable  Pageable
+     * @return Page<ScisCompetition>
+     */
+    Page<ScisCompetition> findByNameContainingAndLevelAndOrganizerAndStatusNot(String name, String level, String organizer, String status,
+                                                                               Pageable pageable);
 
     /**
      * 11
@@ -113,12 +136,25 @@ public interface CompetitionRepository extends JpaRepository<ScisCompetition, In
     /**
      * 11
      *
+     * @param name     String
+     * @param level    String
+     * @param status   String
+     * @param pageable Pageable
+     * @return Page<ScisCompetition>
+     */
+    Page<ScisCompetition> findByNameContainingAndLevelAndStatusIsNot(String name, String level, String status, Pageable pageable);
+
+    /**
+     * 11
+     *
      * @param organizer String
      * @param name      String
      * @param pageable  Pageable
      * @return Page<ScisCompetition>
      */
     Page<ScisCompetition> findByOrganizerAndLevel(String organizer, String name, Pageable pageable);
+
+    Page<ScisCompetition> findByOrganizerAndLevelAndStatusIsNot(String organizer, String name, String status, Pageable pageable);
 
     /**
      * 查找标题
@@ -167,6 +203,7 @@ public interface CompetitionRepository extends JpaRepository<ScisCompetition, In
 
     /**
      * 竞赛开始时间在date之前
+     *
      * @param date Date
      * @return List<ScisCompetition>
      */

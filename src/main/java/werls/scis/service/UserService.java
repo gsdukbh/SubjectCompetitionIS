@@ -206,7 +206,7 @@ public class UserService {
         return userRepository.findByIdentity(identity);
     }
 
-    public ScisUser findByEmail(String email) {
+    public Optional<ScisUser> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 

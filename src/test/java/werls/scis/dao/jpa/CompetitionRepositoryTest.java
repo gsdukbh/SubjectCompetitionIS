@@ -18,13 +18,17 @@ import static org.junit.jupiter.api.Assertions.*;
 class CompetitionRepositoryTest {
     @Autowired
     CompetitionRepository competitionRepository;
-    @Test
-    void upStatus() {
-        competitionRepository.upStatus();
-    }
+//    @Test
+//    void upStatus() {
+//        competitionRepository.upStatus();
+//    }
 
     @Test
     void upStatusA() {
-        competitionRepository.upStatusA();
+    }
+
+    @Test
+    void s() {
+
     }
 }

@@ -45,7 +45,6 @@
                 },
                 rulesA: {
                     name: [
-
                         {validator: validatePass, trigger: 'blur'}
                     ]
                 }

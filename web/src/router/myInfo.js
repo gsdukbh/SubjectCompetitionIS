@@ -23,17 +23,19 @@ const myInfo = {
             name:'studentCompetition',
             component: ()=>import('../views/competition/studentCompetition'),
             meta:{
-                title:'我参加的比赛',
-                icon: 'record'
+                title: '我参加的比赛',
+                icon: 'record',
+                roles: ['ROLE_STU']
             },
         },
         {
-            path:'my/grades',
-            name:'my grades',
-            component:()=>import('../views/Achievement/my'),
-            meta:{
-                title:'我的成绩',
-                icon:'ranks'
+            path: 'my/grades',
+            name: 'my grades',
+            component: () => import('../views/Achievement/my'),
+            meta: {
+                title: '我的成绩',
+                icon: 'ranks',
+                roles: ['ROLE_STU']
             },
         },
         {
@@ -42,7 +44,8 @@ const myInfo = {
             component:()=>import('../views/works/my'),
             meta: {
                 title: "我的作品",
-                icon:'works'
+                icon: 'works',
+                roles: ['ROLE_STU']
             }
         }
 

@@ -55,10 +55,12 @@
                             <el-col :span="12">
 
 
-                                <el-form-item label="手机号码">
-                                    <el-input v-model="userInfo.phone" style="width: 80%"></el-input>
+                                <el-form-item label="性别:" prop="sex">
+                                    <el-select v-model="userInfo.sex" placeholder="请选择" style="width: 80%">
+                                        <el-option label="男" value="男"></el-option>
+                                        <el-option label="女" value="女"></el-option>
+                                    </el-select>
                                 </el-form-item>
-
                             </el-col>
 
                         </el-row>
@@ -110,6 +112,7 @@
                                 </el-form-item>
                             </el-col>
                             <el-col :span="12">
+
                                 <el-form-item label="班级" prop="className" v-if="userInfo.role==='学生'">
                                     <el-select v-model="userInfo.className" filterable placeholder="请选择"
                                                style="width: 80%">
@@ -139,6 +142,13 @@
                                 </el-form-item>
                             </el-col>
 
+                        </el-row>
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="手机号码">
+                                    <el-input v-model="userInfo.phone" style="width: 80%"></el-input>
+                                </el-form-item>
+                            </el-col>
                         </el-row>
 
                         <el-button style="width: 50%" native-type="reset">
@@ -225,6 +235,7 @@
                 item: 1,
                 college: [],
                 userInfo: {
+                    sex: '',
                     name: '',
                     login: '',
                     password: '',
@@ -242,6 +253,9 @@
                 classList: [],
                 major: [],
                 rules: {
+                    sex: [
+                        {required: true, message: '请输入', trigger: 'change'}
+                    ],
                     level: [
                         {required: true, message: '请输入', trigger: 'change'}
                     ],

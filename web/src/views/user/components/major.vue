@@ -10,7 +10,7 @@
                     <el-option label="专科" value="专科"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="所属学院" prop="college.id">
+            <el-form-item label="所属学院" prop="college">
                 <el-select v-model="major.college.id" filterable placeholder="请选择" style="width: 100%"
                 >
                     <el-option
@@ -53,6 +53,7 @@
                     });
             };
             return {
+                college: [],
                 buttonLoading: false,
                 major: {
                     name: '',
@@ -109,7 +110,7 @@
                         });
                     }
                 });
-
+                this.buttonLoading = false;
             },
             resetForm(formName) {
                 this.$refs[formName].resetFields();
