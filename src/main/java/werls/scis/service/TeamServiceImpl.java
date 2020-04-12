@@ -24,85 +24,111 @@ public class TeamServiceImpl {
     @Autowired
     private TeamApplyRepository teamApplyRepository;
 
+    public Page<ScisTeamApply> findAllByCompetitionId(Integer id, Pageable pageable) {
+        return teamApplyRepository.findAllByCompetitionId(id, pageable);
+    }
+
+    public Page<ScisTeamApply> findByNameContainingAndCompetitionId(String name, Integer id, Pageable pageable) {
+        return teamApplyRepository.findByNameContainingAndCompetitionId(name, id, pageable);
+    }
+
     /**
      * 通过名称模糊查询，分页 排序
+     *
      * @param nameLike String 团队名称
      * @return Page<ScisTeamApply>
      */
-    public Page<ScisTeamApply> findByNameLike(String nameLike , Pageable pageable){
+    public Page<ScisTeamApply> findByNameLike(String nameLike, Pageable pageable) {
         return teamApplyRepository.findByNameLike(nameLike, pageable);
     }
 
     /**
      * 参赛状态 分页 排序
-     * @param status String 状态
+     *
+     * @param status   String 状态
      * @param pageable Pageable
      * @return Page<ScisTeamApply>
      */
-    public Page<ScisTeamApply> findByStatus(String status,Pageable pageable){
+    public Page<ScisTeamApply> findByStatus(String status, Pageable pageable) {
         return teamApplyRepository.findByStatus(status, pageable);
     }
+
     /**
      * 按照团队分数查询 确定分数 排序
-     * @param score  Integer 分数
+     *
+     * @param score    Integer 分数
      * @param pageable Pageable
      * @return Page<ScisTeamApply>
      */
-    public  Page<ScisTeamApply> findByScore(Integer score,Pageable pageable){
+    public Page<ScisTeamApply> findByScore(Integer score, Pageable pageable) {
         return teamApplyRepository.findByScore(score, pageable);
     }
+
     /**
      * > score 团队
+     *
      * @param scoreAfter Integer
-     * @param pageable Pageable
+     * @param pageable   Pageable
      * @return Page<ScisTeamApply>
      */
-    public Page<ScisTeamApply> findByScoreAfter(Integer scoreAfter,Pageable pageable){
+    public Page<ScisTeamApply> findByScoreAfter(Integer scoreAfter, Pageable pageable) {
         return teamApplyRepository.findByScoreAfter(scoreAfter, pageable);
     }
+
     /**
-     *  < score 团队分数
+     * < score 团队分数
+     *
      * @param scoreBefore Integer
+     * @param pageable    Pageable
+     * @return Page<ScisTeamApply>
+     */
+    public Page<ScisTeamApply> findByScoreBefore(Integer scoreBefore, Pageable pageable) {
+        return teamApplyRepository.findByScoreBefore(scoreBefore, pageable);
+    }
+
+    /**
+     * start <= score <= end
+     *
+     * @param start    Integer
+     * @param end      Integer
      * @param pageable Pageable
      * @return Page<ScisTeamApply>
      */
-    public Page<ScisTeamApply> findByScoreBefore(Integer scoreBefore,Pageable pageable){
-        return  teamApplyRepository.findByScoreBefore(scoreBefore, pageable);
-    }
-    /**
-     * start <= score <= end
-     * @param start Integer
-     * @param end Integer
-     * @param pageable Pageable
-     * @return  Page<ScisTeamApply>
-     */
-    public Page<ScisTeamApply> findByScoreBetween(Integer start,Integer end, Pageable pageable){
+    public Page<ScisTeamApply> findByScoreBetween(Integer start, Integer end, Pageable pageable) {
         return teamApplyRepository.findByScoreBetween(start, end, pageable);
     }
+
     /**
      * 团队人数查询
+     *
      * @param number Integer
      * @return age<ScisTeamApply>
      */
-    public Page<ScisTeamApply> findByNumber(Integer number, Pageable pageable){
-        return  teamApplyRepository.findByNumber(number, pageable);
+    public Page<ScisTeamApply> findByNumber(Integer number, Pageable pageable) {
+        return teamApplyRepository.findByNumber(number, pageable);
     }
-    public void save (ScisTeamApply teamApply){
-       teamApplyRepository.save(teamApply);
+
+    public ScisTeamApply save(ScisTeamApply teamApply) {
+        return teamApplyRepository.save(teamApply);
     }
-    public void saveAll (List<ScisTeamApply> teamApply){
+
+    public void saveAll(List<ScisTeamApply> teamApply) {
         teamApplyRepository.saveAll(teamApply);
     }
-    public Page<ScisTeamApply> findAll(Pageable pageable){
+
+    public Page<ScisTeamApply> findAll(Pageable pageable) {
         return teamApplyRepository.findAll(pageable);
     }
-    public void delete(ScisTeamApply teamApply){
+
+    public void delete(ScisTeamApply teamApply) {
         this.teamApplyRepository.delete(teamApply);
     }
-    public void deleteAll(List<ScisTeamApply>teamApply){
+
+    public void deleteAll(List<ScisTeamApply> teamApply) {
         this.teamApplyRepository.deleteAll(teamApply);
     }
-    public void deleteById(Integer id){
+
+    public void deleteById(Integer id) {
         this.teamApplyRepository.deleteById(id);
     }
 }

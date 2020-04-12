@@ -2,6 +2,9 @@ package werls.scis.dao.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -18,19 +21,22 @@ import java.sql.Date;
  */
 @Entity
 @Table(name = "Is_apply_from")
-
+@EntityListeners(AuditingEntityListener.class)
 public class ScisApplyFrom implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(name="apply_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "apply_id")
     private Integer id;
 
-
+    @CreatedDate
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH-mm-ss")
     @Column(name = "apply_time")
     private Date applyTime;
+
     @Column(name = "apply_rank")
     private String rank;
+
     @Column(name = "apply_status")
     private String status;
     @Column(name = "apply_score")
@@ -47,20 +53,21 @@ public class ScisApplyFrom implements Serializable {
     /**
      * 参加的竞赛
      */
-    @ManyToOne(fetch = FetchType.EAGER,optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "competition_id")
     @JsonIgnoreProperties({"applyFromList"})
     private ScisCompetition competition;
 
-    @Override
-    public String toString() {
-        return "ScisApplyFrom{" +
-                "id=" + id +
-                ", applyTime=" + applyTime +
-                ", rank='" + rank + '\'' +
-                ", status='" + status + '\'' +
-                ", score=" + score +
-                '}';
+    @OneToOne()
+    @JoinColumn(name = "works_id", referencedColumnName = "works_id")
+    private ScisWorks works;
+
+    public ScisWorks getWorks() {
+        return works;
+    }
+
+    public void setWorks(ScisWorks works) {
+        this.works = works;
     }
 
     public Integer getScore() {

@@ -83,10 +83,34 @@ public class ScisWorks  implements Serializable{
     @JsonIgnoreProperties({"works"})
     private ScisCompetition competition;
 
+
     @Fetch(FetchMode.SUBSELECT)
-    @OneToMany(mappedBy = "worksList",fetch = FetchType.EAGER,cascade = CascadeType.REFRESH)
+    @OneToMany(mappedBy = "worksList", fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     @JsonIgnoreProperties({"worksList"})
     private List<ScisProblem> problemList;
+
+    @OneToOne(mappedBy = "works")
+
+    private ScisApplyFrom applyFrom;
+
+    @OneToOne(mappedBy = "works")
+    private ScisTeamApply teamApply;
+
+    public ScisTeamApply getTeamApply() {
+        return teamApply;
+    }
+
+    public void setTeamApply(ScisTeamApply teamApply) {
+        this.teamApply = teamApply;
+    }
+
+    public ScisApplyFrom getApplyFrom() {
+        return applyFrom;
+    }
+
+    public void setApplyFrom(ScisApplyFrom applyFrom) {
+        this.applyFrom = applyFrom;
+    }
 
     public List<ScisProblem> getProblemList() {
         return problemList;

@@ -29,12 +29,13 @@ public interface UserRepository extends JpaRepository<ScisUser, Integer> {
      * @param id Integer
      * @return Optional<ScisUser>
      */
-    @Override
-    @Query(nativeQuery = true, value = "select * from Is_user where user_id=?1")
-    Optional<ScisUser> findById(Integer id);
+//    @Override
+//    @Query(nativeQuery = true, value = "select * from Is_user where user_id=?1")
+//    Optional<ScisUser> findById(Integer id);
 
     /**
      * deleteById
+     *
      * @param id Integer id
      */
     @Modifying

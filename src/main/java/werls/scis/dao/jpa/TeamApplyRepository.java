@@ -15,57 +15,83 @@ import werls.scis.dao.pojo.ScisTeamApply;
  * @Description: TODO
  * @date Date : 2020年02月26日 23:29
  */
-public interface TeamApplyRepository extends JpaRepository<ScisTeamApply,Integer> {
+public interface TeamApplyRepository extends JpaRepository<ScisTeamApply, Integer> {
     /**
      * 通过名称模糊查询，分页 排序
+     *
      * @param nameLike String 团队名称
      * @return Page<ScisTeamApply>
      */
-    Page<ScisTeamApply> findByNameLike(String nameLike ,Pageable pageable);
+    Page<ScisTeamApply> findByNameLike(String nameLike, Pageable pageable);
+
+    /**
+     * 相关竞赛团队
+     *
+     * @param id       Integer CompetitionId
+     * @param pageable Pageable
+     * @return Page<ScisTeamApply>
+     */
+    Page<ScisTeamApply> findAllByCompetitionId(Integer id, Pageable pageable);
+
+    /**
+     * 相关竞赛团队名称
+     *
+     * @param name     名称
+     * @param id       CompetitionId
+     * @param pageable Pageable
+     * @return Page<ScisTeamApply>
+     */
+    Page<ScisTeamApply> findByNameContainingAndCompetitionId(String name, Integer id, Pageable pageable);
 
     /**
      * 参赛状态 分页 排序
-     * @param status String 状态
+     *
+     * @param status   String 状态
      * @param pageable Pageable
      * @return Page<ScisTeamApply>
      */
-    Page<ScisTeamApply> findByStatus(String status,Pageable pageable);
+    Page<ScisTeamApply> findByStatus(String status, Pageable pageable);
 
     /**
      * 按照团队分数查询 确定分数 排序
-     * @param score  Integer 分数
+     *
+     * @param score    Integer 分数
      * @param pageable Pageable
      * @return Page<ScisTeamApply>
      */
-    Page<ScisTeamApply> findByScore(Integer score,Pageable pageable);
+    Page<ScisTeamApply> findByScore(Integer score, Pageable pageable);
 
     /**
      * > score 团队
+     *
      * @param scoreAfter Integer
-     * @param pageable Pageable
+     * @param pageable   Pageable
      * @return Page<ScisTeamApply>
      */
-    Page<ScisTeamApply> findByScoreAfter(Integer scoreAfter,Pageable pageable);
+    Page<ScisTeamApply> findByScoreAfter(Integer scoreAfter, Pageable pageable);
 
     /**
-     *  < score 团队分数
+     * < score 团队分数
+     *
      * @param scoreBefore Integer
-     * @param pageable Pageable
+     * @param pageable    Pageable
      * @return Page<ScisTeamApply>
      */
-    Page<ScisTeamApply> findByScoreBefore(Integer scoreBefore,Pageable pageable);
+    Page<ScisTeamApply> findByScoreBefore(Integer scoreBefore, Pageable pageable);
 
     /**
      * start <= score <= end
-     * @param start Integer
-     * @param end Integer
+     *
+     * @param start    Integer
+     * @param end      Integer
      * @param pageable Pageable
-     * @return  Page<ScisTeamApply>
+     * @return Page<ScisTeamApply>
      */
-    Page<ScisTeamApply> findByScoreBetween(Integer start,Integer end, Pageable pageable);
+    Page<ScisTeamApply> findByScoreBetween(Integer start, Integer end, Pageable pageable);
 
     /**
      * 团队人数查询
+     *
      * @param number Integer
      * @return age<ScisTeamApply>
      */

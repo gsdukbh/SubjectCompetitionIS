@@ -13,14 +13,22 @@
             </el-card>
 
             <el-card class="apply top" v-if="isApplyTime " shadow="always">
-                距离报名开始还有：{{applyTime}}
+                <span>
+                 距离报名开始还有：{{applyTime}}
+                 </span>
             </el-card>
-            <el-card class="apply top" v-if="isEnd " shadow="always">
+            <el-card class="apply top" v-if="!isApplyTime " shadow="always">
+                <span>
+                 距离比赛开始还有：{{startTime}}
+                 </span>
+            </el-card>
+            <el-card class="apply top" v-if="isEnd" shadow="always">
                 比赛已经结束！！！
             </el-card>
             <div v-if="!competition.team" class="top">
 
-                <el-button type="primary" round v-if="!isEnd" @click="applyIn()">
+                <el-button type="primary" :loading="buttonLoading" round
+                           v-if=" !isEnd && isApplyTime && !competition.team " @click="applyIn()">
                     》》 立刻报名 《《
                 </el-button>
 
@@ -33,9 +41,24 @@
                 <!--查找团队-->
 
                 <el-card class="top a" shadow="hover">
-                    查找团队
+                    <!--搜索框-->
+                    <div style="margin-top: 10px;">
+
+                        <el-input placeholder="名称" style="width: 200px;margin-left: 10px;" v-model="page.name"/>
+
+                        <el-button class="filter-item" type="primary" style="margin-left: 10px;" icon="el-icon-search"
+                                   @click="handleFilter">
+                            搜索
+                        </el-button>
+
+                        <el-button class="filter-item" type="primary" style="margin-left: 10px;"
+                                   icon="el-icon-refresh-left"
+                                   @click="handleRefresh">
+                            重置
+                        </el-button>
+                    </div>
                 </el-card>
-                
+
                 <el-card class="top a" shadow="hover">
                     创建
                 </el-card>
@@ -77,13 +100,23 @@
                         id: ''
                     }
                 },
+                applyTeam: {},
                 rules: {},
                 tempRoute: {},
                 applyTime: null,
                 isApplyTime: true,
                 isEnd: false,
-                isTeam:false,
+                isTeam: false,
+                startTime: null,
+                isApplyTimeStop: false,
+                buttonLoading: false,
+                page: {
+                    size: 20,
+                    page: 0,
+                    name: null,
 
+                    totalElements: 100,
+                },
             }
         },
         created() {
@@ -100,14 +133,43 @@
                 this.applyTime = getDuration(new Date(this.competition.applyTime) - new Date());
                 this.isApplyTime = (new Date() < new Date(this.competition.applyTime));
                 this.isEnd = (new Date() > new Date(this.competition.endTime))
+                this.isApplyTimeStop = (new Date() > new Date(this.competition.startTime));
+                this.startTime = getDuration(new Date(this.competition.startTime) - new Date());
             }, 1000);
         },
         beforeDestroy() {
             clearInterval(this.timeout)
         },
         methods: {
-            applyIn() {
 
+            handleSizeChange(val) {
+                this.page.size = val;
+                this.loading = true;
+                this.getDataPage();
+            },
+            /*当前页数*/
+            handleCurrentChange(val) {
+                /*页面切换*/
+                this.page.page = val;
+                this.getDataPage()
+            },
+
+            handleFilter() {
+                // this.loading = true;
+                this.getDataPage();
+            },
+            handleRefresh() {
+                this.page.level = null;
+                this.page.organizer = null;
+                this.page.name = null;
+                this.getDataPage();
+            },
+            getDataPage() {
+
+            },
+            applyIn() {
+                this.buttonLoading = true;
+                this.apply.scisUser.id = this.userId;
             },
             fetchData(id) {
                 getJson('/public/competition/findById/' + id)

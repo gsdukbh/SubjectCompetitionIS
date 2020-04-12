@@ -100,8 +100,10 @@ public class MyInfo {
             for (ScisRole scisRole : user.getRoles()) {
                 role.add(scisRole.getAuthority());
             }
-
-//            res.put("avatar",user)  留坑 头像图片地址
+            if (user.getAvatar() != null) {
+                res.put("avatar", user.getAvatar());
+            }
+            //留坑 头像图片地址
             res.put("role", role);
             user.setPassword("");
             user.setRoles(null);

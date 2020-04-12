@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -21,11 +24,12 @@ import java.util.List;
  */
 @Entity
 @Table(name = "Is_team_apply")
+@EntityListeners(AuditingEntityListener.class)
 public class ScisTeamApply implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(name="team_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "team_id")
     private Integer id;
     @Column(name = "team_name")
     private String name;
@@ -33,8 +37,12 @@ public class ScisTeamApply implements Serializable {
     private Integer number;
     @Column(name = "team_score")
     private Integer score;
+
+    @CreatedDate
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH-mm-ss")
     @Column(name = "team_apply_time")
     private Date applyTime;
+
     @Column(name = "team_rank")
     private String rank;
     @Column(name = "team_status")
@@ -43,7 +51,7 @@ public class ScisTeamApply implements Serializable {
     /**
      * 团队成员
      */
-    @Fetch(FetchMode.SUBSELECT)
+//    @Fetch(FetchMode.SUBSELECT)
     @JsonIgnoreProperties({"teamApplies"})
     @ManyToMany(cascade = {CascadeType.REFRESH},fetch = FetchType.EAGER)
     @JoinTable(name = "Is_team_user",
@@ -54,23 +62,21 @@ public class ScisTeamApply implements Serializable {
     /**
      * 竞赛（团队）
      */
-     @ManyToOne(fetch = FetchType.EAGER,optional = false)
-     @JoinColumn(name = "competition_id")
-     @JsonIgnoreProperties({"teamApplyList"})
-     private ScisCompetition competition;
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "competition_id")
+    @JsonIgnoreProperties({"teamApplyList"})
+    private ScisCompetition competition;
 
-    @Override
-    public String toString() {
-        return "ScisTeamApply{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", number='" + number + '\'' +
-                ", score='" + score + '\'' +
-                ", applyTime=" + applyTime +
-                ", rank='" + rank + '\'' +
-                ", status='" + status + '\'' +
-                ", userList=" + scisUserList +
-                '}';
+    @OneToOne()
+    @JoinColumn(name = "works_id", referencedColumnName = "works_id")
+    private ScisWorks works;
+
+    public ScisWorks getWorks() {
+        return works;
+    }
+
+    public void setWorks(ScisWorks works) {
+        this.works = works;
     }
 
     public String getStatus() {
@@ -80,7 +86,8 @@ public class ScisTeamApply implements Serializable {
     public void setStatus(String status) {
         this.status = status;
     }
-    @JsonIgnore
+
+    //    @JsonIgnore
     public List<ScisUser> getScisUserList() {
         return scisUserList;
     }

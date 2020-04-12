@@ -16,18 +16,30 @@ import java.util.List;
  * @Description: TODO
  * @date Date : 2020年02月26日 15:57
  */
-public interface ApplyFromRepository extends JpaRepository<ScisApplyFrom,Integer> {
+public interface ApplyFromRepository extends JpaRepository<ScisApplyFrom, Integer> {
 
     /**
      * 报名状态 分页 排序
-     * @param status 状态
+     *
+     * @param status   状态
      * @param pageable Pageable
      * @return List<ScisApplyFrom>
      */
     Page<ScisApplyFrom> findByStatus(String status, Pageable pageable);
+
+    /**
+     * 竞赛报名
+     *
+     * @param id       Integer
+     * @param pageable Pageable
+     * @return Page<ScisApplyFrom>
+     */
+    Page<ScisApplyFrom> findAllByCompetitionId(Integer id, Pageable pageable);
+
     /**
      * 分数查询 分页 排序
-     * @param score 分数 Integer
+     *
+     * @param score    分数 Integer
      * @param pageable Pageable
      * @return Page<ScisApplyFrom>
      */
