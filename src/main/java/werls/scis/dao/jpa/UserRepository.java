@@ -433,10 +433,10 @@ public interface UserRepository extends JpaRepository<ScisUser, Integer> {
                     "     \n" +
                     "from Is_user a,\n" +
                     "     Is_college b \n" +
-                    "where\n" +
-                    "  and a.college_id = b.college_id\n" +
+                    "where " +
+                    "   a.college_id = b.college_id\n" +
                     "  and (a.user_name = ?1 or a.user_login=?1 or a.user_identity=?1)\n" +
-                    "  and d.college_name = ?2\n" +
+                    "  and b.college_name = ?2\n" +
                     "group by a.user_id \n" +
                     "limit ?4,?5")
     List<Map<String, Object>> findByInfoAndCollege(

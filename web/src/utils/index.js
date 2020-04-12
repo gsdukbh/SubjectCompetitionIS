@@ -87,3 +87,16 @@ function randomNum(minNum, maxNum) {
 
     }
 }
+
+export function getDuration(my_time) {
+    const days = my_time / 1000 / 60 / 60 / 24;
+    const daysRound = Math.floor(days);
+    const hours = my_time / 1000 / 60 / 60 - (24 * daysRound);
+    const hoursRound = Math.floor(hours);
+    const minutes = my_time / 1000 / 60 - (24 * 60 * daysRound) - (60 * hoursRound);
+    const minutesRound = Math.floor(minutes);
+    const seconds = my_time / 1000 - (24 * 60 * 60 * daysRound) - (60 * 60 * hoursRound) - (60 * minutesRound);
+    const tem = daysRound.toString().replace("-", '') + '天' + hoursRound + '小时' + minutesRound + '分钟' + seconds.toString().substring(0, 2) + '秒';
+    // const time = daysRound.toString().replace("-",'') + ':' + hoursRound + ':' + minutesRound + ':' + seconds.toString().substring(0,1);
+    return tem;
+}

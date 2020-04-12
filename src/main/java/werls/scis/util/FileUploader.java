@@ -5,6 +5,7 @@ import io.minio.errors.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -53,6 +54,7 @@ public class FileUploader {
         minioClient.makeBucket(bucketName);
     }
 
+    @Async
     public void putObject(String bucketName,
                           String objectName,
                           InputStream stream,
@@ -62,6 +64,7 @@ public class FileUploader {
         minioClient.putObject(bucketName, objectName, stream, size, contentType);
     }
 
+    @Async
     public void putObjectImg(String objectName,
                              InputStream stream,
                              long size,

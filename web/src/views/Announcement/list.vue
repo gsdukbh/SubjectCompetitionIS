@@ -259,7 +259,7 @@
                             message: error
                         })
                     });
-                this.getDataPage();
+                await this.getDataPage();
             },
             handleDelete(id) {
                 this.$confirm('此操作将永久删除, 是否继续?', '提示', {

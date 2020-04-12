@@ -10,7 +10,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import werls.scis.dao.pojo.ScisCompetition;
 import werls.scis.dao.pojo.ScisProblem;
+import werls.scis.dao.pojo.ScisReply;
 import werls.scis.service.ProblemServiceImpl;
+import werls.scis.service.ReplyServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,18 +33,34 @@ public class ProblemController {
 
     @Autowired
     ProblemServiceImpl service;
+    @Autowired
+    ReplyServiceImpl replyService;
 
+    @GetMapping("/competition/reply/find/{id}")
+    public Map<String, Object> find(@PathVariable Integer id) {
+        Map<String, Object> res = new ConcurrentHashMap<>(10);
+        ScisReply reply = replyService.findByProblemId(id);
+        if (reply != null) {
+            res.put("status", 200);
+            res.put("data", reply);
+            return res;
+        } else {
+            res.put("status", 403);
+            res.put("message", "查询数据为空");
+            return res;
+        }
+    }
 
     @PostMapping("/find/competition/{id}")
 //    @Cacheable(value = "problemCompetition",key = "'key:'+#id",unless = "#result ==null")
     public Map<String, Object> findByCompetitionId(@PathVariable Integer id,
                                                    @RequestParam(name = "size", defaultValue = "20") Integer size,
                                                    @RequestParam(name = "page", defaultValue = "0") Integer page,
-                                                   @RequestParam(name = "isReply",defaultValue = "1")Integer isReply){
-        Map<String, Object> res=new ConcurrentHashMap<>(10);
-        Pageable pageable= PageRequest.of(page, size, Sort.by("problem_time"));
-        Page<ScisProblem> problems = service.findByReply(isReply,id,pageable);
-        if (problems!=null){
+                                                   @RequestParam(name = "isReply", defaultValue = "1") Integer isReply) {
+        Map<String, Object> res = new ConcurrentHashMap<>(10);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("problem_time"));
+        Page<ScisProblem> problems = service.findByReply(isReply, id, pageable);
+        if (problems != null) {
             List<ScisProblem> tem=new ArrayList<>();
             for (ScisProblem t:problems.getContent() ){
                 ScisCompetition competition=new ScisCompetition();

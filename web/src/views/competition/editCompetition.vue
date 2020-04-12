@@ -125,8 +125,8 @@
 
                     <el-form-item>
 
-                        <el-button type="primary" @click="next('ruleForm')">下一步</el-button>
-                        <el-button @click="resetForm('ruleForm')">重置</el-button>
+                        <el-button round type="primary" @click="next('ruleForm')">下一步</el-button>
+                        <el-button round @click="resetForm('ruleForm')">重置</el-button>
                     </el-form-item>
                 </el-form>
             </div>
@@ -184,8 +184,8 @@
             </el-upload>
 
             <span slot="footer" class="dialog-footer">
-                                 <el-button @click="annex = false">关闭</el-button>
-                              <el-button type="primary" @click="submitUpload">上 传</el-button>
+                                 <el-button @click="annex = false" round>关闭</el-button>
+                              <el-button round type="primary" @click="submitUpload">上 传</el-button>
                         </span>
         </el-dialog>
     </div>

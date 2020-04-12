@@ -40,19 +40,6 @@
                 border
                 v-loading="loading"
                 style="width: 100%;margin-top: 10px;">
-
-            <el-table-column
-                    type="selection"
-                    width="55">
-            </el-table-column>
-
-            <el-table-column
-                    prop="id"
-                    label="ID"
-                    sortable
-                    width="60">
-            </el-table-column>
-
             <el-table-column
                     prop="startTime"
                     label="开始日期"

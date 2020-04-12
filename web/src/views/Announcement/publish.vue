@@ -26,7 +26,6 @@
                             </el-form-item>
                         </el-form>
                     </el-col>
-
                 </el-row>
                 <markdown-editor ref="markdownEditor" title="请输入详细内容 " height="auto"/>
             </el-card>
@@ -152,9 +151,15 @@
                     collegeName: '',
                 },
                 rules: {
-                    title: [{validator: validateRequire}],
-                    from: [{validator: validateRequire}],
-                    type: [{validator: validateRequire}]
+                    title: [
+                        {validator: validateRequire}
+                    ],
+                    from: [
+                        {required: true, message: '请输入', trigger: 'blur'}
+                    ],
+                    type: [
+                        {required: true, message: '请输入', trigger: 'blur'}
+                    ]
                 }
             }
         },

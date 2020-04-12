@@ -2,6 +2,7 @@ package werls.scis.webSocket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.web.session.SessionInformationExpiredEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +31,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @Component
 @ServerEndpoint("/public/websocket/{userName}")
 public class WebSocket {
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -93,6 +94,7 @@ public class WebSocket {
             }
         }
     }
+
     public void sendOneMessage(String userName, Object message) {
         Session session = sessionPool.get(userName);
         if (session != null) {

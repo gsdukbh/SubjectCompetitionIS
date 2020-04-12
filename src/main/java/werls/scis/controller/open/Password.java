@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.repository.query.Param;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import werls.scis.dao.pojo.ScisRole;
@@ -37,7 +38,7 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/public")
 public class Password {
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     UserService userService;
 
@@ -74,6 +75,7 @@ public class Password {
             /*redis 保存验证码 5分钟*/
             redisTemplate.opsForValue().set(email, send, 5, TimeUnit.MINUTES);
             /*发送验证码*/
+
             emailService.sendHtmlEmail(user.getEmail(),
                     "密码重置",
                     emailTemplate.sandCode(send,

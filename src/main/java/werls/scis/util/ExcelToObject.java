@@ -5,6 +5,7 @@ import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import werls.scis.dao.pojo.*;
 import werls.scis.service.*;
 import werls.scis.webSocket.WebSocket;
@@ -24,9 +25,9 @@ import java.util.Optional;
 
 public class ExcelToObject extends AnalysisEventListener<UserUpObject> {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private static final int BATCH_COUNT = 5;
+    private static final int BATCH_COUNT = 1000;
 
     List<UserUpObject> list = new ArrayList<>();
 
@@ -99,6 +100,7 @@ public class ExcelToObject extends AnalysisEventListener<UserUpObject> {
      * @param userUpObject    UserUpObject
      * @param analysisContext AnalysisContext
      */
+
     @Override
     public void invoke(UserUpObject userUpObject, AnalysisContext analysisContext) {
         logger.info("解析到一条数据:{}", JSON.toJSONString(userUpObject));
@@ -118,15 +120,16 @@ public class ExcelToObject extends AnalysisEventListener<UserUpObject> {
      */
     @Override
     public void doAfterAllAnalysed(AnalysisContext analysisContext) {
-        logger.info("所有数据解析完成！");
         save(list);
+        logger.info("所有数据解析完成！");
     }
 
     private void sendWebsocket(UserUpObject userUpObject) {
         webSocket.sendOneMessage(adminUser.toString(), JSON.toJSONString(userUpObject));
     }
 
-    private void save(List<UserUpObject> userUpObject) {
+    @Async
+    public void save(List<UserUpObject> userUpObject) {
         try {
             for (UserUpObject object : userUpObject) {
                 ScisUser user = new ScisUser();

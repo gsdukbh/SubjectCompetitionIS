@@ -1,5 +1,6 @@
 package werls.scis.dao.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -43,9 +44,10 @@ public class ScisReply implements Serializable {
     @Column(name = "problem_id")
     private Integer problemId;
 
-    @OneToOne(mappedBy="reply",cascade=CascadeType.ALL)
+    @JsonIgnore
+    @OneToOne(mappedBy = "reply", cascade = CascadeType.ALL)
     @JoinColumn(name="problem_id",referencedColumnName = "problem_id")
-    @JsonIgnoreProperties({"reply"})
+//    @JsonIgnoreProperties({"reply"})
     private ScisProblem problem;
 
     public Integer getProblemId() {

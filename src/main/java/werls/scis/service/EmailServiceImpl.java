@@ -8,6 +8,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMailMessage;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
@@ -24,8 +25,9 @@ import javax.mail.internet.MimeMessage;
  * @date Date : 2020年03月05日 21:42
  */
 @Service
+@Async
 public class EmailServiceImpl {
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private JavaMailSender mailSender;
@@ -33,7 +35,7 @@ public class EmailServiceImpl {
     @Value("${spring.mail.username}")
     private String from;
 
-    public int sendTextEmail(String to, String subject, String content) {
+    public void sendTextEmail(String to, String subject, String content) {
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setFrom(from);
         simpleMailMessage.setTo(to);
@@ -43,20 +45,20 @@ public class EmailServiceImpl {
         simpleMailMessage.setText(content);
         try {
             mailSender.send(simpleMailMessage);
-            logger.info("邮箱发送给:"+to);
-            return 1;
+            logger.info("邮箱发送给:" + to);
+
         }catch (Exception e){
             logger.error("发送邮箱给:"+to+"失败");
             e.printStackTrace();
-            return 0;
+
         }
     }
 
-    public int sendHtmlEmail(String to, String subject, String content){
+    public void sendHtmlEmail(String to, String subject, String content) {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper messageHelper;
         try {
-            messageHelper = new MimeMessageHelper(message,true);
+            messageHelper = new MimeMessageHelper(message, true);
 
             messageHelper.setFrom(from);
 
@@ -67,16 +69,17 @@ public class EmailServiceImpl {
             messageHelper.setText(content,true);
 
             mailSender.send(message);
-            logger.info("邮箱发送给:"+to);
-            return 1;
+            logger.info("邮箱发送给:" + to);
+
         } catch (MessagingException e) {
-            logger.error("发送邮箱给:"+to+"失败");
+            logger.error("发送邮箱给:" + to + "失败");
             e.printStackTrace();
-            return 0;
+
         }
     }
-    public int sandFileEmail(){
 
-        return 0;
+    public void sandFileEmail() {
+
+
     }
 }

@@ -5,8 +5,8 @@
             <sticky :z-index="10" class-name="sub-navbar">
 
                 <router-link :to="'/apply/apply/'+showData.id">
-                    <el-button style="margin-left: 10px;" type="success">
-                        立刻参赛
+                    <el-button style="margin-left: 10px;" type="success" round>
+                        立刻报名
                     </el-button>
                 </router-link>
 
@@ -17,7 +17,7 @@
                 <span>{{showData.name}}</span>
             </div>
 
-
+            <el-divider><i class="el-icon-trophy-1"></i></el-divider>
             <div class="el-row">
 
                 <div class="leftColumn">
@@ -129,12 +129,133 @@
                         <el-divider></el-divider>
                         <el-link type="primary" @click="dl()"><i class="el-icon-download"></i>下载</el-link>
                     </el-card>
+                    <el-card class="box-card top right" shadow="hover">
+                        <h3>相关问题
+                            <svg-icon icon-class="problem"></svg-icon>
+                        </h3>
+                        <el-divider/>
+                        <li v-for="item in problem" :key="item.id">
+                            <el-link type="primary" @click="showProblem(item)">{{item.title}}</el-link>
+                        </li>
+
+                        <el-link type="primary" @click="showMore" style="float: right; padding: 3px 0"
+                                 v-if="problemTotalElements > 0"> 更多
+                        </el-link>
+
+                        <el-button round type="success" size="mini" style="margin-top: 10px"
+                                   @click="dialogVisible1=true">
+                            有疑问
+                        </el-button>
+                    </el-card>
 
                 </div>
 
             </div>
+            <el-dialog title="疑问" :visible.sync="problemMore">
+
+                <el-table
+                        v-loading="loading1"
+                        :data="problem"
+                        stripe
+                        style="width: 100%">
+                    <el-table-column
+                            prop="time"
+                            label="时间"
+                            width="180">
+                        <template slot-scope="{row}">
+                            <span>{{formatTimeA(row.time)}}</span>
+                        </template>
+                    </el-table-column>
+
+                    <el-table-column
+                            prop="title"
+                            label="标题"
+                            width="180">
+                        <template slot-scope="{row}">
+                            <el-link @click="showProblem(row)"><span>{{row.title}}</span></el-link>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                            prop="content"
+                            label="内容">
+                        <template slot-scope="{row}">
+                            <el-link @click="showProblem(row)">
+                                <span>{{row.content.substr(0,20)}}...</span>
+                            </el-link>
+                        </template>
+                    </el-table-column>
+
+                </el-table>
+                <div class="center">
+                    <el-pagination
+                            @size-change="handleSizeChange"
+                            @current-change="handleCurrentChange"
+                            @next-click="handleCurrentChange"
+                            @prev-click="handleCurrentChange"
+                            :current-page="page.page"
+                            :page-sizes="[20,50,100]"
+                            :page-size="page.size"
+                            background
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :total="page.totalElements">
+                    </el-pagination>
+                </div>
+            </el-dialog>
+
+            <el-dialog title="疑问" :visible.sync="dialogVisible">
+                <el-form>
+                    <el-card shadow="hover">
+                        <div slot="header" class="clearfix">
+                            <span>问题描述  ---- <el-link type="info"> {{formatTimeA(problemTem.time)}} </el-link></span>
+                        </div>
+                        <span>标题：{{problemTem.title}}</span>
+                        <br>
+                        <span> 内容:</span>
+                        <span>{{problemTem.content}}</span>
+
+                    </el-card>
+                    <el-card shadow="hover" style="margin-top: 10px">
+                        <div slot="header" class="clearfix">
+                            <span>回复  ---- <el-link type="info"> {{formatTimeA(reply.replyTime)}} </el-link></span>
+                        </div>
+                        <span>回复人：{{reply.author}}</span>
+                        <br>
+                        <span> 内容:</span>
+                        <span>{{reply.content}}</span>
+                    </el-card>
+                </el-form>
 
 
+                <span slot="footer" class="dialog-footer">
+                    <el-button round @click="dialogVisible = false">取 消</el-button>
+                    <el-button round type="primary" @click="dialogVisible = false">确 定</el-button>
+                    </span>
+            </el-dialog>
+
+            <el-dialog title="提交疑问" :visible.sync="dialogVisible1">
+                <el-form :model="problemUp" :rules="rules" ref="problemUp">
+                    <el-form-item prop="title" style="margin-bottom: 40px;">
+                        <MdInput v-model="problemUp.title" required>标题</MdInput>
+                    </el-form-item>
+                    <el-form-item label="类型:" prop="type">
+                        <el-input type="text" v-model="problemUp.type" style="width: 100%"></el-input>
+                    </el-form-item>
+                    <el-form-item label="内容:" prop="content">
+                        <el-input type="textarea" v-model="problemUp.content" maxlength="500">
+                        </el-input>
+                    </el-form-item>
+                </el-form>
+                <el-button native-type="reset" round>
+                    重置
+                </el-button>
+                <el-button @click="dialogVisible1=false" round>
+                    关闭
+                </el-button>
+                <el-button round type="primary" style="margin-top: 10px" @click="upProblem()" :loading="buttonLoading">
+                    提交
+                </el-button>
+
+            </el-dialog>
             <el-tooltip placement="top" content="返回顶部">
                 <back-to-top :visibility-height="300" :back-position="50" transition-name="fade"/>
             </el-tooltip>
@@ -151,12 +272,14 @@
     import BackToTop from "../../components/BackTop/index";
     import {mapGetters} from "vuex";
     import Page404 from '../error-page/404';
-    import {getJson} from "../../api/api";
+    import {getJson, postFrom, postJson} from "../../api/api";
     import {parseTime} from '../../utils/index'
+    import {getDuration} from "../../utils";
+    import MdInput from "../../components/MDinput/index";
 
     export default {
         name: "detailStu",
-        components: {BackToTop, MarkdownViewer, Sticky, Page404},
+        components: {MdInput, BackToTop, MarkdownViewer, Sticky, Page404},
         computed: {
             ...mapGetters([
                 'name',
@@ -164,7 +287,16 @@
             ])
         },
         data() {
+            const validateRequire = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('标题' + '为必传项'))
+                } else {
+                    callback()
+                }
+            };
             return {
+                date: new Date(),
+                dialogVisible: false,
                 download: {
                     bucketName: '',
                     objectName: '',
@@ -173,25 +305,129 @@
                 Page404: null,
                 showData: {},
                 loading: false,
-                loading1: true,
+                loading1: false,
+
                 PageLoading: null,
                 tempRoute: {},
+                problem: {},
+                problemTem: {
+                    title: '',
+                    content: '',
+                    time: '',
+                },
+                problemMore: null,
+                reply: {
+                    replyTime: '',
+                    content: '',
+                    author: ''
+                },
+                problemTotalElements: 0,
+                problemUp: {
+                    type: '',
+                    title: '',
+                    content: '',
+                    myReply: 1,
+                    competition: {
+                        id: '',
+                    },
+                    scisUser: {
+                        id: '',
+                    },
+                },
+                page: {
+                    size: 5,
+                    page: 0,
+                    isReply: 0,
+                    totalElements: 20,
+                },
+                dialogVisible1: false,
+                buttonLoading: false,
+                rules: {
+                    type: [{required: true, message: '请输入', trigger: 'blur'}],
+                    title: [
+                        {validator: validateRequire}
+                    ],
+                    content: [
+                        {required: true, message: '请输入内容', trigger: 'blur'}
+                    ]
+                }
             }
         },
         created() {
             this.id = this.$route.params.id;
-            this.fetchData(this.id);
-            this.tempRoute = Object.assign({}, this.$route);
             this.PageLoading = this.$loading({
                 lock: true,
                 text: '拼命加载中...',
                 spinner: 'el-icon-loading',
                 background: 'rgba(0, 0, 0, 0.7)'
             });
+            this.fetchData(this.id);
+            this.tempRoute = Object.assign({}, this.$route);
+
         },
         methods: {
+            upProblem() {
+                this.buttonLoading = true;
+                this.problemUp.scisUser.id = this.userId;
+                this.problemUp.competition.id = this.id;
+                postJson('/public/problem/save', this.problemUp)
+                    .then(response => {
+                        if (response.data.status === 200) {
+                            this.$notify.success({
+                                title: '成功',
+                                message: response.message
+                            })
+                            this.buttonLoading = false;
+                        } else if (response.data.status === 0) {
+                            this.$notify.warning({
+                                title: '警告',
+                                message: response.message
+                            })
+                        }
+                    })
+                this.buttonLoading = false;
+            },
+            handleSizeChange(val) {
+                this.page.size = val;
+                this.loading1 = true;
+                this.getDataPage();
+            },
+            /*当前页数*/
+            handleCurrentChange(val) {
+                /*页面切换*/
+                this.page.page = val;
+                this.getDataPage()
+            },
+            getDataPage() {
+                this.loading1 = true;
+                postFrom('/public/problem/find/competition/' + this.id, this.page)
+                    .then(response => {
+                        this.problem = response.data.data;
+                        this.page.totalElements = response.data.totalElements;
+                        this.loading1 = false;
+                    })
+                this.loading1 = false;
+            },
+            async showMore() {
+                this.problemMore = true;
+                this.getDataPage();
+            },
+            showProblem(problem) {
+                this.problemTem = problem;
+                getJson("/public/problem/competition/reply/find/" + problem.id)
+                    .then(response => {
+                        this.reply = response.data.data;
+                    })
+                this.dialogVisible = true;
+            },
+            toApply() {
+                console.log(this.date, new Date(this.showData.applyTime))
+                console.log(this.date - new Date(this.showData.applyTime))
+                console.log(new Date((this.date - new Date(this.showData.applyTime))))
+                console.log(getDuration(new Date(this.showData.applyTime) - new Date()))
+                this.dialogVisible = true;
+            },
             dl() {
-                console.log("sss");
                 this.download.bucketName = this.showData.bucketName;
                 this.download.objectName = this.showData.objectName;
                 let a = document.createElement('a');
@@ -201,6 +437,15 @@
                 a.click();
             },
             async fetchData(id) {
+                const info = {
+                    isReply: 0,
+                    size: 5,
+                }
+                postFrom('/public/problem/find/competition/' + id, info)
+                    .then(response => {
+                        this.problem = response.data.data;
+                        this.problemTotalElements = response.data.totalElements;
+                    })
                 await getJson('/public/competition/findById/' + id)
                     .then(response => {
                         if (response.data.status === 200) {
@@ -262,6 +507,9 @@
         margin-top: 20px;
         font-size: 50px;
         text-align: center;
+        text-shadow: 2px 2px #1482f0;
+        letter-spacing: 12px;
+        color: orange;
     }
 
     .rightColumn {
