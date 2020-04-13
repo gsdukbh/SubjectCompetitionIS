@@ -42,7 +42,7 @@ public class ScisProblem implements Serializable {
     private String type;
     @Column(name = "problem_title")
     private String title;
-    @Column(name = "problem_content")
+    @Column(name = "problem_content", columnDefinition = "text")
     private String content;
 
     @Column(name = "problem_isReply")

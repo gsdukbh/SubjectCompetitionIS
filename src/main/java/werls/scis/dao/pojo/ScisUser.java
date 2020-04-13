@@ -9,10 +9,7 @@ import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 用户
@@ -60,7 +57,7 @@ public class ScisUser implements Serializable {
      * 用户角色
      */
 
-    @Fetch(FetchMode.SUBSELECT)
+//    @Fetch(FetchMode.SUBSELECT)
     @ManyToMany(cascade = {CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinTable(name = "Is_role_user",
             joinColumns = {@JoinColumn(name = "user_id")},
@@ -74,7 +71,6 @@ public class ScisUser implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "class_id", referencedColumnName = "class_id")
     @JsonIgnoreProperties({"scisUserList"})
-
     private ScisClass scisClass;
 
     /**
@@ -83,7 +79,6 @@ public class ScisUser implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "college_id", referencedColumnName = "college_id")
     @JsonIgnoreProperties({"scisUserList"})
-
     private ScisCollege college;
 
     /**
@@ -92,7 +87,7 @@ public class ScisUser implements Serializable {
     @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "scisUser", fetch = FetchType.EAGER)
     @JsonIgnoreProperties({"scisUser"})
-    @JsonIgnore
+//    @JsonIgnore
     private List<ScisApplyFrom> applyFroms;
     /**
      * 公告教师，管理员专属，一对多
@@ -100,23 +95,20 @@ public class ScisUser implements Serializable {
     @Fetch(FetchMode.SUBSELECT)
     @JsonIgnoreProperties({"scisUser"})
     @OneToMany(mappedBy = "scisUser", fetch = FetchType.EAGER)
-    @JsonIgnore
+//    @JsonIgnore
     private List<ScisAnnouncement> announcements;
 
     @Fetch(FetchMode.SUBSELECT)
-    @JsonIgnore
+//    @JsonIgnore
     @JsonIgnoreProperties({"scisUserList"})
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "Is_team_user",
-            joinColumns = {@JoinColumn(name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "team_id")})
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "scisUserList")
     private List<ScisTeamApply> teamApplies;
 
     /*提出的问题*/
     @Fetch(FetchMode.SUBSELECT)
     @JsonIgnoreProperties({"scisUser"})
     @OneToMany(mappedBy = "scisUser", fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
-    @JsonIgnore
+//    @JsonIgnore
     private List<ScisProblem> problems;
 
 

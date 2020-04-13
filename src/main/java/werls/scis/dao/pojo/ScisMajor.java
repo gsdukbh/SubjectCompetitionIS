@@ -37,6 +37,7 @@ public class ScisMajor implements Serializable {
     @JoinColumn(name = "college_id")
     @JsonIgnoreProperties({"majors"})
     private ScisCollege college;
+
     @JsonIgnore
     @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "major", fetch = FetchType.EAGER)

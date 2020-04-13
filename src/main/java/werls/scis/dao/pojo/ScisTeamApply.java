@@ -10,8 +10,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 团体报名
@@ -33,30 +34,31 @@ public class ScisTeamApply implements Serializable {
     private Integer id;
     @Column(name = "team_name")
     private String name;
+
     @Column(name = "team_number")
     private Integer number;
-    @Column(name = "team_score")
-    private Integer score;
+
 
     @CreatedDate
     @DateTimeFormat(pattern = "yyyy-MM-dd HH-mm-ss")
     @Column(name = "team_apply_time")
     private Date applyTime;
 
-    @Column(name = "team_rank")
-    private String rank;
+
     @Column(name = "team_status")
     private String status;
+    @Column(name = "team_captain")
+    private String captain;
 
     /**
      * 团队成员
      */
-//    @Fetch(FetchMode.SUBSELECT)
+    @Fetch(FetchMode.SUBSELECT)
     @JsonIgnoreProperties({"teamApplies"})
-    @ManyToMany(cascade = {CascadeType.REFRESH},fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "Is_team_user",
-            joinColumns = {@JoinColumn(name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "team_id")})
+            joinColumns = {@JoinColumn(name = "team_id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id")})
     private List<ScisUser> scisUserList;
 
     /**
@@ -70,6 +72,38 @@ public class ScisTeamApply implements Serializable {
     @OneToOne()
     @JoinColumn(name = "works_id", referencedColumnName = "works_id")
     private ScisWorks works;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ScisTeamApply)) {
+            return false;
+        }
+        ScisTeamApply that = (ScisTeamApply) o;
+        return id.equals(that.id) &&
+                name.equals(that.name) &&
+                Objects.equals(number, that.number) &&
+                Objects.equals(applyTime, that.applyTime) &&
+                Objects.equals(status, that.status) &&
+                Objects.equals(captain, that.captain) &&
+                competition.equals(that.competition) &&
+                Objects.equals(works, that.works);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, number, applyTime, status, captain, competition, works);
+    }
+
+    public String getCaptain() {
+        return captain;
+    }
+
+    public void setCaptain(String captain) {
+        this.captain = captain;
+    }
 
     public ScisWorks getWorks() {
         return works;
@@ -120,13 +154,6 @@ public class ScisTeamApply implements Serializable {
         this.number = number;
     }
 
-    public Integer getScore() {
-        return score;
-    }
-
-    public void setScore(Integer score) {
-        this.score = score;
-    }
 
     public Date getApplyTime() {
         return applyTime;
@@ -136,13 +163,7 @@ public class ScisTeamApply implements Serializable {
         this.applyTime = applyTime;
     }
 
-    public String getRank() {
-        return rank;
-    }
 
-    public void setRank(String rank) {
-        this.rank = rank;
-    }
 
     public ScisCompetition getCompetition() {
         return competition;

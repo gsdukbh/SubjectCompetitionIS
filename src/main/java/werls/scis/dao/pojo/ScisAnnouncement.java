@@ -40,7 +40,7 @@ public class ScisAnnouncement implements Serializable {
     /**
      * 内容
      */
-    @Column(name = "announcement_content")
+    @Column(name = "announcement_content", columnDefinition = "text")
     private String content;
     /**
      * 公告时间
@@ -75,7 +75,8 @@ public class ScisAnnouncement implements Serializable {
     private String bucketName;
     @Column(name = "announcement_objectName")
     private String objectName;
-
+    @Column(name = "announcement_img")
+    private String img;
     /**
      * 用户多对一
      */
@@ -89,9 +90,15 @@ public class ScisAnnouncement implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     @JsonIgnoreProperties({"announcements"})
-    @JsonIgnore
     private ScisUser scisUser;
 
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
 
     public String getBucketName() {
         return bucketName;

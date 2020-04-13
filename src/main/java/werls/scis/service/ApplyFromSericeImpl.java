@@ -43,55 +43,6 @@ public class ApplyFromSericeImpl {
         return apply.findByStatus(status, pageable);
     }
 
-    /**
-     * 分数查询 分页 排序
-     *
-     * @param score    分数 Integer
-     * @param pageable Pageable
-     * @return Page<ScisApplyFrom>
-     */
-
-    public Page<ScisApplyFrom> findByScore(Integer score, Pageable pageable) {
-        return apply.findByScore(score, pageable);
-    }
-
-    /**
-     * > score 的集合 分页 排序
-     *
-     * @param scoreAfter 分数 Intege
-     * @param pageable   Pageable
-     * @return List<ScisApplyFrom>
-     */
-
-    public Page<ScisApplyFrom> findByScoreAfter(Integer scoreAfter, Pageable pageable) {
-        return apply.findByScoreAfter(scoreAfter, pageable);
-    }
-
-    /**
-     * < score 的集合 分页 排序
-     *
-     * @param scoreBefore 分数 Integer
-     * @param pageable    Pageable
-     * @return Page<ScisApplyFrom>
-     */
-
-    public Page<ScisApplyFrom> findByScoreBefore(Integer scoreBefore, Pageable pageable) {
-        return apply.findByScoreBefore(scoreBefore, pageable);
-    }
-
-    /**
-     * 区间查询 score 的集合 分页 排序
-     *
-     * @param start    开始值 Integer
-     * @param end      结束值 Integer
-     * @param pageable Pageable
-     * @return Page<ScisApplyFrom>
-     */
-
-    public Page<ScisApplyFrom> findByScoreBetween(Integer start, Integer end, Pageable pageable) {
-        return apply.findByScoreBetween(start, end, pageable);
-    }
-
 
     public ScisApplyFrom save(ScisApplyFrom applyFrom) {
         return apply.save(applyFrom);

@@ -30,6 +30,13 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
+    public Map<String, Object> tex(Integer teamId, Integer userId) {
+        return userRepository.tex(teamId, userId);
+    }
+
+    public List<ScisUser> findByTeamId(Integer id) {
+        return userRepository.findByTeamId(id);
+    }
 
     public List<Map<String, Object>> findByNameOrLoginOrIdentityAndRole(String name, Integer page, Integer size) {
         return userRepository.findByNameOrLoginOrIdentityAndRole(name, page, size);
@@ -151,13 +158,15 @@ public class UserService {
     }
 
     /**
-     *  更新时使用 不更改密码
-     * @param user  ScisUser
-     * @return  ScisUser
+     * 更新时使用 不更改密码
+     *
+     * @param user ScisUser
+     * @return ScisUser
      */
     public ScisUser upData(ScisUser user) {
         return userRepository.save(user);
     }
+
     /**
      * 保存用户时调用
      * 需要完整的user

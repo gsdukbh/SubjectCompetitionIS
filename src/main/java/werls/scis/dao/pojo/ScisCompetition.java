@@ -15,6 +15,7 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 竞赛
@@ -48,7 +49,7 @@ public class ScisCompetition implements Serializable {
     @Column(name = "competition_apply_time")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH-mm-ss")
     private Date applyTime;
-    @Column(name = "competition_content")
+    @Column(name = "competition_content", columnDefinition = "text")
     private String content;
     @Column(name = "competition_author")
     private String author;
@@ -71,6 +72,9 @@ public class ScisCompetition implements Serializable {
     private String bucketName;
     @Column(name = "competition_objectName")
     private String objectName;
+
+    @Column(name = "competition_img")
+    private String img;
     /**
      * 个人报名
      */
@@ -108,6 +112,14 @@ public class ScisCompetition implements Serializable {
     @JsonIgnoreProperties({"competitionList"})
     @JsonIgnore
     private ScisUser user;
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
 
     public String getBucketName() {
         return bucketName;
@@ -287,5 +299,44 @@ public class ScisCompetition implements Serializable {
 
     public void setApplyFromList(List<ScisApplyFrom> applyFromList) {
         this.applyFromList = applyFromList;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ScisCompetition)) {
+            return false;
+        }
+        ScisCompetition that = (ScisCompetition) o;
+        return id.equals(that.id) &&
+                name.equals(that.name) &&
+                Objects.equals(status, that.status) &&
+                Objects.equals(startTime, that.startTime) &&
+                Objects.equals(endTime, that.endTime) &&
+                Objects.equals(applyTime, that.applyTime) &&
+                Objects.equals(content, that.content) &&
+                Objects.equals(author, that.author) &&
+                Objects.equals(principal, that.principal) &&
+                Objects.equals(level, that.level) &&
+                Objects.equals(organizer, that.organizer) &&
+                Objects.equals(numLimit, that.numLimit) &&
+                Objects.equals(place, that.place) &&
+                Objects.equals(type, that.type) &&
+                Objects.equals(team, that.team) &&
+                Objects.equals(bucketName, that.bucketName) &&
+                Objects.equals(objectName, that.objectName) &&
+                Objects.equals(img, that.img) &&
+                Objects.equals(applyFromList, that.applyFromList) &&
+                Objects.equals(teamApplyList, that.teamApplyList) &&
+                Objects.equals(works, that.works) &&
+                Objects.equals(problems, that.problems) &&
+                Objects.equals(user, that.user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, status, startTime, endTime, applyTime, content, author, principal, level, organizer, numLimit, place, type, team, bucketName, objectName, img, applyFromList, teamApplyList, works, problems, user);
     }
 }

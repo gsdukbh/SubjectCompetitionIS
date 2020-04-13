@@ -53,43 +53,6 @@ public interface TeamApplyRepository extends JpaRepository<ScisTeamApply, Intege
     Page<ScisTeamApply> findByStatus(String status, Pageable pageable);
 
     /**
-     * 按照团队分数查询 确定分数 排序
-     *
-     * @param score    Integer 分数
-     * @param pageable Pageable
-     * @return Page<ScisTeamApply>
-     */
-    Page<ScisTeamApply> findByScore(Integer score, Pageable pageable);
-
-    /**
-     * > score 团队
-     *
-     * @param scoreAfter Integer
-     * @param pageable   Pageable
-     * @return Page<ScisTeamApply>
-     */
-    Page<ScisTeamApply> findByScoreAfter(Integer scoreAfter, Pageable pageable);
-
-    /**
-     * < score 团队分数
-     *
-     * @param scoreBefore Integer
-     * @param pageable    Pageable
-     * @return Page<ScisTeamApply>
-     */
-    Page<ScisTeamApply> findByScoreBefore(Integer scoreBefore, Pageable pageable);
-
-    /**
-     * start <= score <= end
-     *
-     * @param start    Integer
-     * @param end      Integer
-     * @param pageable Pageable
-     * @return Page<ScisTeamApply>
-     */
-    Page<ScisTeamApply> findByScoreBetween(Integer start, Integer end, Pageable pageable);
-
-    /**
      * 团队人数查询
      *
      * @param number Integer

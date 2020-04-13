@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.lang.NonNullApi;
+import werls.scis.dao.pojo.ScisTeamUserApply;
 import werls.scis.dao.pojo.ScisUser;
 
 import java.util.List;
@@ -24,14 +25,45 @@ import java.util.Optional;
  */
 public interface UserRepository extends JpaRepository<ScisUser, Integer> {
 
+    @Query(nativeQuery = true, value = "select b.isCaptain,\n" +
+            "       isApply,\n" +
+            "       isRead\n" +
+            "from Is_user a,\n" +
+            "     Is_team_user b\n" +
+            "where a.user_id = b.user_id\n" +
+            "  and b.team_id = ?1\n" +
+            "  and a.user_id=?2")
+    Map<String, Object> tex(Integer teamId, Integer userId);
+
     /**
      * findById
+     *
      * @param id Integer
      * @return Optional<ScisUser>
      */
-//    @Override
-//    @Query(nativeQuery = true, value = "select * from Is_user where user_id=?1")
-//    Optional<ScisUser> findById(Integer id);
+    @Override
+    @Query(nativeQuery = true, value = "select * from Is_user where user_id=?1")
+    Optional<ScisUser> findById(Integer id);
+
+    @Query(nativeQuery = true,
+            value = "select a.user_id,\n" +
+                    "       user_avatar,\n" +
+                    "       user_email,\n" +
+                    "       user_identity,\n" +
+                    "       user_login,\n" +
+                    "       user_name,\n" +
+                    "       user_password,\n" +
+                    "       user_phone,\n" +
+                    "       user_role,\n" +
+                    "       user_sex,\n" +
+                    "       user_status,\n" +
+                    "       college_id,\n" +
+                    "       class_id\n" +
+                    "from Is_user a,\n" +
+                    "     Is_team_user b\n" +
+                    "where a.user_id=b.user_id\n" +
+                    "and b.team_id=?1")
+    List<ScisUser> findByTeamId(Integer id);
 
     /**
      * deleteById
@@ -42,7 +74,6 @@ public interface UserRepository extends JpaRepository<ScisUser, Integer> {
     @Query(nativeQuery = true, value = "delete from Is_user where user_id=?1")
     @Override
     void deleteById(Integer id);
-
 
 
     /**
@@ -191,6 +222,7 @@ public interface UserRepository extends JpaRepository<ScisUser, Integer> {
      */
     @Query(nativeQuery = true,
             value = "select a.user_id        as id,\n" +
+                    " user_avatar as avatar," +
                     "       user_login       as login,\n" +
                     "       user_name        as name,\n" +
                     "       user_email       as email,\n" +
@@ -321,6 +353,7 @@ public interface UserRepository extends JpaRepository<ScisUser, Integer> {
 
     @Query(nativeQuery = true,
             value = "select a.user_id as id, \n" +
+                    " user_avatar as avatar," +
                     "       user_login as login,\n" +
                     "       user_name as name,\n" +
                     "       user_email as email,\n" +
@@ -349,6 +382,7 @@ public interface UserRepository extends JpaRepository<ScisUser, Integer> {
 
     @Query(nativeQuery = true,
             value = "select a.user_id as id, \n" +
+                    " user_avatar as avatar," +
                     "       user_login as login,\n" +
                     "       user_name as name,\n" +
                     "       user_email as email,\n" +
@@ -379,6 +413,7 @@ public interface UserRepository extends JpaRepository<ScisUser, Integer> {
      */
     @Query(nativeQuery = true,
             value = "select a.user_id as id,\n" +
+                    " user_avatar as avatar," +
                     "       user_login as login,\n" +
                     "       user_name as name,\n" +
                     "       user_email as email,\n" +
@@ -422,6 +457,7 @@ public interface UserRepository extends JpaRepository<ScisUser, Integer> {
      */
     @Query(nativeQuery = true,
             value = "select a.user_id as id,\n" +
+                    " user_avatar as avatar," +
                     "       user_login as login,\n" +
                     "       user_name as name,\n" +
                     "       user_email as email,\n" +
@@ -457,6 +493,7 @@ public interface UserRepository extends JpaRepository<ScisUser, Integer> {
      */
     @Query(nativeQuery = true,
             value = "select a.user_id as id,\n" +
+                    " user_avatar as avatar," +
                     "       user_login as login, \n" +
                     "       user_name as name,\n" +
                     "       user_email as email,\n" +
@@ -495,6 +532,7 @@ public interface UserRepository extends JpaRepository<ScisUser, Integer> {
      */
     @Query(nativeQuery = true,
             value = "select a.user_id as id,\n" +
+                    " user_avatar as avatar," +
                     "       user_login as login,\n" +
                     "       user_name as name,\n" +
                     "       user_email as email,\n" +

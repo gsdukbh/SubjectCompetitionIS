@@ -241,7 +241,7 @@
                         <el-input type="text" v-model="problemUp.type" style="width: 100%"></el-input>
                     </el-form-item>
                     <el-form-item label="内容:" prop="content">
-                        <el-input type="textarea" v-model="problemUp.content" maxlength="500">
+                        <el-input type="textarea" v-model="problemUp.content" maxlength="500" show-word-limit>
                         </el-input>
                     </el-form-item>
                 </el-form>

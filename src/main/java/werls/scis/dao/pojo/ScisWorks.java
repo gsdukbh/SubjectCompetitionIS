@@ -40,7 +40,7 @@ public class ScisWorks  implements Serializable{
     /**
      * 作品描述
      */
-    @Column(name = "works_description")
+    @Column(name = "works_description", columnDefinition = "text")
     private String description;
 
     /**
@@ -73,7 +73,8 @@ public class ScisWorks  implements Serializable{
     private String bucketName;
     @Column(name = "works_objectName")
     private String objectName;
-
+    @Column(name = "works_img")
+    private String img;
 
     /**
      * 所属的竞赛项目
@@ -90,11 +91,18 @@ public class ScisWorks  implements Serializable{
     private List<ScisProblem> problemList;
 
     @OneToOne(mappedBy = "works")
-
     private ScisApplyFrom applyFrom;
 
     @OneToOne(mappedBy = "works")
     private ScisTeamApply teamApply;
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
 
     public ScisTeamApply getTeamApply() {
         return teamApply;

@@ -9,6 +9,7 @@ import werls.scis.dao.jpa.TeamApplyRepository;
 import werls.scis.dao.pojo.ScisTeamApply;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author : LiJiWei
@@ -23,6 +24,10 @@ import java.util.List;
 public class TeamServiceImpl {
     @Autowired
     private TeamApplyRepository teamApplyRepository;
+
+    public Optional<ScisTeamApply> findById(Integer id) {
+        return teamApplyRepository.findById(id);
+    }
 
     public Page<ScisTeamApply> findAllByCompetitionId(Integer id, Pageable pageable) {
         return teamApplyRepository.findAllByCompetitionId(id, pageable);
@@ -53,50 +58,6 @@ public class TeamServiceImpl {
         return teamApplyRepository.findByStatus(status, pageable);
     }
 
-    /**
-     * 按照团队分数查询 确定分数 排序
-     *
-     * @param score    Integer 分数
-     * @param pageable Pageable
-     * @return Page<ScisTeamApply>
-     */
-    public Page<ScisTeamApply> findByScore(Integer score, Pageable pageable) {
-        return teamApplyRepository.findByScore(score, pageable);
-    }
-
-    /**
-     * > score 团队
-     *
-     * @param scoreAfter Integer
-     * @param pageable   Pageable
-     * @return Page<ScisTeamApply>
-     */
-    public Page<ScisTeamApply> findByScoreAfter(Integer scoreAfter, Pageable pageable) {
-        return teamApplyRepository.findByScoreAfter(scoreAfter, pageable);
-    }
-
-    /**
-     * < score 团队分数
-     *
-     * @param scoreBefore Integer
-     * @param pageable    Pageable
-     * @return Page<ScisTeamApply>
-     */
-    public Page<ScisTeamApply> findByScoreBefore(Integer scoreBefore, Pageable pageable) {
-        return teamApplyRepository.findByScoreBefore(scoreBefore, pageable);
-    }
-
-    /**
-     * start <= score <= end
-     *
-     * @param start    Integer
-     * @param end      Integer
-     * @param pageable Pageable
-     * @return Page<ScisTeamApply>
-     */
-    public Page<ScisTeamApply> findByScoreBetween(Integer start, Integer end, Pageable pageable) {
-        return teamApplyRepository.findByScoreBetween(start, end, pageable);
-    }
 
     /**
      * 团队人数查询

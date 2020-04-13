@@ -39,8 +39,8 @@ public class ScisApplyFrom implements Serializable {
 
     @Column(name = "apply_status")
     private String status;
-    @Column(name = "apply_score")
-    private Integer score;
+
+
     /**
      * 竞赛用户
      */
@@ -68,14 +68,6 @@ public class ScisApplyFrom implements Serializable {
 
     public void setWorks(ScisWorks works) {
         this.works = works;
-    }
-
-    public Integer getScore() {
-        return score;
-    }
-
-    public void setScore(Integer score) {
-        this.score = score;
     }
 
     public String getStatus() {
