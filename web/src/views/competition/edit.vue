@@ -142,7 +142,9 @@
                                                                       type="info"> 详 情 </el-link> </span>
                 <el-button size="mini" type="success" style="margin-left: 10px" @click="annex = true"><i
                         class="el-icon-upload2">上传附件</i></el-button>
-                <el-link  style="margin-left: 10px" type="primary" @click="dl()">附件：<i class="el-icon-download"></i>下载</el-link>
+                <el-link v-if="ruleForm.objectName!=null" style="margin-left: 10px" type="primary" @click="dl()">附件：<i
+                        class="el-icon-download"></i>下载
+                </el-link>
                 <markdown-editor ref="markdownEditor" title="请输入详细内容 " v-bind:content="ruleForm.content"
                                  height="600px"/>
 
@@ -195,7 +197,7 @@
     import MarkdownEditor from '@/components/MarkdownEditor';
     import {getJson, postJson} from "../../api/api";
     import Page404 from '../error-page/404';
-
+    import qs from 'qs';
     export default {
         name: "edit",
         components: {Page404, MarkdownEditor},

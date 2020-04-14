@@ -86,7 +86,9 @@
                         </el-button>
                     </div>
 
-
+                    <el-link type="primary" v-if="announcement.bucketName!=null" @click="dl()"><i
+                            class="el-icon-download"></i>下载
+                    </el-link>
                     <el-upload
 
                             drag
@@ -120,7 +122,7 @@
     import MarkdownEditor from '@/components/MarkdownEditor'
     import {getJson, postJson} from "../../api/api";
     import Page404 from "../error-page/404";
-
+    import qs from 'qs';
     export default {
         name: "edit",
         components: {Page404, MarkdownEditor, MdInput, BackToTop, Sticky},
@@ -152,6 +154,8 @@
                     from: '',
                     status: '',
                     type: '',
+                    objectName: '',
+                    bucketName: '',
                     scisUser: {
                         id: null,
                     }
@@ -187,6 +191,15 @@
                 });
         },
         methods: {
+            dl() {
+                this.download.bucketName = this.showData.bucketName;
+                this.download.objectName = this.showData.objectName;
+                let a = document.createElement('a');
+                a.href = "/api/public/file/getFile?" + qs.stringify(this.download);
+                a.download = this.download.objectName;
+                a.target = "_blank";
+                a.click();
+            },
             submitUpload() {
 
                 this.$refs.upload.submit();

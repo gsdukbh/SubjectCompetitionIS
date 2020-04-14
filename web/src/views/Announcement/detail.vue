@@ -64,6 +64,15 @@
                         </el-col>
                     </el-row>
                 </el-card>
+                <el-card class="right top" shadow="hover" v-if="announcement.bucketName!=null">
+
+                    <div slot="header" class="clearfix">
+                        <h3>相关附件
+                            <svg-icon icon-class="annex"></svg-icon>
+                        </h3>
+                    </div>
+                    <el-link type="primary" @click="dl()"><i class="el-icon-download"></i>下载</el-link>
+                </el-card>
             </div>
 
             <!--底部-->
@@ -84,6 +93,8 @@
     import {getJson} from "../../api/api";
     import {parseTime} from '../../utils/index'
     import MarkdownViewer from "../../components/MarkdownViewer/index";
+    import qs from 'qs';
+
     export default {
         name: "detail",
         components: {MarkdownViewer, Page404, BackToTop, Sticky},
@@ -103,8 +114,17 @@
 
         },
         methods: {
+            dl() {
+                this.download.bucketName = this.showData.bucketName;
+                this.download.objectName = this.showData.objectName;
+                let a = document.createElement('a');
+                a.href = "/api/public/file/getFile?" + qs.stringify(this.download);
+                a.download = this.download.objectName;
+                a.target = "_blank";
+                a.click();
+            },
             async fetchData(id) {
-                 getJson('/public/announcement/findById/' + id)
+                getJson('/public/announcement/findById/' + id)
                     .then(response => {
                         if (response.data.status === 200) {
                             this.announcement = response.data.data;

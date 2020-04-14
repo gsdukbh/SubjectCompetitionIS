@@ -131,7 +131,13 @@
                                     </div>
                                 </el-card>
 
-
+                                <el-card class="box-card top right" shadow="hover" v-if="showData.objectName!=null">
+                                    <h3>相关附件
+                                        <svg-icon icon-class="annex"></svg-icon>
+                                    </h3>
+                                    <el-divider></el-divider>
+                                    <el-link type="primary" @click="dl()"><i class="el-icon-download"></i>下载</el-link>
+                                </el-card>
                             </div>
 
                         </div>
@@ -363,7 +369,7 @@
     import BackToTop from "../../components/BackTop/index";
     import {mapGetters} from "vuex";
     import Page404 from '../error-page/404';
-
+    import qs from 'qs';
     export default {
         name: "detail",
         components: {BackToTop, MarkdownViewer, Sticky, Page404},
@@ -421,8 +427,17 @@
 
         },
         methods: {
+            dl() {
+                this.download.bucketName = this.showData.bucketName;
+                this.download.objectName = this.showData.objectName;
+                let a = document.createElement('a');
+                a.href = "/api/public/file/getFile?" + qs.stringify(this.download);
+                a.download = this.download.objectName;
+                a.target = "_blank";
+                a.click();
+            },
             async fetchData(id) {
-              await  getJson('/public/competition/findById/' + id)
+                await getJson('/public/competition/findById/' + id)
                     .then(response => {
                         if (response.data.status === 200) {
                             this.showData = response.data.data;
