@@ -34,7 +34,7 @@ public class TeamApplyController {
     @Autowired
     UserService userService;
 
-    @Cacheable(value = "TeamApply", unless = "#result == null ", key = "#id")
+
     @PostMapping("/findAll/{id}")
     public Map<String, Object> findAll(@RequestParam(name = "page", defaultValue = "0") Integer page,
                                        @RequestParam(name = "size", defaultValue = "20") Integer size,
@@ -55,20 +55,36 @@ public class TeamApplyController {
         return res;
     }
 
-    @CacheEvict(cacheNames = "TeamApply", key = "#teamApply.id")
+
     @PostMapping("/save")
     public Map<String, Object> save(@RequestBody ScisTeamApply teamApply) {
         Map<String, Object> res = new ConcurrentHashMap<>(16);
         ScisUser user = teamApply.getScisUserList().get(0);
+        Set<Integer> competitionId = new HashSet<>();
         Optional<ScisUser> userOptional = userService.findById(user.getId());
-
-        res.put("data", user);
-//        if (teamApply != null) {
-//            res.put("result", service.save(teamApply));
-//            res.put("status", 200);
-//        } else {
-//            res.put("status", 403);
-//        }
+        if (userOptional.isPresent()) {
+            user = userOptional.get();
+            if (user.getTeamApplies() != null) {
+                for (ScisTeamApply apply : user.getTeamApplies()) {
+                    if (apply.getCompetition() != null) {
+                        competitionId.add(apply.getCompetition().getId());
+                    }
+                }
+            }
+            if (competitionId.add(teamApply.getCompetition().getId())) {
+                ScisTeamApply result = service.save(teamApply);
+                userService.upUserTeam(true, true, true, result.getId(), user.getId());
+                res.put("result", result);
+                res.put("status", 200);
+                res.put("message", "您的团队创建成功，快起邀请小伙伴加入吧！");
+            } else {
+                res.put("status", 403);
+                res.put("message", "您已经有一个团队了");
+            }
+        } else {
+            res.put("status", 403);
+            res.put("message", "用户识别失败！请检查信息");
+        }
         return res;
     }
 
@@ -78,32 +94,46 @@ public class TeamApplyController {
         Map<String, Object> res = new ConcurrentHashMap<>(16);
         if (teamApply != null) {
             Optional<ScisTeamApply> teamApplyOptional = service.findById(teamApply.getId());
-            Integer numLim;
             if (teamApplyOptional.isPresent()) {
                 ScisTeamApply tem = teamApplyOptional.get();
-                List<ScisUser> userList = tem.getScisUserList();
-                ScisUser user = new ScisUser();
-                Set<ScisUser> userSet = new HashSet<>(userService.findByTeamId(tem.getId()));
-                System.out.println(userSet.add(user));
-                if (userSet.add(user)) {
-                    userList.add(user);
-                    tem.setScisUserList(userList);
-                    numLim = tem.getNumber();
-//                    if (numLim >= userList.size()) {
-//                        res.put("result", service.save(tem));
-//                        res.put("status", 200);
-//                    } else {
-//                        res.put("message", "队伍人数已满！");
-//                        res.put("status", 403);
-//                    }
+                ScisUser user = teamApply.getScisUserList().get(0);
+                Set<Integer> competitionId = new HashSet<>();
+                Optional<ScisUser> userOptional = userService.findById(user.getId());
+                if (userOptional.isPresent()) {
+                    user = userOptional.get();
+                    if (user.getTeamApplies() != null) {
+                        for (ScisTeamApply apply : user.getTeamApplies()) {
+                            if (apply.getCompetition() != null) {
+                                competitionId.add(apply.getCompetition().getId());
+                            }
+                        }
+                    }
+                    if (competitionId.add(teamApply.getCompetition().getId())) {
+                        List<ScisUser> userList = userService.findByTeamId(teamApply.getId());
+                        /*控制成员人数*/
+                        if (tem.getNumber() >= userList.size()) {
+                            ScisTeamApply result = service.save(teamApply);
+                            userService.upUserTeam(false, false, false, result.getId(), user.getId());
+                            res.put("result", result);
+                            res.put("status", 200);
+                            res.put("message", "成功加入，可以去报名 -> 团队中查看自己的团队 ！");
+                        } else {
+                            res.put("status", 403);
+                            res.put("message", "队伍人数已满！");
+                        }
+                    } else {
+                        res.put("status", 403);
+                        res.put("message", "您已经报名！");
+                    }
                 } else {
                     res.put("status", 403);
-                    res.put("message", "您已经报名！");
+                    res.put("message", "用户识别失败！请检查信息");
                 }
 
             }
         } else {
             res.put("status", 403);
+            res.put("message", "错误的提交信息");
         }
         return res;
     }
@@ -116,6 +146,7 @@ public class TeamApplyController {
         for (ScisUser user1 : teamApplyList) {
             Map<String, Object> tem = userService.tex(team, user1.getId());
             ScisTeamUserApply apply = new ScisTeamUserApply();
+
             apply.setApply((Boolean) tem.get("isApply"));
             apply.setCaptain((Boolean) tem.get("isCaptain"));
             apply.setRead((Boolean) tem.get("isRead"));

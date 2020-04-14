@@ -113,6 +113,15 @@ public class ScisCompetition implements Serializable {
     @JsonIgnore
     private ScisUser user;
 
+    @Override
+    public String toString() {
+        return "ScisCompetition{" +
+                "id=" + id +
+                ", startTime=" + startTime +
+                ", applyTime=" + applyTime +
+                '}';
+    }
+
     public String getImg() {
         return img;
     }

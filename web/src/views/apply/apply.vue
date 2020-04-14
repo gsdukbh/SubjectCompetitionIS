@@ -12,12 +12,12 @@
                 </span>
             </el-card>
 
-            <el-card class="apply top" v-if="isApplyTime " shadow="always">
+            <el-card class="apply top" v-if="!isApplyTime " shadow="always">
                 <span>
                  距离报名开始还有：{{applyTime}}
                  </span>
             </el-card>
-            <el-card class="apply top" v-if="!isApplyTime " shadow="always">
+            <el-card class="apply top" v-if="!isEnd" shadow="always">
                 <span>
                  距离比赛开始还有：{{startTime}}
                  </span>
@@ -25,95 +25,124 @@
             <el-card class="apply top" v-if="isEnd" shadow="always">
                 比赛已经结束！！！
             </el-card>
-            <div v-if="!competition.team" class="top">
 
-                <el-button type="primary" :loading="buttonLoading" round
-                           v-if=" !isEnd && isApplyTime && !competition.team " @click="applyIn()">
+            <div class="top">
+
+                <!--查找团队-->
+                <div v-if="competition.team">
+                    <el-card v-if="showTeamInfo" class="top a" shadow="hover">
+                        <div slot="header" class="clearfix">
+                            <span>查询团队</span>
+                        </div>
+                        <!--搜索框-->
+                        <div style="margin-top: 10px;">
+
+                            <el-input placeholder="名称" style="width: 200px;margin-left: 10px;" v-model="page.name"/>
+
+                            <el-button round size="small" class="filter-item" type="primary" style="margin-left: 10px;"
+                                       icon="el-icon-search"
+                                       @click="handleFilter">
+                                搜索
+                            </el-button>
+
+                            <el-button round size="small" class="filter-item" type="primary" style="margin-left: 10px;"
+                                       icon="el-icon-refresh-left"
+                                       @click="handleRefresh">
+                                重置
+                            </el-button>
+                        </div>
+
+                        <el-table
+                                v-loading="loading1"
+                                :data="applyTeam"
+                                style="width: 100%"
+                                height="250">
+                            <el-table-column
+                                    prop="name"
+                                    label="队名">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="captain"
+                                    label="队长">
+                            </el-table-column>
+                            <el-table-column
+                                    sortable
+                                    prop="scisUserList.length"
+                                    label="人数">
+                                <template slot-scope="{row}">
+                                    <span>{{row.scisUserList.length}}/{{row.number}}</span>
+                                </template>
+                            </el-table-column>
+
+                            <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+                                <template slot-scope="{row}">
+                                    <el-button @click="showJoin(row)" size="mini" type="primary" round>
+                                        加入
+                                    </el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+
+
+                        <div class="center">
+                            <el-pagination
+                                    @size-change="handleSizeChange"
+                                    @current-change="handleCurrentChange"
+                                    @next-click="handleCurrentChange"
+                                    @prev-click="handleCurrentChange"
+                                    :current-page="page.page"
+                                    :page-sizes="[20,50,100]"
+                                    :page-size="page.size"
+                                    background
+                                    layout="total, sizes, prev, pager, next, jumper"
+                                    :total="page.totalElements">
+                            </el-pagination>
+                        </div>
+                    </el-card>
+
+                    <el-card v-if="!showTeamInfo" class="top a" shadow="hover">
+                        <div slot="header" class="clearfix">
+                            <span>创建团队并加入</span>
+                        </div>
+                        <el-form :model="createTeamApply" :rules="rules" ref="createTeamApply">
+                            <el-form-item prop="name" style="margin-bottom: 40px;">
+                                <MdInput v-model="createTeamApply.name" required>队名</MdInput>
+                            </el-form-item>
+                            <el-button type="success" round @click="createTeamJoin('createTeamApply')"
+                                       :loading="buttonLoading2">
+                                创建并报名
+                            </el-button>
+                        </el-form>
+                    </el-card>
+                </div>
+
+
+                <el-button class="top" type="primary" :loading="buttonLoading" round
+                           v-if=" !isEnd && isApplyTime && !competition.team  " @click="applyIn()">
                     》》 立刻报名 《《
                 </el-button>
 
-                <router-link v-if="isEnd" to="/competition/user">
-                    <el-button type="primary" round>
+                <el-button class="top" type="primary" :loading="buttonLoading" round
+                           v-if=" !isEnd  && !competition.team  " disabled>
+                    》》 立刻报名 《《
+                </el-button>
+
+                <el-button class="top" type="primary" :loading="buttonLoading" round
+                           v-if=" !isEnd && isApplyTime && competition.team  " @click="createTeam()">
+                    》》 创建团队 《《
+                </el-button>
+
+                <el-button class="top" type="primary" :loading="buttonLoading" round style="margin-left: 10px"
+                           v-if=" !isEnd && isApplyTime && competition.team  " @click="joinTeam()">
+                    》》 加入团队 《《
+                </el-button>
+
+                <router-link to="/competition/user">
+                    <el-button type="primary" round class="top" style="margin-left: 10px">
                         》》 查看更多比赛 《《
                     </el-button>
                 </router-link>
 
-                <!--查找团队-->
-
-                <el-card class="top a" shadow="hover">
-                    <!--搜索框-->
-                    <div style="margin-top: 10px;">
-
-                        <el-input placeholder="名称" style="width: 200px;margin-left: 10px;" v-model="page.name"/>
-
-                        <el-button round size="small" class="filter-item" type="primary" style="margin-left: 10px;"
-                                   icon="el-icon-search"
-                                   @click="handleFilter">
-                            搜索
-                        </el-button>
-
-                        <el-button round size="small" class="filter-item" type="primary" style="margin-left: 10px;"
-                                   icon="el-icon-refresh-left"
-                                   @click="handleRefresh">
-                            重置
-                        </el-button>
-                    </div>
-
-                    <el-table
-                            v-loading="loading1"
-                            :data="applyTeam"
-                            style="width: 100%"
-                            height="250">
-                        <el-table-column
-                                prop="name"
-                                label="队名">
-                        </el-table-column>
-                        <el-table-column
-                                prop="captain"
-                                label="队长">
-                        </el-table-column>
-                        <el-table-column
-                                sortable
-                                prop="scisUserList.length"
-                                label="人数">
-                            <template slot-scope="{row}">
-                                <span>{{row.scisUserList.length}}/{{row.number}}</span>
-                            </template>
-                        </el-table-column>
-
-                        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-                            <template slot-scope="{row}">
-                                <el-button @click="showJoin(row)" size="mini" type="primary" round>
-                                    加入
-                                </el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-
-
-                    <div class="center">
-                        <el-pagination
-                                @size-change="handleSizeChange"
-                                @current-change="handleCurrentChange"
-                                @next-click="handleCurrentChange"
-                                @prev-click="handleCurrentChange"
-                                :current-page="page.page"
-                                :page-sizes="[20,50,100]"
-                                :page-size="page.size"
-                                background
-                                layout="total, sizes, prev, pager, next, jumper"
-                                :total="page.totalElements">
-                        </el-pagination>
-                    </div>
-                </el-card>
-
-                <el-card class="top a" shadow="hover">
-                    创建
-                </el-card>
-                <el-button class="top" type="primary" :loading="buttonLoading" round
-                           v-if=" !isEnd && isApplyTime && !competition.team " @click="applyIn()">
-                    》》 立刻报名 《《
-                </el-button>
             </div>
 
             <el-dialog title="成员详情" center :visible.sync="dialogVisible">
@@ -161,9 +190,11 @@
     import {getJson, postFrom, postJson} from "../../api/api";
     import {parseTime} from '../../utils/index'
     import {getDuration} from "../../utils";
+    import MdInput from "../../components/MDinput/index";
 
     export default {
         name: "apply",
+        components: {MdInput},
         computed: {
             ...mapGetters([
                 'name',
@@ -171,6 +202,14 @@
             ])
         },
         data() {
+            const validateRequire = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('标题' + '为必传项'))
+                } else {
+                    callback()
+                }
+            };
+
             return {
                 loading2: false,
                 loading1: false,
@@ -179,7 +218,8 @@
                 PageLoading: null,
                 id: '',
                 competition: {},
-                apply: {
+
+                apply: {//个人
                     scisUser: {
                         id: ''
                     },
@@ -194,14 +234,28 @@
                         id: 1
                     }
                 },
+                createTeamApply: {
+                    name: '',
+                    number: '',
+                    captain: '',
+                    scisUserList: [],
+                    competition: {
+                        id: null,
+                    }
+                },
                 applyTeam: [],
-                rules: {},
+                rules: {
+                    name: [
+                        {validator: validateRequire}
+                    ]
+                },
                 tempRoute: {},
                 applyTime: null,
                 isApplyTime: true,
                 isEnd: false,
                 isTeam: false,
                 startTime: null,
+                isStart: false,
                 isApplyTimeStop: false,
                 buttonLoading: false,
                 page: {
@@ -213,6 +267,9 @@
                 dialogVisible: false,
                 teamList: [],
                 buttonLoading1: false,
+                showTeamInfo: false,
+                buttonLoading2: false,
+
             }
         },
         created() {
@@ -227,16 +284,62 @@
             this.timeout = setInterval(() => {
                 this.date = new Date();
                 this.applyTime = getDuration(new Date(this.competition.applyTime) - new Date());
-                this.isApplyTime = (new Date() < new Date(this.competition.applyTime));
+                this.isApplyTime = (new Date() > new Date(this.competition.applyTime));
                 this.isEnd = (new Date() > new Date(this.competition.endTime))
                 this.isApplyTimeStop = (new Date() > new Date(this.competition.startTime));
                 this.startTime = getDuration(new Date(this.competition.startTime) - new Date());
+                this.isStart = (new Date() > new Date(this.competition.startTime))
             }, 1000);
         },
         beforeDestroy() {
             clearInterval(this.timeout)
         },
         methods: {
+            createTeamJoin(form) {
+                this.createTeam();
+                this.buttonLoading2 = true;
+                this.$refs[form].validate((valid) => {
+                    if (valid) {
+                        postJson('/student/team/save', this.createTeamApply)
+                            .then(response => {
+                                if (response.data.status === 200) {
+                                    this.$notify.success({
+                                        title: '成功',
+                                        message: response.data.message,
+                                    })
+                                } else {
+                                    this.$notify.warning({
+                                        title: '警告',
+                                        message: response.data.message,
+                                    })
+                                }
+                                this.buttonLoading2 = false;
+                            })
+                            .catch(error => {
+                                this.$message.error("出现了一些问题：" + error)
+                                this.buttonLoading2 = false;
+                            })
+                        this.buttonLoading2 = false;
+                    } else {
+                        this.buttonLoading2 = false;
+                        this.$message.warning("请检查你的输入")
+                    }
+                })
+            },
+            createTeam() {
+                this.createTeamApply.competition.id = this.competition.id;
+                const user = {
+                    id: this.userId
+                }
+                this.createTeamApply.number = this.competition.numLimit;
+                this.createTeamApply.scisUserList.push(user);
+                this.showTeamInfo = false;
+
+            },
+            joinTeam() {
+                this.showTeamInfo = true;
+                this.getDataPage();
+            },
             join() {
                 this.buttonLoading1 = true
                 const user = {
@@ -308,11 +411,34 @@
                         this.page.totalElements = response.data.totalElements;
                         this.loading1 = false;
                     })
+                    .catch(() => {
+                        this.loading1 = false;
+                    });
                 this.loading1 = false;
             },
             applyIn() {
+                /*个人报名*/
                 this.buttonLoading = true;
                 this.apply.scisUser.id = this.userId;
+                this.apply.competition.id = this.id;
+                postJson('/student/personal/apply/join', this.apply)
+                    .then(response => {
+                        if (response.data.status === 200) {
+                            this.$notify.success({
+                                title: '成功',
+                                message: response.data.message,
+                            })
+                        } else {
+                            this.$notify.warning({
+                                title: '警告',
+                                message: response.data.message
+                            })
+                        }
+                        this.buttonLoading = false;
+                    }).catch(error => {
+                    this.$message.error("错误：" + error)
+                    this.buttonLoading = false;
+                })
             },
             fetchData(id) {
                 getJson('/public/competition/findById/' + id)
@@ -334,7 +460,7 @@
                     .catch(() => {
                         this.loading = false;
                     });
-                this.getDataPage();
+                // this.getDataPage();
             },
             setTagsViewTitle() {
                 const title = this.competition.name;

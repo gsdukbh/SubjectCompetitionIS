@@ -107,12 +107,45 @@
                             详情
                         </el-button>
                     </router-link>
-
+                    <el-button
+                            style="margin-left: 10px;"
+                            type="success" size="mini"
+                            icon="el-icon-plus"
+                            @click="joinNow(row)">
+                        立即报名
+                    </el-button>
                 </template>
 
             </el-table-column>
 
         </el-table>
+
+        <el-dialog
+                title="提示"
+                :visible.sync="centerDialogVisible"
+                width="30%"
+                center>
+            <div style="text-align: center">
+                <span>先看比赛介绍，再去报名报名吧！</span>
+            </div>
+            <span slot="footer" class="dialog-footer">
+
+                   <router-link :to="'/competition/detailStu/'+this.apply">
+                        <el-button style="margin-left: 10px;"
+                                   type="success"
+                                   round @click="centerDialogVisible=false">
+                            好的这就去看
+                        </el-button>
+                    </router-link>
+                 <router-link :to="'/apply/apply/'+this.apply">
+                        <el-button style="margin-left: 10px;"
+                                   type="primary"
+                                   round @click="centerDialogVisible=false">
+                            算了我现在就去报名
+                        </el-button>
+                    </router-link>
+                 </span>
+        </el-dialog>
 
 
         <div class="center">
@@ -142,9 +175,8 @@
         name: "studentCompetition",
         data() {
             return {
+                centerDialogVisible: false,
                 loading: true,
-                loading1: false,
-                loading2: false,
                 tableData: [
                     {
                         id: null,
@@ -163,6 +195,7 @@
                         team: null
                     }
                 ],
+                apply: null,
                 college: null,
                 page: {
                     size: 20,
@@ -193,6 +226,10 @@
                 })
         },
         methods: {
+            joinNow(value) {
+                this.apply = value.id;
+                this.centerDialogVisible = true;
+            },
             formatTimeA(time) {
                 return parseTime(time, '{y}-{m}-{d} {h}:{i}')
             },

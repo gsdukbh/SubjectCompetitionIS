@@ -24,7 +24,13 @@ import java.util.Optional;
  * @date Date : 2020年02月21日 23:33
  */
 public interface UserRepository extends JpaRepository<ScisUser, Integer> {
-
+    /**
+     * 查询是否是队长
+     *
+     * @param teamId Integer
+     * @param userId Integer
+     * @return Map<String, Object>
+     */
     @Query(nativeQuery = true, value = "select b.isCaptain,\n" +
             "       isApply,\n" +
             "       isRead\n" +
@@ -36,10 +42,31 @@ public interface UserRepository extends JpaRepository<ScisUser, Integer> {
     Map<String, Object> tex(Integer teamId, Integer userId);
 
     /**
-     * findById
+     * ss
      *
-     * @param id Integer
-     * @return Optional<ScisUser>
+     * @param isCaptain Boolean
+     * @param isApply   Boolean
+     * @param isRead    Boolean
+     * @param teamId    Integer
+     * @param userId    Integer
+     */
+    @Modifying
+    @Query(nativeQuery = true,
+            value = "update Is_team_user\n" +
+                    "set isCaptain= ?1,\n" +
+                    "    isApply= ?2,\n" +
+                    "    isRead= ?3\n" +
+                    "where team_id=?4\n" +
+                    "and user_id=?5")
+    void upUserTeam(Boolean isCaptain, Boolean isApply, Boolean isRead, Integer teamId, Integer userId);
+
+
+    /**
+     * Retrieves an entity by its id.
+     *
+     * @param id must not be {@literal null}.
+     * @return the entity with the given id or {@literal Optional#empty()} if none found.
+     * @throws IllegalArgumentException if {@literal id} is {@literal null}.
      */
     @Override
     @Query(nativeQuery = true, value = "select * from Is_user where user_id=?1")

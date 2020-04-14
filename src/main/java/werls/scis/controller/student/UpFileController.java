@@ -115,44 +115,4 @@ public class UpFileController {
         return res;
     }
 
-
-    @GetMapping("/getFile")
-    public ResponseEntity<byte[]> download(
-            HttpServletRequest request,
-            @RequestParam("bucketName") String bucketName,
-            @RequestParam("objectName") String objectName) throws Exception {
-        InputStream inputStream = fileUploader.getObject(bucketName, objectName);
-        byte[] bytes = new byte[2048];
-        int length;
-        ByteArrayOutputStream res = new ByteArrayOutputStream();
-        while ((length = inputStream.read(bytes)) > 0) {
-            res.write(bytes, 0, length);
-        }
-        inputStream.close();
-
-        res.close();
-
-        objectName = this.getFilename(request, objectName);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentDispositionFormData("attachment", objectName);
-        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        return new ResponseEntity<byte[]>(res.toByteArray(),
-                headers, HttpStatus.OK);
-    }
-
-    public String getFilename(HttpServletRequest request,
-                              String filename) throws Exception {
-        // IE不同版本User-Agent中出现的关键词
-        String[] iEBrowserKeyWords = {"MSIE", "Trident", "Edge"};
-        // 获取请求头代理信息
-        String userAgent = request.getHeader("User-Agent");
-        for (String keyWord : iEBrowserKeyWords) {
-            if (userAgent.contains(keyWord)) {
-                //IE内核浏览器，统一为UTF-8编码显示
-                return URLEncoder.encode(filename, "UTF-8");
-            }
-        }
-
-        return new String(filename.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
-    }
 }

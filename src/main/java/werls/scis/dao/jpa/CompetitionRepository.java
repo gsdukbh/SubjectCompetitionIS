@@ -21,6 +21,76 @@ import java.util.List;
  * @date Date : 2020年02月26日 19:23
  */
 public interface CompetitionRepository extends JpaRepository<ScisCompetition, Integer> {
+
+    /**
+     * my join
+     *
+     * @param id              Integer
+     * @param competitionName ScisCompetition name
+     * @return List ScisCompetition
+     */
+    @Query(nativeQuery = true,
+            value = "select d.competition_id,\n" +
+                    "       d.competition_apply_time,\n" +
+                    "       d.competition_author,\n" +
+                    "       d.competition_bucketName,\n" +
+                    "       d.competition_content,\n" +
+                    "       d.competition_end_time,\n" +
+                    "       d.competition_img,\n" +
+                    "       d.competition_level,\n" +
+                    "       d.competition_name,\n" +
+                    "       d.competition_num_limit,\n" +
+                    "       d.competition_objectName,\n" +
+                    "       d.competition_organizer,\n" +
+                    "       d.competition_place,\n" +
+                    "       d.competition_principal,\n" +
+                    "       d.competition_start_time,\n" +
+                    "       d.competition_status,\n" +
+                    "       d.competition_isTeam,\n" +
+                    "       d.competition_type,\n" +
+                    "       d.user_id\n" +
+                    "from Is_user a,\n" +
+                    "     Is_team_user b,\n" +
+                    "     Is_team_apply c,\n" +
+                    "     Is_competition d\n" +
+                    "where a.user_id = b.user_id\n" +
+                    "  and b.team_id = c.team_id\n" +
+                    "  and c.competition_id = d.competition_id\n" +
+                    "  and a.user_id = ?1\n" +
+                    "  and d.competition_name like concat('%',?2,'%')" +
+                    " limit ?3,?4")
+    List<ScisCompetition> findByApplyAndUserTeam(Integer id, String competitionName, Integer page, Integer size);
+
+    @Query(nativeQuery = true,
+            value = "select c.competition_id,\n" +
+                    "       c.competition_apply_time,\n" +
+                    "       c.competition_author,\n" +
+                    "       c.competition_bucketName,\n" +
+                    "       c.competition_content,\n" +
+                    "       c.competition_end_time,\n" +
+                    "       c.competition_img,\n" +
+                    "       c.competition_level,\n" +
+                    "       c.competition_name,\n" +
+                    "       c.competition_num_limit,\n" +
+                    "       c.competition_objectName,\n" +
+                    "       c.competition_organizer,\n" +
+                    "       c.competition_place,\n" +
+                    "       c.competition_principal,\n" +
+                    "       c.competition_start_time,\n" +
+                    "       c.competition_status,\n" +
+                    "       c.competition_isTeam,\n" +
+                    "       c.competition_type,\n" +
+                    "       c.user_id\n" +
+                    "from Is_user a,\n" +
+                    "     Is_apply_from b,\n" +
+                    "     Is_competition c\n" +
+                    "where a.user_id = b.user_id\n" +
+                    "  and c.competition_id = b.competition_id\n" +
+                    "  and a.user_id = ?1\n" +
+                    "  and c.competition_name like concat('%',?2,'%') " +
+                    "limit ?3,?4")
+    List<ScisCompetition> findApplyUser(Integer id, String competitionName, Integer page, Integer size);
+
     /**
      * 模糊查询竞赛名称
      *

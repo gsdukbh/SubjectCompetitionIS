@@ -58,6 +58,16 @@
                                         <el-col :span="24">
                                             <span>发布者：{{showData.author}}</span>
                                         </el-col>
+                                        <el-col :span="24">
+                                            <span v-if="showData.team">参赛形式：团队赛</span>
+                                        </el-col>
+                                        <el-col :span="24">
+                                            <span v-if="!showData.team">参赛形式：个人赛</span>
+                                        </el-col>
+                                        <el-col :span="24">
+                                            <span v-if="showData.team">人数限制：{{showData.numLimit}}</span>
+                                        </el-col>
+
                                     </el-row>
                                 </el-card>
 

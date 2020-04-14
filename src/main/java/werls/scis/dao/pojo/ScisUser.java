@@ -32,7 +32,6 @@ public class ScisUser implements Serializable {
     @Column(name = "user_login")
     private String login;
 
-
     //    @JsonIgnore
     @Column(name = "user_password")
     private String password;
@@ -57,7 +56,7 @@ public class ScisUser implements Serializable {
      * 用户角色
      */
 
-//    @Fetch(FetchMode.SUBSELECT)
+    @Fetch(FetchMode.SUBSELECT)
     @ManyToMany(cascade = {CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinTable(name = "Is_role_user",
             joinColumns = {@JoinColumn(name = "user_id")},

@@ -30,6 +30,10 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
+    public void upUserTeam(Boolean isCaptain, Boolean isApply, Boolean isRead, Integer teamId, Integer userId) {
+        userRepository.upUserTeam(isCaptain, isApply, isRead, teamId, userId);
+    }
+
     public Map<String, Object> tex(Integer teamId, Integer userId) {
         return userRepository.tex(teamId, userId);
     }

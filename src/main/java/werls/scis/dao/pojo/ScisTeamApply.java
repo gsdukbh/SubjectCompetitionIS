@@ -73,6 +73,7 @@ public class ScisTeamApply implements Serializable {
     @JoinColumn(name = "works_id", referencedColumnName = "works_id")
     private ScisWorks works;
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -83,18 +84,19 @@ public class ScisTeamApply implements Serializable {
         }
         ScisTeamApply that = (ScisTeamApply) o;
         return id.equals(that.id) &&
-                name.equals(that.name) &&
+                Objects.equals(name, that.name) &&
                 Objects.equals(number, that.number) &&
                 Objects.equals(applyTime, that.applyTime) &&
                 Objects.equals(status, that.status) &&
                 Objects.equals(captain, that.captain) &&
+                Objects.equals(scisUserList, that.scisUserList) &&
                 competition.equals(that.competition) &&
                 Objects.equals(works, that.works);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, number, applyTime, status, captain, competition, works);
+        return Objects.hash(id, name, number, applyTime, status, captain, scisUserList, competition, works);
     }
 
     public String getCaptain() {
