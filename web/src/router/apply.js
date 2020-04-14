@@ -15,7 +15,8 @@ const applyRouter={
             component: () => import('../views/apply/index'),
             meta: {
                 title: "报名详情",
-                icon: 'info'
+                icon: 'info',
+                roles: ['ROLE_STU'],
             }
         },
         {
@@ -33,7 +34,8 @@ const applyRouter={
             component: () => import('../views/apply/team'),
             meta: {
                 title: "团队",
-                icon: 'team'
+                icon: 'team',
+                roles: ['ROLE_STU'],
             }
         }
     ]

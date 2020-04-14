@@ -18,6 +18,7 @@ import java.util.List;
  */
 public interface ApplyFromRepository extends JpaRepository<ScisApplyFrom, Integer> {
 
+
     /**
      * 报名状态 分页 排序
      *

@@ -76,6 +76,30 @@
 
                 </el-card>
 
+                <el-card class="right top" shadow="hover">
+
+                    <div slot="header" class="clearfix">
+                        <h3>上传附件
+                            <svg-icon icon-class="annex"></svg-icon>
+                        </h3>
+                        <el-button style="float: right; padding: 3px 0" type="text" @click="submitUpload">上 传
+                        </el-button>
+                    </div>
+
+
+                    <el-upload
+
+                            drag
+                            class="upload-demo"
+                            ref="upload"
+                            action="/api/i/upFile/annex"
+                            :on-success="upSuccess"
+                            :auto-upload="false">
+                        <i class="el-icon-upload"></i>
+                        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+
+                    </el-upload>
+                </el-card>
             </div>
 
 
@@ -163,6 +187,23 @@
                 });
         },
         methods: {
+            submitUpload() {
+
+                this.$refs.upload.submit();
+
+            },
+            upSuccess(response) {
+                if (response.status === 200) {
+                    this.$notify.success({
+                        title: '成功',
+                        message: '上传成功'
+                    })
+                    this.announcement.objectName = response.objectName;
+                    this.announcement.bucketName = response.bucketName;
+                } else {
+                    this.$message.error("上传失败");
+                }
+            },
             async fetchData(id) {
                 await getJson('/public/announcement/findById/' + id)
                     .then(response => {

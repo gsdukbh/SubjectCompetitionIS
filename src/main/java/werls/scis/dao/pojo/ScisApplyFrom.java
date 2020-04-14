@@ -45,7 +45,7 @@ public class ScisApplyFrom implements Serializable {
      * 竞赛用户
      */
 
-    @ManyToOne(fetch = FetchType.EAGER,optional = false)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     @JsonIgnoreProperties({"applyFroms"})
     private ScisUser scisUser;
@@ -53,7 +53,7 @@ public class ScisApplyFrom implements Serializable {
     /**
      * 参加的竞赛
      */
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "competition_id")
     @JsonIgnoreProperties({"applyFromList"})
     private ScisCompetition competition;

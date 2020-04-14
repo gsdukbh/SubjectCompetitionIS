@@ -19,24 +19,27 @@
             <el-table
                     v-loading="loading"
                     :data="competition"
-                    stripe
+
                     style="width: 100%">
                 <el-table-column
-                        prop="name"
-                        sortable
-                        label="名称"
-                        width="180">
+                        type="index"
+                >
                 </el-table-column>
 
                 <el-table-column
                         prop="startTime"
                         sortable
-                        label="名称"
+                        label="开始时间"
                         width="180">
                     <template slot-scope="{row}">
-                        <span>{{row.startTime}}</span>
+                        <span>{{formatTimeA(row.startTime)}}</span>
                     </template>
-
+                </el-table-column>
+                <el-table-column
+                        prop="name"
+                        sortable
+                        label="名称"
+                        width="180">
                 </el-table-column>
 
                 <el-table-column
@@ -55,6 +58,29 @@
                         <span v-if="row.type ==='offline'">{{row.place}}</span>
                     </span>
                     </template>
+                </el-table-column>
+                <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+                    <template slot-scope="{row}">
+
+                        <router-link :to="'/competition/detailStu/'+row.id">
+                            <el-button style="margin-left: 10px;" type="primary" size="mini" icon="el-icon-reading">
+                                比赛详情
+                            </el-button>
+                        </router-link>
+
+                        <router-link :to="'/apply/index/'+row.id" v-if="!row.team">
+                            <el-button style="margin-left: 10px;" type="primary" size="mini" icon="el-icon-collection">
+                                我的报名信息
+                            </el-button>
+                        </router-link>
+                        <router-link :to="'/competition/team/'+row.id" v-if="row.team">
+                            <el-button style="margin-left: 10px;" type="primary" size="mini" icon="el-icon-collection">
+                                我的团队信息
+                            </el-button>
+                        </router-link>
+
+                    </template>
+
                 </el-table-column>
 
 

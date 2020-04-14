@@ -35,4 +35,5 @@ public class ApplyController {
         res.put("data", serice.findAllByCompetitionId(id, pageable));
         return res;
     }
+
 }

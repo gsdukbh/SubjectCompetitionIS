@@ -26,11 +26,20 @@ export const publicRoutes = [
     {
         path: '/404',
         name: '404',
-        component:()=> import('../views/error-page/404'),
+        redirect: '/404/index',
         hidden: true,
         meta: {
             title: '404'
-        }
+        },
+        children: [
+            {
+                path: 'index',
+                component: () => import('../views/error-page/404'),
+                meta: {
+                    title: '404'
+                },
+            }
+        ]
     },
 
     {
@@ -119,19 +128,19 @@ export const asyncRoutes = [
                 meta: {
                     title: '学科竞赛',
                     roles: ['ROLE_STU'],
-                    icon: 'project'
+
                 }
             },
-            {
-                path: 'my/join',
-                name: 'studentCompetition',
-                component: () => import('../views/competition/myjoin'),
-                meta: {
-                    title: '我参加的比赛',
-                    icon: 'record',
-                    roles: ['ROLE_STU']
-                },
-            },
+            // {
+            //     path: 'my/join',
+            //     name: 'studentCompetition',
+            //     component: () => import('../views/competition/myjoin'),
+            //     meta: {
+            //         title: '我参加的比赛',
+            //         icon: 'record',
+            //         roles: ['ROLE_STU']
+            //     },
+            // },
             {
                 path: 'index',
                 component: () => import('../views/competition/index'),
@@ -194,9 +203,6 @@ export const asyncRoutes = [
             }
         ]
     },
-    worksRouter,
-    applyRouter,
-    achievementRouter,
     {
         path: '/announcement',
         name: 'announcement',
@@ -248,6 +254,10 @@ export const asyncRoutes = [
 
         ]
     },
+    worksRouter,
+    applyRouter,
+    achievementRouter,
+
     userRouter,
     myInfo,
     {

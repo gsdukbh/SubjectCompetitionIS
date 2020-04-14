@@ -101,6 +101,7 @@ public class UpFileController {
                 res.put("contentType", file.getContentType());
                 res.put("message", "success");
                 res.put("markdown", "![" + file.getOriginalFilename() + "](" + fileUploader.URl() + "/img/" + fileName + ")");
+                res.put("img", fileUploader.URl() + "/img/" + fileName);
                 return res;
             } catch (Exception e) {
                 e.printStackTrace();

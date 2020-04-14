@@ -1,6 +1,8 @@
 <template>
     <div>
+        <div class="main">
 
+        </div>
     </div>
 </template>
 
@@ -11,5 +13,7 @@
 </script>
 
 <style scoped>
+    .main {
 
+    }
 </style>
