@@ -3,10 +3,12 @@ package werls.scis.dao.jpa;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.security.core.parameters.P;
 import werls.scis.dao.pojo.ScisApplyFrom;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author : LiJiWei
@@ -18,6 +20,60 @@ import java.util.List;
  */
 public interface ApplyFromRepository extends JpaRepository<ScisApplyFrom, Integer> {
 
+    /**
+     * @param id
+     * @param name
+     * @param page
+     * @param size
+     * @return
+     */
+    @Query(nativeQuery = true,
+            value = "select d.team_id as teamId,\n" +
+                    "       team_apply_time as applyTime,\n" +
+                    "       team_captain as captain,\n" +
+                    "       team_name as name,\n" +
+                    "       team_number as number,\n" +
+                    "       a.competition_id as competitionId,\n" +
+                    "       a.competition_name as competitionName,\n" +
+                    "       competition_start_time as startTime, " +
+                    "       competition_place as place ," +
+                    "       competition_type as type\n" +
+                    "from Is_competition a,\n" +
+                    "     Is_user b,\n" +
+                    "     Is_team_user c,\n" +
+                    "     Is_team_apply d\n" +
+                    "where a.competition_id = d.competition_id\n" +
+                    "  and d.team_id = c.team_id\n" +
+                    "  and c.user_id = b.user_id\n" +
+                    "  and b.user_id = ?1\n" +
+                    "  and a.competition_name like concat('%', ?2, '%')\n" +
+                    "limit ?3,?4")
+    List<Map<String, Object>> findScisUserIdT(Integer id, String name, Integer page, Integer size);
+
+    /**
+     * @param id
+     * @param name
+     * @param page
+     * @param size
+     * @return
+     */
+    @Query(nativeQuery = true,
+            value = "SELECT b.apply_id             as applyId,\n" +
+                    "       apply_time             as applyTime,\n" +
+                    "       c.competition_id       as competitionId,\n" +
+                    "       competition_name       as name,\n" +
+                    "       competition_start_time as startTime," +
+                    "       competition_place as place ," +
+                    "       competition_type as type \n" +
+                    "from Is_user a,\n" +
+                    "     Is_apply_from b,\n" +
+                    "     Is_competition c\n" +
+                    "where a.user_id = b.user_id\n" +
+                    "  and b.competition_id=c.competition_id\n" +
+                    "  and a.user_id = ?1\n" +
+                    "and c.competition_name like concat('%', ?2, '%')" +
+                    "limit ?3,?4")
+    List<Map<String, Object>> findScisUserIdA(Integer id, String name, Integer page, Integer size);
 
     /**
      * 报名状态 分页 排序

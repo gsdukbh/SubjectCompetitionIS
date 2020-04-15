@@ -67,10 +67,11 @@
                         </el-form>
 
                     </el-col>
-
                 </el-row>
 
             </el-card>
+
+
             <el-card class="right top" shadow="hover">
 
                 <div slot="header" class="clearfix">
@@ -93,6 +94,29 @@
 
                 </el-upload>
             </el-card>
+            <el-card class="right top" shadow="hover">
+                <div slot="header" class="clearfix">
+                    <h3>首页图片
+                        <icon class="el-icon-picture-outline"></icon>
+                    </h3>
+                    <el-upload
+                            style="float: right; padding: 3px 0"
+                            class="upload-demo"
+                            action="/api/i/upFile/img"
+                            :on-success="onSuccess"
+                            list-type="picture">
+                        <el-button style="float: right; padding: 3px 0" type="text">设置首页图片</el-button>
+                    </el-upload>
+                </div>
+                <div class="demo-image__preview">
+                    <el-image
+                            style="width: 100px; height: 100px"
+                            :src="announcement.img"
+                            :preview-src-list="[announcement.img]">
+                    </el-image>
+                </div>
+            </el-card>
+
         </div>
 
 
@@ -142,6 +166,7 @@
                     type: '',
                     objectName: '',
                     bucketName: '',
+                    img: '',
                     scisUser: {
                         id: null,
                     }
@@ -179,10 +204,19 @@
             //     });
         },
         methods: {
+            onSuccess(response) {
+                if (response.status === 200) {
+                    this.$notify.success({
+                        title: '成功',
+                        message: '设置成功'
+                    })
+                    this.announcement.img = response.img;
+                } else {
+                    this.$message.error("上传失败");
+                }
+            },
             submitUpload() {
-
                 this.$refs.upload.submit();
-
             },
             upSuccess(response) {
                 if (response.status === 200) {

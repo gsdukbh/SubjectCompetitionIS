@@ -7,6 +7,8 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import werls.scis.dao.pojo.ScisTeamApply;
 
+import java.util.List;
+
 /**
  * @author : LiJiWei
  * @version V1.0
@@ -16,6 +18,9 @@ import werls.scis.dao.pojo.ScisTeamApply;
  * @date Date : 2020年02月26日 23:29
  */
 public interface TeamApplyRepository extends JpaRepository<ScisTeamApply, Integer> {
+
+//    List<ScisTeamApply> fin
+
     /**
      * 通过名称模糊查询，分页 排序
      *

@@ -34,6 +34,15 @@ public class TeamApplyController {
     @Autowired
     UserService userService;
 
+    @PostMapping("/findTeam/join/{id}")
+    public Map<String, Object> findTeam(@PathVariable Integer id,
+                                        @RequestParam(name = "page", defaultValue = "0") Integer page,
+                                        @RequestParam(name = "size", defaultValue = "20") Integer size,
+                                        @RequestParam(name = "name", defaultValue = "") String name) {
+        Map<String, Object> res = new ConcurrentHashMap<>(16);
+
+        return res;
+    }
 
     @PostMapping("/findAll/{id}")
     public Map<String, Object> findAll(@RequestParam(name = "page", defaultValue = "0") Integer page,
@@ -42,13 +51,10 @@ public class TeamApplyController {
                                        @PathVariable Integer id) {
         Map<String, Object> res = new ConcurrentHashMap<>(16);
         Pageable pageable = PageRequest.of(page, size, Sort.by("applyTime"));
-
         if (!"".equals(name)) {
-
             Page<ScisTeamApply> teamApplies = service.findByNameContainingAndCompetitionId(name, id, pageable);
             this.addUserList(teamApplies, res);
         } else {
-
             Page<ScisTeamApply> teamApplies = service.findAllByCompetitionId(id, pageable);
             this.addUserList(teamApplies, res);
         }
@@ -73,6 +79,7 @@ public class TeamApplyController {
             }
             if (competitionId.add(teamApply.getCompetition().getId())) {
                 ScisTeamApply result = service.save(teamApply);
+                System.out.println(result.getId());
                 userService.upUserTeam(true, true, true, result.getId(), user.getId());
                 res.put("result", result);
                 res.put("status", 200);
@@ -88,7 +95,6 @@ public class TeamApplyController {
         return res;
     }
 
-    @CacheEvict(cacheNames = "TeamApply", key = "#teamApply.id")
     @PostMapping("/upData")
     public Map<String, Object> upData(@RequestBody ScisTeamApply teamApply) {
         Map<String, Object> res = new ConcurrentHashMap<>(16);
@@ -146,7 +152,6 @@ public class TeamApplyController {
         for (ScisUser user1 : teamApplyList) {
             Map<String, Object> tem = userService.tex(team, user1.getId());
             ScisTeamUserApply apply = new ScisTeamUserApply();
-
             apply.setApply((Boolean) tem.get("isApply"));
             apply.setCaptain((Boolean) tem.get("isCaptain"));
             apply.setRead((Boolean) tem.get("isRead"));

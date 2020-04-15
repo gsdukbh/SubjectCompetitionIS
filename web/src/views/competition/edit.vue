@@ -294,11 +294,13 @@
         },
         methods: {
             dl() {
-                this.download.bucketName = this.showData.bucketName;
-                this.download.objectName = this.showData.objectName;
+                const download = {
+                    bucketName: this.ruleForm.bucketName,
+                    objectName: this.ruleForm.objectName
+                }
                 let a = document.createElement('a');
-                a.href = "/api/public/file/getFile?" + qs.stringify(this.download);
-                a.download = this.download.objectName;
+                a.href = "/api/public/file/getFile?" + qs.stringify(download);
+                a.download = download.objectName;
                 a.target = "_blank";
                 a.click();
             },

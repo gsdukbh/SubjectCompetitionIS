@@ -27,6 +27,14 @@ import java.util.List;
 @Repository
 public interface AnnouncementJpaRepository extends JpaRepository<ScisAnnouncement, Integer> {
 
+    /**
+     * 是
+     *
+     * @param status   String
+     * @param pageable Pageable
+     * @return Page<ScisAnnouncement>
+     */
+    Page<ScisAnnouncement> findAllByStatus(String status, Pageable pageable);
 
     /**
      * 公告时间在此之后
@@ -76,6 +84,16 @@ public interface AnnouncementJpaRepository extends JpaRepository<ScisAnnouncemen
     Page<ScisAnnouncement> findByFrom(String from, Pageable pageable);
 
     /**
+     * 暗示
+     *
+     * @param from     String
+     * @param status   String
+     * @param pageable Pageable
+     * @return Page<ScisAnnouncement>
+     */
+    Page<ScisAnnouncement> findByFromAndStatus(String from, String status, Pageable pageable);
+
+    /**
      * 按照公告类型，模糊 排序 分页
      *
      * @param typeLike String 类型
@@ -84,6 +102,15 @@ public interface AnnouncementJpaRepository extends JpaRepository<ScisAnnouncemen
      */
     Page<ScisAnnouncement> findByTypeContaining(String typeLike, Pageable pageable);
 
+    /**
+     * s
+     *
+     * @param typeLike String
+     * @param status   String
+     * @param pageable Pageable
+     * @return Page<ScisAnnouncement>
+     */
+    Page<ScisAnnouncement> findByTypeContainingAndStatus(String typeLike, String status, Pageable pageable);
 
     /**
      * 按照发布作者查询  模糊 分页 排序
@@ -105,6 +132,16 @@ public interface AnnouncementJpaRepository extends JpaRepository<ScisAnnouncemen
     Page<ScisAnnouncement> findByTitleContaining(String titleLike, Pageable pageable);
 
     /**
+     * sd
+     *
+     * @param titleLike String
+     * @param status    String
+     * @param pageable  Pageable
+     * @return Page<ScisAnnouncement>
+     */
+    Page<ScisAnnouncement> findByTitleContainingAndStatus(String titleLike, String status, Pageable pageable);
+
+    /**
      * ...
      *
      * @param title    String
@@ -114,6 +151,23 @@ public interface AnnouncementJpaRepository extends JpaRepository<ScisAnnouncemen
      * @return Page<ScisAnnouncement>
      */
     Page<ScisAnnouncement> findByTitleContainingAndTypeContainingAndFrom(String title, String type, String from, Pageable pageable);
+
+    /**
+     * 2
+     *
+     * @param title    String
+     * @param type     String
+     * @param from     String
+     * @param status   String
+     * @param pageable Pageable
+     * @return Page<ScisAnnouncement>
+     */
+    Page<ScisAnnouncement> findByTitleContainingAndTypeContainingAndFromAndStatus(
+            String title,
+            String type,
+            String from,
+            String status,
+            Pageable pageable);
 
     /**
      * ...
@@ -137,14 +191,34 @@ public interface AnnouncementJpaRepository extends JpaRepository<ScisAnnouncemen
     Page<ScisAnnouncement> findByTitleContainingAndTypeContaining(String title, String type, Pageable pageable);
 
     /**
-     * ..
+     * 11
      *
      * @param title    String
      * @param type     String
+     * @param status   String
      * @param pageable Pageable
      * @return Page<ScisAnnouncement>
      */
-    Page<ScisAnnouncement> findByTitleContainingAndFrom(String title, String type, Pageable pageable);
+    Page<ScisAnnouncement> findByTitleContainingAndTypeContainingAndStatus(String title, String type, String status, Pageable pageable);
+
+    /**
+     * ..
+     *
+     * @param title    String
+     * @param from     String
+     * @param pageable Pageable
+     * @return Page<ScisAnnouncement>
+     */
+    Page<ScisAnnouncement> findByTitleContainingAndFrom(String title, String from, Pageable pageable);
+
+    /**
+     * @param title    String
+     * @param from     String
+     * @param status   String
+     * @param pageable Pageable
+     * @return Page<ScisAnnouncement>
+     */
+    Page<ScisAnnouncement> findByTitleContainingAndFromAndStatus(String title, String from, String status, Pageable pageable);
 
     /**
      * 。。
@@ -155,6 +229,17 @@ public interface AnnouncementJpaRepository extends JpaRepository<ScisAnnouncemen
      * @return Page<ScisAnnouncement>
      */
     Page<ScisAnnouncement> findByTypeContainingAndFrom(String type, String from, Pageable pageable);
+
+    /**
+     * '
+     *
+     * @param type     String
+     * @param from     String
+     * @param status   String
+     * @param pageable Pageable
+     * @return Page<ScisAnnouncement>
+     */
+    Page<ScisAnnouncement> findByTypeContainingAndFromAndStatus(String type, String from, String status, Pageable pageable);
 
     /**
      * 查找公告类型 ，

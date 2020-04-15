@@ -163,7 +163,7 @@ export const asyncRoutes = [
             },
             {
                 path: 'detail/:id(\\d+)',
-                name: 'detail',
+                name: 'detail ss',
                 component: () => import('../views/competition/detail'),
                 hidden: true,
                 meta: {
@@ -173,7 +173,7 @@ export const asyncRoutes = [
             },
             {
                 path: 'detailStu/:id(\\d+)',
-                name: 'detail',
+                name: 'detail ',
                 component: () => import('../views/competition/detailStu'),
                 hidden: true,
                 meta: {
@@ -212,6 +212,25 @@ export const asyncRoutes = [
             icon: 'announcement'
         },
         children: [
+            {
+                path: 'index',
+                name: 'stu index',
+                component: () => import('../views/Announcement/studentViwer'),
+                meta: {
+                    roles: ['ROLE_STU'],
+                    title: '公告',
+                }
+            },
+            {
+                path: 'detailStu/:id(\\d+)',
+                name: 'detailStu index',
+                component: () => import('../views/Announcement/detailStu'),
+                hidden: true,
+                meta: {
+                    roles: ['ROLE_STU'],
+                    title: '公告详情',
+                }
+            },
             {
                 path: 'publish',
                 name: 'announcementPublish',

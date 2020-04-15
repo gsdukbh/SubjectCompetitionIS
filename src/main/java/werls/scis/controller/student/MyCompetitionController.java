@@ -2,12 +2,17 @@ package werls.scis.controller.student;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.AccessType;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import werls.scis.dao.pojo.ScisApplyFrom;
 import werls.scis.dao.pojo.ScisCompetition;
 import werls.scis.dao.pojo.ScisTeamApply;
 import werls.scis.dao.pojo.ScisUser;
+import werls.scis.service.ApplyFromSericeImpl;
 import werls.scis.service.CompetitionServiceImpl;
+import werls.scis.service.TeamServiceImpl;
 import werls.scis.service.UserService;
 
 import javax.validation.constraints.Email;
@@ -29,8 +34,55 @@ public class MyCompetitionController {
     CompetitionServiceImpl service;
     @Autowired
     UserService userService;
+    @Autowired
+    ApplyFromSericeImpl applyFromSerice;
+    @Autowired
+    TeamServiceImpl teamService;
 
-    @PostMapping("/my/join/{id}")
+    @GetMapping("/esc/team/{id}")
+    public Map<String, Object> findTeamEsc(@PathVariable Integer id) {
+        Map<String, Object> res = new ConcurrentHashMap<>(16);
+        res.put("status", 200);
+        teamService.deleteById(id);
+        return res;
+    }
+
+    @GetMapping("/esc/{id}")
+    public Map<String, Object> findPersonalEsc(@PathVariable Integer id) {
+        Map<String, Object> res = new ConcurrentHashMap<>(16);
+        res.put("status", 200);
+        applyFromSerice.deleteById(id);
+        return res;
+    }
+
+    @PostMapping("/findPersonal/{id}")
+    public Map<String, Object> findPersonal(@PathVariable Integer id,
+                                            @RequestParam(name = "page", defaultValue = "0") Integer page,
+                                            @RequestParam(name = "size", defaultValue = "20") Integer size,
+                                            @RequestParam(name = "name", defaultValue = "") String name) {
+        Map<String, Object> res = new ConcurrentHashMap<>(16);
+        List<Map<String, Object>> tem = applyFromSerice.findScisUserIdA(id, name, page, size);
+        res.put("status", 200);
+        res.put("content", tem);
+        res.put("totalElements", tem.size());
+        return res;
+    }
+
+    @PostMapping("/findTeam/{id}")
+    public Map<String, Object> findTeam(@PathVariable Integer id,
+                                        @RequestParam(name = "page", defaultValue = "0") Integer page,
+                                        @RequestParam(name = "size", defaultValue = "20") Integer size,
+                                        @RequestParam(name = "name", defaultValue = "") String name) {
+        Map<String, Object> res = new ConcurrentHashMap<>(16);
+        List<Map<String, Object>> tem = applyFromSerice.findScisUserIdT(id, name, page, size);
+        res.put("status", 200);
+        res.put("content", tem);
+        res.put("totalElements", tem.size());
+        return res;
+    }
+
+
+    @PostMapping("/my/join/team/{id}")
     public Map<String, Object> findMyJoinA(@PathVariable Integer id,
                                            @RequestParam(name = "page", defaultValue = "0") Integer page,
                                            @RequestParam(name = "size", defaultValue = "20") Integer size,
@@ -42,7 +94,6 @@ public class MyCompetitionController {
         res.put("data", competitionList);
         res.put("totalElements", competitionList.size());
         return res;
-
     }
 
 

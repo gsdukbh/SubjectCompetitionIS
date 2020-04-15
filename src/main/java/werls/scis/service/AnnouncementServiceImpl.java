@@ -27,6 +27,9 @@ public class AnnouncementServiceImpl {
     @Autowired
     private AnnouncementJpaRepository announcementJpaRepository;
 
+    public Page<ScisAnnouncement> findAllByStatus(String status, Pageable pageable) {
+        return announcementJpaRepository.findAllByStatus(status, pageable);
+    }
 
     /**
      * 公告时间在此之后
@@ -89,6 +92,10 @@ public class AnnouncementServiceImpl {
         return announcementJpaRepository.findByFrom(from, pageable);
     }
 
+    public Page<ScisAnnouncement> findByFromAndStatus(String from, String status, Pageable pageable) {
+        return announcementJpaRepository.findByFromAndStatus(from, status, pageable);
+    }
+
     /**
      * 按照公告类型，模糊 排序 分页
      *
@@ -99,6 +106,10 @@ public class AnnouncementServiceImpl {
 
     public Page<ScisAnnouncement> findByTypeContaining(String typeLike, Pageable pageable) {
         return announcementJpaRepository.findByTypeContaining(typeLike, pageable);
+    }
+
+    public Page<ScisAnnouncement> findByTypeContainingAndStatus(String typeLike, String status, Pageable pageable) {
+        return announcementJpaRepository.findByTypeContainingAndStatus(typeLike, status, pageable);
     }
 
     /**
@@ -123,6 +134,10 @@ public class AnnouncementServiceImpl {
 
     public Page<ScisAnnouncement> findByTitleContaining(String titleLike, Pageable pageable) {
         return announcementJpaRepository.findByTitleContaining(titleLike, pageable);
+    }
+
+    public Page<ScisAnnouncement> findByTitleContainingAndStatus(String titleLike, String status, Pageable pageable) {
+        return announcementJpaRepository.findByTitleContainingAndStatus(titleLike, status, pageable);
     }
 
     /**
@@ -174,6 +189,15 @@ public class AnnouncementServiceImpl {
         return announcementJpaRepository.findByTitleContainingAndTypeContainingAndFrom(title, type, from, pageable);
     }
 
+    public Page<ScisAnnouncement> findByTitleContainingAndTypeContainingAndFromAndStatus(
+            String title,
+            String type,
+            String from,
+            String status,
+            Pageable pageable) {
+        return announcementJpaRepository.findByTitleContainingAndTypeContainingAndFromAndStatus(title, type, from, status, pageable);
+    }
+
     public Page<ScisAnnouncement> findByTitleContainingOrTypeContainingOrFrom(
             String title,
             String type,
@@ -189,18 +213,32 @@ public class AnnouncementServiceImpl {
         return announcementJpaRepository.findByTitleContainingAndTypeContaining(title, type, pageable);
     }
 
-    public Page<ScisAnnouncement> findByTitleContainingAndFrom(String title, String type, Pageable pageable) {
-        return announcementJpaRepository.findByTitleContainingAndFrom(title, type, pageable);
+    public Page<ScisAnnouncement> findByTitleContainingAndTypeContainingAndStatus(String title, String type, String status, Pageable pageable) {
+        return announcementJpaRepository.findByTitleContainingAndTypeContainingAndStatus(title, type, status, pageable);
+    }
+
+    public Page<ScisAnnouncement> findByTitleContainingAndFrom(String title, String from, Pageable pageable) {
+        return announcementJpaRepository.findByTitleContainingAndFrom(title, from, pageable);
+    }
+
+    public Page<ScisAnnouncement> findByTitleContainingAndFromAndStatus(String title, String from, String status, Pageable pageable) {
+        return announcementJpaRepository.findByTitleContainingAndFromAndStatus(title, from, status, pageable);
     }
 
     public Page<ScisAnnouncement> findByTypeContainingAndFrom(String type, String from, Pageable pageable) {
         return announcementJpaRepository.findByTypeContainingAndFrom(type, from, pageable);
     }
-    public Optional<ScisAnnouncement> findById(Integer id){
+
+    public Page<ScisAnnouncement> findByTypeContainingAndFromAndStatus(String type, String from, String status, Pageable pageable) {
+        return announcementJpaRepository.findByTypeContainingAndFromAndStatus(type, from, status, pageable);
+    }
+
+    public Optional<ScisAnnouncement> findById(Integer id) {
 
         return announcementJpaRepository.findById(id);
     }
-    public   List<String> findTitle(){
+
+    public List<String> findTitle() {
         return announcementJpaRepository.findTitle();
     }
 }

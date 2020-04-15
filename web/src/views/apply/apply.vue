@@ -296,8 +296,14 @@
         },
         methods: {
             createTeamJoin(form) {
-                this.createTeam();
+                this.createTeamApply.competition.id = this.competition.id;
+                const user = {
+                    id: this.userId
+                }
+                this.createTeamApply.number = this.competition.numLimit;
+                this.createTeamApply.scisUserList.push(user);
                 this.buttonLoading2 = true;
+                this.createTeamApply.captain = this.name;
                 this.$refs[form].validate((valid) => {
                     if (valid) {
                         postJson('/student/team/save', this.createTeamApply)
@@ -327,12 +333,6 @@
                 })
             },
             createTeam() {
-                this.createTeamApply.competition.id = this.competition.id;
-                const user = {
-                    id: this.userId
-                }
-                this.createTeamApply.number = this.competition.numLimit;
-                this.createTeamApply.scisUserList.push(user);
                 this.showTeamInfo = false;
 
             },

@@ -74,7 +74,7 @@ public class FileUploader {
     }
 
     public InputStream getObject(String bucketName, String objectName) throws Exception {
-
+        logger.info(new Date().toString() + " 下传了文件：" + objectName);
         return minioClient.getObject(bucketName, objectName);
     }
 

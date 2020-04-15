@@ -71,7 +71,6 @@
                             </el-form>
 
                         </el-col>
-
                     </el-row>
 
                 </el-card>
@@ -85,12 +84,12 @@
                         <el-button style="float: right; padding: 3px 0" type="text" @click="submitUpload">上 传
                         </el-button>
                     </div>
-
                     <el-link type="primary" v-if="announcement.bucketName!=null" @click="dl()"><i
                             class="el-icon-download"></i>下载
                     </el-link>
-                    <el-upload
 
+                    <el-upload
+                            style="margin-top: 10px"
                             drag
                             class="upload-demo"
                             ref="upload"
@@ -101,6 +100,28 @@
                         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
 
                     </el-upload>
+                </el-card>
+                <el-card class="right top" shadow="hover" v-if="announcement.img!=null">
+                    <div slot="header" class="clearfix">
+                        <h3>首页图片
+                            <icon class="el-icon-picture-outline"></icon>
+                        </h3>
+                        <el-upload
+                                class="upload-demo"
+                                action="/api/i/upFile/img"
+                                :on-success="onSuccess"
+                                list-type="picture">
+                            <el-link>设置首页图片</el-link>
+
+                        </el-upload>
+                    </div>
+                    <div class="demo-image__preview">
+                        <el-image
+                                style="width: 100px; height: 100px"
+                                :src="announcement.img"
+                                :preview-src-list="[announcement.img]">
+                        </el-image>
+                    </div>
                 </el-card>
             </div>
 
@@ -191,12 +212,25 @@
                 });
         },
         methods: {
+            onSuccess(response) {
+                if (response.status === 200) {
+                    this.$notify.success({
+                        title: '成功',
+                        message: '设置成功'
+                    })
+                    this.announcement.img = response.img;
+                } else {
+                    this.$message.error("上传失败");
+                }
+            },
             dl() {
-                this.download.bucketName = this.showData.bucketName;
-                this.download.objectName = this.showData.objectName;
+                const download = {
+                    bucketName: this.announcement.bucketName,
+                    objectName: this.announcement.objectName
+                }
                 let a = document.createElement('a');
-                a.href = "/api/public/file/getFile?" + qs.stringify(this.download);
-                a.download = this.download.objectName;
+                a.href = "/api/public/file/getFile?" + qs.stringify(download);
+                a.download = download.objectName;
                 a.target = "_blank";
                 a.click();
             },

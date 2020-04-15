@@ -2,70 +2,32 @@
     <div class="content">
         <div class="main" v-if="Page404 ===false"
              :style="{'background-image': 'url('+announcement.img+')'}">
-            <!--顶部-->
-            <sticky :z-index="10" class-name="sub-navbar">
-
-                <router-link :to="'/announcement/edit/'+this.id">
-
-                    <el-button style="margin-left: 10px;" type="primary">
-                        更改
-                    </el-button>
-
-                </router-link>
-
-            </sticky>
-
-            <!--内容-->
-
             <!--左边主要内容-->
             <div class="leftColumn">
                 <el-card class="left top " shadow="hover">
                     <!--标题-->
-                    <el-tag v-if="announcement.status ==='0' " style="float: right; font-size: 12px;" > 公开状态 </el-tag>
-                    <el-tag v-if="announcement.status ==='1' " style="float: right; font-size: 12px;" > 草稿状态 </el-tag>
                     <h1 class="title">{{announcement.title}}</h1>
 
 
                     <p class="info">
                         <span v-if="announcement.status==='0'">发布时间: {{formatTimeA(announcement.time)}} </span>
-                        <span v-if="announcement.status==='1'">最后时间: {{formatTimeA(announcement.time)}} </span>
+                        <span v-if="announcement.status==='1'">最后修改时间: {{formatTimeA(announcement.time)}} </span>
                         <span style="margin-left: 15px"></span>
                         发布单位: {{announcement.from}}
                         <span style="margin-left: 15px"></span>
-                        作者:  {{announcement.author}}
+                        作者: {{announcement.author}}
                         <span style="margin-left: 15px"></span>
                         信息类型: {{announcement.type}}
                     </p>
                     <el-divider></el-divider>
                     <!--主要内容-->
 
-                    <markdown-viewer v-bind:content="announcement.content" ></markdown-viewer>
+                    <markdown-viewer v-bind:content="announcement.content"></markdown-viewer>
                 </el-card>
 
             </div>
             <!--右边信息栏-->
             <div class="rightColumn">
-                <el-card class="right top" shadow="hover">
-                    <h4>
-                        基础信息  <i class="el-icon-info"/>
-                    </h4>
-                    <el-divider content-position="right"></el-divider>
-
-                    <el-row>
-                        <el-col :span="24">
-                            公告状态:
-                            <el-tag v-if="announcement.status ==='0' " size="small" disable-transitions > 公开状态 </el-tag>
-                            <el-tag v-if="announcement.status ==='1' " size="small" disable-transitions> 草稿状态 </el-tag>
-                        </el-col>
-                        <el-col :span="24" style="margin-top: 10px">
-                            最后编辑: {{announcement.author}}
-                        </el-col>
-                        <el-col :span="24" style="margin-top: 10px">
-                            最后修改时间:
-                            {{formatTimeA(announcement.time)}}
-                        </el-col>
-                    </el-row>
-                </el-card>
                 <el-card class="right top" shadow="hover" v-if="announcement.bucketName!=null">
 
                     <div slot="header" class="clearfix">
@@ -74,20 +36,6 @@
                         </h3>
                     </div>
                     <el-link type="primary" @click="dl()"><i class="el-icon-download"></i>下载</el-link>
-                </el-card>
-                <el-card class="right top" shadow="hover" v-if="announcement.img!=null">
-                    <div slot="header" class="clearfix">
-                        <h3>首页图片
-                            <icon class="el-icon-picture-outline"></icon>
-                        </h3>
-                    </div>
-                    <div class="demo-image__preview">
-                        <el-image
-                                style="width: 100px; height: 100px"
-                                :src="announcement.img"
-                                :preview-src-list="[announcement.img]">
-                        </el-image>
-                    </div>
                 </el-card>
             </div>
 
@@ -103,7 +51,7 @@
 </template>
 
 <script>
-    import Sticky from "../../components/Sticky/index";
+
     import BackToTop from "../../components/BackTop/index";
     import Page404 from "../error-page/404";
     import {getJson} from "../../api/api";
@@ -113,8 +61,8 @@
 
 
     export default {
-        name: "detail",
-        components: {MarkdownViewer, Page404, BackToTop, Sticky},
+        name: "detailStu",
+        components: {MarkdownViewer, Page404, BackToTop},
         data() {
             return {
                 Page404: null,
@@ -181,6 +129,7 @@
 </script>
 
 <style lang="scss" scoped>
+
 
     .rightColumn {
         float: left;

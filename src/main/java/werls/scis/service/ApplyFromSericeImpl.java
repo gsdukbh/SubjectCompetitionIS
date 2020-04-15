@@ -10,6 +10,7 @@ import werls.scis.dao.pojo.ScisAnnouncement;
 import werls.scis.dao.pojo.ScisApplyFrom;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author : LiJiWei
@@ -25,6 +26,14 @@ public class ApplyFromSericeImpl {
     @Autowired
     private ApplyFromRepository apply;
 
+
+    public List<Map<String, Object>> findScisUserIdT(Integer id, String name, Integer page, Integer size) {
+        return apply.findScisUserIdT(id, name, page, size);
+    }
+
+    public List<Map<String, Object>> findScisUserIdA(Integer id, String name, Integer page, Integer size) {
+        return apply.findScisUserIdA(id, name, page, size);
+    }
 
     public Page<ScisApplyFrom> findAllByCompetitionId(Integer id, Pageable pageable) {
         return apply.findAllByCompetitionId(id, pageable);
