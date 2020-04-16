@@ -5,11 +5,11 @@
             <el-tabs type="card" class="top" value="first">
 
                 <el-tab-pane label="我创建的团队" lazy name="first">
-                    <my-join-team/>
+                    <my-created-apply/>
                 </el-tab-pane>
 
                 <el-tab-pane label="我加入的团队" lazy name="second">
-
+                    <my-join-team/>
                 </el-tab-pane>
 
             </el-tabs>
@@ -19,18 +19,19 @@
 
 <script>
     import MyJoinTeam from "./components/myJoinTeam";
+    import MyCreatedApply from "./components/myCreatedApply";
 
     export default {
         name: "team",
-        components: {MyJoinTeam}
+        components: {MyCreatedApply, MyJoinTeam}
     }
 </script>
 
 <style scoped>
     .top {
-        width: 80%;
-        margin-right: 10%;
-        margin-left: 10%;
+        width: 95%;
+        margin-right: 2.5%;
+        margin-left: 2.5%;
         margin-top: 20px;
     }
 </style>

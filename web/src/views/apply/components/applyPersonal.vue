@@ -122,24 +122,36 @@
         },
         methods: {
             escApply(value) {
+
                 this.buttonLoading = true;
-                getJson('/student/Competition/esc/' + value.applyId)
-                    .then(response => {
-                        if (response.data.status === 200) {
-                            this.$notify.success({
-                                title: '成功',
-                                message: '退出成功'
-                            })
-                            this.getDataPage()
-                        } else {
-                            this.$notify.error({
-                                title: '错误',
-                                message: response.data.message
-                            })
-                        }
-                        this.buttonLoading = false;
-                    }).catch(error => {
-                    this.$message.error(error)
+                this.$confirm('此操作将取消, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    getJson('/student/Competition/esc/' + value.applyId)
+                        .then(response => {
+                            if (response.data.status === 200) {
+                                this.$notify.success({
+                                    title: '成功',
+                                    message: '退出成功'
+                                })
+                                this.getDataPage()
+                            } else {
+                                this.$notify.error({
+                                    title: '错误',
+                                    message: response.data.message
+                                })
+                            }
+                            this.buttonLoading = false;
+                        }).catch(error => {
+                        this.$message.error(error)
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
                 })
             },
             formatTimeA(time) {

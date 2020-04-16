@@ -5,8 +5,8 @@ const applyRouter={
     name:'apply',
     component: Layout,
     meta:{
-        title:'报名',
-        icon:'apply'
+        title: '报名',
+        icon: 'apply',
     },
     children: [
         {
@@ -26,6 +26,7 @@ const applyRouter={
             hidden: true,
             meta: {
                 title: "报名",
+                roles: ['ROLE_STU']
             }
         },
         {
@@ -33,7 +34,7 @@ const applyRouter={
             name: 'team info',
             component: () => import('../views/apply/team'),
             meta: {
-                title: "团队",
+                title: "我的团队",
                 icon: 'team',
                 roles: ['ROLE_STU'],
             }

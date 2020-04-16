@@ -26,7 +26,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * @date Date : 2020年04月03日 22:39
  */
 @Component
-@Async
 public class Tools {
     @Autowired
     ClassServiceImpl classService;

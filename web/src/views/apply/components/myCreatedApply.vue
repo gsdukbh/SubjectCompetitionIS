@@ -1,5 +1,6 @@
 <template>
     <div>
+
         <el-table
                 border
                 style="width: 100%"
@@ -56,16 +57,16 @@
 
             <el-table-column label="操作" align="center" width="350px" class-name="small-padding fixed-width">
                 <template slot-scope="{row}">
-                    <el-button type="info" :loading="buttonLoading" size="mini" icon="el-icon-info"
+                    <el-button type="primary" size="mini" icon="el-icon-info"
                                @click="showTeamInfo(row)"
                     >
-                        查看成员
+                        管理团队
                     </el-button>
 
                     <el-button style="margin-left: 10px" type="danger" :loading="buttonLoading" size="mini"
                                icon="el-icon-delete"
-                               @click="escApply(row)">
-                        取消报名
+                               @click="disbandTeam(row)">
+                        解散队伍
                     </el-button>
                 </template>
 
@@ -75,11 +76,48 @@
         <el-dialog
                 title="提示"
                 :visible.sync="dialogVisible"
-                width="50%"
+                width="60%"
         >
+            <!-- v-if="applyTeam.length===0"-->
+            <div>
+                <el-card
+                        shadow="hover"
+                        v-for="(row,index) in applyTeam "
+                        :key="row.userId"
+                >
+                    <el-row>
+                        <el-col :span="2">
+                            <el-avatar icon="el-icon-user-solid" v-if="row.avatar===null"></el-avatar>
+                            <el-avatar
+                                    v-if="row.avatar!==null"
+                                    :src="row.avatar">
+                            </el-avatar>
+
+                        </el-col>
+                        <el-col :span="22">
+                            <span style="font-size: larger">{{row.name}}  </span>
+                            <span style="margin-left: 20px;color: #5a5e66"> 时间：{{formatTimeA(row.applyTeamTime)}} </span>
+                            <br>
+                            <svg-icon icon-class="college"/>
+                            <span>{{row.ClassInfo.major.college.name}}</span>
+                            <span style="margin-left: 10px">{{row.ClassInfo.name}}</span>
+                            <span style="margin-left: 10px;color: #2b2f3a;font-size: large">申请加入你的团队 </span>
+
+                            <el-button style="margin-left: 30%" :loading="loading1" type="primary"
+                                       @click="agreeApply(row,index)">
+                                同意
+                            </el-button>
+                            <el-button type="danger" @click="refuseApply(row,index)">
+                                拒绝
+                            </el-button>
+                        </el-col>
+                    </el-row>
+                </el-card>
+            </div>
+
             <el-table
                     :data="teamMember"
-                    style="width: 100%"
+                    style="width: 100%;margin-top: 5px"
                     :row-class-name="tableRowClassName">
                 <el-table-column
                         prop="name"
@@ -109,14 +147,22 @@
                 </el-table-column>
                 <el-table-column label="班级" prop="ClassInfo.name">
                 </el-table-column>
+                <el-table-column label="操作" align="center" width="180px" class-name="small-padding fixed-width">
+                    <template slot-scope="{row}">
+                        <el-button style="margin-left: 10px" type="danger" :loading="buttonLoading" size="mini"
+                                   icon="el-icon-delete"
+                                   @click="escApply(row)">
+                            请他离开队伍
+                        </el-button>
+                    </template>
 
+                </el-table-column>
             </el-table>
             <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible = false">取 消</el-button>
     <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
   </span>
         </el-dialog>
-
         <div class="center">
             <el-pagination
                     @size-change="handleSizeChange"
@@ -141,12 +187,12 @@
 
 <script>
     import {mapGetters} from "vuex";
-    import {getJson, postFrom} from "../../../api/api";
-    import {parseTime} from '../../../utils/index'
+    import {getJson, postFrom, postJson} from "../../../api/api";
     import BackToTop from "../../../components/BackTop/index";
+    import {parseTime} from '../../../utils/index'
 
     export default {
-        name: "myJoinTeam",
+        name: "myCreatedApply",
         components: {BackToTop},
         computed: {
             ...mapGetters([
@@ -158,6 +204,7 @@
             return {
                 team: [],
                 loading: true,
+                loading1: false,
                 dialogVisible: false,
                 teamMember: [],
                 page: {
@@ -165,33 +212,83 @@
                     page: 0,
                     teamName: '',
                     competitionName: '',
-                    isCaptain: false,
+                    isCaptain: true,
                     totalElements: 100,
                 },
                 buttonLoading: false,
-
+                applyTeam: [],
+                upDate: {
+                    isCaptain: false,
+                    isApply: false,
+                    isRead: true,
+                    teamId: null,
+                    userId: null,
+                }
             }
         },
         created() {
-            this.getDataPage();
+            this.getDataPage()
         },
         methods: {
-
-            tableRowClassName({row}) {
-                if (row.isCaptain) {
-                    return 'success-row';
-                } else {
-                    return '';
-                }
+            agreeApply(value, index) {
+                this.upDate.isApply = true;
+                this.upDate.teamId = value.teamId
+                this.upDate.userId = value.userId;
+                postJson('/student/team/update', this.upDate)
+                    .then(response => {
+                        if (response.data.status === 200) {
+                            this.$notify.success({
+                                title: '成功',
+                            })
+                            this.applyTeam.splice(index, 1);
+                            this.getDataPage()
+                        } else {
+                            this.$notify.error({
+                                title: '错误',
+                                message: response.data.message
+                            })
+                        }
+                    })
             },
-            escApply(value) {
-                this.buttonLoading = true;
-                this.$confirm('此操作将退出队伍, 是否继续?', '提示', {
+            refuseApply(value, index) {
+                this.$confirm('确定拒绝？', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    getJson('/student/Competition/team/esc/' + this.userId + '/' + value.teamId)
+                    getJson('/student/Competition/team/esc/' + value.userId + '/' + value.teamId)
+                        .then(response => {
+                            if (response.data.status === 200) {
+                                this.$notify.success({
+                                    title: '成功',
+                                })
+                                this.applyTeam.splice(index, 1);
+                                this.getDataPage()
+                            } else {
+                                this.$notify.error({
+                                    title: '错误',
+                                    message: response.data.message
+                                })
+                            }
+                            this.buttonLoading = false;
+                        }).catch(error => {
+                        this.$message.error(error)
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
+                    })
+                })
+            },
+            escApply(value) {
+                this.buttonLoading = true;
+                this.$confirm('此操作将取消, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    getJson('/student/Competition/esc/' + value.applyId)
                         .then(response => {
                             if (response.data.status === 200) {
                                 this.$notify.success({
@@ -208,11 +305,53 @@
                             this.buttonLoading = false;
                         }).catch(error => {
                         this.$message.error(error)
-                    }).catch(() => {
-                        this.$message({
-                            type: 'info',
-                            message: '已取消删除'
-                        });
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                })
+            },
+            tableRowClassName({row}) {
+                if (row.isCaptain) {
+                    return 'success-row';
+                } else {
+                    return '';
+                }
+            },
+
+            disbandTeam(value) {
+                this.buttonLoading = true;
+                this.$confirm('此操作将解散队伍, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    getJson('/student/Competition/team/esc/' + value.teamId)
+                        .then(response => {
+                            if (response.data.status === 200) {
+                                this.$notify.success({
+                                    title: '成功',
+                                    message: '队伍解散成功'
+                                })
+                                this.getDataPage()
+                            } else {
+                                this.$notify.error({
+                                    title: '错误',
+                                    message: response.data.message
+                                })
+                            }
+                            this.buttonLoading = false;
+                        }).catch(error => {
+                        this.buttonLoading = false;
+                        this.$message.error(error)
+                    })
+                }).catch(() => {
+                    this.buttonLoading = false;
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
                     });
                 })
             },
@@ -227,7 +366,17 @@
 
                         this.$message.error("出现了一些问题:" + error)
                     })
+                getJson('/student/team/find/Team/Member/' + value.teamId + '/' + false)
+                    .then(response => {
+                        if (response.data.status === 200) {
+                            this.applyTeam = response.data.content;
+                        }
+                    }).catch(error => {
+
+                    this.$message.error("出现了一些问题:" + error)
+                })
                 this.dialogVisible = true;
+
             },
             formatTimeA(time) {
                 return parseTime(time, '{y}-{m}-{d} {h}:{i}')
@@ -271,7 +420,6 @@
                     })
             },
         }
-
     }
 </script>
 

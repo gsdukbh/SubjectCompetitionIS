@@ -1,6 +1,4 @@
 <template>
-
-
     <el-row v-loading="loading">
         <div id="viewer"></div>
     </el-row>

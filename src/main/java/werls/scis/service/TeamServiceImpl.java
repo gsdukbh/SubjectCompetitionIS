@@ -9,6 +9,7 @@ import werls.scis.dao.jpa.TeamApplyRepository;
 import werls.scis.dao.pojo.ScisTeamApply;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -24,6 +25,23 @@ import java.util.Optional;
 public class TeamServiceImpl {
     @Autowired
     private TeamApplyRepository teamApplyRepository;
+
+
+    public void deleteTeamUser(Integer teamId, Integer userId) {
+        teamApplyRepository.deleteTeamUser(teamId, userId);
+    }
+
+    public List<Map<String, Object>> findTeamMember(Integer teamId, Boolean isApply) {
+        return teamApplyRepository.findTeamMember(teamId, isApply);
+    }
+
+    public List<Map<String, Object>> findMyTeamIsCaptain(Integer userId, String competitionName, String teamName, Boolean isCaptain, Integer page, Integer size) {
+        return teamApplyRepository.findMyTeamIsCaptain(userId, competitionName, teamName, isCaptain, page, size);
+    }
+
+    public List<Map<String, Object>> findMyTeam(Integer userId, String competitionName, String teamName, Integer page, Integer size) {
+        return teamApplyRepository.findMyTeam(userId, competitionName, teamName, page, size);
+    }
 
     public Optional<ScisTeamApply> findById(Integer id) {
         return teamApplyRepository.findById(id);

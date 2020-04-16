@@ -39,7 +39,7 @@
                         label="队名"
                         prop="name">
                     <template slot-scope="{row}">
-                        <router-link to="">
+                        <router-link to="/apply/team/">
                             <el-link v-if="row.name.length>15">{{row.name.substr(0,20)}}...</el-link>
                             <el-link v-if="row.name.length<15" style="color: #2b2f3a"> {{row.name}}</el-link>
                         </router-link>
@@ -81,16 +81,6 @@
                     </template>
                 </el-table-column>
             </el-table-column>
-            <el-table-column label="操作" align="center" width="180px" class-name="small-padding fixed-width">
-                <template slot-scope="{row}">
-                    <el-button type="danger" :loading="buttonLoading" size="mini" icon="el-icon-edit"
-                               @click="escApply(row)">
-                        取消报名
-                    </el-button>
-
-                </template>
-
-            </el-table-column>
 
         </el-table>
 
@@ -119,7 +109,7 @@
 
 <script>
     import {mapGetters} from "vuex";
-    import {getJson, postFrom} from "../../../api/api";
+    import {postFrom} from "../../../api/api";
     import {parseTime} from '../../../utils/index'
     import BackToTop from "../../../components/BackTop/index";
 
@@ -136,6 +126,7 @@
             return {
                 teamApply: null,
                 loading: true,
+                buttonLoading: false,
                 page: {
                     size: 20,
                     page: 0,
@@ -148,27 +139,6 @@
             this.getDataPage();
         },
         methods: {
-            escApply(value) {
-                this.buttonLoading = true;
-                getJson('/student/Competition/esc/team' + value.teamId)
-                    .then(response => {
-                        if (response.data.status === 200) {
-                            this.$notify.success({
-                                title: '成功',
-                                message: '退出成功'
-                            })
-                            this.getDataPage()
-                        } else {
-                            this.$notify.error({
-                                title: '错误',
-                                message: response.data.message
-                            })
-                        }
-                        this.buttonLoading = false;
-                    }).catch(error => {
-                    this.$message.error(error)
-                })
-            },
             formatTimeA(time) {
                 return parseTime(time, '{y}-{m}-{d} {h}:{i}')
             },

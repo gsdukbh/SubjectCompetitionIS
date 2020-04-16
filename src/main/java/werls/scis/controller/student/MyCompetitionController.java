@@ -39,6 +39,12 @@ public class MyCompetitionController {
     @Autowired
     TeamServiceImpl teamService;
 
+    /**
+     * 解散队伍
+     *
+     * @param id Integer
+     * @return Map<String, Object>
+     */
     @GetMapping("/esc/team/{id}")
     public Map<String, Object> findTeamEsc(@PathVariable Integer id) {
         Map<String, Object> res = new ConcurrentHashMap<>(16);
@@ -46,6 +52,15 @@ public class MyCompetitionController {
         teamService.deleteById(id);
         return res;
     }
+
+    @GetMapping("/team/esc/{userId}/{teamId}")
+    public Map<String, Object> teamEsc(@PathVariable Integer userId, @PathVariable Integer teamId) {
+        Map<String, Object> res = new ConcurrentHashMap<>(16);
+        res.put("status", 200);
+        teamService.deleteTeamUser(teamId, userId);
+        return res;
+    }
+
 
     @GetMapping("/esc/{id}")
     public Map<String, Object> findPersonalEsc(@PathVariable Integer id) {
