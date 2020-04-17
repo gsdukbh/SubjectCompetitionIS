@@ -122,16 +122,6 @@ export const asyncRoutes = [
         },
         children: [
             {
-                path: 'apply/detail/:id(\\d+)',
-                name: 'admin competition',
-                component: () => import('../views/apply/admin'),
-                hidden: true,
-                meta: {
-                    title: "报名",
-                    roles: ['ROLE_ADMIN', 'ROLE_TEA'],
-                }
-            },
-            {
                 path: 'user',
                 name: 'studentCompetition',
                 component: () => import('../views/competition/studentCompetition'),

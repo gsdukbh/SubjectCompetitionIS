@@ -3,7 +3,11 @@
             <div  v-if="Page404 ===false" class="main">
 
                 <sticky :z-index="10" class-name="sub-navbar">
-
+                    <router-link :to="'/apply/apply/detail/'+id">
+                        <el-button>
+                            报名详情
+                        </el-button>
+                    </router-link>
                     <router-link :to="'/competition/edit/'+showData.id">
                         <el-button style="margin-left: 10px;" type="success">
                             修改
@@ -58,15 +62,15 @@
                                         <el-col :span="24">
                                             <span>发布者：{{showData.author}}</span>
                                         </el-col>
-                                        <el-col :span="24">
-                                            <span v-if="showData.team">参赛形式：团队赛</span>
-                                        </el-col>
-                                        <el-col :span="24">
-                                            <span v-if="!showData.team">参赛形式：个人赛</span>
-                                        </el-col>
-                                        <el-col :span="24">
-                                            <span v-if="showData.team">人数限制：{{showData.numLimit}}</span>
-                                        </el-col>
+                                        <!--                                        <el-col :span="24">-->
+                                        <!--                                            <span v-if="showData.team">参赛形式：团队赛</span>-->
+                                        <!--                                        </el-col>-->
+                                        <!--                                        <el-col :span="24">-->
+                                        <!--                                            <span v-if="!showData.team">参赛形式：个人赛</span>-->
+                                        <!--                                        </el-col>-->
+                                        <!--                                        <el-col :span="24">-->
+                                        <!--                                            <span v-if="showData.team">人数限制：{{showData.numLimit}}</span>-->
+                                        <!--                                        </el-col>-->
 
                                     </el-row>
                                 </el-card>
@@ -242,9 +246,6 @@
 
                     </el-tab-pane>
 
-                    <el-tab-pane label="报名详情" lazy name="3">
-                        配置管理
-                    </el-tab-pane>
 
                 </el-tabs>
 

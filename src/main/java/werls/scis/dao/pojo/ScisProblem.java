@@ -67,15 +67,6 @@ public class ScisProblem implements Serializable {
 //    @JsonIgnore
     private ScisCompetition competition;
 
-    /**
-     * 作品问题
-     */
-
-    @JsonIgnoreProperties({"problems"})
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "works_id")
-    @JsonIgnore
-    private ScisWorks worksList;
 
 
     @OneToOne(cascade=CascadeType.ALL)
@@ -98,13 +89,7 @@ public class ScisProblem implements Serializable {
         this.reply = reply;
     }
 
-    public ScisWorks getWorksList() {
-        return worksList;
-    }
 
-    public void setWorksList(ScisWorks worksList) {
-        this.worksList = worksList;
-    }
 
 
     public ScisUser getScisUser() {

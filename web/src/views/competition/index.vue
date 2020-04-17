@@ -122,7 +122,7 @@
 
             </el-table-column>
 
-            <el-table-column label="操作" align="center" width="350px" class-name="small-padding fixed-width">
+            <el-table-column label="操作" align="center" width="450px" class-name="small-padding fixed-width">
                 <template slot-scope="{row,$index}">
                     <router-link :to="'/competition/edit/'+row.id">
 
@@ -133,8 +133,14 @@
                     </router-link>
 
                     <router-link :to="'/competition/detail/'+row.id">
-                        <el-button style="margin-left: 10px;" type="primary" size="mini" icon="el-icon-reading">
+                        <el-button style="margin-left: 10px;" size="mini" icon="el-icon-reading">
                             详情
+                        </el-button>
+                    </router-link>
+
+                    <router-link :to="'/apply/apply/detail/'+row.id">
+                        <el-button style="margin-left: 10px;" type="info" size="mini" icon="el-icon-info">
+                            报名数据
                         </el-button>
                     </router-link>
 

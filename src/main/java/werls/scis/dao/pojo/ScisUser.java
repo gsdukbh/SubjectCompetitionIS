@@ -52,6 +52,7 @@ public class ScisUser implements Serializable {
 
     @Column(name = "user_avatar")
     private String avatar;
+
     /**
      * 用户角色
      */
@@ -94,11 +95,11 @@ public class ScisUser implements Serializable {
     @Fetch(FetchMode.SUBSELECT)
     @JsonIgnoreProperties({"scisUser"})
     @OneToMany(mappedBy = "scisUser", fetch = FetchType.EAGER)
-//    @JsonIgnore
+    @JsonIgnore
     private List<ScisAnnouncement> announcements;
 
     @Fetch(FetchMode.SUBSELECT)
-//    @JsonIgnore
+    @JsonIgnore
     @JsonIgnoreProperties({"scisUserList"})
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "scisUserList")
     private List<ScisTeamApply> teamApplies;
@@ -114,7 +115,7 @@ public class ScisUser implements Serializable {
     @Fetch(FetchMode.SUBSELECT)
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
     @JsonIgnoreProperties({"user"})
-    @JsonIgnore
+//    @JsonIgnore
     private List<ScisCompetition> competitionList;
 
 

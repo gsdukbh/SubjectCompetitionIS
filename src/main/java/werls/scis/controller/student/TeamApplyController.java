@@ -57,34 +57,34 @@ public class TeamApplyController {
                                                    @RequestParam(name = "isCaptain", defaultValue = "false") Boolean isCaptain) {
         Map<String, Object> res = new ConcurrentHashMap<>(16);
         List<Map<String, Object>> tem = service.findMyTeamIsCaptain(id, competitionName, teamName, isCaptain, page, size);
-        List<Map<String, Object>> result = new ArrayList<>();
-        for (Map<String, Object> map : tem) {
-            Map<String, Object> temInfo = new HashMap<>(16);
-            for (Map.Entry<String, Object> entry : map.entrySet()) {
-                temInfo.put(entry.getKey(), entry.getValue());
-            }
-//            List<Map<String, Object>> teamMember = service.findTeamMember((Integer) map.get("teamId"));
-//            List<Map<String, Object>> teamMemberRes = new ArrayList<>();
-//            for (Map<String, Object> map1 : teamMember) {
-//                Integer userId = (Integer) map1.get("userId");
-//                Optional<ScisUser> userOptional = userService.findById(userId);
-//                Map<String, Object> teamMemberInfo = new HashMap<>(16);
-//                for (Map.Entry<String, Object> entry : map1.entrySet()) {
-//                    teamMemberInfo.put(entry.getKey(), entry.getValue());
-//                }
-//                if (userOptional.isPresent()) {
-//                    ScisUser user = userOptional.get();
-//                    teamMemberInfo.put("ClassInfo", user.getScisClass());
-//                }
-//                teamMemberRes.add(teamMemberInfo);
+//        List<Map<String, Object>> result = new ArrayList<>();
+//        for (Map<String, Object> map : tem) {
+//            Map<String, Object> temInfo = new HashMap<>(16);
+//            for (Map.Entry<String, Object> entry : map.entrySet()) {
+//                temInfo.put(entry.getKey(), entry.getValue());
 //            }
-//            temInfo.put("teamMember",teamMemberRes);
-            result.add(temInfo);
-        }
+////            List<Map<String, Object>> teamMember = service.findTeamMember((Integer) map.get("teamId"));
+////            List<Map<String, Object>> teamMemberRes = new ArrayList<>();
+////            for (Map<String, Object> map1 : teamMember) {
+////                Integer userId = (Integer) map1.get("userId");
+////                Optional<ScisUser> userOptional = userService.findById(userId);
+////                Map<String, Object> teamMemberInfo = new HashMap<>(16);
+////                for (Map.Entry<String, Object> entry : map1.entrySet()) {
+////                    teamMemberInfo.put(entry.getKey(), entry.getValue());
+////                }
+////                if (userOptional.isPresent()) {
+////                    ScisUser user = userOptional.get();
+////                    teamMemberInfo.put("ClassInfo", user.getScisClass());
+////                }
+////                teamMemberRes.add(teamMemberInfo);
+////            }
+////            temInfo.put("teamMember",teamMemberRes);
+//            result.add(temInfo);
+//        }
 
         res.put("status", 200);
-        res.put("totalElements", result.size());
-        res.put("content", result);
+        res.put("totalElements", tem.size());
+        res.put("content", tem);
         return res;
     }
 

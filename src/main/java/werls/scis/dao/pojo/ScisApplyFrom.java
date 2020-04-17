@@ -37,6 +37,8 @@ public class ScisApplyFrom implements Serializable {
     @Column(name = "apply_rank")
     private String rank;
 
+    @Column(name = "apply_score")
+    private Integer score;
     @Column(name = "apply_status")
     private String status;
 
@@ -58,9 +60,11 @@ public class ScisApplyFrom implements Serializable {
     @JsonIgnoreProperties({"applyFromList"})
     private ScisCompetition competition;
 
+    @JsonIgnoreProperties({"applyFrom"})
     @OneToOne()
     @JoinColumn(name = "works_id", referencedColumnName = "works_id")
     private ScisWorks works;
+
 
     public ScisWorks getWorks() {
         return works;

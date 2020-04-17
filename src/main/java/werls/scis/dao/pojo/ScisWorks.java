@@ -4,10 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,15 +24,18 @@ import java.util.List;
  */
 @Entity
 @Table(name = "Is_works")
+@EntityListeners(AuditingEntityListener.class)
 public class ScisWorks  implements Serializable{
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(name="works_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "works_id")
     private Integer id;
     /**
      * 上传时间
      */
+    @CreatedDate
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH-mm-ss")
     @Column(name = "works_up_time")
     private Date upTime;
     /**
@@ -48,27 +54,12 @@ public class ScisWorks  implements Serializable{
      */
     @Column(name = "works_author")
     private String author;
-    /**
-     * 作品形式
-     */
-    @Column(name = "works_moder")
-    private String moder;
+
     /**
      * 分数
      */
     @Column(name = "works_score")
     private Integer score;
-    /**
-     * 评分成员
-     */
-    @Column(name = "works_mem")
-    private String mem;
-    /**
-     * 评语
-     */
-    @Column(name = "works_remark")
-    private String remark;
-
     @Column(name = "works_bucketName")
     private String bucketName;
     @Column(name = "works_objectName")
@@ -79,20 +70,18 @@ public class ScisWorks  implements Serializable{
     /**
      * 所属的竞赛项目
      */
+
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "competition_id", referencedColumnName = "competition_id")
     @JsonIgnoreProperties({"works"})
     private ScisCompetition competition;
 
 
-    @Fetch(FetchMode.SUBSELECT)
-    @OneToMany(mappedBy = "worksList", fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
-    @JsonIgnoreProperties({"worksList"})
-    private List<ScisProblem> problemList;
-
+    @JsonIgnoreProperties({"works"})
     @OneToOne(mappedBy = "works")
     private ScisApplyFrom applyFrom;
 
+    @JsonIgnoreProperties({"works"})
     @OneToOne(mappedBy = "works")
     private ScisTeamApply teamApply;
 
@@ -120,13 +109,7 @@ public class ScisWorks  implements Serializable{
         this.applyFrom = applyFrom;
     }
 
-    public List<ScisProblem> getProblemList() {
-        return problemList;
-    }
 
-    public void setProblemList(List<ScisProblem> problemList) {
-        this.problemList = problemList;
-    }
 
     public Date getUpTime() {
         return upTime;
@@ -179,13 +162,6 @@ public class ScisWorks  implements Serializable{
         this.author = author;
     }
 
-    public String getModer() {
-        return moder;
-    }
-
-    public void setModer(String moder) {
-        this.moder = moder;
-    }
 
     public Integer getId() {
         return id;
@@ -203,22 +179,6 @@ public class ScisWorks  implements Serializable{
         this.score = score;
     }
 
-    public String getMem() {
-        return mem;
-    }
-
-    public void setMem(String mem) {
-        this.mem = mem;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-    @JsonIgnore
     public ScisCompetition getCompetition() {
         return competition;
     }

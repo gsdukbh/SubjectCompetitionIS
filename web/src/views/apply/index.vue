@@ -8,10 +8,9 @@
                     <apply-personal/>
                 </el-tab-pane>
 
-                <el-tab-pane label="团队赛报名信息" lazy name="second">
-                    <team-apply/>
-                </el-tab-pane>
-
+                <!--                <el-tab-pane label="团队赛报名信息" lazy name="second">-->
+                <!--                    <team-apply/>-->
+                <!--                </el-tab-pane>-->
             </el-tabs>
         </div>
     </div>
@@ -19,11 +18,10 @@
 
 <script>
     import ApplyPersonal from "./components/applyPersonal";
-    import TeamApply from "./components/teamApply";
 
     export default {
         name: "index",
-        components: {TeamApply, ApplyPersonal},
+        components: {ApplyPersonal},
         data() {
             return {
                 activeName: 'first'
@@ -42,9 +40,9 @@
 
 <style scoped>
     .main {
-        width: 80%;
-        margin-left: 10%;
-        margin-right: 10%;
+        width: 98%;
+        margin-left: 1%;
+        margin-right: 1%;
     }
 
     .top {

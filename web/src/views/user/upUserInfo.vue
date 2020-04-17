@@ -1,6 +1,14 @@
 <template>
     <div>
-
+        <div class="title">
+            <el-alert
+                    style="width: 30%;margin-left: 35%;margin-right: 35%"
+                    title="因为使用用户的身份证后六位作为密码,若留空,默认密码为:123456"
+                    type="warning"
+                    center
+                    show-icon>
+            </el-alert>
+        </div>
         <div class="up">
             <el-upload
                     drag
@@ -16,6 +24,7 @@
                 <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
                 <div class="el-upload__tip" slot="tip">只能上传excel文件</div>
                 <div class="el-upload__tip" slot="tip">上传教师信息时，不需要填写专业、班级等信息</div>
+
             </el-upload>
 
             <el-switch
@@ -224,6 +233,15 @@
         margin-top: 20px;
         margin-left: 40%;
         width: 20%;
+    }
+
+    .title {
+        margin-top: 20px;
+        text-align: center;
+
+        /*color: orange;*/
+        /*font-size: 20px;*/
+        /*text-shadow: 2px 2px #1482f0;*/
     }
 
     .info {

@@ -19,27 +19,22 @@ import javax.persistence.criteria.CriteriaBuilder;
 public interface WorksRepository extends JpaRepository<ScisWorks, Integer> {
     /**
      * 模糊查询 作品名
+     *
      * @param nameLike String
-     * @param pageable Pageable
-     * @return   Page<ScisWorks>
-     */
-    Page<ScisWorks> findByNameLike(String nameLike, Pageable pageable);
-
-    /**
-     * author By Like sort page
-     * @param authorLike String
-     * @param pageable Pageable
-     * @return  Page<ScisWorks>
-     */
-    Page<ScisWorks> findByAuthorLike(String authorLike,Pageable pageable);
-
-    /**
-     * 作品形式
-     * @param moder  String
      * @param pageable Pageable
      * @return Page<ScisWorks>
      */
-    Page<ScisWorks> findByModer(String moder, Pageable  pageable);
+    Page<ScisWorks> findByNameContaining(String nameLike, Pageable pageable);
+
+    /**
+     * author By Like sort page
+     *
+     * @param authorLike String
+     * @param pageable   Pageable
+     * @return Page<ScisWorks>
+     */
+    Page<ScisWorks> findByAuthorContaining(String authorLike, Pageable pageable);
+
 
     /**
      * 作品分数

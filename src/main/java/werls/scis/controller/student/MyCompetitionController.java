@@ -83,6 +83,16 @@ public class MyCompetitionController {
         return res;
     }
 
+    @GetMapping("/findPersonal/all/{id}")
+    public Map<String, Object> findPersonalAll(@PathVariable Integer id) {
+        Map<String, Object> res = new ConcurrentHashMap<>(16);
+        List<Map<String, Object>> tem = applyFromSerice.findScisUserIdA(id);
+        res.put("status", 200);
+        res.put("content", tem);
+        res.put("totalElements", tem.size());
+        return res;
+    }
+
     @PostMapping("/findTeam/{id}")
     public Map<String, Object> findTeam(@PathVariable Integer id,
                                         @RequestParam(name = "page", defaultValue = "0") Integer page,

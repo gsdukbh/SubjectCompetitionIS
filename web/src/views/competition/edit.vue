@@ -93,17 +93,17 @@
                         </el-input>
                     </el-form-item>
 
-                    <el-form-item label="团队比赛">
-                        <el-switch
-                                v-model="ruleForm.team"
-                                active-text="团队比赛"
-                                inactive-text="个人比赛">
-                        </el-switch>
-                    </el-form-item>
+                    <!--                    <el-form-item label="团队比赛">-->
+                    <!--                        <el-switch-->
+                    <!--                                v-model="ruleForm.team"-->
+                    <!--                                active-text="团队比赛"-->
+                    <!--                                inactive-text="个人比赛">-->
+                    <!--                        </el-switch>-->
+                    <!--                    </el-form-item>-->
 
-                    <el-form-item label="人数限制" prop="type" v-if="ruleForm.team">
-                        <el-input-number v-model="ruleForm.numLimit" :min="1" :max="10" label="描述文字"></el-input-number>
-                    </el-form-item>
+                    <!--                    <el-form-item label="人数限制" prop="type" v-if="ruleForm.team">-->
+                    <!--                        <el-input-number v-model="ruleForm.numLimit" :min="1" :max="10" label="描述文字"></el-input-number>-->
+                    <!--                    </el-form-item>-->
 
                     <el-form-item label="负责人" prop="author">
                         <!--                        <el-input-->

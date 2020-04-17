@@ -75,6 +75,23 @@ public interface ApplyFromRepository extends JpaRepository<ScisApplyFrom, Intege
                     "limit ?3,?4")
     List<Map<String, Object>> findScisUserIdA(Integer id, String name, Integer page, Integer size);
 
+    @Query(nativeQuery = true,
+            value = "SELECT b.apply_id             as applyId,\n" +
+                    "       apply_time             as applyTime,\n" +
+                    "       c.competition_id       as competitionId,\n" +
+                    "       competition_name       as name,\n" +
+                    "       competition_start_time as startTime," +
+                    "       competition_place as place ," +
+                    "       competition_type as type \n" +
+                    "from Is_user a,\n" +
+                    "     Is_apply_from b,\n" +
+                    "     Is_competition c\n" +
+                    "where a.user_id = b.user_id\n" +
+                    "  and b.competition_id=c.competition_id\n" +
+                    "  and a.user_id = ?1 " +
+                    " and  c.competition_end_time > now()\n")
+    List<Map<String, Object>> findScisUserIdA(Integer id);
+
     /**
      * 报名状态 分页 排序
      *
@@ -93,5 +110,34 @@ public interface ApplyFromRepository extends JpaRepository<ScisApplyFrom, Intege
      */
     Page<ScisApplyFrom> findAllByCompetitionId(Integer id, Pageable pageable);
 
+    @Query(nativeQuery = true,
+            value = "select a.user_id as userId,\n" +
+                    "       b.apply_time as applyTime\n" +
+                    "from Is_user a,\n" +
+                    "     Is_apply_from b,\n" +
+                    "     Is_competition c\n" +
+                    "where a.user_id = b.user_id\n" +
+                    "  and b.competition_id = c.competition_id\n" +
+                    "  and c.competition_id=?1\n" +
+                    "and  a.user_name like  concat('%',?2,'%') " +
+                    "ORDER BY  b.apply_time DESC " +
+                    "limit ?3,?4")
+    List<Map<String, Object>> findCompetitionId(Integer id, String name, Integer page, Integer size);
 
+    @Query(nativeQuery = true,
+            value = "select a.user_id as userId,\n" +
+                    "       b.apply_time as applyTime ,\n " +
+                    "       c.competition_id as competitionId ," +
+                    "      competition_name as competitionName   " +
+                    "from Is_user a,\n" +
+                    "     Is_apply_from b,\n" +
+                    "     Is_competition c\n" +
+                    "where a.user_id = b.user_id\n" +
+                    "  and b.competition_id = c.competition_id\n" +
+                    "  and c.competition_id=?1\n" +
+                    "ORDER BY  b.apply_time DESC "
+    )
+    List<Map<String, Object>> findCompetitionId(Integer id);
+
+    List<ScisApplyFrom> findAllByCompetitionId(Integer id);
 }

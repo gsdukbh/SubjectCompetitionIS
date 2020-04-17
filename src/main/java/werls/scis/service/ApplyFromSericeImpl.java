@@ -11,6 +11,7 @@ import werls.scis.dao.pojo.ScisApplyFrom;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author : LiJiWei
@@ -35,10 +36,25 @@ public class ApplyFromSericeImpl {
         return apply.findScisUserIdA(id, name, page, size);
     }
 
+    public List<Map<String, Object>> findScisUserIdA(Integer id) {
+        return apply.findScisUserIdA(id);
+    }
+
     public Page<ScisApplyFrom> findAllByCompetitionId(Integer id, Pageable pageable) {
         return apply.findAllByCompetitionId(id, pageable);
     }
 
+    public List<Map<String, Object>> findCompetitionId(Integer id, String name, Integer page, Integer size) {
+        return apply.findCompetitionId(id, name, page, size);
+    }
+
+    public List<Map<String, Object>> findCompetitionId(Integer id) {
+        return apply.findCompetitionId(id);
+    }
+
+    public List<ScisApplyFrom> findAllByCompetitionId(Integer id) {
+        return apply.findAllByCompetitionId(id);
+    }
 
     /**
      * 报名状态 分页 排序
@@ -52,6 +68,9 @@ public class ApplyFromSericeImpl {
         return apply.findByStatus(status, pageable);
     }
 
+    public Optional<ScisApplyFrom> findById(Integer id) {
+        return apply.findById(id);
+    }
 
     public ScisApplyFrom save(ScisApplyFrom applyFrom) {
         return apply.save(applyFrom);

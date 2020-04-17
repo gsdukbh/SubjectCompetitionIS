@@ -142,7 +142,8 @@ public class ExcelToObject extends AnalysisEventListener<UserUpObject> {
                 } else if (this.role == 3) {
                     user.setRole("教师");
                 }
-                user.setPassword(object.getIdentity().substring(object.getIdentity().length() - 6));
+//                user.setPassword(object.getIdentity().substring(object.getIdentity().length() - 6));
+                user.setPassword(object.getIdentity() != null ? object.getIdentity().substring(object.getIdentity().length() - 6) : "123456");
                 user.setLogin(object.getLogin());
                 user.setName(object.getName());
                 user.setSex(object.getSex());

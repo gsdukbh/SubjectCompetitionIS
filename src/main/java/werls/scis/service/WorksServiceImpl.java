@@ -27,25 +27,27 @@ public class WorksServiceImpl {
     @Autowired
     private WorksRepository worksRepository;
 
-    public void delete(ScisWorks works){
+    public void delete(ScisWorks works) {
         this.worksRepository.delete(works);
     }
-    public void deleteAll(List<ScisWorks> works){
+
+    public void deleteAll(List<ScisWorks> works) {
         this.worksRepository.deleteAll(works);
     }
-    public void deleteById(Integer id){
+
+    public void deleteById(Integer id) {
         this.worksRepository.deleteById(id);
     }
 
-    public void save(ScisWorks works){
-        worksRepository.save(works);
+    public ScisWorks save(ScisWorks works) {
+        return worksRepository.save(works);
     }
 
-    public void  save(List<ScisWorks> works ){
-       worksRepository.saveAll(works);
+    public void save(List<ScisWorks> works) {
+        worksRepository.saveAll(works);
     }
 
-    public Page<ScisWorks> findAll(Pageable pageable){
+    public Page<ScisWorks> findAll(Pageable pageable) {
         return worksRepository.findAll(pageable);
     }
 
@@ -57,7 +59,7 @@ public class WorksServiceImpl {
      * @return   Page<ScisWorks>
      */
     public Page<ScisWorks> findByNameLike(String nameLike, Pageable pageable){
-        return worksRepository.findByNameLike(nameLike, pageable);
+        return worksRepository.findByNameContaining(nameLike, pageable);
     }
     /**
      * author By Like sort page
@@ -66,18 +68,9 @@ public class WorksServiceImpl {
      * @return  Page<ScisWorks>
      */
     public Page<ScisWorks> findByAuthorLike(String authorLike,Pageable pageable){
-        return worksRepository.findByAuthorLike(authorLike, pageable);
+        return worksRepository.findByAuthorContaining(authorLike, pageable);
     }
 
-    /**
-     * 作品形式
-     * @param moder  String
-     * @param pageable Pageable
-     * @return Page<ScisWorks>
-     */
-    public Page<ScisWorks> findByModer(String moder, Pageable  pageable){
-        return worksRepository.findByModer(moder, pageable);
-    }
 
     /**
      * 作品分数
