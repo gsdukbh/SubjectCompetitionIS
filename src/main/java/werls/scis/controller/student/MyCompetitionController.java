@@ -75,11 +75,12 @@ public class MyCompetitionController {
                                             @RequestParam(name = "page", defaultValue = "0") Integer page,
                                             @RequestParam(name = "size", defaultValue = "20") Integer size,
                                             @RequestParam(name = "name", defaultValue = "") String name) {
-        Map<String, Object> res = new ConcurrentHashMap<>(16);
+        Map<String, Object> res = new HashMap<>(16);
         List<Map<String, Object>> tem = applyFromSerice.findScisUserIdA(id, name, page, size);
+        Map<String, Object> map = applyFromSerice.findScisUserIdA(id, name);
         res.put("status", 200);
         res.put("content", tem);
-        res.put("totalElements", tem.size());
+        res.put("totalElements", map.get("totalElements"));
         return res;
     }
 
@@ -89,7 +90,7 @@ public class MyCompetitionController {
         List<Map<String, Object>> tem = applyFromSerice.findScisUserIdA(id);
         res.put("status", 200);
         res.put("content", tem);
-        res.put("totalElements", tem.size());
+        res.put("totalElements", applyFromSerice.findScisUserIdB(id).get("totalElements"));
         return res;
     }
 
@@ -100,6 +101,7 @@ public class MyCompetitionController {
                                         @RequestParam(name = "name", defaultValue = "") String name) {
         Map<String, Object> res = new ConcurrentHashMap<>(16);
         List<Map<String, Object>> tem = applyFromSerice.findScisUserIdT(id, name, page, size);
+
         res.put("status", 200);
         res.put("content", tem);
         res.put("totalElements", tem.size());

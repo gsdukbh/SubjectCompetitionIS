@@ -54,7 +54,6 @@ public class CompetitionAdmin {
 
             return competitionService.findByNameContainingAndOrganizerAndStatusIsNot(name, organizer, status, pageable);
         } else if (!"".equals(level) && !"".equals(name)) {
-
             return competitionService.findByNameContainingAndLevelAndStatusIsNot(name, level, status, pageable);
         } else if (!"".equals(organizer) && !"".equals(level)) {
 
@@ -70,6 +69,22 @@ public class CompetitionAdmin {
         }
     }
 
+    @RequestMapping("/find")
+    public Map<String, Object> find() {
+        Map<String, Object> res = new ConcurrentHashMap<>(10);
+        List<Map<String, Object>> result = new ArrayList<>();
+        String status = "草稿";
+        List<ScisCompetition> scisCompetitions = competitionService.findAllByStatusIsNot(status);
+        for (ScisCompetition competition : scisCompetitions) {
+            Map<String, Object> tem = new ConcurrentHashMap<>(2);
+            tem.put("competitionId", competition.getId());
+            tem.put("name", competition.getName());
+            result.add(tem);
+        }
+        res.put("competition", result);
+        res.put("status", 200);
+        return res;
+    }
 
     @RequestMapping("/findAll")
     public Page<ScisCompetition> findByAll(@RequestParam(name = "page", defaultValue = "0") Integer page,
@@ -78,7 +93,7 @@ public class CompetitionAdmin {
                                            @RequestParam(name = "organizer", defaultValue = "") String organizer,
                                            @RequestParam(name = "level", defaultValue = "") String level) {
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by("startTime").descending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("applyTime").descending());
         return getScisCompetitions(name, organizer, level, pageable);
     }
 

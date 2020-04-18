@@ -11,18 +11,29 @@ const achievementRouter={
     },
     children: [
         {
-            path:"index",
-            name:'achievement index',
-            component: ()=>import('../views/Achievement/index'),
-            meta:{
-                title:'成绩排行',
-                icon:'ranks'
+            path: "admin",
+            name: 'achievement index',
+            component: () => import('../views/Achievement/index'),
+            meta: {
+                title: '成绩排行',
+                icon: 'ranks',
+                roles: ['ROLE_ADMIN', 'ROLE_TEA'],
+            },
+        },
+        {
+            path: "index",
+            name: 'achievement index',
+            component: () => import('../views/Achievement/index'),
+            meta: {
+                title: '成绩排行',
+                icon: 'ranks',
+                roles: ['ROLE_STU'],
             },
         },
         {
             path: "upData",
-            name:'achievement upData ',
-            component:()=>import('../views/Achievement/upData'),
+            name: 'achievement upData ',
+            component: () => import('../views/Achievement/upData'),
             meta: {
                 title: '上传比赛成绩',
                 icon: 'upInfo',

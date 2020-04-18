@@ -144,6 +144,10 @@ public class CompetitionServiceImpl {
         return competitionRepository.findAllByStatusIsNot(status, pageable);
     }
 
+    public List<ScisCompetition> findAllByStatusIsNot(String status) {
+        return competitionRepository.findAllByStatusIsNot(status);
+    }
+
     public void delete(ScisCompetition scisCompetition) {
         this.competitionRepository.delete(scisCompetition);
     }

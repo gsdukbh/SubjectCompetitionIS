@@ -29,13 +29,13 @@
         <div class="rightColumn">
             <el-card shadow="hover" class="right top">
                 <el-form ref="works" :model="works" :rules="rules" label-position="top">
-                    <el-form-item label="选择提交的比赛" prop="id">
-                        <el-select style="width: 100%" v-model="works.competition.id" filterable placeholder="请选择">
+                    <el-form-item label="选择提交的比赛" prop="competitionId">
+                        <el-select style="width: 100%" v-model="works.competitionId" filterable placeholder="请选择">
                             <el-option
                                     v-for="item in competition"
-                                    :key="item.id"
+                                    :key="item.competitionId"
                                     :label="item.name"
-                                    :value="item.id">
+                                    :value="item.competitionId">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -70,20 +70,20 @@
                     <span>设置展示图片
                         <i class="el-icon-picture-outline"></i>
                     </span>
-                    <el-upload
-                            style="float: right; padding: 3px 0"
-                            class="upload-demo"
-                            action="/api/i/upFile/img"
-                            :on-success="onSuccess"
-                            list-type="picture">
-                        <el-button style="float: right; padding: 3px 0" type="text">设置图片</el-button>
-                    </el-upload>
                 </div>
                 <el-alert
                         title="设置图片,以便更好的展示你的作品"
                         type="success"
                         effect="dark">
                 </el-alert>
+                <el-upload
+                        style="float: right; padding: 3px 0"
+                        class="upload-demo"
+                        action="/api/i/upFile/img"
+                        :on-success="onSuccess"
+                        list-type="picture">
+                    <el-button style="float: left; padding: 3px 0" type="text">设置图片</el-button>
+                </el-upload>
                 <div class="demo-image__preview" style="margin-top: 10px">
                     <el-image
                             style="width: 100px; height: 100px"
@@ -132,16 +132,16 @@
                     bucketName: '',
                     objectName: '',
                     img: '',
-                    competition: {
-                        id: ''
-                    },
+                    competitionId: '',
+                    userId: ''
 
                 },
                 rules: {
                     name: [
+                        {required: true, message: '请填写标题', trigger: 'blur'},
                         {validator: validateRequire}
                     ],
-                    id: [
+                    competitionId: [
                         {required: true, message: '请选择上传比赛', trigger: 'blur'}
                     ]
 
@@ -152,7 +152,13 @@
             getJson('/student/Competition/findPersonal/all/' + this.userId)
                 .then(response => {
                     this.competition = response.data.content;
+                }).catch(error => {
+                this.$notify.error({
+                    title: '错误',
+                    message: error,
                 })
+            })
+
         },
         methods: {
             onSuccess(response) {
@@ -161,7 +167,7 @@
                         title: '成功',
                         message: '设置成功'
                     })
-                    this.announcement.img = response.img;
+                    this.works.img = response.img;
                 } else {
                     this.$message.error("上传失败");
                 }
@@ -170,15 +176,46 @@
                 this.loading1 = true;
                 this.works.description = this.$refs.markdown.getMarkdown()
                 this.works.author = this.name;
+                this.works.userId = this.userId
                 if (this.works.bucketName === '') {
-                    this.$notify.warning({
-                        title: '警告',
-                        message: '请先上传作品'
-                    })
+                    this.$message.warning('请先上传作品')
+                    this.loading1 = false;
+                } else if (this.works.name === '') {
+                    this.loading1 = false;
+                    this.$message.warning("请填写作品名称")
                 } else {
                     this.$refs[formName].validate((valid) => {
                         if (valid) {
-postJson()
+                            postJson('/student/works/save', this.works)
+                                .then(response => {
+                                    if (response.data.status === 200) {
+                                        this.$notify.success({
+                                            title: '成功',
+                                            message: '提交成功'
+                                        })
+
+                                    } else if (response.data.status === 403) {
+                                        this.$notify.warning({
+                                            title: '警告',
+                                            message: response.data.message
+                                        })
+                                    } else {
+                                        this.$notify.error({
+                                            title: '错误',
+                                            message: '发生了一些错误' + response.data.message
+                                        })
+                                    }
+                                    this.loading1 = false;
+                                }).catch(error => {
+                                this.loading1 = false;
+                                this.$notify.error({
+                                    title: '错误',
+                                    message: error
+                                })
+                            })
+                        } else {
+                            this.loading1 = false;
+                            this.$message.warning('检查你的输入')
                         }
                     })
                 }

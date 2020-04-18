@@ -68,12 +68,12 @@ public class ExcelToObject extends AnalysisEventListener<UserUpObject> {
     public ExcelToObject(Integer adminUser,
                          Integer role,
                          WebSocket webSocket,
-                         UserService userService
+                         Tools tools
     ) {
         this.webSocket = webSocket;
         this.adminUser = adminUser;
-        this.userService = userService;
         this.role = role;
+        this.tools = tools;
     }
 
     public ExcelToObject(Integer adminUser,
@@ -107,10 +107,9 @@ public class ExcelToObject extends AnalysisEventListener<UserUpObject> {
         sendWebsocket(userUpObject);
         list.add(userUpObject);
         if (list.size() >= BATCH_COUNT) {
-            save(list);
+            tools.saveUserInfo(list, this.role);
             list.clear();
         }
-        i++;
     }
 
     /**
@@ -120,7 +119,7 @@ public class ExcelToObject extends AnalysisEventListener<UserUpObject> {
      */
     @Override
     public void doAfterAllAnalysed(AnalysisContext analysisContext) {
-        save(list);
+        tools.saveUserInfo(list, this.role);
         logger.info("所有数据解析完成！");
     }
 
@@ -128,53 +127,52 @@ public class ExcelToObject extends AnalysisEventListener<UserUpObject> {
         webSocket.sendOneMessage(adminUser.toString(), JSON.toJSONString(userUpObject));
     }
 
-    @Async
-    public void save(List<UserUpObject> userUpObject) {
-        try {
-            for (UserUpObject object : userUpObject) {
-                ScisUser user = new ScisUser();
-                ScisRole role = new ScisRole();
-                List<ScisRole> roleList = new ArrayList<>();
-                role.setId(this.role);
-                roleList.add(role);
-                if (this.role == 2) {
-                    user.setRole("学生");
-                } else if (this.role == 3) {
-                    user.setRole("教师");
-                }
-//                user.setPassword(object.getIdentity().substring(object.getIdentity().length() - 6));
-                user.setPassword(object.getIdentity() != null ? object.getIdentity().substring(object.getIdentity().length() - 6) : "123456");
-                user.setLogin(object.getLogin());
-                user.setName(object.getName());
-                user.setSex(object.getSex());
-                user.setEmail(object.getEmail());
-                user.setIdentity(object.getIdentity());
-                user.setPhone(object.getPhone());
-                user.setStatus("false");
-                user.setRoles(roleList);
-
-                /*查找是否有该班级信息*/
-                Optional<ScisClass> scisClass = classService.findByName(object.getClassName());
-                Optional<ScisCollege> scisCollege = collegeService.findByCollegeName(object.getCollege());
-                if (this.role == 2) {
-                    if (scisClass.isPresent()) {
-                        tools.isClass(user, scisClass.get(), object);
-                    } else {
-                        tools.noClass(user, object);
-                    }
-                } else {
-                    ScisCollege temCollege = new ScisCollege();
-                    temCollege = scisCollege.map(tools::isCollege).orElseGet(() -> tools.noCollege(object));
-                    user.setCollege(temCollege);
-                }
-                userService.save(user);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-
-        }
-
-    }
+//    @Async
+//    public void save(List<UserUpObject> userUpObject) {
+//        try {
+//            for (UserUpObject object : userUpObject) {
+//                ScisUser user = new ScisUser();
+//                ScisRole role = new ScisRole();
+//                List<ScisRole> roleList = new ArrayList<>();
+//                role.setId(this.role);
+//                roleList.add(role);
+//                if (this.role == 2) {
+//                    user.setRole("学生");
+//                } else if (this.role == 3) {
+//                    user.setRole("教师");
+//                }
+//                user.setPassword(object.getIdentity() != null ? object.getIdentity().substring(object.getIdentity().length() - 6) : "123456");
+//                user.setLogin(object.getLogin());
+//                user.setName(object.getName());
+//                user.setSex(object.getSex());
+//                user.setEmail(object.getEmail());
+//                user.setIdentity(object.getIdentity());
+//                user.setPhone(object.getPhone());
+//                user.setStatus("false");
+//                user.setRoles(roleList);
+//
+//                /*查找是否有该班级信息*/
+//                Optional<ScisClass> scisClass = classService.findByName(object.getClassName());
+//                Optional<ScisCollege> scisCollege = collegeService.findByCollegeName(object.getCollege());
+//                if (this.role == 2) {
+//                    if (scisClass.isPresent()) {
+//                        tools.isClass(user, scisClass.get(), object);
+//                    } else {
+//                        tools.noClass(user, object);
+//                    }
+//                } else {
+//                    ScisCollege temCollege = new ScisCollege();
+//                    temCollege = scisCollege.map(tools::isCollege).orElseGet(() -> tools.noCollege(object));
+//                    user.setCollege(temCollege);
+//                }
+//                userService.save(user);
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//
+//        }
+//
+//    }
 
 }

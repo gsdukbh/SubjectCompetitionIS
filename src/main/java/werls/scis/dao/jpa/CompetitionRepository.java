@@ -133,6 +133,8 @@ public interface CompetitionRepository extends JpaRepository<ScisCompetition, In
 
     Page<ScisCompetition> findAllByStatusIsNot(String status, Pageable pageable);
 
+    List<ScisCompetition> findAllByStatusIsNot(String status);
+
     /**
      * 举办单位
      *

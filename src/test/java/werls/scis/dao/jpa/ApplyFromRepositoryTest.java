@@ -24,4 +24,5 @@ class ApplyFromRepositoryTest {
 
         System.out.println(applyFromRepository.findScisUserIdA(2));
     }
+
 }

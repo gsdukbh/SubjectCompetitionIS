@@ -2,6 +2,8 @@ package werls.scis.dao.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -35,18 +37,17 @@ public class ScisApplyFrom implements Serializable {
     private Date applyTime;
 
     @Column(name = "apply_rank")
-    private String rank;
+    private String gradesanking;
 
     @Column(name = "apply_score")
     private Integer score;
     @Column(name = "apply_status")
     private String status;
 
-
     /**
      * 竞赛用户
      */
-
+    @NotFound(action = NotFoundAction.IGNORE)
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     @JsonIgnoreProperties({"applyFroms"})
@@ -65,6 +66,22 @@ public class ScisApplyFrom implements Serializable {
     @JoinColumn(name = "works_id", referencedColumnName = "works_id")
     private ScisWorks works;
 
+
+    public String getGradesanking() {
+        return gradesanking;
+    }
+
+    public void setGradesanking(String gradesanking) {
+        this.gradesanking = gradesanking;
+    }
+
+    public Integer getScore() {
+        return score;
+    }
+
+    public void setScore(Integer score) {
+        this.score = score;
+    }
 
     public ScisWorks getWorks() {
         return works;
@@ -107,13 +124,7 @@ public class ScisApplyFrom implements Serializable {
         this.applyTime = applyTime;
     }
 
-    public String getRank() {
-        return rank;
-    }
 
-    public void setRank(String rank) {
-        this.rank = rank;
-    }
 
     public ScisCompetition getCompetition() {
         return competition;

@@ -73,7 +73,7 @@ public class CompetitionController {
                                                  @RequestParam(name = "page", defaultValue = "0") Integer page,
                                                  @RequestParam(name = "size", defaultValue = "20") Integer size) {
         Map<String, Object> res = new ConcurrentHashMap<>();
-        Pageable pageable = PageRequest.of(page, size, Sort.by("startTime").descending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("endTime").descending());
         Page<ScisCompetition> tem = competitionService.findByNameContainingAndUserId(name, id, pageable);
         res.put("content", tem.getContent());
         res.put("totalElements", tem.getTotalElements());

@@ -49,6 +49,7 @@ public class UpFileController {
                     file.getSize(),
                     file.getContentType()
             );
+            res.put("fileSize", file.getSize());
             res.put("status", 200);
             res.put("bucketName", "works");
             res.put("objectName", fileName);
@@ -71,6 +72,7 @@ public class UpFileController {
                     file.getSize(),
                     file.getContentType()
             );
+            res.put("fileSize", file.getSize());
             res.put("status", 200);
             res.put("bucketName", "annex");
             res.put("objectName", fileName);

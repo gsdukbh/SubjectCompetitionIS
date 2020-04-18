@@ -1,5 +1,6 @@
 package werls.scis.controller.open;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import werls.scis.util.FileUploader;
+import werls.scis.util.Tools;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +32,8 @@ import java.nio.charset.StandardCharsets;
 public class GetFileController {
     @Resource
     FileUploader fileUploader;
+    @Autowired
+    Tools tools;
 
     @GetMapping("/getFile")
     public ResponseEntity<byte[]> download(
@@ -47,7 +51,7 @@ public class GetFileController {
 
         res.close();
 
-        objectName = this.getFilename(request, objectName);
+        objectName = tools.getFilename(request, objectName);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentDispositionFormData("attachment", objectName);
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
@@ -55,19 +59,5 @@ public class GetFileController {
                 headers, HttpStatus.OK);
     }
 
-    public String getFilename(HttpServletRequest request,
-                              String filename) throws Exception {
-        // IE不同版本User-Agent中出现的关键词
-        String[] iEBrowserKeyWords = {"MSIE", "Trident", "Edge"};
-        // 获取请求头代理信息
-        String userAgent = request.getHeader("User-Agent");
-        for (String keyWord : iEBrowserKeyWords) {
-            if (userAgent.contains(keyWord)) {
-                //IE内核浏览器，统一为UTF-8编码显示
-                return URLEncoder.encode(filename, "UTF-8");
-            }
-        }
 
-        return new String(filename.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
-    }
 }

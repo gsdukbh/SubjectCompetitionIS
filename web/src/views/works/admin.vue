@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="title" v-if="competition!==null">
-            <span> {{competition.name}}--成绩排行</span>
+            <span> {{competition.name}}--作品</span>
         </div>
 
         <div class="leftColumn">
@@ -15,10 +15,89 @@
                     </el-button>
 
                 </div>
+                <div style="margin-top: 10px;">
 
+                    <el-input placeholder="作者" style="width: 200px;margin-left: 10px;" v-model="page.userName"/>
+                    <el-input placeholder="作品名称" style="width: 200px;margin-left: 10px;" v-model="page.worksName"/>
+                    <el-button class="filter-item" type="primary" style="margin-left: 10px;" icon="el-icon-search"
+                               @click="handleFilter">
+                        搜索
+                    </el-button>
+                    <el-button class="filter-item" type="primary" style="margin-left: 10px;" icon="el-icon-refresh-left"
+                               @click="handleRefresh">
+                        重置搜索
+                    </el-button>
+
+                </div>
+
+
+                <el-row v-loading="loading" style="margin-top: 10px">
+                    <el-col :span="6" v-for="(item,index) in works" :key="index">
+
+
+                        <el-card shadow="hover" :body-style="{ padding: '0px' }" class="card" @click="t()">
+                            <el-tooltip class="item" effect="dark" content="点击查看作品详情" placement="top">
+                                <router-link :to="'/works/detail/All/'+item.id">
+                                    <el-image
+                                            :src="item.img"
+                                            fit="scale-down"
+                                            class="image">
+                                        <div slot="placeholder" class="image-slot">
+                                            加载中<span class="dot">...</span>
+                                        </div>
+                                    </el-image>
+                                </router-link>
+                            </el-tooltip>
+                            <div style="padding: 14px;">
+                        <span>作品名称：
+                           <router-link :to="'/works/detail/'+item.id">
+                               <el-link :underline="false" type="primary">
+                                   {{item.name}}
+                               </el-link>
+                            </router-link>
+                        </span>
+                                <br>
+                                <span>作者: {{item.author}}</span>
+                                <br>
+                                <span>上传时间：{{formatTimeA(item.upTime)}}</span>
+                                <br>
+                                <span>作品：<el-link type="primary" icon="el-icon-download" @click="dlWorks(item)">{{item.objectName.substr(33,item.objectName.length)}}</el-link></span>
+                                <br>
+                                <span v-if="works.score!=null">评分：{{works.score}}</span>
+                                <span v-if="works.score==null">评分：暂无</span>
+                                <br>
+                                <span>所属竞赛：
+                            <router-link :to="'/competition/detailStu/'+item.competition.id">
+                                  <el-link :underline="false" type="primary">
+                                   {{item.competition.name}}
+                               </el-link>
+                            </router-link>
+                        </span>
+                            </div>
+
+                        </el-card>
+
+
+                    </el-col>
+
+                </el-row>
+
+                <div class="center">
+                    <el-pagination
+                            @size-change="handleSizeChange"
+                            @current-change="handleCurrentChange"
+                            @next-click="handleCurrentChange"
+                            @prev-click="handleCurrentChange"
+                            :current-page="page.page"
+                            :page-sizes="[20,50,100]"
+                            :page-size="page.size"
+                            background
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :total="page.totalElements">
+                    </el-pagination>
+                </div>
             </el-card>
         </div>
-
 
         <div class="rightColumn">
             <el-card class="right top" shadow="hover" v-loading="loading1">
@@ -35,7 +114,7 @@
                     </el-form-item>
                 </el-form>
                 <div v-for="(item) in competitionDate " :key="item.id" style="text-align: center;">
-                    <el-link type="primary" @click="showInfo(item)">
+                    <el-link type="primary" @click="showWorks(item)">
                         <span style="font-size: 15px;"> {{item.name}}</span>
                     </el-link>
                     <br>
@@ -51,7 +130,35 @@
                 </el-pagination>
             </el-card>
 
+            <el-card class="right top" shadow="hover" v-loading="loading2">
+                <div slot="header" class="clearfix">
+                    <span>我负责的</span>
+                    <el-button style="float: right; padding: 3px 0" type="text" @click="handleFilter2()">搜索</el-button>
+                </div>
 
+                <el-form>
+                    <el-form-item style="margin-bottom: 40px;" prop="title">
+                        <MdInput v-model="page1.name" name="name" required>
+                            竞赛名称
+                        </MdInput>
+                    </el-form-item>
+                </el-form>
+                <div v-for="(item) in competitionDate1 " :key="item.id" style="text-align: center;">
+                    <el-link type="primary" @click="showWorks(item)">
+                        <span style="font-size: 15px;"> {{item.name}}</span>
+                    </el-link>
+                    <br>
+                </div>
+                <el-pagination
+                        style="text-align: center;margin-top: 10px"
+                        @current-change="handleCurrentChange2"
+                        @next-click="handleCurrentChange2"
+                        @prev-click="handleCurrentChange2"
+                        small
+                        layout="prev, pager, next"
+                        :total="page2.totalElements">
+                </el-pagination>
+            </el-card>
         </div>
         <!--返回-->
         <el-tooltip placement="top" content="返回顶部">
@@ -62,16 +169,16 @@
 </template>
 
 <script>
-    import {getJson, postFrom} from "../../api/api";
-    import MdInput from "../../components/MDinput/index";
-    import BackToTop from "../../components/BackTop/index";
-
-    import {parseTime} from '../../utils/index'
     import {mapGetters} from "vuex";
+    import {getJson, postFrom} from "../../api/api";
+    import BackToTop from "../../components/BackTop/index";
+    import MdInput from "../../components/MDinput/index";
+    import {parseTime} from '../../utils/index'
+    import qs from 'qs';
 
     export default {
-        name: "index",
-        components: {BackToTop, MdInput},
+        name: "admin",
+        components: {MdInput, BackToTop},
         computed: {
             ...mapGetters([
                 'name',
@@ -86,6 +193,7 @@
                 competitionDate: [],
                 competitionDate1: [],
                 loading: false,
+                works: [],
                 page: {
                     size: 20,
                     page: 0,
@@ -122,11 +230,35 @@
             this.getDataPage2()
         },
         methods: {
-            dl() {
-
-            },
             formatTimeA(time) {
                 return parseTime(time, '{y}-{m}-{d} {h}:{i}')
+            },
+            dlWorks(value) {
+                const download = {
+                    bucketName: value.bucketName,
+                    objectName: value.objectName,
+                }
+                this.$notify.info({
+                    title: '提示',
+                    message: '服务器下载文件中...'
+                })
+                let a = document.createElement('a');
+                a.href = "/api/public/file/getFile?" + qs.stringify(download);
+                a.download = download.objectName.substr(33, download.objectName.length);
+                a.target = "_blank";
+                a.click();
+            },
+            dl() {
+                this.$notify.info({
+                    title: '提示',
+                    message: '服务器下载文件中...',
+                    duration: 0
+                })
+                let a = document.createElement('a');
+                a.href = "/api/student/works/get/File/works/" + this.competition.id;
+                // a.download = download.objectName;
+                a.target = "_blank";
+                a.click();
             },
             handleCurrentChange1(val) {
                 this.page1.page = val;
@@ -191,12 +323,6 @@
                 this.page.type = null;
                 this.loading = true;
                 this.getDataPage();
-            },
-            showInfo(value) {
-                this.competition = value;
-                this.page.competitionId = value.id;
-                this.loading = true;
-
             },
             showWorks(value) {
                 console.log(value)

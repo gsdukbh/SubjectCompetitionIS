@@ -38,6 +38,8 @@
             <el-button style="margin-top: 10px" size="small" type="success" @click="submitUpload">上传信息</el-button>
 
         </div>
+
+
         <div>
             <el-divider></el-divider>
             <el-alert
@@ -209,7 +211,7 @@
             upSuccess() {
                 this.$notify.success({
                     title: '成功',
-                    message: '上传了'+this.show.length()+'条信息成功'
+                    message: '上传信息成功'
                 })
             },
             submitUpload() {

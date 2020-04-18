@@ -55,10 +55,10 @@ public class UserController {
     public Map<String, Object> save(@RequestBody JSONObject jsonObject) {
         Map<String, Object> res = new ConcurrentHashMap<>(16);
         UserUpObject userUpObject = JSONObject.toJavaObject(jsonObject, UserUpObject.class);
-        ScisUser user =new ScisUser();
+        ScisUser user = new ScisUser();
         user.setRole(userUpObject.getRole());
-        ScisRole role=new ScisRole();
-        List<ScisRole> roleList=new ArrayList<>();
+        ScisRole role = new ScisRole();
+        List<ScisRole> roleList = new ArrayList<>();
 
         user.setPassword(userUpObject.getPassword());
         user.setStatus(userUpObject.getStatus());
@@ -72,7 +72,7 @@ public class UserController {
         Optional<ScisClass> scisClass = classService.findByName(userUpObject.getClassName());
         Optional<ScisCollege> scisCollege = collegeService.findByCollegeName(userUpObject.getCollege());
 
-        if ("学生".equals(user.getRole())){
+        if ("学生".equals(user.getRole())) {
             role.setId(2);
             roleList.add(role);
             user.setRoles(roleList);
@@ -81,21 +81,21 @@ public class UserController {
             } else {
                 tools.noClass(user, userUpObject);
             }
-        }else if ("教师".equals(user.getRole())){
+        } else if ("教师".equals(user.getRole())) {
             role.setId(3);
             roleList.add(role);
             user.setRoles(roleList);
-            ScisCollege  temCollege = scisCollege.map(tools::isCollege).orElseGet(() -> tools.noCollege(userUpObject));
+            ScisCollege temCollege = scisCollege.map(tools::isCollege).orElseGet(() -> tools.noCollege(userUpObject));
             user.setCollege(temCollege);
-        }else if ("管理员".equals(user.getRole())){
+        } else if ("管理员".equals(user.getRole())) {
             role.setId(1);
             roleList.add(role);
             user.setRoles(roleList);
-        }else {
-            res.put("status",403);
+        } else {
+            res.put("status", 403);
             return res;
         }
-        res.put("status",200);
+        res.put("status", 200);
         service.save(user);
         return res;
     }
@@ -141,7 +141,7 @@ public class UserController {
                     tools.noClass(user, userUpObject);
                 }
             } else {
-                ScisCollege  temCollege = scisCollege.map(tools::isCollege).orElseGet(() -> tools.noCollege(userUpObject));
+                ScisCollege temCollege = scisCollege.map(tools::isCollege).orElseGet(() -> tools.noCollege(userUpObject));
                 user.setCollege(temCollege);
             }
             res.put("status", 200);
@@ -386,7 +386,7 @@ public class UserController {
     public Map<String, Object> sa() {
         Map<String, Object> res = new ConcurrentHashMap<>(16);
         res.put("status", 200);
-        webSocket.sendAllMessage("text");
+        res.put("data", service.findByLogin("root") != null);
         return res;
     }
 
@@ -413,10 +413,6 @@ public class UserController {
                             id,
                             role,
                             webSocket,
-                            service,
-                            classService,
-                            majorService,
-                            collegeService,
                             tools
                     ))
                     .sheet().doRead();

@@ -12,36 +12,38 @@ import java.util.Date;
  * @Project: scis
  * @Package werls.scis.util
  * @Description: TODO
- * @date Date : 2020年04月17日 11:45
+ * @date Date : 2020年04月21日 16:27
  */
 @Data
-public class ApplyFromToExceal {
+public class DateScoreToExcel {
     @ExcelProperty({"竞赛信息", "竞赛id"})
     private Integer competitionId;
     @ExcelProperty({"竞赛信息", "竞赛名称"})
     private String competitionName;
-    @DateTimeFormat("yyyy年MM月dd日HH时mm分ss秒")
-    @ExcelProperty({"报名信息", "申请时间"})
-    private Date applyTime;
 
-    @ExcelProperty({"报名信息", "名字"})
+    @ExcelProperty({"学生信息", "名字"})
     private String name;
 
-    @ExcelProperty({"报名信息", "学号"})
+    @ExcelProperty({"学生信息", "学号"})
     private String login;
 
-    @ExcelProperty({"报名信息", "班级"})
+    @ExcelProperty({"学生信息", "班级"})
     private String className;
-    @ExcelProperty({"报名信息", "专业"})
+    @ExcelProperty({"学生信息", "专业"})
     private String majorName;
-    @ExcelProperty({"报名信息", "学院"})
+    @ExcelProperty({"学生信息", "学院"})
     private String collegeName;
-    @ExcelProperty({"报名信息", "性别"})
+    @ExcelProperty({"学生信息", "性别"})
     private String sex;
-    @ExcelProperty({"报名信息", "手机号码"})
+    @ExcelProperty({"学生信息", "手机号码"})
     private String phone;
-    @ExcelProperty({"报名信息", "身份证号码"})
+    @ExcelProperty({"学生信息", "身份证号码"})
     private String identity;
-    @ExcelProperty({"报名信息", "电子邮箱"})
+    @ExcelProperty({"学生信息", "电子邮箱"})
     private String email;
+
+    @ExcelProperty({"成绩", "分数"})
+    private Integer score;
+    @ExcelProperty({"成绩", "排名"})
+    private String grades;
 }

@@ -27,6 +27,19 @@ public class ApplyFromSericeImpl {
     @Autowired
     private ApplyFromRepository apply;
 
+    /**
+     * 用户id
+     *
+     * @param id ApplyId Integer
+     * @return Map<String, Object> userId ,integer 用户id
+     */
+    public Map<String, Object> findUserIdByApplyId(Integer id) {
+        return apply.findUserIdByApplyId(id);
+    }
+
+    public ScisApplyFrom findByUserIdCompetitionId(Integer userId, Integer competitionId) {
+        return apply.findByUserIdCompetitionId(userId, competitionId);
+    }
 
     public List<Map<String, Object>> findScisUserIdT(Integer id, String name, Integer page, Integer size) {
         return apply.findScisUserIdT(id, name, page, size);
@@ -36,8 +49,20 @@ public class ApplyFromSericeImpl {
         return apply.findScisUserIdA(id, name, page, size);
     }
 
+    public Map<String, Object> findScisUserIdA(Integer id, String name) {
+        return apply.findScisUserIdA(id, name);
+    }
+
     public List<Map<String, Object>> findScisUserIdA(Integer id) {
         return apply.findScisUserIdA(id);
+    }
+
+    public Map<String, Object> findScisUserIdB(Integer id) {
+        return apply.findScisUserIdB(id);
+    }
+
+    public void update(Integer userId, Integer competitionId, Integer worksId) {
+        apply.update(userId, competitionId, worksId);
     }
 
     public Page<ScisApplyFrom> findAllByCompetitionId(Integer id, Pageable pageable) {
@@ -54,6 +79,14 @@ public class ApplyFromSericeImpl {
 
     public List<ScisApplyFrom> findAllByCompetitionId(Integer id) {
         return apply.findAllByCompetitionId(id);
+    }
+
+    public List<Map<String, Object>> findGrades(Integer competitionId, String userName, Integer page, Integer size) {
+        return apply.findGrades(competitionId, userName, page, size);
+    }
+
+    public Map<String, Object> findGrades(String userName, Integer competitionId) {
+        return apply.findGrades(userName, competitionId);
     }
 
     /**

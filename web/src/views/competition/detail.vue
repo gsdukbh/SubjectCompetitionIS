@@ -435,7 +435,7 @@
                 }
                 let a = document.createElement('a');
                 a.href = "/api/public/file/getFile?" + qs.stringify(download);
-                a.download = download.objectName;
+                a.download = download.objectName.substr(33, download.objectName.length);
                 a.target = "_blank";
                 a.click();
             },
@@ -459,7 +459,12 @@
                             })
                         }
                     })
-                    .catch(() => {
+                    .catch((error) => {
+                        this.Page404 = true;
+                        this.$notify.error({
+                            title: '错误',
+                            message: error
+                        })
                     });
             },
             setTagsViewTitle() {

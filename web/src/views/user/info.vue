@@ -6,10 +6,10 @@
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="学号:" v-if="myInfo.role==='学生'">
-                            <el-input v-model="myInfo.id" style="width: 80%" disabled readonly></el-input>
+                            <el-input v-model="myInfo.login" style="width: 80%" disabled readonly></el-input>
                         </el-form-item>
                         <el-form-item label="工号:" v-if="myInfo.role==='教师'|| myInfo.role==='管理员'" prop="name">
-                            <el-input v-model="myInfo.id" style="width: 80%" disabled></el-input>
+                            <el-input v-model="myInfo.login" style="width: 80%" disabled></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">

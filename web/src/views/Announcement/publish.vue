@@ -272,7 +272,7 @@
                                 } else {
                                     this.$notify.error({
                                         title: '错误',
-                                        message: '发生了一些错误'
+                                        message: '发生了一些错误' + response.data.message
                                     })
                                 }
                             })

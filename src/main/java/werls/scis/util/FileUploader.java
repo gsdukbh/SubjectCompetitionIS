@@ -50,7 +50,7 @@ public class FileUploader {
     }
 
     public void makeBucket(String bucketName) throws Exception {
-        logger.info(new Date().toString() + "创建了存储对象：" + bucketName);
+        logger.info("创建了存储对象：" + bucketName);
         minioClient.makeBucket(bucketName);
     }
 
@@ -60,7 +60,7 @@ public class FileUploader {
                           InputStream stream,
                           long size,
                           String contentType) throws Exception {
-        logger.info(new Date().toString() + " 上传了文件：" + objectName + "  文件大小：" + size + " 文件类型：" + contentType);
+        logger.info(" 上传了文件：" + objectName + "  文件大小：" + size + " 文件类型：" + contentType);
         minioClient.putObject(bucketName, objectName, stream, size, contentType);
     }
 
@@ -69,12 +69,12 @@ public class FileUploader {
                              InputStream stream,
                              long size,
                              String contentType) throws Exception {
-        logger.info(new Date().toString() + " 上传了文件：" + objectName + "  文件大小：" + size + " 文件类型：" + contentType);
+        logger.info(" 上传了文件：" + objectName + "  文件大小：" + size + " 文件类型：" + contentType);
         minioClient.putObject(IMGBUCKET, objectName, stream, size, contentType);
     }
 
     public InputStream getObject(String bucketName, String objectName) throws Exception {
-        logger.info(new Date().toString() + " 下传了文件：" + objectName);
+        logger.info(" 下传了文件：" + objectName);
         return minioClient.getObject(bucketName, objectName);
     }
 
@@ -84,5 +84,14 @@ public class FileUploader {
 
     public void getObject(String bucketName, String objectName, String fileName) throws Exception {
         minioClient.getObject(bucketName, objectName, fileName);
+    }
+
+    public void remove(String bucketName, String objectName) {
+        try {
+            minioClient.removeObject(bucketName, objectName);
+            logger.info(" 删除文件：" + "/" + bucketName + objectName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

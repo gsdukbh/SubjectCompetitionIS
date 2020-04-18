@@ -17,6 +17,7 @@ import werls.scis.service.CompetitionServiceImpl;
 import werls.scis.service.TeamServiceImpl;
 import werls.scis.service.UserService;
 import werls.scis.util.ApplyFromToExceal;
+import werls.scis.util.Tools;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayOutputStream;
@@ -49,6 +50,8 @@ public class ApplyAdminController {
     UserService userService;
     @Autowired
     CompetitionServiceImpl competitionService;
+    @Autowired
+    Tools tools;
 
     @PostMapping("/personal/{id}")
     public Map<String, Object> findAll(@RequestParam(name = "page", defaultValue = "0") Integer page,
@@ -76,8 +79,7 @@ public class ApplyAdminController {
 
     @GetMapping("/downloadApply/{id}")
     public ResponseEntity<byte[]> downloadApply(
-            HttpServletRequest request
-            , @PathVariable Integer id) {
+            HttpServletRequest request, @PathVariable Integer id) {
         List<ApplyFromToExceal> excealList = new ArrayList<>();
         List<Map<String, Object>> tem = applyFromSerice.findCompetitionId(id);
         String fileName = null;
@@ -122,7 +124,7 @@ public class ApplyAdminController {
             res.close();
             File file = new File(fileName);
             file.delete();
-            fileName = this.getFilename(request, fileName);
+            fileName = tools.getFilename(request, fileName);
             HttpHeaders headers = new HttpHeaders();
             headers.setContentDispositionFormData("attachment", fileName);
             headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
@@ -146,19 +148,5 @@ public class ApplyAdminController {
         return res;
     }
 
-    public String getFilename(HttpServletRequest request,
-                              String filename) throws Exception {
-        // IE不同版本User-Agent中出现的关键词
-        String[] iebrowserkeywords = {"MSIE", "Trident", "Edge"};
-        // 获取请求头代理信息
-        String userAgent = request.getHeader("User-Agent");
-        for (String keyWord : iebrowserkeywords) {
-            if (userAgent.contains(keyWord)) {
-                //IE内核浏览器，统一为UTF-8编码显示
-                return URLEncoder.encode(filename, "UTF-8");
-            }
-        }
 
-        return new String(filename.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
-    }
 }
