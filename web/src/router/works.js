@@ -27,6 +27,25 @@ const worksRouter = {
                 icon: 'upInfo',
                 roles: ['ROLE_STU']
             }
+        },
+        {
+            path: 'detail/:id(\\d+)',
+            name: 'detail works',
+            hidden: true,
+            component: () => import('../views/works/components/detail'),
+            meta: {
+                title: '作品详情',
+            }
+        },
+        {
+            path: 'edit/:id(\\d+)',
+            name: 'edit works',
+            hidden: true,
+            component: () => import('../views/works/components/edit'),
+            meta: {
+                title: '作品修改',
+                roles: ['ROLE_STU']
+            }
         }
 
     ]

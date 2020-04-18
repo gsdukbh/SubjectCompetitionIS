@@ -55,9 +55,21 @@
                 </template>
             </el-table-column>
 
-            <el-table-column label="操作" align="center" width="180px" class-name="small-padding fixed-width">
+            <el-table-column label="操作" align="center" width="250px" class-name="small-padding fixed-width">
                 <template slot-scope="{row}">
-                    <el-button type="danger" :loading="buttonLoading" size="mini" icon="el-icon-edit"
+                    <router-link to="/works/up" v-if="row.worksId===null">
+                        <el-button type="primary" size="mini" icon="el-icon-upload2">
+                            提交作品
+                        </el-button>
+                    </router-link>
+                    <router-link :to="'/works/detail/'+row.worksId" v-if="row.worksId!==null">
+                        <el-button type="primary" size="mini" icon="el-icon-view">
+                            查看作品
+                        </el-button>
+                    </router-link>
+
+                    <el-button style="margin-left: 10px" type="danger" :loading="buttonLoading" size="mini"
+                               icon="el-icon-edit"
                                @click="escApply(row)">
                         取消报名
                     </el-button>

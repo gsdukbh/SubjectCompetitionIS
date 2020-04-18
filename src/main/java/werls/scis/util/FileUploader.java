@@ -85,4 +85,13 @@ public class FileUploader {
     public void getObject(String bucketName, String objectName, String fileName) throws Exception {
         minioClient.getObject(bucketName, objectName, fileName);
     }
+
+    public void remove(String bucketName, String objectName) {
+        try {
+            minioClient.removeObject(bucketName, objectName);
+            logger.info(new Date().toString() + " 删除文件：" + "/" + bucketName + objectName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

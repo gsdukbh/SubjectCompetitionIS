@@ -1,15 +1,15 @@
 <template>
     <div>
-        <!--头部-->
         <sticky :z-index="10" class-name="sub-navbar">
 
 
             <el-button :loading="loading1" style="margin-left: 10px;" type="primary"
                        @click="submitWorks('works')">
-                提交
+                修改
             </el-button>
 
         </sticky>
+
 
         <div class="leftColumn">
             <el-card shadow="hover" class="left top">
@@ -20,7 +20,8 @@
                 </el-form>
                 <el-tag>输入作品描述</el-tag>
 
-                <markdown-editor style="margin-top: 10px" ref="markdown" title="请输入作品描述" height="auto">
+                <markdown-editor style="margin-top: 10px" ref="markdown" title="请输入作品描述" height="auto"
+                                 v-bind:content="works.description">
                 </markdown-editor>
             </el-card>
         </div>
@@ -94,20 +95,20 @@
             </el-card>
         </div>
 
-
     </div>
 </template>
 
 <script>
-    import Sticky from "../../components/Sticky/index";
-    import {mapGetters} from "vuex";
-    import MdInput from "../../components/MDinput/index";
-    import MarkdownEditor from "../../components/MarkdownEditor/index";
     import {getJson, postJson} from "../../api/api";
+    import Sticky from "../../components/Sticky/index";
+    import MarkdownEditor from "../../components/MarkdownEditor/index";
+    import MdInput from "../../components/MDinput/index";
+    import {mapGetters} from "vuex";
+    import qs from 'qs';
 
     export default {
-        name: "up",
-        components: {MarkdownEditor, MdInput, Sticky},
+        name: "edit",
+        components: {MdInput, MarkdownEditor, Sticky},
         computed: {
             ...mapGetters([
                 'name',
@@ -123,6 +124,7 @@
                 }
             };
             return {
+                worksId: '',
                 competition: [],
                 loading1: false,
                 works: {
@@ -134,7 +136,6 @@
                     img: '',
                     competitionId: '',
                     userId: ''
-
                 },
                 rules: {
                     name: [
@@ -147,14 +148,64 @@
 
                 }
             }
+
         },
         created() {
+            this.worksId = this.$route.params.id;
+            this.tempRoute = Object.assign({}, this.$route);
+
             getJson('/student/Competition/findPersonal/all/' + this.userId)
                 .then(response => {
                     this.competition = response.data.content;
                 })
+            getJson('/student/works/findById/' + this.worksId)
+                .then(response => {
+                    this.works = response.data.data;
+                    this.works.competitionId = response.data.competition.id;
+                    console.log(this.works.description, this.works);
+                    console.log("sdasdasdasdasdasdasdasdasdasdsadasdas")
+                    this.setTagsViewTitle();
+                    this.setPageTitle();
+                }).catch(() => {
+
+            })
+
         },
         methods: {
+
+            dl() {
+                const download = {
+                    bucketName: this.works.bucketName,
+                    objectName: this.works.objectName,
+                }
+                let a = document.createElement('a');
+                a.href = "/api/public/file/getFile?" + qs.stringify(download);
+                a.download = download.objectName.substr(33, download.objectName.length);
+                a.target = "_blank";
+                a.click();
+            },
+            getWorks(id) {
+                getJson('/student/works/findById/' + id)
+                    .then(response => {
+                        this.works = response.data.data;
+                        this.works.competitionId = response.data.competition.id;
+                        console.log(this.works.description, this.works);
+                        console.log("sdasdasdasdasdasdasdasdasdasdsadasdas")
+                        this.setTagsViewTitle();
+                        this.setPageTitle();
+                    }).catch(() => {
+
+                })
+            },
+            setTagsViewTitle() {
+                const title = this.works.name;
+                const route = Object.assign({}, this.tempRoute, {title: `${title} - 详情`});
+                this.$store.dispatch('tagsView/updateVisitedView', route);
+            },
+            setPageTitle() {
+                const title = this.works.name;
+                document.title = `${title} - 详情`
+            },
             onSuccess(response) {
                 if (response.status === 200) {
                     this.$notify.success({
@@ -172,7 +223,10 @@
                 this.works.author = this.name;
                 this.works.userId = this.userId
                 if (this.works.bucketName === '') {
-                    this.$message.warning('请先上传作品')
+                    this.$message.warning({
+                        title: '警告',
+                        message: '请先上传作品'
+                    })
                     this.loading1 = false;
                 } else if (this.works.name === '') {
                     this.loading1 = false;
@@ -180,7 +234,7 @@
                 } else {
                     this.$refs[formName].validate((valid) => {
                         if (valid) {
-                            postJson('/student/works/save', this.works)
+                            postJson('/student/works/update', this.works)
                                 .then(response => {
                                     if (response.data.status === 200) {
                                         this.$notify.success({

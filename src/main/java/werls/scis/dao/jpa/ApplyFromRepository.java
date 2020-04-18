@@ -3,6 +3,7 @@ package werls.scis.dao.jpa;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.security.core.parameters.P;
 import werls.scis.dao.pojo.ScisApplyFrom;
@@ -51,6 +52,19 @@ public interface ApplyFromRepository extends JpaRepository<ScisApplyFrom, Intege
     List<Map<String, Object>> findScisUserIdT(Integer id, String name, Integer page, Integer size);
 
     /**
+     * s
+     *
+     * @param userId
+     * @param competitionId
+     */
+    @Modifying
+    @Query(nativeQuery = true, value = "update Is_apply_from\n" +
+            "set works_id=?3\n" +
+            "where user_id = ?1\n" +
+            "  and competition_id = ?2")
+    void update(Integer userId, Integer competitionId, Integer worksId);
+
+    /**
      * @param id
      * @param name
      * @param page
@@ -59,7 +73,8 @@ public interface ApplyFromRepository extends JpaRepository<ScisApplyFrom, Intege
      */
     @Query(nativeQuery = true,
             value = "SELECT b.apply_id             as applyId,\n" +
-                    "       apply_time             as applyTime,\n" +
+                    "       apply_time             as applyTime, " +
+                    "        works_id  as  worksId, \n" +
                     "       c.competition_id       as competitionId,\n" +
                     "       competition_name       as name,\n" +
                     "       competition_start_time as startTime," +
@@ -78,6 +93,7 @@ public interface ApplyFromRepository extends JpaRepository<ScisApplyFrom, Intege
     @Query(nativeQuery = true,
             value = "SELECT b.apply_id             as applyId,\n" +
                     "       apply_time             as applyTime,\n" +
+                    "        works_id  as  worksId, \n" +
                     "       c.competition_id       as competitionId,\n" +
                     "       competition_name       as name,\n" +
                     "       competition_start_time as startTime," +

@@ -40,6 +40,10 @@ public class ApplyFromSericeImpl {
         return apply.findScisUserIdA(id);
     }
 
+    public void update(Integer userId, Integer competitionId, Integer worksId) {
+        apply.update(userId, competitionId, worksId);
+    }
+
     public Page<ScisApplyFrom> findAllByCompetitionId(Integer id, Pageable pageable) {
         return apply.findAllByCompetitionId(id, pageable);
     }
