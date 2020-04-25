@@ -126,6 +126,19 @@ public interface ApplyFromRepository extends JpaRepository<ScisApplyFrom, Intege
     void update(Integer userId, Integer competitionId, Integer worksId);
 
     /**
+     * s
+     *
+     * @param userId
+     * @param competitionId
+     */
+    @Modifying
+    @Query(nativeQuery = true, value = "update Is_apply_from\n" +
+            "set works_id=?3\n" +
+            "where user_id = ?1\n" +
+            "  and competition_id = ?2")
+    void update(Integer userId, Integer competitionId, Integer worksId);
+
+    /**
      * @param id
      * @param name
      * @param page
