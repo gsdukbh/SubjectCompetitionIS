@@ -2,6 +2,12 @@ package werls.scis.controller.teacher;
 
 import com.alibaba.excel.EasyExcel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -9,8 +15,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import werls.scis.dao.pojo.ScisApplyFrom;
+import werls.scis.dao.pojo.ScisCollege;
 import werls.scis.dao.pojo.ScisUser;
 import werls.scis.service.ApplyFromSericeImpl;
+import werls.scis.service.CollegeServiceImpl;
 import werls.scis.service.UserService;
 import werls.scis.util.*;
 import werls.scis.webSocket.WebSocket;
@@ -18,6 +26,7 @@ import werls.scis.webSocket.WebSocket;
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author : LiJiWei
@@ -32,7 +41,8 @@ import java.util.*;
 public class ScoreAdminController {
     @Autowired
     ApplyFromSericeImpl applyFromSerice;
-
+    @Autowired
+    CollegeServiceImpl collegeService;
     @Autowired
     WebSocket webSocket;
     @Autowired
@@ -40,6 +50,38 @@ public class ScoreAdminController {
 
     @Autowired
     UserService userService;
+
+
+    @Cacheable(value = "Score", unless = "#result == null ", key = "'competitionId:'+#competitionId")
+    @GetMapping("/getScore/analysis/{competitionId}")
+    public Map<String, Object> getScoreInfo(@PathVariable Integer competitionId) {
+        Map<String, Object> res = new HashMap<>(16);
+        List<ScisCollege> scisColleges = collegeService.findAll();
+        List<Map<String, Object>> collegeData = new ArrayList<>(16);
+        List<String> collegeName = new ArrayList<>(16);
+        for (ScisCollege college : scisColleges) {
+            Map<String, Object> tem = new HashMap<>(16);
+            List<Integer> data = new ArrayList<>(16);
+            collegeName.add(college.getName());
+            tem.put("name", college.getName());
+            data.add(applyFromSerice.gradeDistribution(competitionId, 0, 59, college.getName()));
+            data.add(applyFromSerice.gradeDistribution(competitionId, 60, 75, college.getName()));
+            data.add(applyFromSerice.gradeDistribution(competitionId, 76, 85, college.getName()));
+            data.add(applyFromSerice.gradeDistribution(competitionId, 86, 95, college.getName()));
+            data.add(applyFromSerice.gradeDistribution(competitionId, 96, 100, college.getName()));
+            tem.put("data", data);
+            tem.put("type", "bar");
+            tem.put("coordinateSystem", "polar");
+            tem.put("stack", "a");
+            collegeData.add(tem);
+        }
+        res.put("collegeName", collegeName);
+        res.put("collegeData", collegeData);
+        res.put("scoreData", tools.getScoreLevel(competitionId));
+        res.put("status", 200);
+        return res;
+    }
+
 
     @GetMapping("/getModel/{competitionId}")
     public ResponseEntity<byte[]> getModel(HttpServletRequest request, @PathVariable Integer competitionId) {
@@ -141,6 +183,7 @@ public class ScoreAdminController {
         return responseEntity;
     }
 
+    @CachePut(value = "Score", unless = "#result == null ", key = "'competitionId:'+#competitionId")
     @PostMapping("/upScoreInfo")
     public Map<String, Object> upScoreInfo(@RequestParam("file") MultipartFile file,
                                            @RequestParam("id") Integer id,

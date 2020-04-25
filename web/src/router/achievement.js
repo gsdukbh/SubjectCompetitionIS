@@ -23,7 +23,7 @@ const achievementRouter={
         {
             path: "index",
             name: 'achievement index',
-            component: () => import('../views/Achievement/index'),
+            component: () => import('../views/Achievement/stu'),
             meta: {
                 title: '成绩排行',
                 icon: 'ranks',

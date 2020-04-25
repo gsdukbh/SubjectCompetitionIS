@@ -47,6 +47,40 @@ public class Tools {
     @Autowired
     WebSocket webSocket;
 
+
+    public List<Map<String, Object>> getScoreLevel(Integer competitionId) {
+        List<Map<String, Object>> score = new ArrayList<>(16);
+        Map<String, Object> temp1 = new HashMap<>(16);
+        Map<String, Object> temp2 = new HashMap<>(16);
+        Map<String, Object> temp3 = new HashMap<>(16);
+        Map<String, Object> temp4 = new HashMap<>(16);
+        Map<String, Object> temp5 = new HashMap<>(16);
+        temp1.put("name", "不合格");
+        temp1.put("value", applyFromSerice.gradeDistribution(competitionId, 0, 59));
+
+        temp2.put("name", "合格");
+        temp2.put("value", applyFromSerice.gradeDistribution(competitionId, 60, 75));
+
+        temp3.put("name", "中等");
+        temp3.put("value", applyFromSerice.gradeDistribution(competitionId, 76, 85));
+
+
+        temp4.put("name", "良好");
+        temp4.put("value", applyFromSerice.gradeDistribution(competitionId, 86, 95));
+
+        temp5.put("name", "优秀");
+        temp5.put("value", applyFromSerice.gradeDistribution(competitionId, 96, 100));
+
+        score.add(temp1);
+        score.add(temp2);
+        score.add(temp3);
+        score.add(temp4);
+        score.add(temp5);
+
+        return score;
+    }
+
+
     public String getFilename(HttpServletRequest request,
                               String filename) throws Exception {
         // IE不同版本User-Agent中出现的关键词

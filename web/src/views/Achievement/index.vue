@@ -1,24 +1,5 @@
 <template>
     <div>
-        <div class="title" v-if="competition!==null">
-            <span> {{competition.name}}--成绩排行</span>
-        </div>
-
-        <div class="leftColumn">
-            <el-card shadow="hover" class="top left">
-                <div slot="header" class="clearfix">
-                    <span>所有的作品</span>
-                    <el-tag style="margin-left: 10px">共{{page.totalElements}}人提交</el-tag>
-
-                    <el-button @click="dl()" style="float: right; padding: 3px 0" type="text" icon="el-icon-download">
-                        下载所有作品
-                    </el-button>
-
-                </div>
-
-            </el-card>
-        </div>
-
 
         <div class="rightColumn">
             <el-card class="right top" shadow="hover" v-loading="loading1">
@@ -51,7 +32,64 @@
                 </el-pagination>
             </el-card>
 
+            <el-card class="right top" shadow="hover" v-loading="loading2">
+                <div slot="header" class="clearfix">
+                    <span>我负责的</span>
+                    <el-button style="float: right; padding: 3px 0" type="text" @click="handleFilter2()">搜索</el-button>
+                </div>
 
+                <el-form>
+                    <el-form-item style="margin-bottom: 40px;" prop="title">
+                        <MdInput v-model="page1.name" name="name" required>
+                            竞赛名称
+                        </MdInput>
+                    </el-form-item>
+                </el-form>
+                <div v-for="(item) in competitionDate1 " :key="item.id" style="text-align: center;">
+                    <el-link type="primary" @click="showInfo(item)">
+                        <span style="font-size: 15px;"> {{item.name}}</span>
+                    </el-link>
+                    <br>
+                </div>
+                <el-pagination
+                        style="text-align: center;margin-top: 10px"
+                        @current-change="handleCurrentChange2"
+                        @next-click="handleCurrentChange2"
+                        @prev-click="handleCurrentChange2"
+                        small
+                        layout="prev, pager, next"
+                        :total="page2.totalElements">
+                </el-pagination>
+            </el-card>
+        </div>
+        <div class="title" v-if="competition!==null">
+            <span> {{competition.name}}--成绩排行</span>
+        </div>
+
+        <div class="leftColumn">
+            <el-card shadow="hover" class="top left">
+                <div slot="header" class="clearfix">
+                    <span>详情</span>
+
+                    <el-button @click="dl()" style="float: right; padding: 3px 0" type="text" icon="el-icon-download">
+                        下载成绩单
+                    </el-button>
+
+                </div>
+
+                <el-tabs value="first" type="card" @tab-click="handleClick">
+                    <el-tab-pane label="成绩排行" name="first">
+                        <rank ref="rank"/>
+                    </el-tab-pane>
+
+                    <el-tab-pane label="数据分析" name="second">
+                        <analysis ref="analysis"></analysis>
+                    </el-tab-pane>
+
+                </el-tabs>
+
+
+            </el-card>
         </div>
         <!--返回-->
         <el-tooltip placement="top" content="返回顶部">
@@ -68,10 +106,13 @@
 
     import {parseTime} from '../../utils/index'
     import {mapGetters} from "vuex";
+    import Rank from "./components/rank";
+    import Analysis from "./components/analysis";
+
 
     export default {
         name: "index",
-        components: {BackToTop, MdInput},
+        components: {Analysis, Rank, BackToTop, MdInput},
         computed: {
             ...mapGetters([
                 'name',
@@ -86,14 +127,6 @@
                 competitionDate: [],
                 competitionDate1: [],
                 loading: false,
-                page: {
-                    size: 20,
-                    page: 0,
-                    userName: null,
-                    competitionId: null,
-                    worksName: null,
-                    totalElements: 0,
-                },
                 page1: {
                     size: 5,
                     page: 0,
@@ -122,8 +155,25 @@
             this.getDataPage2()
         },
         methods: {
-            dl() {
+            handleClick(tab) {
+                if (tab.name === 'second') {
+                    if (this.competition === null) {
+                        this.$message.info("请先选择竞赛")
+                    } else {
+                        this.$refs.analysis.getInfo(this.competition);
+                    }
+                }
+            },
 
+            dl() {
+                if (this.competition !== null) {
+                    let a = document.createElement('a');
+                    a.href = '/api//tea/score/getScoreInfo/' + this.competition.id
+                    a.target = '_blank';
+                    a.click();
+                } else {
+                    this.$message.info("请先选择竞赛！")
+                }
             },
             formatTimeA(time) {
                 return parseTime(time, '{y}-{m}-{d} {h}:{i}')
@@ -161,74 +211,17 @@
                 this.loading2 = true;
                 this.getDataPage2();
             },
-            handleSizeChange(val) {
-                this.page.size = val;
-                this.loading = true;
-                this.getDataPage();
-            },
-            /*当前页数*/
-            handleCurrentChange(val) {
-                /*页面切换*/
-                this.page.page = val;
-                this.loading = true;
-                this.getDataPage()
-            },
+
             handleFilter1() {
                 /*搜索*/
                 this.loading1 = true;
                 this.getDataPage1();
                 console.log(this.page)
             },
-            handleFilter() {
-                /*搜索*/
-                this.loading = true;
-                this.getDataPage();
-                console.log(this.page)
-            },
-            handleRefresh() {
-                this.page.title = null;
-                this.page.from = null;
-                this.page.type = null;
-                this.loading = true;
-                this.getDataPage();
-            },
             showInfo(value) {
                 this.competition = value;
-                this.page.competitionId = value.id;
-                this.loading = true;
-
-            },
-            showWorks(value) {
-                console.log(value)
-                this.competition = value;
-                this.loading = true;
-                this.page.competitionId = value.id;
-                postFrom('/student/works/findAll', this.page)
-                    .then(response => {
-                        if (response.data.status === 200) {
-                            this.works = response.data.content;
-                            this.page.totalElements = response.data.totalElements;
-                            this.loading = false;
-                        }
-                    }).catch(error => {
-                    this.loading = false;
-                    this.$message.error("出现了一些问题:" + error)
-                })
-            },
-            getDataPage() {
-                this.loading = true;
-
-                postFrom('/student/works/findAll', this.page)
-                    .then(response => {
-                        if (response.data.status === 200) {
-                            this.works = response.data.content;
-                            this.page.totalElements = response.data.totalElements;
-                            this.loading = false;
-                        }
-                    }).catch(error => {
-                    this.loading = false;
-                    this.$message.error("出现了一些问题:" + error)
-                })
+                this.$refs.rank.getInfo(value);
+                this.$refs.analysis.getInfo(this.competition);
             },
         }
     }

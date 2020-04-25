@@ -39,7 +39,7 @@ public class ApplyController {
                                        @RequestParam(name = "page", defaultValue = "0") Integer page,
                                        @RequestParam(name = "size", defaultValue = "20") Integer size) {
         Map<String, Object> res = new ConcurrentHashMap<>(16);
-        Pageable pageable = PageRequest.of(page, size, Sort.by("applyTime"));
+        Pageable pageable = PageRequest.of(page, size, Sort.by("score").descending());
         Page<ScisApplyFrom> scisApplyFroms = serice.findAllByCompetitionId(id, pageable);
         List<ScisApplyFrom> scisApplyFromList = new ArrayList<>();
         for (ScisApplyFrom scisApplyFrom : scisApplyFroms.getContent()) {
@@ -51,8 +51,6 @@ public class ApplyController {
         res.put("content", scisApplyFromList);
         res.put("totalElements", scisApplyFroms.getTotalElements());
         res.put("status", 200);
-
-
         return res;
     }
 

@@ -25,4 +25,8 @@ class ApplyFromRepositoryTest {
         System.out.println(applyFromRepository.findScisUserIdA(2));
     }
 
+    @Test
+    void text() {
+
+    }
 }

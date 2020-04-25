@@ -21,6 +21,60 @@ import java.util.Map;
  */
 public interface ApplyFromRepository extends JpaRepository<ScisApplyFrom, Integer> {
 
+
+    Page<ScisApplyFrom> findByScisUserLoginContaining(String login, Pageable pageable);
+
+    Page<ScisApplyFrom> findByScisUserNameContaining(String name, Pageable pageable);
+
+    Page<ScisApplyFrom> findByScisUserNameContainingOrScisUserLoginContaining(String name, String login, Pageable pageable);
+
+    Page<ScisApplyFrom> findByScisUserNameContainingOrScisUserLoginContainingAndScoreBetween(String name, String login, Integer left, Integer right, Pageable pageable);
+
+    Page<ScisApplyFrom> findByScisUserId(Integer id, Pageable pageable);
+
+    Page<ScisApplyFrom> findByScisUserIdAndScoreNotNull(Integer id, Pageable pageable);
+
+    Page<ScisApplyFrom> findByScisUserIdAndCompetitionIdAndScoreBetween(Integer userId, Integer competitionId, Integer left, Integer right, Pageable pageable);
+
+    Page<ScisApplyFrom> findByScisUserIdAndCompetitionIdAndScoreBetweenAndScoreNotNull(Integer userId, Integer competitionId, Integer left, Integer right, Pageable pageable);
+
+    /**
+     * s
+     *
+     * @param competitionId
+     * @param left
+     * @param right
+     * @return
+     */
+    @Query(nativeQuery = true, value = "select count(*)\n" +
+            "from Is_apply_from a,\n" +
+            "     Is_user b,\n" +
+            "     Is_college c,\n" +
+            "     Is_major d,\n" +
+            "     Is_class e\n" +
+            "where a.user_id = b.user_id\n" +
+            "  and c.college_id = d.college_id\n" +
+            "  and e.major_id = d.major_id\n" +
+            "  and b.class_id = e.class_id\n" +
+            "  and a.competition_id = ?1\n" +
+            "  and a.apply_score between ?2 and ?3")
+    int gradeDistribution(Integer competitionId, Integer left, Integer right);
+
+    @Query(nativeQuery = true, value = "select count(*)\n" +
+            "from Is_apply_from a,\n" +
+            "     Is_user b,\n" +
+            "     Is_college c,\n" +
+            "     Is_major d,\n" +
+            "     Is_class e\n" +
+            "where a.user_id = b.user_id\n" +
+            "  and c.college_id = d.college_id\n" +
+            "  and e.major_id = d.major_id\n" +
+            "  and b.class_id = e.class_id\n" +
+            "  and a.competition_id = ?1\n" +
+            "  and a.apply_score between ?2 and ?3 " +
+            "and  c.college_name =?4")
+    int gradeDistribution(Integer competitionId, Integer left, Integer right, String college);
+
     /**
      * @param id
      * @param name
@@ -190,6 +244,17 @@ public interface ApplyFromRepository extends JpaRepository<ScisApplyFrom, Intege
     Page<ScisApplyFrom> findByStatus(String status, Pageable pageable);
 
     /**
+     * @param left
+     * @param right
+     * @return
+     */
+    Page<ScisApplyFrom> findByScoreBetween(Integer left, Integer right, Pageable pageable);
+
+    Page<ScisApplyFrom> findByScoreBetweenAndScisUserId(Integer left, Integer right, Integer userId, Pageable pageable);
+
+    Page<ScisApplyFrom> findByScoreBetweenAndScisUserIdAndScoreNotNull(Integer left, Integer right, Integer userId, Pageable pageable);
+
+    /**
      * 竞赛报名
      *
      * @param id       Integer
@@ -197,6 +262,10 @@ public interface ApplyFromRepository extends JpaRepository<ScisApplyFrom, Intege
      * @return Page<ScisApplyFrom>
      */
     Page<ScisApplyFrom> findAllByCompetitionId(Integer id, Pageable pageable);
+
+    Page<ScisApplyFrom> findAllByCompetitionIdAndScisUserId(Integer id, Integer userId, Pageable pageable);
+
+    Page<ScisApplyFrom> findAllByCompetitionIdAndScisUserIdAndScoreNotNull(Integer id, Integer userId, Pageable pageable);
 
     /**
      * 用户id

@@ -52,22 +52,30 @@ public class CollegeServiceImpl {
     public ScisCollege save (ScisCollege college){
        return collegeJpaRepository.save(college);
     }
-    @CachePut(value = "college",unless = "#result == null ",key = "'college'")
-    public void saveAll (List<ScisCollege> college){
+
+    @CachePut(value = "college", unless = "#result == null ", key = "'college'")
+    public void saveAll(List<ScisCollege> college) {
         collegeJpaRepository.saveAll(college);
     }
 
-    @Cacheable(value = "college",unless = "#result == null ",key = "'college'")
-    public Page<ScisCollege> findAll(Pageable pageable){
+    @Cacheable(value = "college", unless = "#result == null ", key = "'college'")
+    public Page<ScisCollege> findAll(Pageable pageable) {
         return collegeJpaRepository.findAll(pageable);
     }
-    public void delete(ScisCollege college){
+
+    public List<ScisCollege> findAll() {
+        return collegeJpaRepository.findAll();
+    }
+
+    public void delete(ScisCollege college) {
         this.collegeJpaRepository.delete(college);
     }
-    public void deleteAll(List<ScisCollege> college){
+
+    public void deleteAll(List<ScisCollege> college) {
         this.collegeJpaRepository.deleteAll(college);
     }
-    public void deleteById(Integer id){
+
+    public void deleteById(Integer id) {
         this.collegeJpaRepository.deleteById(id);
     }
 
