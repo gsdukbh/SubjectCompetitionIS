@@ -236,6 +236,7 @@
     .center {
         text-align: center;
         align-content: center;
+        margin-top: 20px;
     }
 
     .index {

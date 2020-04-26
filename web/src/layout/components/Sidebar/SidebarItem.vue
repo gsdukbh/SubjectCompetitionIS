@@ -1,6 +1,9 @@
 <template>
   <div v-if="!item.hidden">
-    <template v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&!item.alwaysShow">
+    <template v-if="hasOneShowingChild(item.children,item)
+     && (!onlyOneChild.children
+     ||onlyOneChild.noShowingChildren)
+     &&!item.alwaysShow">
       <app-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path)">
         <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{'submenu-title-noDropdown':!isNest}">
           <item :icon="onlyOneChild.meta.icon||(item.meta&&item.meta.icon)" :title="onlyOneChild.meta.title" />
@@ -61,7 +64,7 @@ export default {
         if (item.hidden) {
           return false
         } else {
-         //临时集（如果只有一个显示子级，将使用它）
+         //临时（如果只有一个显示子级，将使用它）
           this.onlyOneChild = item;
           return true
         }

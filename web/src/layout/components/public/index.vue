@@ -4,41 +4,19 @@
                  class="el-menu-demo top"
                  mode="horizontal"
                  text-color="#303133"
+                 router
                  active-text-color="#409eff"
-                 @select="handleSelect">
+        >
+
+            <el-menu-item index="/">首页</el-menu-item>
 
 
-            <el-menu-item index="1">首页</el-menu-item>
+            <el-menu-item index="/public/competition">竞赛</el-menu-item>
 
-            <el-submenu index="2">
+            <el-menu-item index="/public/announcement">公告</el-menu-item>
 
-                <template slot="title">我的工作台</template>
-
-                <el-menu-item index="2-1">选项1</el-menu-item>
-
-                <el-menu-item index="2-2">选项2</el-menu-item>
-
-                <el-menu-item index="2-3">选项3</el-menu-item>
-
-                <el-submenu index="2-4">
-
-                    <template slot="title">选项4</template>
-
-                    <el-menu-item index="2-4-1">选项1</el-menu-item>
-
-                    <el-menu-item index="2-4-2">选项2</el-menu-item>
-
-                    <el-menu-item index="2-4-3">选项3</el-menu-item>
-
-                </el-submenu>
-
-            </el-submenu>
-            <el-menu-item index="3" disabled>消息中心</el-menu-item>
-
-            <el-menu-item index="4">赛事进程</el-menu-item>
-
-            <el-menu-item class="right" index="5">
-                <router-link to="/login">登录</router-link>
+            <el-menu-item class="right" :index="'/login'">
+                登录
             </el-menu-item>
 
             <div class="right-menu">
@@ -125,6 +103,7 @@
             handleSelect(key, keyPath) {
                 this.keys = key;
                 this.keyPath = keyPath;
+                console.log(key, keyPath)
             },
             login() {
                 this.$router.push({path: '/login'})
@@ -139,16 +118,19 @@
 </script>
 
 <style scoped>
-  .top{
-      align-content: center;
-      padding-right: 10%;
-      padding-left: 10%;
-  }
+    .top {
+        align-content: center;
+        padding-right: 10%;
+        padding-left: 10%;
+    }
 
 </style>
 
 <style lang="scss" scoped>
 
+    .main {
+
+    }
 
     .con {
         padding-top: 60px;

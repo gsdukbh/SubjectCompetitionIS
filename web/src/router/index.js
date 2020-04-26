@@ -52,11 +52,12 @@ export const publicRoutes = [
         },
         children: [
             {
-
                 path: "/password/recover/index",
                 component: () => import('../views/login/pwdRe/index'),
                 name: 'recover',
-
+                meta: {
+                    title: '密码重置'
+                }
             }
         ]
 
@@ -79,13 +80,45 @@ export const publicRoutes = [
                 component: () => import('../views/public/index')
             },
             {
-                path:'register',
-                name:'register',
-                component:()=>import('../views/register'),
-                meta:{
-                    title:'注册',
+                path: 'register',
+                name: 'register',
+                component: () => import('../views/register'),
+                meta: {
+                    title: '注册',
                 }
             },
+            {
+                path: 'announcement',
+                component: () => import('../views/public/components/announcement'),
+                name: 'announcement public',
+                mata: {
+                    title:'公告',
+                }
+            },
+            {
+                path: 'announcement/detail/:id(\\d+)',
+                component: () => import('../views/public/components/announcementDetail'),
+                name: 'announcement public',
+                mata: {
+                    title:'详情',
+                }
+            },
+            {
+                path: 'competition',
+                name: 'competition public',
+                component: () => import('../views/public/components/competition'),
+                mata: {
+                    title:'竞赛',
+                }
+            },
+            {
+                path: 'competition/detail/:id(\\d+)',
+                name: 'competition detail',
+                component: () => import('../views/public/components/competitionDetail'),
+                mata: {
+                    title:'详情',
+                }
+            }
 
         ]
     },
@@ -98,7 +131,7 @@ export const asyncRoutes = [
         component: Layout,
         meta: {
             icon: 'dashboard',
-           roles: ['ROLE_ADMIN','ROLE_TEA','ROLE_STU'],
+            roles: ['ROLE_ADMIN', 'ROLE_TEA', 'ROLE_STU'],
         },
         children: [
             {
@@ -106,7 +139,7 @@ export const asyncRoutes = [
                 name: 'home',
                 component: () => import('../views/dashboard/Home'),
                 meta: {
-                    title: '我的仪表盘',
+                    title: '首页',
                     affix: true
                 }
             },
@@ -192,13 +225,13 @@ export const asyncRoutes = [
                 }
             },
             {
-                path:'myResponsible',
-                name:'my-responsible',
-                component:()=>import('../views/competition/myResponsible'),
-                meta:{
-                    title:'我负责的竞赛',
+                path: 'myResponsible',
+                name: 'my-responsible',
+                component: () => import('../views/competition/myResponsible'),
+                meta: {
+                    title: '我负责的竞赛',
                     icon: 'myre',
-                    roles: [ 'ROLE_TEA'],
+                    roles: ['ROLE_TEA'],
                 }
             }
         ]

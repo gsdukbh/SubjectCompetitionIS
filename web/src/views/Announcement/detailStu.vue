@@ -35,7 +35,7 @@
                             <svg-icon icon-class="annex"></svg-icon>
                         </h3>
                     </div>
-                    <el-link type="primary" @click="dl()"><i class="el-icon-download"></i>下载</el-link>
+                    <el-link type="primary" @click="dl()"><i class="el-icon-download"></i>下载：{{announcement.objectName.substr(33, announcement.objectName.length)}}</el-link>
                 </el-card>
             </div>
 
@@ -91,7 +91,7 @@
                 this.download.objectName = this.announcement.objectName;
                 let a = document.createElement('a');
                 a.href = "/api/public/file/getFile?" + qs.stringify(this.download);
-                a.download = this.download.objectName;
+                // a.download = this.download.objectName;
                 a.target = "_blank";
                 a.click();
             },

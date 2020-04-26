@@ -37,7 +37,7 @@ export default {
     activeMenu() {
       const route = this.$route
       const { meta, path } = route
-      // 如果设置了路径，则侧边栏将突出显示您设置的路径
+
       if (meta.activeMenu) {
         return meta.activeMenu
       }
