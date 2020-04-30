@@ -131,7 +131,7 @@ export const asyncRoutes = [
         component: Layout,
         meta: {
             icon: 'dashboard',
-            roles: ['ROLE_ADMIN', 'ROLE_TEA', 'ROLE_STU'],
+
         },
         children: [
             {

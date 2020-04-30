@@ -187,7 +187,7 @@
                 .catch(error => {
                     this.$message.error("出现了一些问题:" + error)
                 });
-            postFrom('public/announcement/findAll', this.page)
+            postFrom('/tea/announcement/findAll', this.page)
                 .then(response => {
                     this.tableData = response.data.content;
                     this.page.totalElements = response.data.totalElements;
@@ -360,8 +360,7 @@
 
             },
             async getDataPage() {
-
-                await postFrom('public/announcement/findAll', this.page)
+                await postFrom('/tea/announcement/findAll', this.page)
                     .then(response => {
                         this.tableData = response.data.content;
                         this.page.totalElements = response.data.totalElements;

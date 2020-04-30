@@ -339,7 +339,6 @@
                 this.buttonLoading = true;
                 this.$refs[form].validate((valid) => {
                     if (valid) {
-
                         postJson('/admin/user/save', this.userInfo)
                             .then(response => {
                                 if (response.data.status === 200) {

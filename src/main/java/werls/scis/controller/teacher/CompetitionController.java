@@ -82,4 +82,38 @@ public class CompetitionController {
         return res;
     }
 
+    @RequestMapping("/findAll")
+    public Page<ScisCompetition> findByAll(@RequestParam(name = "page", defaultValue = "0") Integer page,
+                                           @RequestParam(name = "size", defaultValue = "20") Integer size,
+                                           @RequestParam(name = "name", defaultValue = "") String name,
+                                           @RequestParam(name = "organizer", defaultValue = "") String organizer,
+                                           @RequestParam(name = "level", defaultValue = "") String level) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("applyTime").descending());
+        return getScisCompetitions(name, organizer, level, pageable);
+    }
+
+    private Page<ScisCompetition> getScisCompetitions(@RequestParam(name = "name", defaultValue = "") String name, @RequestParam(name = "organizer", defaultValue = "") String organizer, @RequestParam(name = "level", defaultValue = "") String level, Pageable pageable) {
+        if (!"".equals(organizer) && !"".equals(name) && !"".equals(level)) {
+
+            return competitionService.findByNameContainingAndLevelAndOrganizer(name, level, organizer, pageable);
+        } else if (!"".equals(organizer) && !"".equals(name)) {
+
+            return competitionService.findByNameContainingAndOrganizer(name, organizer, pageable);
+        } else if (!"".equals(level) && !"".equals(name)) {
+
+            return competitionService.findByNameContainingAndLevel(name, level, pageable);
+        } else if (!"".equals(organizer) && !"".equals(level)) {
+
+            return competitionService.findByOrganizerAndLevel(organizer, level, pageable);
+        } else if (!"".equals(name)) {
+            return competitionService.findByNameLike(name, pageable);
+        } else if (!"".equals(organizer)) {
+            return competitionService.findByOrganizer(organizer, pageable);
+        } else if (!"".equals(level)) {
+            return competitionService.findByLevel(level, pageable);
+        } else {
+            return competitionService.findAll(pageable);
+        }
+    }
 }

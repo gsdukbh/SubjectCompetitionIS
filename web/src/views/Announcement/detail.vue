@@ -73,12 +73,15 @@
                             <svg-icon icon-class="annex"></svg-icon>
                         </h3>
                     </div>
-                    <el-link type="primary" @click="dl()"><i class="el-icon-download"></i>下载</el-link>
+                    <el-link type="primary" @click="dl()">
+                        <i class="el-icon-download"></i>
+                        下载： {{announcement.objectName.substr(33, announcement.objectName.length)}}
+                    </el-link>
                 </el-card>
                 <el-card class="right top" shadow="hover" v-if="announcement.img!=null">
                     <div slot="header" class="clearfix">
                         <h3>首页图片
-                            <icon class="el-icon-picture-outline"></icon>
+                            <i class="el-icon-picture-outline"></i>
                         </h3>
                     </div>
                     <div class="demo-image__preview">
@@ -143,7 +146,7 @@
                 this.download.objectName = this.announcement.objectName;
                 let a = document.createElement('a');
                 a.href = "/api/public/file/getFile?" + qs.stringify(this.download);
-                a.download = this.download.objectName.substr(33, this.download.objectName.length);
+                // a.download = this.download.objectName.substr(33, this.download.objectName.length);
                 a.target = "_blank";
                 a.click();
             },

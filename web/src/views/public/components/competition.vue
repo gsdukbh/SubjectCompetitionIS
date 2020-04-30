@@ -50,9 +50,7 @@
                                      报名时间<i class="el-icon-time"></i>   {{formatTimeA(item.applyTime)}}
                                      </span>
 
-                                    <span style="color: #5a5e66;margin-left: 10px">
-                                      开始时间<i class="el-icon-time"></i>   {{formatTimeA(item.startTime)}}
-                                     </span>
+
 
                                     <span style="color: #5a5e66;margin-left: 10px">
                                       结束时间<i class="el-icon-time"></i>   {{formatTimeA(item.endTime)}}
@@ -94,8 +92,9 @@
 
 <script>
     import {getData, getJson, postFrom} from "../../../api/api";
-    import {parseTime} from '../../../utils/index'
+
     import BackToTop from "../../../components/BackTop/index";
+    import {Myformat} from "../../../utils";
 
     export default {
         name: "competition",
@@ -139,7 +138,8 @@
                 console.log(row, column, event)
             },
             formatTimeA(time) {
-                return parseTime(time, '{y}-{m}-{d} {h}:{i}')
+                // return parseTime(time, '{y}-{m}-{d} {h}:{i}')
+                return Myformat("yyyy年MM月dd日hh小时mm分", new Date(time))
             },
             handleSizeChange(val) {
                 this.page.size = val;

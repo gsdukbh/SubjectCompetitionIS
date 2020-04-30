@@ -73,7 +73,7 @@
                     <div v-loading="loading" style="height: 280px">
                         <div v-for="(item,index) in announcement1" :key="index">
                             <li style="margin-top: 10px">
-                                <router-link to="/#">
+                                <router-link :to="'/public/announcement/detail/'+item.id">
                                     <el-link type="primary" style="font-size: 16px">{{item.title}}</el-link>
 
                                     <span style="float: right; padding: 3px 0"> {{formatTimeA(item.time)}}</span>
@@ -95,13 +95,12 @@
                         <div v-for="(item,index) in competition" :key="index">
 
                             <li style="margin-top: 10px">
-                                <router-link to="/">
+                                <router-link :to="'/public/competition/detail/'+item.id">
 
                                     <el-link type="primary" style="font-size: 16px" href="/#">{{item.name}}</el-link>
                                     <span style="float: right; padding: 3px 0">{{formatTimeA(item.applyTime)}}</span>
                                 </router-link>
                             </li>
-
                         </div>
                     </div>
 
@@ -117,6 +116,8 @@
                 <br>
                 <p> {{formatTimeA(new Date().getTime())}}</p>
             </div>
+
+
         </div>
         <el-tooltip placement="top" content="返回顶部">
             <back-to-top :visibility-height="300" :back-position="50" transition-name="fade"/>
@@ -130,8 +131,9 @@
 
 
     import {postFrom} from "../../api/api";
-    import {parseTime} from '../../utils/index'
+
     import BackToTop from "../../components/BackTop/index";
+    import {Myformat} from "../../utils";
 
     export default {
         name: "index",
@@ -155,7 +157,8 @@
         },
         methods: {
             formatTimeA(time) {
-                return parseTime(time, '{y}-{m}-{d} {h}:{i}')
+                // return parseTime(time, '{y}-{m}-{d} {h}:{i}')
+                return Myformat("yyyy年MM月dd日", new Date(time))
             },
             getAnnouncement1() {
                 const info = {

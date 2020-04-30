@@ -217,7 +217,7 @@
             }
         },
         created() {
-            getJson('/public/competition/findAll')
+            getJson('/tea/competition/findAll')
                 .then(response => {
                     this.competitionDate = response.data.content;
                     this.page1.totalElements = response.data.totalElements
@@ -282,7 +282,7 @@
             },
             getDataPage1() {
                 this.loading1 = true;
-                postFrom('/public/competition/findAll', this.page1)
+                postFrom('/tea/competition/findAll', this.page1)
                     .then(response => {
                         this.competitionDate = response.data.content;
                         this.page1.totalElements = response.data.totalElements

@@ -85,8 +85,9 @@
 <script>
     import Sticky from "../../../components/Sticky/index";
     import {getJson, postFrom} from "../../../api/api";
-    import {parseTime} from '../../../utils/index'
+
     import BackToTop from "../../../components/BackTop/index";
+    import {Myformat} from "../../../utils";
 
     export default {
         name: "announcement",
@@ -126,7 +127,8 @@
                 };
             },
             formatTimeA(time) {
-                return parseTime(time, '{y}-{m}-{d} {h}:{i}')
+                // return parseTime(time, '{y}-{m}-{d} {h}:{i}')
+                return Myformat("yyyy年MM月dd日", new Date(time))
             },
             handleSizeChange(val) {
                 this.page.size = val;

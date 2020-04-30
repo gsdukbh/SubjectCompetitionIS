@@ -79,44 +79,8 @@ public class AnnouncementController {
         res.put("totalElements", announcements.getTotalElements());
         return res;
     }
-    @PostMapping("/findAll")
-    public Map<String, Object> findAll(@RequestParam(name = "page", defaultValue = "0") Integer page,
-                                       @RequestParam(name = "size", defaultValue = "20") Integer size,
-                                       @RequestParam(name = "title", defaultValue = "") String title,
-                                       @RequestParam(name = "type", defaultValue = "") String type,
-                                       @RequestParam(name = "from", defaultValue = "") String from) {
-        Map<String, Object> res = new ConcurrentHashMap<>(16);
-        Pageable pageable = PageRequest.of(page, size, Sort.by("time").descending());
-        Page<ScisAnnouncement> announcements;
-        if (!"".equals(title) && !"".equals(type) && !"".equals(from)) {
 
-            announcements = service.findByTitleContainingAndTypeContainingAndFrom(title, type, from, pageable);
-        } else if (!"".equals(title) && !"".equals(type)) {
 
-            announcements = service.findByTitleContainingAndTypeContaining(title, type, pageable);
-        } else if (!"".equals(title) && !"".equals(from)) {
-
-            announcements = service.findByTitleContainingAndFrom(title, from, pageable);
-        } else if (!"".equals(type) && !"".equals(from)) {
-
-            announcements = service.findByTypeContainingAndFrom(type, from, pageable);
-        } else if (!"".equals(type)) {
-            announcements = service.findByTypeContaining(type, pageable);
-        } else if (!"".equals(from)) {
-            announcements = service.findByFrom(from, pageable);
-        } else if (!"".equals(title)) {
-            announcements = service.findByTitleContaining(title, pageable);
-        } else {
-
-            announcements = service.findAll(pageable);
-        }
-//        System.out.println(announcements.getContent().get(0).getTitle());
-        res.put("status", 200);
-        res.put("message", "Success");
-        res.put("content", announcements.getContent());
-        res.put("totalElements", announcements.getTotalElements());
-        return res;
-    }
 
     @GetMapping("/findById/{id}")
     public Map<String, Object> findById(@PathVariable Integer id) {

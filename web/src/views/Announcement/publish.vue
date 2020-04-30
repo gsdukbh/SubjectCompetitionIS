@@ -97,7 +97,7 @@
             <el-card class="right top" shadow="hover">
                 <div slot="header" class="clearfix">
                     <h3>首页图片
-                        <icon class="el-icon-picture-outline"></icon>
+                        <i class="el-icon-picture-outline"></i>
                     </h3>
                     <el-upload
                             style="float: right; padding: 3px 0"

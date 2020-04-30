@@ -192,7 +192,8 @@
 
 <script>
     import {getData, getJson, postFrom, postJson} from "../../api/api";
-    import {parseTime} from '../../utils/index'
+
+    import {Myformat} from "../../utils";
 
     export default {
         name: "index",
@@ -201,7 +202,7 @@
                 html: null,
                 loading: true,
                 loading1: false,
-                loading2:false,
+                loading2: false,
                 tableData: [
                     {
                         id: null,
@@ -241,7 +242,7 @@
 
         },
         mounted() {
-            getData('/public/competition/findAll')
+            getData('/tea/competition/findAll')
                 .then(response => {
                     this.tableData = response.data.content;
                     this.page.totalElements = response.data.totalElements;
@@ -283,7 +284,8 @@
                 });
             },
             formatTimeA(time) {
-                return parseTime(time, '{y}-{m}-{d} {h}:{i}')
+                // return parseTime(time, '{y}-{m}-{d} {h}:{i}')
+                return Myformat("yyyy年MM月dd日", new Date(time))
             },
             handleSizeChange(val) {
                 this.page.size = val;
@@ -414,7 +416,7 @@
 
                     return this.multipleSelection.map(v => data.map(j => {
                         if (j === 'startTime' || j === 'endTime' || j === 'applyTime') {
-                            return parseTime(v[j])
+                            return Myformat("yyyy年MM月dd日", new Date(v[j]))
                         } else {
                             return v[j]
                         }
@@ -422,7 +424,7 @@
                 } else {
                     return this.tableData.map(v => data.map(j => {
                         if (j === 'startTime' || j === 'endTime' || j === 'applyTime') {
-                            return parseTime(v[j])
+                            return Myformat("yyyy年MM月dd日", new Date(v[j]))
                         } else {
                             return v[j]
                         }
@@ -431,7 +433,7 @@
             },
             getDataPage() {
                 this.loading = true;
-                postFrom('/public/competition/findAll', this.page)
+                postFrom('/tea/competition/findAll', this.page)
                     .then(response => {
                         this.tableData = response.data.content;
                         this.page.totalElements = response.data.totalElements;

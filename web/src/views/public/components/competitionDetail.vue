@@ -157,9 +157,10 @@
     import Sticky from "../../../components/Sticky/index";
     import {mapGetters} from "vuex";
     import {getJson} from "../../../api/api";
-    import {parseTime} from '../../../utils/index'
+
     import qs from 'qs';
     import MarkdownViewer from "../../../components/MarkdownViewer/index";
+    import {Myformat} from "../../../utils";
 
     export default {
         name: "competitionDetail",
@@ -235,7 +236,8 @@
                 document.title = `${title} - 详情`
             },
             formatTimeA(time) {
-                return parseTime(time, '{y}-{m}-{d} {h}:{i}')
+                // return parseTime(time, '{y}-{m}-{d} {h}:{i}')
+                return Myformat("yyyy年MM月dd日", new Date(time))
             },
         }
     }

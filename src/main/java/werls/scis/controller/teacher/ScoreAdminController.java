@@ -51,7 +51,6 @@ public class ScoreAdminController {
     @Autowired
     UserService userService;
 
-
     @Cacheable(value = "Score", unless = "#result == null ", key = "'competitionId:'+#competitionId")
     @GetMapping("/getScore/analysis/{competitionId}")
     public Map<String, Object> getScoreInfo(@PathVariable Integer competitionId) {
