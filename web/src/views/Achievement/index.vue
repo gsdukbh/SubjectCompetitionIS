@@ -40,7 +40,7 @@
 
                 <el-form>
                     <el-form-item style="margin-bottom: 40px;" prop="title">
-                        <MdInput v-model="page1.name" name="name" required>
+                        <MdInput v-model="page2.name" name="name" required>
                             竞赛名称
                         </MdInput>
                     </el-form-item>

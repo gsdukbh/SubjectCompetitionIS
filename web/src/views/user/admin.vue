@@ -237,40 +237,40 @@
 
             </el-row>
 
-            <el-row>
-                <el-col :span="8">
-                    <span class="bold">
-                        参加的比赛：
-                    </span>
-                    <router-link to="/home">
-                        <el-button type="primary" size="small">
-                            更多
-                        </el-button>
-                    </router-link>
-                </el-col>
+            <!--            <el-row>-->
+            <!--                <el-col :span="8">-->
+            <!--                    <span class="bold">-->
+            <!--                        参加的比赛：-->
+            <!--                    </span>-->
+            <!--                    <router-link to="/home">-->
+            <!--                        <el-button type="primary" size="small">-->
+            <!--                            更多-->
+            <!--                        </el-button>-->
+            <!--                    </router-link>-->
+            <!--                </el-col>-->
 
-                <el-col :span="8">
-                    <span class="bold">
-                        作 品：
-                    </span>
-                    <router-link to="/home">
-                        <el-button type="primary" size="small">
-                            更多
-                        </el-button>
-                    </router-link>
-                </el-col>
+            <!--                <el-col :span="8">-->
+            <!--                    <span class="bold">-->
+            <!--                        作 品：-->
+            <!--                    </span>-->
+            <!--                    <router-link to="/home">-->
+            <!--                        <el-button type="primary" size="small">-->
+            <!--                            更多-->
+            <!--                        </el-button>-->
+            <!--                    </router-link>-->
+            <!--                </el-col>-->
 
-                <el-col :span="8">
-                    <span class="bold">
-                        成 绩：
-                    </span>
-                    <router-link to="/home">
-                        <el-button type="primary" size="small">
-                            更多
-                        </el-button>
-                    </router-link>
-                </el-col>
-            </el-row>
+            <!--                <el-col :span="8">-->
+            <!--                    <span class="bold">-->
+            <!--                        成 绩：-->
+            <!--                    </span>-->
+            <!--                    <router-link to="/home">-->
+            <!--                        <el-button type="primary" size="small">-->
+            <!--                            更多-->
+            <!--                        </el-button>-->
+            <!--                    </router-link>-->
+            <!--                </el-col>-->
+            <!--            </el-row>-->
 
 
             <span slot="footer" class="dialog-footer">

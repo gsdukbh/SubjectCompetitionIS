@@ -55,6 +55,29 @@ public class WorksController {
     @Autowired
     ZipFile zipFile;
 
+    @GetMapping("/delWorks/{id}/{applyFromId}")
+    public Map<String, Object> delWorks(@PathVariable Integer id, @PathVariable Integer applyFromId) {
+        Map<String, Object> res = new HashMap<>(16);
+        ScisApplyFrom apply = new ScisApplyFrom();
+        Optional<ScisApplyFrom> optionalScisApplyFrom = applyFromSerice.findById(applyFromId);
+        if (optionalScisApplyFrom.isPresent()) {
+            apply = optionalScisApplyFrom.get();
+        }
+        apply.setWorks(null);
+        applyFromSerice.save(apply);
+        Optional<ScisWorks> optionalScisWorks = worksService.findById(id);
+        ScisWorks works = new ScisWorks();
+        if (optionalScisApplyFrom.isPresent()) {
+            works = optionalScisWorks.get();
+            fileUploader.remove(works.getBucketName(), works.getObjectName());
+            fileUploader.remove("img", works.getImg());
+        }
+        worksService.deleteById(id);
+        res.put("status", 200);
+        return res;
+    }
+
+
     @GetMapping("/get/File/works/{id}")
     public ResponseEntity<byte[]> download(@PathVariable Integer id,
                                            HttpServletRequest request) throws Exception {
@@ -68,7 +91,10 @@ public class WorksController {
         }
         for (ScisWorks works : worksList) {
             InputStream inputStream = fileUploader.getObject(works.getBucketName(), works.getObjectName());
-            String filePath = file + works.getObjectName();
+            String filePath = file +
+                    works.getApplyFrom().getScisUser().getName() +
+                    works.getApplyFrom().getScisUser().getLogin() +
+                    works.getObjectName();
             zipName = works.getCompetition().getName();
             OutputStream outputStream = new FileOutputStream(filePath);
             byte[] bytes = new byte[2048];
@@ -109,7 +135,7 @@ public class WorksController {
         Map<String, Object> res = new HashMap<>(16);
         Pageable pageable = PageRequest.of(0, 10, Sort.by("score").descending());
         Page<ScisWorks> scisWorksPage = worksService.findByCompetitionId(2, pageable);
-
+        res.put("data", worksService.findByCompetitionId(4));
         return res;
     }
 

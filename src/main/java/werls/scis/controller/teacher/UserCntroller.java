@@ -51,6 +51,7 @@ public class UserCntroller {
             String value = getName + "-" + college;
             type.put("value", value);
             type.put("id", user.getId());
+            type.put("name", getName);
             ret.add(type);
         }
         res.put("userInfo", ret);

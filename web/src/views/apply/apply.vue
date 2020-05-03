@@ -122,10 +122,10 @@
                     》》 立刻报名 《《
                 </el-button>
 
-                <el-button class="top" type="primary" :loading="buttonLoading" round
-                           v-if=" !isEnd  && !competition.team  " disabled>
-                    》》 立刻报名 《《
-                </el-button>
+                <!--                <el-button class="top" type="primary" :loading="buttonLoading" round-->
+                <!--                           v-if=" !isEnd  && !competition.team  " disabled>-->
+                <!--                    》》 立刻报名 《《-->
+                <!--                </el-button>-->
 
                 <!--                <el-button class="top" type="primary" :loading="buttonLoading" round-->
                 <!--                           v-if=" !isEnd && isApplyTime && competition.team  " @click="createTeam()">-->
@@ -220,6 +220,7 @@
                 competition: {},
 
                 apply: {//个人
+                    status: '0',
                     scisUser: {
                         id: ''
                     },
@@ -421,6 +422,7 @@
                 this.buttonLoading = true;
                 this.apply.scisUser.id = this.userId;
                 this.apply.competition.id = this.id;
+                this.apply.status = this.competition.type;
                 postJson('/student/personal/apply/join', this.apply)
                     .then(response => {
                         if (response.data.status === 200) {

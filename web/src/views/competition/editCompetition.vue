@@ -62,11 +62,13 @@
                     <!--  value-format="yyyy-MM-dd HH-mm-ss"-->
 
                     <el-form-item label="报名时间" prop="applyTime">
-                        <el-form-item prop="startTime">
-                            <el-date-picker type="datetime" placeholder="选择日期" v-model="ruleForm.applyTime"
 
-                                            style="width: 30%;"></el-date-picker>
-                        </el-form-item>
+                        <el-date-picker type="datetime" placeholder="选择日期" v-model="ruleForm.applyTime"
+
+                                        style="width: 30%;">
+
+                        </el-date-picker>
+
                     </el-form-item>
                     <el-form-item label="状态" prop="status">
                         <el-select v-model="ruleForm.status" placeholder="请选择">
@@ -105,14 +107,14 @@
                     <!--                        <el-input-number v-model="ruleForm.numLimit" :min="1" :max="10" label="描述文字"></el-input-number>-->
                     <!--                    </el-form-item>-->
 
-                    <el-form-item label="负责人" prop="author">
+                    <el-form-item label="负责人" prop="principal">
 
                         <!--                        <el-input-->
                         <!--                                placeholder="请输入内容"-->
                         <!--                                v-model="ruleForm.author"-->
                         <!--                                style="width: 30%">-->
                         <!--                        </el-input>-->
-                        <el-tooltip class="item" content="请从下面的搜索结果输入，否则默认负责人是当前用户" placement="top-start">
+                        <el-tooltip class="item" content="请从下面的搜索结果输入" placement="top-start">
                             <el-autocomplete
                                     style="width: 30%"
                                     v-model="ruleForm.principal"
@@ -254,7 +256,7 @@
                         {required: true, message: '请选择举办单位', trigger: 'change'}
                     ],
                     status: [{required: true, message: '请选择', trigger: 'change'}],
-                    author: [
+                    principal: [
                         {required: true, message: '请输入负责人', trigger: 'blur'},
                     ],
                     applyTime: [{

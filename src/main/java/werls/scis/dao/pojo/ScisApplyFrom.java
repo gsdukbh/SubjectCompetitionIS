@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -41,6 +42,12 @@ public class ScisApplyFrom implements Serializable {
 
     @Column(name = "apply_score")
     private Integer score;
+
+    @LastModifiedDate
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH-mm-ss")
+    @Column(name = "apply_scoreUpTime")
+    private Date scoreUpTime;
+
     @Column(name = "apply_status")
     private String status;
 
@@ -66,6 +73,13 @@ public class ScisApplyFrom implements Serializable {
     @JoinColumn(name = "works_id", referencedColumnName = "works_id")
     private ScisWorks works;
 
+    public Date getScoreUpTime() {
+        return scoreUpTime;
+    }
+
+    public void setScoreUpTime(Date scoreUpTime) {
+        this.scoreUpTime = scoreUpTime;
+    }
 
     public String getGradesanking() {
         return gradesanking;

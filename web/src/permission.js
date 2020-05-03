@@ -7,8 +7,8 @@ import {getToken} from './utils/auth'
 import getPageTitle from './utils/get-page-title'
 
 import {whiteList} from './utils/validate'
-NProgress.configure({showSpinner: false});
 
+NProgress.configure({showSpinner: false});
 
 
 router.beforeEach(async (to, from, next) => {
@@ -66,17 +66,17 @@ router.beforeEach(async (to, from, next) => {
         /* has no token*/
         //
 
-        if (whiteList(to.path)) {
+        if (whiteList(to.path) || to.path === '/') {
 
-        //在登录白名单中，直接进入
-          next();
-          NProgress.done();
+            //在登录白名单中，直接进入
+            next();
+            NProgress.done();
 
         } else {
 
-         //将其他无权访问的页面重定向到登录页面.
-          next(`/public?redirect=${to.path}`);
-          NProgress.done()
+            //将其他无权访问的页面重定向到登录页面.
+            next(`/public?redirect=${to.path}`);
+            NProgress.done()
         }
 
     }

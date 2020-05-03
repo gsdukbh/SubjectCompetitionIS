@@ -7,9 +7,7 @@
                 </el-tab-pane>
                 <el-tab-pane label="我的作品" name="second">
 
-
                     <my-works/>
-
 
                 </el-tab-pane>
             </el-tabs>

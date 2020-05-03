@@ -15,7 +15,7 @@ const achievementRouter={
             name: 'achievement index',
             component: () => import('../views/Achievement/index'),
             meta: {
-                title: '成绩排行',
+                title: '成绩',
                 icon: 'ranks',
                 roles: ['ROLE_ADMIN', 'ROLE_TEA'],
             },
@@ -25,7 +25,7 @@ const achievementRouter={
             name: 'achievement index',
             component: () => import('../views/Achievement/stu'),
             meta: {
-                title: '成绩排行',
+                title: '成绩',
                 icon: 'ranks',
                 roles: ['ROLE_STU'],
             },

@@ -24,15 +24,15 @@ import java.util.Date;
 public class ScisReply implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(name="reply_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "reply_id")
     private Integer id;
+//
+//    @CreatedDate
+//    @Column(name="reply_created_time")
+//    private Date time;
 
     @CreatedDate
-    @Column(name="reply_created_time")
-    private Date time;
-
-    @LastModifiedDate
     @Column(name = "reply_reply_time")
     private Date replyTime;
 
@@ -66,13 +66,6 @@ public class ScisReply implements Serializable {
         this.replyTime = replyTime;
     }
 
-    public Date getTime() {
-        return time;
-    }
-
-    public void setTime(Date time) {
-        this.time = time;
-    }
 
     public Integer getId() {
         return id;

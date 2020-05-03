@@ -51,6 +51,36 @@ public class ScoreAdminController {
     @Autowired
     UserService userService;
 
+    @PostMapping("/modifyInfo/{id}")
+    public Map<String, Object> modifyInfo(@RequestBody ScisApplyFrom applyFrom) {
+        Map<String, Object> res = new HashMap<>(16);
+        applyFromSerice.save(applyFrom);
+        res.put("status", 200);
+        return res;
+    }
+
+    @PostMapping("/delInfoAll}")
+    public Map<String, Object> delInfoAll(@RequestBody List<ScisApplyFrom> applyFroms) {
+        Map<String, Object> res = new HashMap<>(16);
+        res.put("status", 200);
+        for (ScisApplyFrom apply : applyFroms) {
+            apply.setScore(0);
+            apply.setGradesanking(null);
+            applyFromSerice.save(apply);
+        }
+        return res;
+    }
+
+    @PostMapping("/delInfo}")
+    public Map<String, Object> delInfo(ScisApplyFrom applyFrom) {
+        Map<String, Object> res = new HashMap<>(16);
+        applyFrom.setScore(0);
+        applyFrom.setGradesanking(null);
+        applyFromSerice.save(applyFrom);
+        res.put("status", 200);
+        return res;
+    }
+
     @Cacheable(value = "Score", unless = "#result == null ", key = "'competitionId:'+#competitionId")
     @GetMapping("/getScore/analysis/{competitionId}")
     public Map<String, Object> getScoreInfo(@PathVariable Integer competitionId) {

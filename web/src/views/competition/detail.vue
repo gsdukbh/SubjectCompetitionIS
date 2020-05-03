@@ -20,6 +20,7 @@
                 <div class="title">
                     <span>{{showData.name}}</span>
                 </div>
+
                 <el-tabs type="card" class="" value="1" @tab-click="handleClick">
                     <el-tab-pane lazy label="竞赛详情" name="1">
 

@@ -66,16 +66,22 @@
                         </router-link>
                     </template>
                 </el-table-column>
+
                 <el-table-column
                         prop="works.name"
                         label="作品名称"
                         width="180">
                     <template slot-scope="{row}">
-                        <router-link :to="'/works/detail/'+row.works.id">
-                            <el-link type="primary">{{row.works.name}}</el-link>
-                        </router-link>
+                        <div v-if="row.works !==null">
+                            <router-link :to="'/works/detail/'+row.works.id">
+                                <el-link type="primary">{{row.works.name}}</el-link>
+                            </router-link>
+                        </div>
+
+
                     </template>
                 </el-table-column>
+
                 <el-table-column
                         sortable
                         prop="score"
@@ -160,9 +166,9 @@
                 this.loading = true;
                 this.getDataPage()
             },
-            getDataPage() {
+            async getDataPage() {
                 this.loading = true;
-                postFrom('/public/score/findMy/' + this.userId, this.page)
+                await postFrom('/public/score/findMy/' + this.userId, this.page)
                     .then(response => {
                         if (response.data.status === 200) {
                             this.content = response.data.content;
@@ -176,12 +182,12 @@
                             })
                         }
                     }).catch(() => {
-                    this.loading = false;
-                    this.$notify.error({
-                        title: "错误",
-                        message: '服务器异常'
+                        this.loading = false;
+                        this.$notify.error({
+                            title: "错误",
+                            message: '服务器异常'
+                        })
                     })
-                })
             },
             handleFilter() {
                 /*搜索*/

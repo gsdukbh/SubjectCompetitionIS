@@ -12,7 +12,12 @@
                     </el-button>
 
                 </router-link>
-
+                <el-button style="margin-left: 10px;"
+                           type="danger"
+                           @click="delInfo()"
+                >
+                    删除
+                </el-button>
             </sticky>
 
             <!--内容-->
@@ -139,6 +144,36 @@
 
         },
         methods: {
+
+            delInfo() {
+                this.$confirm('此操作将永久删除, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    getJson('/student/works/delWorks/' + this.id + '/' + this.works.applyFrom.id)
+                        .then(response => {
+                            if (response.data.status === 200) {
+                                this.$notify({
+                                    title: '成功',
+                                    message: '删除成功',
+                                    type: 'success'
+                                });
+                                // this.tableData.splice(index, 1);
+                                // this.page.totalElements -= 1;
+                                this.getDataPage();
+                            }
+                        })
+                        .catch(error => {
+                            this.$message.error("出现了一些问题" + error)
+                        });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
             dl() {
                 this.$notify.info({
                     title: '提示',
