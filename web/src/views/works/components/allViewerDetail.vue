@@ -136,7 +136,7 @@
                 this.download.objectName = this.works.objectName;
                 let a = document.createElement('a');
                 a.href = "/api/public/file/getFile?" + qs.stringify(this.download);
-                a.download = this.download.objectName.substr(33, this.download.objectName.length);
+                // a.download = this.download.objectName.substr(33, this.download.objectName.length);
                 a.target = "_blank";
                 a.click();
             },

@@ -395,7 +395,7 @@ public class UserController {
                                           @RequestParam("id") Integer id,
                                           @RequestParam("role") Integer role) {
         Map<String, Object> res = new ConcurrentHashMap<>(16);
-        String fileName = "/" + file.getOriginalFilename();
+        String fileName = "/temp/" + file.getOriginalFilename();
         try {
             InputStream inputStream = file.getInputStream();
             File file1 = new File(fileName);

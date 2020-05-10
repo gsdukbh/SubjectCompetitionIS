@@ -73,6 +73,7 @@ public class WebSocket {
     }
 
     // 此为广播消息
+
     public void sendAllMessage(String message) {
         for(WebSocket webSocket : webSockets) {
             try {
@@ -84,6 +85,7 @@ public class WebSocket {
     }
 
     // 此为单点消息
+
     public void sendOneMessage(String userName, String message) {
         Session session = sessionPool.get(userName);
         if (session != null) {

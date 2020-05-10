@@ -2,6 +2,7 @@ package werls.scis.controller.open;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import werls.scis.dao.pojo.ScisClass;
@@ -39,6 +40,7 @@ public class ClassController {
     }
 
     @GetMapping("/find")
+
     public Map<String,Object> findClass(){
         Map <String, Object> res = new ConcurrentHashMap<>(10);
 

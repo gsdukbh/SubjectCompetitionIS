@@ -60,6 +60,25 @@ public interface ApplyFromRepository extends JpaRepository<ScisApplyFrom, Intege
             "  and a.apply_score between ?2 and ?3")
     int gradeDistribution(Integer competitionId, Integer left, Integer right);
 
+    /**
+     * 实时查询排名
+     *
+     * @param applyId
+     * @return
+     */
+    @Query(nativeQuery = true, value =
+            "SELECT\n" +
+                    "\t( SELECT count( b.apply_score ) \n" +
+                    "\t\tFROM Is_apply_from b\n" +
+                    "\t\tWHERE b.apply_score >= a.apply_score ) AS Rank \n" +
+                    "FROM\n" +
+                    "\tIs_apply_from a \n" +
+                    "WHERE\n" +
+                    "\ta.apply_id = ?1\n" +
+                    "ORDER BY\n" +
+                    "\ta.apply_score DESC;")
+    Integer getGradeRank(Integer applyId);
+
     @Query(nativeQuery = true, value = "select count(*)\n" +
             "from Is_apply_from a,\n" +
             "     Is_user b,\n" +
@@ -124,7 +143,6 @@ public interface ApplyFromRepository extends JpaRepository<ScisApplyFrom, Intege
             "where user_id = ?1\n" +
             "  and competition_id = ?2")
     void update(Integer userId, Integer competitionId, Integer worksId);
-
 
 
     /**

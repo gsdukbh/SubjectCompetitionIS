@@ -45,7 +45,7 @@ public class CollegeServiceImpl {
      * @return Page<ScisCollege>
      */
     public Page<ScisCollege> findByCollegeNameLike(String collegeName, Pageable pageable){
-        return collegeJpaRepository.findByNameLike(collegeName, pageable);
+        return collegeJpaRepository.findByNameContaining(collegeName, pageable);
     }
 
     @CachePut(value = "college",unless = "#result == null ",key = "'college'")

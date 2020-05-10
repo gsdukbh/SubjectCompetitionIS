@@ -69,7 +69,7 @@
             <el-table-column
                     prop="sex"
                     label="性别"
-                    width="180">
+                    width="80">
             </el-table-column>
 
             <el-table-column
@@ -234,7 +234,7 @@
                     @next-click="handleCurrentChange"
                     @prev-click="handleCurrentChange"
                     :current-page="page.page"
-                    :page-sizes="[20,50,100]"
+                    :page-sizes="[5,10,20,50,100]"
                     :page-size="page.size"
                     background
                     layout="total, sizes, prev, pager, next, jumper"
@@ -520,5 +520,6 @@
     .center {
         text-align: center;
         align-content: center;
+        margin-top: 20px;
     }
 </style>

@@ -177,12 +177,15 @@
                 },
                 rules: {
                     title: [
+                        {max: 255, message: '长度在  255 个字符 以下', trigger: 'blur'},
                         {validator: validateRequire}
                     ],
                     from: [
+                        {max: 255, message: '长度在  255 个字符 以下', trigger: 'blur'},
                         {required: true, message: '请输入', trigger: 'blur'}
                     ],
                     type: [
+                        {max: 255, message: '长度在  255 个字符 以下', trigger: 'blur'},
                         {required: true, message: '请输入', trigger: 'blur'}
                     ]
                 }

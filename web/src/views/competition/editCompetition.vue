@@ -241,6 +241,7 @@
                 },
                 rules: {
                     name: [
+                        {max: 255, message: '长度在  255 个字符 以下', trigger: 'blur'},
                         {required: true, message: '请输入活动名称', trigger: 'blur'}
                     ],
                     level: [
@@ -257,6 +258,7 @@
                     ],
                     status: [{required: true, message: '请选择', trigger: 'change'}],
                     principal: [
+                        {max: 255, message: '长度在  255 个字符 以下', trigger: 'blur'},
                         {required: true, message: '请输入负责人', trigger: 'blur'},
                     ],
                     applyTime: [{

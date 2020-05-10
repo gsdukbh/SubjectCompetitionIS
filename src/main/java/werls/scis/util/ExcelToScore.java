@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author : LiJiWei
@@ -30,7 +31,7 @@ public class ExcelToScore extends AnalysisEventListener<Score> {
 
     private static final int BATCH_COUNT = 1000;
 
-    List<Score> list = new ArrayList<>();
+    List<Score> list = new CopyOnWriteArrayList<>();
 
 
     Integer userId;

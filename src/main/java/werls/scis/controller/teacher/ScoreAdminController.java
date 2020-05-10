@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import werls.scis.dao.pojo.ScisApplyFrom;
 import werls.scis.dao.pojo.ScisCollege;
 import werls.scis.dao.pojo.ScisUser;
+import werls.scis.dao.pojo.ScisWorks;
 import werls.scis.service.ApplyFromSericeImpl;
 import werls.scis.service.CollegeServiceImpl;
 import werls.scis.service.UserService;
@@ -51,9 +52,13 @@ public class ScoreAdminController {
     @Autowired
     UserService userService;
 
+    @CachePut(value = "Score", unless = "#result == null ", key = "'competitionId:'+#id")
     @PostMapping("/modifyInfo/{id}")
-    public Map<String, Object> modifyInfo(@RequestBody ScisApplyFrom applyFrom) {
+    public Map<String, Object> modifyInfo(@RequestBody ScisApplyFrom applyFrom, Integer id) {
         Map<String, Object> res = new HashMap<>(16);
+        ScisWorks works = applyFrom.getWorks();
+        works.setScore(applyFrom.getScore());
+        applyFrom.setWorks(works);
         applyFromSerice.save(applyFrom);
         res.put("status", 200);
         return res;
@@ -117,7 +122,7 @@ public class ScoreAdminController {
         Score score = new Score();
         score.setCompetitionId(competitionId);
         List<Score> scoreList = new ArrayList<>();
-        List<ScisApplyFrom> applyFroms = applyFromSerice.findAllByCompetitionId(4);
+        List<ScisApplyFrom> applyFroms = applyFromSerice.findAllByCompetitionId(competitionId);
         for (ScisApplyFrom apply : applyFroms) {
             score.setCompetitionId(competitionId);
             score.setCompetitionName(apply.getCompetition() != null ? apply.getCompetition().getName() : null);

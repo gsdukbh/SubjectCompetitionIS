@@ -78,58 +78,6 @@ public class WorksController {
     }
 
 
-    @GetMapping("/get/File/works/{id}")
-    public ResponseEntity<byte[]> download(@PathVariable Integer id,
-                                           HttpServletRequest request) throws Exception {
-        List<ScisWorks> worksList = worksService.findByCompetitionId(id);
-        String file = "/temp/works/";
-        String zipName = "";
-        String file1 = "/temp/works";
-        File zipPath = new File(file1);
-        if (!zipPath.exists()) {
-            zipPath.mkdir();
-        }
-        for (ScisWorks works : worksList) {
-            InputStream inputStream = fileUploader.getObject(works.getBucketName(), works.getObjectName());
-            String filePath = file +
-                    works.getApplyFrom().getScisUser().getName() +
-                    works.getApplyFrom().getScisUser().getLogin() +
-                    works.getObjectName();
-            zipName = works.getCompetition().getName();
-            OutputStream outputStream = new FileOutputStream(filePath);
-            byte[] bytes = new byte[2048];
-            int length;
-            while ((length = inputStream.read(bytes)) > 0) {
-                outputStream.write(bytes, 0, length);
-            }
-            outputStream.close();
-            inputStream.close();
-        }
-        zipName = "/temp/" + zipName + System.currentTimeMillis() + "作品.zip";
-        ZipOutputStream zipOutputStream = new ZipOutputStream(
-                new FileOutputStream(zipName));
-        zipFile.writeZip(zipPath, "/", zipOutputStream);
-        zipOutputStream.close();
-        zipFile.deleteFolder(new File(file));
-        InputStream inputStream = new FileInputStream(zipName);
-        byte[] bytes = new byte[2048];
-        int length;
-        ByteArrayOutputStream res = new ByteArrayOutputStream();
-        while ((length = inputStream.read(bytes)) > 0) {
-            res.write(bytes, 0, length);
-        }
-        inputStream.close();
-        res.close();
-        File t = new File(zipName);
-        t.delete();
-        zipName = this.getFilename(request, zipName);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentDispositionFormData("attachment", zipName);
-        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        return new ResponseEntity<byte[]>(res.toByteArray(),
-                headers, HttpStatus.OK);
-    }
-
     @GetMapping("/")
     public Map<String, Object> findByCompetitionId() {
         Map<String, Object> res = new HashMap<>(16);
@@ -247,19 +195,5 @@ public class WorksController {
         return res;
     }
 
-    public String getFilename(HttpServletRequest request,
-                              String filename) throws Exception {
-        // IE不同版本User-Agent中出现的关键词
-        String[] iEBrowserKeyWords = {"MSIE", "Trident", "Edge"};
-        // 获取请求头代理信息
-        String userAgent = request.getHeader("User-Agent");
-        for (String keyWord : iEBrowserKeyWords) {
-            if (userAgent.contains(keyWord)) {
-                //IE内核浏览器，统一为UTF-8编码显示
-                return URLEncoder.encode(filename, "UTF-8");
-            }
-        }
 
-        return new String(filename.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
-    }
 }

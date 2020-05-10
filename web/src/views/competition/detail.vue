@@ -292,7 +292,7 @@
                                     type="textarea"
                                     placeholder="请输入回复内容"
                                     v-model="reply.content"
-                                    maxlength="500"
+                                    maxlength="255"
                                     show-word-limit
                             >
                             </el-input>

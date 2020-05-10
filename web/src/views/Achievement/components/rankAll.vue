@@ -47,7 +47,7 @@
 
             <div style="margin-top: 20px" v-loading="loading" class="c">
                 <div v-for="(item,index) in content" :key="item.id">
-                    <el-card class="at" shadow="hover" v-if="item.score!==null">
+                    <el-card class="at" shadow="hover">
                         <el-row>
                             <el-col :span="1">
                                 <span class="index">{{index+1}}</span>
@@ -75,14 +75,23 @@
                             </router-link>
                         </span>
                             </el-col>
-                            <el-col :span="2" v-if="item.score!==null">
-                                <p style="float: right; padding: 3px 0">得分 <span
-                                        style="font-size: 30px">{{item.score}}</span>
+                            <el-col :span="2">
+                                <p style="float: right; padding: 3px 0">评分 <span
+                                        style="font-size: 30px">
+                                      <span v-if="item.score===null"> 暂无</span>
+                                    {{item.score}}
+                                </span>
                                 </p>
                                 <br>
                                 <br>
-                                <p style="float: right; padding: 3px 0">排名 <span
-                                        style="font-size: 20px">{{item.gradesanking}}</span></p>
+                                <p style="float: right; padding: 3px 0">排名
+                                    <span v-if="item.score===null"> 暂无</span>
+
+                                    <span
+                                            style="font-size: 20px">
+
+                                    {{item.gradesanking}}
+                                </span></p>
                             </el-col>
                         </el-row>
 

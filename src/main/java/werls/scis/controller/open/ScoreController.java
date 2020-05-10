@@ -51,6 +51,7 @@ public class ScoreController {
     @Autowired
     Tools tools;
 
+
     @PostMapping("/findMy/{id}")
     public Map<String, Object> findMy(@PathVariable Integer id,
                                       @RequestParam(name = "competitionId", defaultValue = "0") Integer competitionId,
@@ -62,22 +63,22 @@ public class ScoreController {
         Pageable pageable = PageRequest.of(page, size, Sort.by("score").descending());
         if (right != 0 && competitionId != 0) {
             Page<ScisApplyFrom> scisApplyFroms = applyFromSerice.findByScisUserIdAndCompetitionIdAndScoreBetweenAndScoreNotNull(id, competitionId, left, right, pageable);
-            res.put("content", scisApplyFroms.getContent());
+            res.put("content", tools.addRank(scisApplyFroms.getContent()));
             res.put("totalElements", scisApplyFroms.getTotalElements());
             res.put("status", 200);
         } else if (right != 0) {
             Page<ScisApplyFrom> scisApplyFroms = applyFromSerice.findByScoreBetweenAndScisUserIdAndScoreNotNull(left, right, id, pageable);
-            res.put("content", scisApplyFroms.getContent());
+            res.put("content", tools.addRank(scisApplyFroms.getContent()));
             res.put("totalElements", scisApplyFroms.getTotalElements());
             res.put("status", 200);
         } else if (competitionId != 0) {
             Page<ScisApplyFrom> scisApplyFroms = applyFromSerice.findAllByCompetitionIdAndScisUserIdAndScoreNotNull(competitionId, id, pageable);
-            res.put("content", scisApplyFroms.getContent());
+            res.put("content", tools.addRank(scisApplyFroms.getContent()));
             res.put("totalElements", scisApplyFroms.getTotalElements());
             res.put("status", 200);
         } else {
             Page<ScisApplyFrom> scisApplyFroms = applyFromSerice.findByScisUserIdAndScoreNotNull(id, pageable);
-            res.put("content", scisApplyFroms.getContent());
+            res.put("content", tools.addRank(scisApplyFroms.getContent()));
             res.put("totalElements", scisApplyFroms.getTotalElements());
             res.put("status", 200);
         }
@@ -108,17 +109,17 @@ public class ScoreController {
         if (right != 0 && !"".equals(name)) {
             Page<ScisApplyFrom> scisApplyFroms = applyFromSerice.findByScisUserNameContainingOrScisUserLoginContainingAndScoreBetween(
                     name, name, left, right, pageable);
-            res.put("content", scisApplyFroms.getContent());
+            res.put("content", tools.addRank(scisApplyFroms.getContent()));
             res.put("totalElements", scisApplyFroms.getTotalElements());
             res.put("status", 200);
         } else if (right != 0) {
             Page<ScisApplyFrom> scisApplyFroms = applyFromSerice.findByScoreBetween(left, right, pageable);
-            res.put("content", scisApplyFroms.getContent());
+            res.put("content", tools.addRank(scisApplyFroms.getContent()));
             res.put("totalElements", scisApplyFroms.getTotalElements());
             res.put("status", 200);
         } else if (!"".equals(name)) {
             Page<ScisApplyFrom> scisApplyFroms = applyFromSerice.findByScisUserNameContainingOrScisUserLoginContaining(name, name, pageable);
-            res.put("content", scisApplyFroms.getContent());
+            res.put("content", tools.addRank(scisApplyFroms.getContent()));
             res.put("totalElements", scisApplyFroms.getTotalElements());
             res.put("status", 200);
         } else {
@@ -130,7 +131,7 @@ public class ScoreController {
                 optional.ifPresent(scisApplyFrom::setScisUser);
                 scisApplyFromList.add(scisApplyFrom);
             }
-            res.put("content", scisApplyFromList);
+            res.put("content", tools.addRank(scisApplyFromList));
             res.put("totalElements", scisApplyFroms.getTotalElements());
             res.put("status", 200);
         }

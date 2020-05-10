@@ -102,10 +102,12 @@
             </el-table-column>
 
             <el-table-column
+                    sortable
                     prop="score"
                     label="成绩分数">
             </el-table-column>
             <el-table-column
+                    sortable
                     prop="gradesanking"
                     label="排名">
             </el-table-column>
@@ -151,16 +153,16 @@
 
 
         <el-dialog
-                title="提示"
+                title="修改分数"
                 :visible.sync="dialogVisible"
                 width="30%"
         >
             <el-form ref="upScore" :model="score" :rules="rules">
-                <el-form-item label="排名" prop="gradesanking">
-                    <el-input v-model="score.gradesanking"></el-input>
-                </el-form-item>
+                <!--                <el-form-item label="排名" prop="gradesanking">-->
+                <!--                    <el-input v-model="score.gradesanking"></el-input>-->
+                <!--                </el-form-item>-->
                 <el-form-item label="分数" prop="score">
-                    <el-input v-model="score.score"></el-input>
+                    <el-input-number v-model="score.score"></el-input-number>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -383,6 +385,8 @@
             },
             handleRefresh() {
                 this.page.value = null;
+                this.left = null;
+                this.right = null;
                 this.loading = true;
                 this.getDataPage();
             },

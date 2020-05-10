@@ -417,7 +417,7 @@
                     @next-click="handleCurrentChange"
                     @prev-click="handleCurrentChange"
                     :current-page="page.page"
-                    :page-sizes="[20,50,100]"
+                    :page-sizes="[5,10,20,50,100]"
                     :page-size="page.size"
                     background
                     layout="total, sizes, prev, pager, next, jumper"
@@ -468,13 +468,17 @@
                     email: ''
                 },
                 rules: {
-                    identity:[
+                    identity: [
+                        {max: 255, message: '长度在  255 个字符 以下', trigger: 'blur'},
                         {required: true, message: '请输入', trigger: 'change'}
+
                     ],
                     name: [
+                        {max: 255, message: '长度在  255 个字符 以下', trigger: 'blur'},
                         {required: true, message: '请输入姓名', trigger: 'change'}
                     ],
                     sex: [
+                        {max: 255, message: '长度在  255 个字符 以下', trigger: 'blur'},
                         {required: true, message: '请选择性别', trigger: 'blur'}
                     ],
                     college: [
@@ -490,6 +494,7 @@
                         {required: true, message: '请选择', trigger: 'blur'}
                     ],
                     email: [
+                        {max: 255, message: '长度在  255 个字符 以下', trigger: 'blur'},
                         {required: true, message: '请检查你的邮箱', trigger: 'blur'},
                         {
                             type: 'email',
@@ -607,6 +612,10 @@
                     .then(response => {
                         if (response.data.status === 200) {
                             this.editInfo = response.data.data;
+                            this.editInfo.className = response.data.data.scisClass.name;
+                            this.editInfo.majorName = response.data.data.scisClass.major.name;
+                            this.editInfo.level = response.data.data.scisClass.major.level;
+                            this.editInfo.college = response.data.data.scisClass.major.college.name;
                             this.innerVisible = true;
                         } else {
                             this.$message.warning('没有找到该用户数据！')
@@ -700,14 +709,12 @@
                 this.getDataPage();
             },
             handleRefresh() {
-                this.page = {
-                    size: 20,
-                    page: 0,
-                    college: null,
-                    major: null,
-                    name: null,
-                    className: null,
-                };
+                this.page.college = null;
+                this.page.college = null;
+                this.page.major = null;
+                this.page.name = null;
+                this.page.className = null;
+                this.getDataPage();
             },
             getDataPage() {
                 this.loading = true;

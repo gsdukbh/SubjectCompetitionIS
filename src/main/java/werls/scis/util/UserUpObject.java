@@ -25,7 +25,7 @@ public class UserUpObject {
     @ExcelProperty(value = "学号")
     private String login;
 
-    @ExcelProperty(value = "名字")
+    @ExcelProperty(value = "姓名")
     private String name;
     @ExcelProperty(value = "性别")
     private String sex;

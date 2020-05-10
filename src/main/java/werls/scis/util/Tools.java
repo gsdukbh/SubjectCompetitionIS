@@ -17,6 +17,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author : LiJiWei
@@ -46,6 +47,15 @@ public class Tools {
 
     @Autowired
     WebSocket webSocket;
+
+    public List<ScisApplyFrom> addRank(List<ScisApplyFrom> applyFromList) {
+        List<ScisApplyFrom> list = new ArrayList<>();
+        for (ScisApplyFrom apply : applyFromList) {
+            apply.setGradesanking(applyFromSerice.getGradeRank(apply.getId()).toString());
+            list.add(apply);
+        }
+        return list;
+    }
 
 
     public List<Map<String, Object>> getScoreLevel(Integer competitionId) {
@@ -101,14 +111,15 @@ public class Tools {
     public void saveScore(List<Score> scores, Integer competitionId, Integer userId) {
         try {
             logger.info("开始将成绩写入数据库");
-            for (Score score : scores) {
+            List<Score> list = new CopyOnWriteArrayList<>(scores);
+            for (Score score : list) {
                 ScisUser user = userService.findByLogin(score.getLogin());
                 if (user != null) {
                     ScisApplyFrom apply = applyFromSerice.findByUserIdCompetitionId(user.getId(), competitionId);
                     if (apply != null) {
                         apply.setScisUser(user);
                         apply.setScore(score.getScore());
-                        apply.setGradesanking(score.getGrades());
+//                        apply.setGradesanking(score.getGrades());
                         if (apply.getWorks() != null) {
                             ScisWorks works = apply.getWorks();
                             works.setScore(score.getScore());
@@ -135,9 +146,12 @@ public class Tools {
 
 
     @Async
-    public void saveUserInfo(List<UserUpObject> userUpObject, Integer roleId) {
+    public void saveUserInfo(List<UserUpObject> userUpObject, Integer roleId, Integer adminUser) {
         try {
-            for (UserUpObject object : userUpObject) {
+            logger.info("开始将信息写入数据库");
+            List<UserUpObject> list = new CopyOnWriteArrayList<>(userUpObject);
+            for (UserUpObject object : list) {
+                webSocket.sendOneMessage(adminUser.toString(), JSON.toJSONString(object));
                 ScisUser user = new ScisUser();
                 ScisRole role = new ScisRole();
                 List<ScisRole> roleList = new ArrayList<>();
@@ -175,6 +189,8 @@ public class Tools {
                 if (userService.findByLogin(user.getLogin()) == null) {
                     userService.save(user);
                     logger.info("保存了用户信息：{}", user.getLogin() + "-" + user.getName());
+                } else {
+                    logger.info("用户信息：{},已存在", user.getLogin() + "-" + user.getName());
                 }
 
             }
@@ -211,9 +227,11 @@ public class Tools {
         ScisMajor scisMajor = new ScisMajor();
         tem.setName(object.getClassName());
         Optional<ScisMajor> major = majorService.findByMajorName(object.getMajorName());
-        scisMajor = major.map(value -> isMajor(value, object)).orElseGet(() -> noMajor(object));
+//        scisMajor = major.map(value -> isMajor(value, object)).orElseGet(() -> noMajor(object));
+        scisMajor = major.isPresent() ? isMajor(major.get(), object) : noMajor(object);
         tem.setMajor(scisMajor);
         tem = classService.save(tem);
+        logger.info("创建了专业户信息：{}", tem.getName());
         user.setScisClass(tem);
     }
 
@@ -233,6 +251,7 @@ public class Tools {
         scisCollege = college.map(this::isCollege).orElseGet(() -> noCollege(object));
         major.setCollege(scisCollege);
         major = majorService.save(major);
+        logger.info("创建了专业户信息：{}", major.getName());
         return major;
     }
 

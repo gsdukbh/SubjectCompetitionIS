@@ -1,6 +1,15 @@
 <template>
     <div>
         <div class="main">
+
+            <el-alert
+                    center
+                    class="title"
+                    title="请先选择竞赛，然后搜索成绩"
+                    type="success">
+            </el-alert>
+
+
             <el-tabs value="first" type="card">
                 <el-tab-pane label="成绩排行" name="first">
                     <rank-all></rank-all>
@@ -35,6 +44,13 @@
     }
 
     .top {
+        margin-top: 20px;
+    }
+
+    .title {
+        margin-left: 40%;
+        margin-right: 40%;
+        width: 20%;
         margin-top: 20px;
     }
 </style>

@@ -8,9 +8,9 @@
             <el-divider class="bg"><i class="el-icon-lollipop"/></el-divider>
 
             <el-steps :active="active" finish-status="success" align-center>
-                <el-step title="步骤 1"></el-step>
-                <el-step title="步骤 2"></el-step>
-                <el-step title="步骤 3"></el-step>
+                <el-step title="输入账号信息"></el-step>
+                <el-step title="身份验证"></el-step>
+                <el-step title="密码重置"></el-step>
             </el-steps>
 
             <el-divider class="bg"></el-divider>
@@ -64,19 +64,19 @@
             <!--发送验证码-->
             <el-card class="box-card" v-if="active === 1">
                 <div slot="header" class="clearfix">
-                    <span>验证方式</span>
+                    <span>邮箱验证</span>
                 </div>
-                <el-form label-width="50px" class="demo-ruleForm">
+                <!--                <el-form label-width="50px" class="demo-ruleForm">-->
 
-                    <el-form-item class="item" prop="delivery">
-                        <el-switch
-                                v-model="value1"
-                                active-text="手机验证"
-                                inactive-text="邮箱验证">
-                        </el-switch>
-                    </el-form-item>
+                <!--                    <el-form-item class="item" prop="delivery">-->
+                <!--                        <el-switch-->
+                <!--                                v-model="value1"-->
+                <!--                                active-text="手机验证"-->
+                <!--                                inactive-text="邮箱验证">-->
+                <!--                        </el-switch>-->
+                <!--                    </el-form-item>-->
 
-                </el-form>
+                <!--                </el-form>-->
                 <div>
                     <el-divider></el-divider>
                     <span v-if="value1 ===false ">你绑定的邮箱账号：{{getData.email}}</span>
@@ -125,8 +125,8 @@
                     <el-form-item label="确认密码" prop="checkPass">
                         <el-input type="password" v-model="recover.checkPass" autocomplete="off"></el-input>
                     </el-form-item>
-                    <el-form-item label="验证码" prop="age">
-                        <el-input v-model.number="recover.code"></el-input>
+                    <el-form-item label="验证码" prop="code">
+                        <el-input v-model="recover.code"></el-input>
                     </el-form-item>
 
                     <el-form-item>
@@ -191,7 +191,7 @@
                 loading: true,
                 imgs: [],
                 ruleForm: {
-                    name: '1361404576@qq.com',
+                    name: '',
                     delivery: false,
 
                 },
@@ -212,17 +212,18 @@
                         {min: 3, message: '长度在 3 个字符 以上', trigger: 'blur'}
                     ],
                     password: [
-                        {min: 6, max: 16, message: '长度在 2 到 20 个字符', trigger: 'blur'},
                         {
                             required: true,
                             pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{6,16}$/,
                             message: '包括至少1个大写字母，1个小写字母，1个数字，',
                             trigger: 'blur'
                         },
+                        {min: 6, max: 16, message: '长度在 6 到 20 个字符', trigger: 'blur'},
                         {validator: validatePass, trigger: 'blur'}
-                        ],
-                    email:[
+                    ],
+                    email: [
                         {required: true, message: '请检查你的邮箱', trigger: 'blur'},
+                        {max: 255, message: '长度在  255 个字符 以下', trigger: 'blur'},
                         {
                             required: true,
                             pattern: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
@@ -377,7 +378,7 @@
         text-align: center;
         width: auto;
         height: 100vh;
-        background-image: url("https://w.wallhaven.cc/full/q6/wallhaven-q68mxl.png");
+        /*background-image: url("https://w.wallhaven.cc/full/q6/wallhaven-q68mxl.png");*/
         padding-top: 50px;
     }
 

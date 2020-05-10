@@ -165,6 +165,9 @@
             setOnmessageMessage(event) {
 
                 // console.log('服务端返回：' + event.data);
+                if (this.info.length > 100) {
+                    this.info.splice(0, this.info.length)
+                }
                 this.info.push(JSON.parse(event.data));
             },
             setOncloseMessage() {

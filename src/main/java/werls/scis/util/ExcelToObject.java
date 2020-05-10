@@ -13,6 +13,7 @@ import werls.scis.webSocket.WebSocket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author : LiJiWei
@@ -27,9 +28,10 @@ public class ExcelToObject extends AnalysisEventListener<UserUpObject> {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private static final int BATCH_COUNT = 1000;
+    private static final int BATCH_COUNT = 3000;
 
-    List<UserUpObject> list = new ArrayList<>();
+    List<UserUpObject> list = new CopyOnWriteArrayList<>();
+//    List<UserUpObject> list = new ArrayList<>();
 
     int i = 0;
     Integer role;
@@ -104,10 +106,9 @@ public class ExcelToObject extends AnalysisEventListener<UserUpObject> {
     @Override
     public void invoke(UserUpObject userUpObject, AnalysisContext analysisContext) {
         logger.info("解析到一条数据:{}", JSON.toJSONString(userUpObject));
-        sendWebsocket(userUpObject);
         list.add(userUpObject);
         if (list.size() >= BATCH_COUNT) {
-            tools.saveUserInfo(list, this.role);
+            tools.saveUserInfo(list, this.role, adminUser);
             list.clear();
         }
     }
@@ -119,13 +120,13 @@ public class ExcelToObject extends AnalysisEventListener<UserUpObject> {
      */
     @Override
     public void doAfterAllAnalysed(AnalysisContext analysisContext) {
-        tools.saveUserInfo(list, this.role);
+        tools.saveUserInfo(list, this.role, adminUser);
         logger.info("所有数据解析完成！");
     }
 
-    private void sendWebsocket(UserUpObject userUpObject) {
-        webSocket.sendOneMessage(adminUser.toString(), JSON.toJSONString(userUpObject));
-    }
+//    private void sendWebsocket(UserUpObject userUpObject) {
+//        webSocket.sendOneMessage(adminUser.toString(), JSON.toJSONString(userUpObject));
+//    }
 
 //    @Async
 //    public void save(List<UserUpObject> userUpObject) {

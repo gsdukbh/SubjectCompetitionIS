@@ -66,7 +66,7 @@ public class Password {
         ScisUser user = userService.findByLoginOrPhoneOrIdentityOrEmail(email);
         if (user == null) {
             res.put("status", 404);
-            res.put("message", "该邮箱没有绑定用户，请请更换方式");
+            res.put("message", "该邮箱没有绑定用户，请更换方式");
             return JSON.toJSONString(res);
         } else {
             /*发送送验证码*/
@@ -99,7 +99,7 @@ public class Password {
             res.put("status", 200);
             res.put("message", "密码修改成功");
             ScisUser user = userService.findByLoginOrPhoneOrIdentityOrEmail(email);
-            user.setPassword(new BCryptPasswordEncoder().encode(password));
+//            user.setPassword(new BCryptPasswordEncoder().encode(password));
             logger.info(user.getName() + "重置了密码");
             userService.save(user);
             return JSON.toJSONString(res);
@@ -139,9 +139,18 @@ public class Password {
         } else {
             res.put("status", 200);
             res.put("message", "有该用户");
-            String email = user.getEmail() == null ? null : user.getEmail().substring(0, 3) +
-                    "****" +
-                    user.getEmail().substring(7);
+            int emailLenth = user.getEmail().length();
+            int f = user.getEmail().lastIndexOf("@");
+            String email;
+            if (f < 3) {
+                email = user.getEmail() == null ? null : user.getEmail().substring(0, f - 1) +
+                        "****" +
+                        user.getEmail().substring(f);
+            } else {
+                email = user.getEmail() == null ? null : user.getEmail().substring(0, 3) +
+                        "****" +
+                        user.getEmail().substring(f);
+            }
             String phone = user.getPhone() == null ? null : user.getPhone().substring(0, 3) +
                     "****" +
                     user.getPhone().substring(7);
@@ -159,17 +168,18 @@ public class Password {
         res.put("message", "success");
         String str = userService.finByLogin(login);
         if (str != null && str.equals(login)) {
-            res.put("data","true");
-        }else{
-            res.put("data","false");
+            res.put("data", "true");
+        } else {
+            res.put("data", "false");
         }
         return res;
     }
+
     @PostMapping("/register/sendEmail")
-    public Map<String, Object> sendEmail(@RequestParam("email") String email){
+    public Map<String, Object> sendEmail(@RequestParam("email") String email) {
         Map<String, Object> res = new ConcurrentHashMap<>(10);
         res.put("status", 200);
-        String co= code.code();
+        String co = code.code();
         /*redis 保存验证码 5分钟*/
         redisTemplate.opsForValue().set(email, co, 5, TimeUnit.MINUTES);
         emailService.sendHtmlEmail(email,
@@ -177,14 +187,15 @@ public class Password {
                 emailTemplate.sandCode(co,
                         "注册"));
         res.put("message", "验证码已经发送，5分钟内有效，注意查看邮箱");
-        return  res;
+        return res;
     }
+
     @PostMapping("/register")
-    public Map<String, Object> registerUser (@RequestBody JSONObject json){
+    public Map<String, Object> registerUser(@RequestBody JSONObject json) {
         Map<String, Object> res = new ConcurrentHashMap<>(10);
-        ScisUser user=new ScisUser();
-        ScisRole role=new ScisRole();
-        List<ScisRole>roleList=new ArrayList<>();
+        ScisUser user = new ScisUser();
+        ScisRole role = new ScisRole();
+        List<ScisRole> roleList = new ArrayList<>();
         role.setId(2);
         roleList.add(role);
         user.setRoles(roleList);
@@ -192,19 +203,19 @@ public class Password {
         user.setPassword(json.getString("password"));
         user.setRole("学生");
         String redisCode = redisTemplate.opsForValue().get(json.getString("email"));
-        if (redisCode == null){
+        if (redisCode == null) {
             res.put("status", 403);
             res.put("message", "验证码过期");
             return res;
-        }else if (redisCode.equals(json.getString("code"))){
+        } else if (redisCode.equals(json.getString("code"))) {
             res.put("status", 200);
             res.put("message", "注册成功,请完善个人信息");
             userService.save(user);
             return res;
-        }else {
+        } else {
             res.put("status", 403);
             res.put("message", "验证码错误 ");
-            return  res;
+            return res;
         }
     }
 

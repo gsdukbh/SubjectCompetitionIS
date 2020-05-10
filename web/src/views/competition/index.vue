@@ -37,14 +37,14 @@
                 </el-button>
             </router-link>
 
-            <el-tooltip content="请选择要导出的信息，默认当前页" placement="bottom">
-                <el-button :loading="downloadLoading" style="margin-left: 10px;" class="filter-item" type="primary"
-                           icon="el-icon-download"
-                           @click="getExcel">
-                    导出
-                </el-button>
+            <!--            <el-tooltip content="请选择要导出的信息，默认当前页" placement="bottom">-->
+            <!--                <el-button :loading="downloadLoading" style="margin-left: 10px;" class="filter-item" type="primary"-->
+            <!--                           icon="el-icon-download"-->
+            <!--                           @click="getExcel">-->
+            <!--                    导出-->
+            <!--                </el-button>-->
 
-            </el-tooltip>
+            <!--            </el-tooltip>-->
 
             <el-button :loading="loading2" class="filter-item" type="danger" style="margin-left: 10px;" icon="el-icon-delete"
                        @click="deleteList()">
@@ -453,5 +453,6 @@
     .center {
         text-align: center;
         align-content: center;
+        margin-top: 20px;
     }
 </style>

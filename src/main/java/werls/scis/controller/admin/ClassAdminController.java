@@ -1,10 +1,13 @@
 package werls.scis.controller.admin;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import werls.scis.dao.pojo.ScisClass;
 import werls.scis.service.ClassServiceImpl;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,15 +23,33 @@ import java.util.concurrent.ConcurrentHashMap;
 @RestController
 @RequestMapping("/admin/class")
 public class ClassAdminController {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
     @Autowired
     ClassServiceImpl service;
 
 
     @PostMapping("/save")
     public Map<String, Object> save(@RequestBody ScisClass scisClass) {
-        Map<String, Object> res = new ConcurrentHashMap<>(16);
+        Map<String, Object> res = new HashMap<>(16);
         res.put("status", 200);
         res.put("data", service.save(scisClass));
+        return res;
+    }
+
+    @PostMapping("/del")
+    public Map<String, Object> del(@RequestBody ScisClass scisClass) {
+        Map<String, Object> res = new HashMap<>(16);
+        try {
+            service.deleteById(scisClass.getId());
+            res.put("status", 200);
+            res.put("message", "ok");
+        } catch (Exception e) {
+            res.put("status", 403);
+            res.put("message", "班级还有学生，拒绝删除");
+            logger.warn("{},班级还有学生,异常信息：{}", scisClass.getName(), e.toString());
+        }
         return res;
     }
 

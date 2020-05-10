@@ -49,12 +49,15 @@ public class ScisCompetition implements Serializable {
     @Column(name = "competition_apply_time")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH-mm-ss")
     private Date applyTime;
+    @Column(name = "competition_apply_stop")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH-mm-ss")
+    private Date applyStop;
     @Column(name = "competition_content", columnDefinition = "text")
     private String content;
     @Column(name = "competition_author")
     private String author;
     @Column(name = "competition_principal")
-    private  String principal;
+    private String principal;
     @Column(name = "competition_level")
     private String level;
     @Column(name = "competition_organizer")

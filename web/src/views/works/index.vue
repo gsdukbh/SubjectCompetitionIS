@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="main">
-            <el-tabs value="first" type="card">
+            <el-tabs value="first" type="card" style="top">
                 <el-tab-pane label="所有作品" name="first">
                     <all-works></all-works>
                 </el-tab-pane>

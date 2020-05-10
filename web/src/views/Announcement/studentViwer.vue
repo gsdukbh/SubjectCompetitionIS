@@ -35,12 +35,15 @@
         </sticky>
 
         <div style="margin-top: 20px">
+            <div style="text-align: center">
+                <p v-if="tableData ===null">暂无数据</p>
+            </div>
             <el-card class="at" shadow="hover" v-for="(item,index) in tableData" :key="item.id">
                 <el-row>
                     <el-col :span="1">
                         <span class="index">{{index+1}}</span>
                     </el-col>
-                    <el-col :span="2">
+                    <el-col :span="3">
                         <el-image
                                 class="img"
                                 :src="item.img"
@@ -50,7 +53,8 @@
                             </div>
                         </el-image>
                     </el-col>
-                    <el-col :span="21">
+                    <el-col :span="20">
+
                         <router-link :to="'/announcement/detailStu/'+item.id">
                             <el-link>
                                 <p style="font-size: 20px;color: #2b2f3a">{{item.title}}</p>

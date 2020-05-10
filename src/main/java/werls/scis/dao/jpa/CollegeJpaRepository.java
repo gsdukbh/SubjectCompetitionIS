@@ -27,10 +27,11 @@ public interface CollegeJpaRepository extends JpaRepository<ScisCollege,Integer>
 
     /**
      * 通过学院名称查询 模糊 分页 排序
+     *
      * @param collegeName 学院名称
-     * @param pageable Pageable
+     * @param pageable    Pageable
      * @return Page<ScisCollege>
      */
-    Page<ScisCollege> findByNameLike(String collegeName, Pageable pageable);
+    Page<ScisCollege> findByNameContaining(String collegeName, Pageable pageable);
 
 }

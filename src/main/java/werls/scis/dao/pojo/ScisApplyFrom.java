@@ -69,7 +69,7 @@ public class ScisApplyFrom implements Serializable {
     private ScisCompetition competition;
 
     @JsonIgnoreProperties({"applyFrom"})
-    @OneToOne()
+    @OneToOne(cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "works_id", referencedColumnName = "works_id")
     private ScisWorks works;
 

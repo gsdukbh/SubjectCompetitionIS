@@ -4,7 +4,8 @@
                  label-position="left">
 
             <div class="title-container">
-                <h2 class="title">登 录</h2>
+                <h2 class="title">大 学 学 科 竞 赛 系 统</h2>
+                <h4 class="t">登 录</h4>
             </div>
 
             <el-form-item prop="username">
@@ -51,30 +52,30 @@
                 <div class="tips">
                     <span> <el-link type="primary" @click="toHome">返回首页</el-link></span>
 
-                    <span > <router-link to="/public/register">
-                        <el-link type="primary"  >注 册</el-link>
-                    </router-link></span>
+                    <!--                    <span > <router-link to="/public/register">-->
+                    <!--                        <el-link type="primary"  >注 册</el-link>-->
+                    <!--                    </router-link></span>-->
 
                     <span style="margin-left: 10px">  <el-link type="warning" @click="passwordRecover">忘记密码</el-link></span>
                 </div>
 
-                <div class="tips">
-                    <span> 默认root : root</span>
-                    <span> 密码 : 123456</span>
-                </div>
-                <div class="tips">
-                    <span> 学生测试账号 : stu</span>
-                    <span> 密码 : 123456</span>
-                </div>
-                <div class="tips">
-                    <span> 教师测试账号 : tea</span>
-                    <span> 密码 : 123456</span>
-                </div>
+                <!--                <div class="tips">-->
+                <!--                    <span> 默认root : root</span>-->
+                <!--                    <span> 密码 : 123456</span>-->
+                <!--                </div>-->
+                <!--                <div class="tips">-->
+                <!--                    <span> 学生测试账号 : stu</span>-->
+                <!--                    <span> 密码 : 123456</span>-->
+                <!--                </div>-->
+                <!--                <div class="tips">-->
+                <!--                    <span> 教师测试账号 : tea</span>-->
+                <!--                    <span> 密码 : 123456</span>-->
+                <!--                </div>-->
 
                 <!--oath2 验证-->
-<!--                <el-button class="thirdparty-button" type="primary" @click="showDialog=true">-->
-<!--                    Or connect with-->
-<!--                </el-button>-->
+                <!--                <el-button class="thirdparty-button" type="primary" @click="showDialog=true">-->
+                <!--                    Or connect with-->
+                <!--                </el-button>-->
             </div>
 
         </el-form>
@@ -102,8 +103,10 @@
             };
             return {
                 loginForm: {
-                    username: 'root',
-                    password: '123456'/*默认*/
+                    username: '',
+                    password: ''/*默认*/
+                    // username: 'root',
+                    // password: '123456'/*默认*/
                 },
 
                 loginRules: {
@@ -278,6 +281,14 @@
 
         .title-container {
             position: relative;
+
+            .t {
+                font-size: 20px;
+                color: $light_gray;
+                margin: 0px auto 40px auto;
+                text-align: center;
+                font-weight: bold;
+            }
 
             .title {
                 font-size: 26px;

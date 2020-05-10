@@ -2,7 +2,7 @@
 
     <div>
 
-        <el-tabs tab-position="right" class="top" type="card">
+        <el-tabs tab-position="right" class="top" type="card" @tab-click="handleClick">
 
             <el-tab-pane label="添加用户">
 
@@ -254,26 +254,33 @@
                 major: [],
                 rules: {
                     sex: [
+                        {max: 255, message: '长度在  255 个字符 以下', trigger: 'blur'},
                         {required: true, message: '请输入', trigger: 'change'}
                     ],
                     level: [
+                        {max: 255, message: '长度在  255 个字符 以下', trigger: 'blur'},
                         {required: true, message: '请输入', trigger: 'change'}
                     ],
                     className: [
+                        {max: 255, message: '长度在  255 个字符 以下', trigger: 'blur'},
                         {required: true, message: '请输入', trigger: 'change'}
                     ],
                     majorName: [
+                        {max: 255, message: '长度在  255 个字符 以下', trigger: 'blur'},
                         {required: true, message: '请输入', trigger: 'change'}
                     ],
                     college: [
+                        {max: 255, message: '长度在  255 个字符 以下', trigger: 'blur'},
                         {required: true, message: '请输入', trigger: 'change'}
                     ],
                     name: [
+                        {max: 255, message: '长度在  255 个字符 以下', trigger: 'blur'},
                         {required: true, message: '请输入', trigger: 'change'}
                     ],
                     login: [
+                        {max: 255, message: '长度在  255 个字符 以下', trigger: 'blur'},
                         {required: true, message: '请输入', trigger: 'blur'},
-                        {min: 4, max: 20, message: '长度在 4 到 20 个字符', trigger: 'blur'},
+                        // {min: 4, max: 20, message: '长度在 4 到 20 个字符', trigger: 'blur'},
                         {
                             required: true,
                             pattern: /^[0-9a-zA-Z]{4,20}$/,
@@ -284,6 +291,7 @@
 
                     ],
                     email: [
+                        {max: 255, message: '长度在  255 个字符 以下', trigger: 'blur'},
                         {required: true, message: '请检查你的邮箱', trigger: 'blur'},
                         {
                             required: true,
@@ -332,9 +340,33 @@
             });
         },
         methods: {
-            upCollegeInfo() {
+            handleClick(tab) {
+                console.log(tab.index)
+                if (tab.index === '0') {
+                    getJson('/public/college/findAll')
+                        .then(response => {
+                            this.college = response.data.content;
+                        })
+                        .catch(error => {
+                            this.$message.error("出现了一些问题" + error)
+                        });
+                    getJson('/public/class/find/info')
+                        .then(response => {
+                            this.classList = response.data.data;
+                        })
+                        .catch(error => {
+                            this.$message.error("出现了一些问题" + error)
+                        });
+                    getJson("/public/major/find")
+                        .then(response => {
+                            this.major = response.data.data;
 
+                        }).catch(error => {
+                        this.$message.error("出现了一些问题" + error)
+                    });
+                }
             },
+
             commit(form) {
                 this.buttonLoading = true;
                 this.$refs[form].validate((valid) => {
@@ -352,17 +384,18 @@
                                         message: '服务器拒绝了请求'
                                     })
                                 }
-                                this.buttonLoading = true;
+                                this.buttonLoading = false;
                             })
                             .catch(error => {
+                                this.buttonLoading = false;
                                 this.$message.error("出现一些错误:" + error)
                             });
 
                     } else {
+                        this.buttonLoading = false;
                         this.$message.warning("请检查你填写的内容")
                     }
                 });
-                this.buttonLoading = true;
             }
 
         }

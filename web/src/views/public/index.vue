@@ -23,7 +23,7 @@
 
                         </div>
                         <div class="info">
-                            <router-link :to="'/#'">
+                            <router-link :to="'/public/announcement/detail/'+item.id">
                                 <el-button round style="color: #2b2f3a; background-color: rgba(255,255,255,0.5);">
                                     <span>查看详情</span>
 
@@ -148,9 +148,12 @@
             }
         },
         created() {
-            this.getAnnouncement();
-            this.getAnnouncement1();
-            this.getCompetition()
+            setTimeout(() => {
+                this.getAnnouncement();
+                this.getAnnouncement1();
+                this.getCompetition()
+            }, 2000);
+
         },
         mounted() {
 
@@ -169,12 +172,13 @@
                     .then(response => {
                         this.announcement1 = response.data.content;
                         this.loading1 = false;
-                    }).catch(error => {
+                    }).catch(() => {
                     this.loading1 = false;
-                    this.$notify.error({
-                        title: '错误',
-                        message: '服务器异常：' + error
-                    })
+                    this.getAnnouncement1()
+                    // this.$notify.error({
+                    //     title: '错误',
+                    //     message: '服务器异常：' + error
+                    // })
                 })
             },
             getCompetition() {
@@ -186,12 +190,13 @@
                     .then(response => {
                         this.competition = response.data.content;
                         this.loading = false;
-                    }).catch(error => {
+                    }).catch(() => {
                     this.loading = false;
-                    this.$notify.error({
-                        title: '错误',
-                        message: '服务器异常：' + error
-                    })
+                    this.getCompetition()
+                    // this.$notify.error({
+                    //     title: '错误',
+                    //     message: '服务器异常：' + error
+                    // })
                 })
             },
             getAnnouncement() {
@@ -202,11 +207,12 @@
                 postFrom('/public/announcement/findAllA', info)
                     .then(response => {
                         this.announcement = response.data.content;
-                    }).catch(error => {
-                    this.$notify.error({
-                        title: '错误',
-                        message: '服务器异常：' + error
-                    })
+                    }).catch(() => {
+                    this.getAnnouncement()
+                    // this.$notify.error({
+                    //     title: '错误',
+                    //     message: '服务器异常：' + error
+                    // })
                 })
             }
         }

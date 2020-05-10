@@ -24,6 +24,6 @@ public class Score {
     private String name;
     @ExcelProperty("分数")
     private Integer score;
-    @ExcelProperty("排名")
-    private String grades;
+//    @ExcelProperty("排名")
+//    private String grades;
 }

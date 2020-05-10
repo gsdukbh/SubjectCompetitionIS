@@ -29,10 +29,11 @@
 
 
         <el-row v-loading="loading" style="margin-top: 10px">
+
             <el-col :span="6" v-for="(item,index) in works" :key="index">
 
-
-                <el-card shadow="hover" :body-style="{ padding: '0px' }" style="margin-left: 10px" @click="t()">
+                <el-card shadow="hover" :body-style="{ padding: '0px' }" style="margin-left: 10px;margin-top: 10px"
+                         @click="t()">
                     <el-tooltip class="item" effect="dark" content="点击查看作品详情" placement="top">
                         <router-link :to="'/works/detail/All/'+item.id">
                             <el-image
@@ -58,8 +59,6 @@
                         <br>
                         <span>上传时间：{{formatTimeA(item.upTime)}}</span>
                         <br>
-                        <span v-if="works.score!=null">评分：{{works.score}}</span>
-                        <span v-if="works.score==null">评分：暂无</span>
                         <br>
                         <span>所属竞赛：
                             <router-link :to="'/competition/detailStu/'+item.competition.id">

@@ -30,7 +30,6 @@ public class MajorServiceImpl {
     private MajorRepostitory major;
 
 
-    @Cacheable(value = "ScisMajor",key = "'findByAll'")
     public List<ScisMajor> findByAll(){
         return major.findAll();
     }
@@ -50,8 +49,6 @@ public class MajorServiceImpl {
     public Optional<ScisMajor> findByMajorName(String majorName){
         return major.findByName(majorName);
     }
-
-    @CachePut(value = "ScisMajor",key = "'findByAll'")
 
     public ScisMajor save(ScisMajor major){
         return   this.major.save(major);

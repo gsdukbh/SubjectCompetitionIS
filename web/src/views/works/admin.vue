@@ -35,7 +35,8 @@
                     <el-col :span="6" v-for="(item,index) in works" :key="index">
 
 
-                        <el-card shadow="hover" :body-style="{ padding: '0px' }" class="card" @click="t()">
+                        <el-card shadow="hover" :body-style="{ padding: '0px' }"
+                                 style="margin-left: 10px;margin-top: 10px" class="card" @click="t()">
                             <el-tooltip class="item" effect="dark" content="点击查看作品详情" placement="top">
                                 <router-link :to="'/works/detail/All/'+item.id">
                                     <el-image
@@ -52,7 +53,10 @@
                         <span>作品名称：
                            <router-link :to="'/works/detail/'+item.id">
                                <el-link :underline="false" type="primary">
-                                   {{item.name}}
+                                 <span v-if="item.name.length <=10">{{item.name}}</span>
+                                   <span v-if="item.name.length >10">
+                                       {{item.name.substr(0,10)}}...
+                                   </span>
                                </el-link>
                             </router-link>
                         </span>
@@ -61,10 +65,11 @@
                                 <br>
                                 <span>上传时间：{{formatTimeA(item.upTime)}}</span>
                                 <br>
-                                <span>作品：<el-link type="primary" icon="el-icon-download" @click="dlWorks(item)">{{item.objectName.substr(33,item.objectName.length)}}</el-link></span>
+                                <span>作品：<el-link type="primary" icon="el-icon-download" @click="dlWorks(item)">
+                               点击下载
+                                </el-link>
+                                </span>
                                 <br>
-                                <span v-if="works.score!=null">评分：{{works.score}}</span>
-                                <span v-if="works.score==null">评分：暂无</span>
                                 <br>
                                 <span>所属竞赛：
                             <router-link :to="'/competition/detailStu/'+item.competition.id">
@@ -217,6 +222,7 @@
             }
         },
         created() {
+
             getJson('/tea/competition/findAll')
                 .then(response => {
                     this.competitionDate = response.data.content;
@@ -244,7 +250,7 @@
                 })
                 let a = document.createElement('a');
                 a.href = "/api/public/file/getFile?" + qs.stringify(download);
-                a.download = download.objectName.substr(33, download.objectName.length);
+                // a.download = download.objectName.substr(33, download.objectName.length);
                 a.target = "_blank";
                 a.click();
             },
@@ -255,7 +261,7 @@
                     duration: 0
                 })
                 let a = document.createElement('a');
-                a.href = "/api/student/works/get/File/works/" + this.competition.id;
+                a.href = "/api/tea/works/get/File/works/" + this.competition.id;
                 // a.download = download.objectName;
                 a.target = "_blank";
                 a.click();
@@ -410,10 +416,10 @@
         margin-top: 10px;
     }
 
-    .item {
-        margin-top: 10px;
-        margin-right: 40px;
-    }
+    /*.item {*/
+    /*    margin-top: 10px;*/
+    /*    margin-right: 40px;*/
+    /*}*/
 
 
     .image {

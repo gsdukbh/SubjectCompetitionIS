@@ -27,6 +27,10 @@ public class ApplyFromSericeImpl {
     @Autowired
     private ApplyFromRepository apply;
 
+    public Integer getGradeRank(Integer applyId) {
+        return apply.getGradeRank(applyId);
+    }
+
     public Page<ScisApplyFrom> findByScisUserNameContaining(String name, Pageable pageable) {
         return apply.findByScisUserNameContaining(name, pageable);
     }
