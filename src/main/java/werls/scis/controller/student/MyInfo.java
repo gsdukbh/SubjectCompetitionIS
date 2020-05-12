@@ -66,6 +66,7 @@ public class MyInfo {
         res.put("status", 200);
         Optional<ScisUser> user = userService.findByEmail(email);
         if (user.isPresent()) {
+            res.put("SID", user.get().getLogin());
             res.put("data", "true");
         } else {
             res.put("data", "false");

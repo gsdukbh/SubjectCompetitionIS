@@ -22,16 +22,18 @@ import java.io.InputStream;
 @Component
 public class FileUploader {
     private final Logger logger = LoggerFactory.getLogger(getClass());
-    @Value("$minio.A_KEY")
-    private static String A_KEY;
-    @Value("minio.S_KEY")
-    private static String S_KEY;
-    @Value("minio.URL")
-    public static String URL;
-    @Value("minio.ENDPOINT")
-    public static String ENDPOINT;
-    @Value("minio.IMG")
-    private static String IMG;
+
+    private static final String A_KEY = "1361404576";
+
+    private static final String S_KEY = "lijiawei+520";
+
+    //    public static final String URL="https://data.werls.top";
+    public static final String URL = "http://127.0.0.1:9000";
+
+    //    public static final String ENDPOINT="http://120.78.148.61:9000";
+    public static final String ENDPOINT = "http://127.0.0.1:9000";
+
+    private static final String IMG = "img";
     MinioClient minioClient = new MinioClient(ENDPOINT, A_KEY, S_KEY);
 
     public FileUploader() throws Exception {

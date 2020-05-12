@@ -199,6 +199,20 @@
         name: "add",
         components: {ClassInfo, Major, College},
         data() {
+            let validatePassEmail = (rule, value, callback) => {
+                const info = {
+                    email: value
+                };
+                postFrom('/i/email/repeat', info)
+                    .then(response => {
+                        let result = response.data.data === 'true';
+                        if (result) {
+                            callback(new Error('此邮箱已经绑定'));
+                        } else {
+                            callback()
+                        }
+                    });
+            };
             let validatePass = (rule, value, callback) => {
                 if (value === '') {
                     callback(new Error('请输入密码'));
@@ -299,6 +313,7 @@
                             message: '请输入正确的邮箱',
                             trigger: 'blur'
                         },
+                        {validator: validatePassEmail, trigger: 'blur'}
                     ],
                     password: [
                         {validator: validatePass, trigger: 'blur'},

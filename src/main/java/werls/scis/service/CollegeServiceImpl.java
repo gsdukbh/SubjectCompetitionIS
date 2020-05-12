@@ -48,17 +48,17 @@ public class CollegeServiceImpl {
         return collegeJpaRepository.findByNameContaining(collegeName, pageable);
     }
 
-    @CachePut(value = "college",unless = "#result == null ",key = "'college'")
+
     public ScisCollege save (ScisCollege college){
        return collegeJpaRepository.save(college);
     }
 
-    @CachePut(value = "college", unless = "#result == null ", key = "'college'")
+
     public void saveAll(List<ScisCollege> college) {
         collegeJpaRepository.saveAll(college);
     }
 
-    @Cacheable(value = "college", unless = "#result == null ", key = "'college'")
+
     public Page<ScisCollege> findAll(Pageable pageable) {
         return collegeJpaRepository.findAll(pageable);
     }

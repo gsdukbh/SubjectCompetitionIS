@@ -3,6 +3,8 @@ package werls.scis.dao.jpa;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import werls.scis.dao.pojo.ScisMajor;
 
 import java.util.Optional;
@@ -30,4 +32,17 @@ public interface MajorRepostitory extends JpaRepository<ScisMajor,Integer> {
      */
     Optional<ScisMajor> findByName(String majorName);
 
+    /**
+     * name find
+     *
+     * @param majorName name
+     * @param pageable  page
+     * @return Page<ScisMajor>
+     */
+    Page<ScisMajor> findByNameContaining(String majorName, Pageable pageable);
+
+    @Modifying
+    @Query(nativeQuery = true,
+            value = "delete from Is_major where major_id =?1")
+    void myDeleteById(Integer id);
 }

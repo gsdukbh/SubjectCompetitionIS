@@ -63,11 +63,22 @@
 
 
                     <el-form-item label="报名时间" prop="applyTime">
-                            <el-date-picker type="datetime" placeholder="选择日期" v-model="ruleForm.applyTime"
-                                            value-format="yyyy-MM-dd HH-mm-ss"
-                                            style="width: 30%;">
-                            </el-date-picker>
+                        <el-date-picker type="datetime" placeholder="选择日期" v-model="ruleForm.applyTime"
+                                        value-format="yyyy-MM-dd HH-mm-ss"
+                                        style="width: 30%;">
+                        </el-date-picker>
                     </el-form-item>
+
+                    <el-form-item label="竞赛报名结束时间" prop="applyStop">
+
+                        <el-date-picker type="datetime" placeholder="选择日期" v-model="ruleForm.applyStop"
+
+                                        style="width: 30%;">
+
+                        </el-date-picker>
+
+                    </el-form-item>
+
                     <el-form-item label="状态" prop="status">
                         <el-select v-model="ruleForm.status" placeholder="请选择">
                             <el-option label="草稿" value="草稿"></el-option>
@@ -208,6 +219,7 @@
                     startTime: null,
                     endTime: null,
                     applyTime: null,
+                    applyStop: null,
                     organizer: '',
                     status: '',
                     type: '',
@@ -253,6 +265,9 @@
                     ],
                     applyTime: [{
                         required: true, message: '请选择开始报名时间', trigger: 'change'
+                    }],
+                    applyStop: [{
+                        required: true, message: '请选择报名结束时间', trigger: 'change'
                     }],
                     type: [
                         {

@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import werls.scis.dao.pojo.ScisCollege;
 import werls.scis.service.CollegeServiceImpl;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -37,17 +39,15 @@ public class CollegeAdminController {
                                     @RequestParam(name = "name", defaultValue = "") String name) {
         Map<String, Object> res = new ConcurrentHashMap<>(16);
         Pageable pageable = PageRequest.of(page, size, Sort.by("name"));
+        Page<ScisCollege> colleges;
         if (!"".equals(name)) {
-            Page<ScisCollege> colleges = service.findByCollegeNameLike(name, pageable);
-            res.put("content", colleges.getContent());
-            res.put("totalElements", colleges.getTotalElements());
-            res.put("status", 200);
+            colleges = service.findByCollegeNameLike(name, pageable);
         } else {
-            Page<ScisCollege> colleges = service.findAll(pageable);
-            res.put("content", colleges.getContent());
-            res.put("totalElements", colleges.getTotalElements());
-            res.put("status", 200);
+            colleges = service.findAll(pageable);
         }
+        res.put("content", colleges.getContent());
+        res.put("totalElements", colleges.getTotalElements());
+        res.put("status", 200);
         return res;
     }
 
@@ -62,14 +62,29 @@ public class CollegeAdminController {
 
     @PostMapping("/del")
     public Map<String, Object> del(@RequestBody ScisCollege college) {
-        Map<String, Object> res = new ConcurrentHashMap<>(16);
+        Map<String, Object> res = new HashMap<>(16);
         try {
             service.deleteById(college.getId());
             res.put("status", 200);
         } catch (Exception e) {
             res.put("status", 403);
             res.put("message", "该学院还有其他专业信息，拒绝删除");
-            logger.warn("{}学院还有其他专业信息,异常信息：{}", college.getName(), e.toString());
+            logger.warn("{}还有其他专业信息,异常信息：{}", college.getName(), e.toString());
+        }
+        return res;
+    }
+
+    @PostMapping("/delAll")
+    public Map<String, Object> delAll(@RequestBody List<ScisCollege> colleges) {
+        Map<String, Object> res = new HashMap<>(16);
+        try {
+            service.deleteAll(colleges);
+            res.put("status", 200);
+            res.put("message", "ok");
+        } catch (Exception e) {
+            res.put("status", 403);
+            res.put("message", "学院还有其他专业信息，拒绝删除");
+            logger.warn("学院还有其他专业信息,异常信息：{}", e.toString());
         }
         return res;
     }
@@ -79,6 +94,7 @@ public class CollegeAdminController {
         Map<String, Object> res = new ConcurrentHashMap<>(16);
         Optional<ScisCollege> college = service.findByCollegeName(name);
         if (college.isPresent()) {
+            res.put("CID", college.get().getId());
             res.put("data", "true");
         } else {
             res.put("data", "false");

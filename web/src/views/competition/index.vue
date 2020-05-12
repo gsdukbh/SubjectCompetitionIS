@@ -186,6 +186,13 @@
                     layout="total, sizes, prev, pager, next, jumper"
                     :total="page.totalElements">
             </el-pagination>
+
+
+            <el-tooltip placement="top" content="返回顶部">
+                <back-to-top :visibility-height="300" :back-position="50" transition-name="fade"/>
+            </el-tooltip>
+
+
         </div>
     </div>
 </template>
@@ -194,9 +201,11 @@
     import {getData, getJson, postFrom, postJson} from "../../api/api";
 
     import {Myformat} from "../../utils";
+    import BackToTop from "../../components/BackTop/index";
 
     export default {
         name: "index",
+        components: {BackToTop},
         data() {
             return {
                 html: null,

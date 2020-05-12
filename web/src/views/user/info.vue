@@ -159,7 +159,9 @@
                 postFrom('/i/email/repeat', info)
                     .then(response => {
                         let result = response.data.data === 'true';
-                        if (result) {
+                        if (this.myInfo.login === response.data.SID && result) {
+                            callback()
+                        } else if (result) {
                             callback(new Error('此邮箱已经绑定'));
                         } else {
                             callback()

@@ -29,46 +29,64 @@ public class MajorServiceImpl {
     @Autowired
     private MajorRepostitory major;
 
+    public void myDeleteById(Integer id) {
+        major.myDeleteById(id);
+    }
 
-    public List<ScisMajor> findByAll(){
+    public void myDeleteByIdAll(List<ScisMajor> majors) {
+        for (ScisMajor major1 : majors) {
+            major.myDeleteById(major1.getId());
+        }
+
+    }
+
+    public Page<ScisMajor> findByNameContaining(String majorName, Pageable pageable) {
+        return major.findByNameContaining(majorName, pageable);
+    }
+
+    public List<ScisMajor> findByAll() {
         return major.findAll();
     }
+
     /**
-     *
      * @param majorLevel String 培养层次
      * @return Page<ScisMajor>
      */
-   public Page<ScisMajor> findByMajorLevel(String majorLevel, Pageable pageable){
-       return major.findByLevel(majorLevel, pageable);
-   }
+    public Page<ScisMajor> findByMajorLevel(String majorLevel, Pageable pageable) {
+        return major.findByLevel(majorLevel, pageable);
+    }
+
     /***
      * 按照专业名字查询
      * @param majorName 专业名字
      * @return ScisMajor
      */
-    public Optional<ScisMajor> findByMajorName(String majorName){
+    public Optional<ScisMajor> findByMajorName(String majorName) {
         return major.findByName(majorName);
     }
 
-    public ScisMajor save(ScisMajor major){
-        return   this.major.save(major);
+    public ScisMajor save(ScisMajor major) {
+        return this.major.save(major);
     }
-    public void saveAll(List<ScisMajor> major){
+
+    public void saveAll(List<ScisMajor> major) {
         this.major.saveAll(major);
     }
 
-    public Page<ScisMajor> findAll( Pageable pageable){
+    public Page<ScisMajor> findAll(Pageable pageable) {
         return this.major.findAll(pageable);
     }
 
 
-    public void delete(ScisMajor major){
+    public void delete(ScisMajor major) {
         this.major.delete(major);
     }
-    public void deleteAll(List<ScisMajor> major){
+
+    public void deleteAll(List<ScisMajor> major) {
         this.major.deleteAll(major);
     }
-    public void deleteById(Integer id){
+
+    public void deleteById(Integer id) {
         this.major.deleteById(id);
     }
 

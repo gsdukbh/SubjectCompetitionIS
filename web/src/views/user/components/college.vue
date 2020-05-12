@@ -22,6 +22,7 @@
 
 
             <el-tab-pane label="学院信息" name="second">
+
                 <div style="margin-top: 10px;">
 
                     <el-input placeholder="名称" style="width: 200px;" v-model="page.name"/>
@@ -46,7 +47,7 @@
 
                 <el-table
                         :data="colleges"
-                        border
+
                         @selection-change="handleSelectionChange"
                         v-loading="loading"
                         style="width: 100%;margin-top: 10px;">
@@ -72,14 +73,18 @@
                     </el-table-column>
 
 
-                    <el-table-column label="操作" align="center" width="450px" class-name="small-padding fixed-width">
+                    <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
                         <template slot-scope="{row}">
 
-                            <el-button type="primary" size="mini" icon="el-icon-edit">
-                                编辑
+                            <el-button type="primary"
+                                       size="mini"
+                                       @click="edit(row)"
+                                       icon="el-icon-edit">
+                                修改
                             </el-button>
 
-                            <el-button style="margin-left: 10px;" v-if="row.status!=='deleted'" size="mini"
+                            <el-button style="margin-left: 10px;"
+                                       size="mini"
                                        type="danger"
                                        @click="handleDelete(row)">
                                 删除
@@ -107,6 +112,11 @@
 
                 </div>
 
+
+                <el-tooltip placement="top" content="返回顶部">
+                    <back-to-top :visibility-height="300" :back-position="50" transition-name="fade"/>
+                </el-tooltip>
+
             </el-tab-pane>
 
         </el-tabs>
@@ -117,14 +127,16 @@
                 :visible.sync="dialogVisible"
                 width="30%"
         >
-            <el-form :model="collegeEdit" :rules="rulesB">
-
+            <el-form :model="collegeEdit" :rules="rulesB" status-icon ref="collegeEdit">
+                <el-form-item label="学院名称" prop="name">
+                    <el-input v-model="collegeEdit.name"></el-input>
+                </el-form-item>
             </el-form>
 
 
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+                <el-button type="primary" @click="upCollege('collegeEdit')" :loading="buttonLoading">确 定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -132,9 +144,11 @@
 
 <script>
     import {postFrom, postJson} from "../../../api/api";
+    import BackToTop from "../../../components/BackTop/index";
 
     export default {
         name: "college",
+        components: {BackToTop},
         data() {
 
             let validatePass = (rule, value, callback) => {
@@ -144,7 +158,9 @@
                 postFrom('/admin/college/repeat', info)
                     .then(response => {
                         let result = response.data.data === 'true';
-                        if (result) {
+                        if (this.collegeEdit.id === response.data.CID && result) {
+                            callback()
+                        } else if (result) {
                             callback(new Error('已经存在该信息'));
                         } else {
                             callback()
@@ -189,14 +205,80 @@
         },
         methods: {
             handleClick(tab) {
-                console.log(tab.index)
+                console.log(tab.index);
+                if (tab.index === '1') {
+                    this.getDataPage()
+                }
             },
-            handleDelete(value) {
-                console.log(value)
-                postJson('')
+            async handleDelete(value) {
+                this.loading = true
+                await postJson('/admin/college/del', value)
+                    .then(response => {
+                        if (response.data.status === 200) {
+                            this.$notify.success({
+                                title: '成功',
+                                message: '删除成功'
+                            })
+                        } else {
+                            this.$notify.error({
+                                title: '错误',
+                                message: response.data.message
+                            })
+                        }
+                    }).catch(error => {
+                        this.$message.error("出现错误" + error);
+                    })
+                this.getDataPage();
             },
-            deleteList() {
-
+            async deleteList() {
+                this.loading2 = true;
+                await postJson('/admin/college/delAll', this.multipleSelection)
+                    .then(response => {
+                        if (response.data.status === 200) {
+                            this.$notify.success({
+                                title: '成功',
+                                message: '删除成功'
+                            })
+                        } else {
+                            this.$notify.error({
+                                title: '错误',
+                                message: response.data.message
+                            })
+                        }
+                    }).catch(error => {
+                        this.$message.error('出现错误' + error);
+                    })
+            },
+            edit(value) {
+                this.collegeEdit = value;
+                this.dialogVisible = true;
+                console.log(this.collegeEdit)
+            },
+            async upCollege(form) {
+                this.buttonLoading = true;
+                await this.$refs[form].validate((valid) => {
+                    if (valid) {
+                        postJson('/admin/college/save', this.collegeEdit)
+                            .then(response => {
+                                if (response.data.status === 200) {
+                                    this.$notify.success({
+                                        title: '成功',
+                                        message: '更新成功'
+                                    })
+                                    this.buttonLoading = false;
+                                    this.dialogVisible = false;
+                                }
+                            }).catch(error => {
+                            this.buttonLoading = false;
+                            this.dialogVisible = false;
+                            this.$message.error('出现了错误', error);
+                        })
+                    } else {
+                        this.buttonLoading = false;
+                        this.$message.warning('请检查输入');
+                    }
+                })
+                this.getDataPage();
             },
             handleSizeChange(val) {
                 this.page.size = val;
@@ -225,7 +307,7 @@
 
             getDataPage() {
                 this.loading = true;
-                postFrom('/tea/college/find', this.page)
+                postFrom('/admin/college/find', this.page)
                     .then(response => {
                         this.colleges = response.data.content;
                         this.page.totalElements = response.data.totalElements;
