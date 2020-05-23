@@ -105,10 +105,10 @@ public class ExcelToObject extends AnalysisEventListener<UserUpObject> {
 
     @Override
     public void invoke(UserUpObject userUpObject, AnalysisContext analysisContext) {
-        logger.info("解析到一条数据:{}", JSON.toJSONString(userUpObject));
+//        logger.info("解析到一条数据:{}", JSON.toJSONString(userUpObject));
         list.add(userUpObject);
         if (list.size() >= BATCH_COUNT) {
-            tools.saveUserInfo(list, this.role, adminUser);
+            tools.saveUserInfo(new ArrayList<>(list), this.role, adminUser);
             list.clear();
         }
     }

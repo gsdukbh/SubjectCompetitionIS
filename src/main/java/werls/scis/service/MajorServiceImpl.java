@@ -48,6 +48,10 @@ public class MajorServiceImpl {
         return major.findAll();
     }
 
+    public Page<ScisMajor> findByAll(Pageable pageable) {
+        return major.findAll(pageable);
+    }
+
     /**
      * @param majorLevel String 培养层次
      * @return Page<ScisMajor>

@@ -312,7 +312,7 @@ export const asyncRoutes = [
     userRouter,
     myInfo,
     {
-        path: '*',
+        path: '/*',
         redirect: '/404',
         hidden: true,
         meta: {

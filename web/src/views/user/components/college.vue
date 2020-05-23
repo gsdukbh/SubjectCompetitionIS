@@ -57,13 +57,13 @@
                             width="55">
                     </el-table-column>
 
-                    <el-table-column
-                            prop="id"
-                            label="ID"
-                            width="100"
-                            sortable
-                    >
-                    </el-table-column>
+                    <!--                    <el-table-column-->
+                    <!--                            prop="id"-->
+                    <!--                            label="ID"-->
+                    <!--                            width="100"-->
+                    <!--                            sortable-->
+                    <!--                    >-->
+                    <!--                    </el-table-column>-->
 
                     <el-table-column
                             prop="name"
@@ -102,8 +102,8 @@
                             @current-change="handleCurrentChange"
                             @next-click="handleCurrentChange"
                             @prev-click="handleCurrentChange"
-                            :current-page="page.page"
-                            :page-sizes="[20,50,100]"
+                            :current-page="page.pages"
+                            :page-sizes="[5,20,50,100]"
                             :page-size="page.size"
                             background
                             layout="total, sizes, prev, pager, next, jumper"
@@ -179,6 +179,7 @@
                 page: {
                     size: 20,
                     page: 0,
+                    pages: 0,
                     name: null,
                     totalElements: 0,
                 },
@@ -288,7 +289,7 @@
             /*当前页数*/
             handleCurrentChange(val) {
                 /*页面切换*/
-                this.page.page = val;
+                this.page.page = val - 1;
                 this.getDataPage()
             },
 

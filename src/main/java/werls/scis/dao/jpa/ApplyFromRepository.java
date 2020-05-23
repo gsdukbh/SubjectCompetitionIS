@@ -159,6 +159,7 @@ public interface ApplyFromRepository extends JpaRepository<ScisApplyFrom, Intege
                     "       c.competition_id       as competitionId,\n" +
                     "       competition_name       as name,\n" +
                     "       competition_start_time as startTime," +
+                    " c.competition_apply_stop as applyStop," +
                     "       competition_place as place ," +
                     "       competition_type as type \n" +
                     "from Is_user a,\n" +
@@ -309,7 +310,8 @@ public interface ApplyFromRepository extends JpaRepository<ScisApplyFrom, Intege
                     "where a.user_id = b.user_id\n" +
                     "  and b.competition_id = c.competition_id\n" +
                     "  and c.competition_id=?1\n" +
-                    "and  a.user_name like  concat('%',?2,'%') " +
+                    "  and  ( a.user_name like  concat('%',?2,'%') " +
+                    " or a.user_id=?2)" +
                     "ORDER BY  b.apply_time DESC " +
                     "limit ?3,?4")
     List<Map<String, Object>> findCompetitionId(Integer id, String name, Integer page, Integer size);

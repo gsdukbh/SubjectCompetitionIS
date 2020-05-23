@@ -1,15 +1,15 @@
 module.exports = {
-  title: '学科竞赛系统',
+    title: '学科竞赛信息系统',
 
-  /**
-   * @type {boolean} true | false
-   * @description 是否在右面板显示设置
-   */
-  showSettings: true,
+    /**
+     * @type {boolean} true | false
+     * @description 是否在右面板显示设置
+     */
+    showSettings: true,
 
-  /**
-   * @type {boolean} true | false
-   * @description 是否需要标签查看
+    /**
+     * @type {boolean} true | false
+     * @description 是否需要标签查看
    */
   tagsView: true,
 

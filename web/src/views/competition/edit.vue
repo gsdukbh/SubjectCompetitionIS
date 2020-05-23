@@ -203,10 +203,34 @@
     import {getJson, postJson} from "../../api/api";
     import Page404 from '../error-page/404';
     import qs from 'qs';
+
     export default {
         name: "edit",
         components: {Page404, MarkdownEditor},
         data() {
+            const validateRequire = (rule, value, callback) => {
+                if (value > this.ruleForm.startTime) {
+                    callback(new Error('竞赛报名结束时间不能在竞赛开始时间之后，请重新输入'))
+                } else if (value < this.ruleForm.applyTime) {
+                    callback(new Error('报名结束时间不能在报名开始时间之前，请重新输入'))
+                } else {
+                    callback()
+                }
+            };
+            const validateRequire1 = (rule, value, callback) => {
+                if (value > this.ruleForm.startTime) {
+                    callback(new Error('报名时间不能在开始时间之后！请重新输入。'))
+                } else {
+                    callback()
+                }
+            }
+            const validateRequire2 = (rule, value, callback) => {
+                if (value < this.ruleForm.startTime) {
+                    callback(new Error('竞赛结束时间不能在开始时间之前，请重新输入！'))
+                } else {
+                    callback()
+                }
+            }
             return {
                 annex: false,
                 id: '',
@@ -252,6 +276,7 @@
                         {required: true, message: '请选择日期', trigger: 'change'}
                     ],
                     endTime: [
+                        {validator: validateRequire2},
                         {required: true, message: '请选择结束日期', trigger: 'change'}
                     ],
                     organizer: [
@@ -263,12 +288,15 @@
                         {max: 255, message: '长度在  255 个字符 以下', trigger: 'blur'},
                         {required: true, message: '请输入负责人', trigger: 'blur'},
                     ],
-                    applyTime: [{
-                        required: true, message: '请选择开始报名时间', trigger: 'change'
-                    }],
-                    applyStop: [{
-                        required: true, message: '请选择报名结束时间', trigger: 'change'
-                    }],
+                    applyTime: [
+                        {validator: validateRequire1},
+                        {required: true, message: '请选择开始报名时间', trigger: 'change'}
+                    ],
+                    applyStop: [
+                        {validator: validateRequire},
+                        {required: true, message: '请选择报名结束时间', trigger: 'change'},
+
+                    ],
                     type: [
                         {
                             required: true, message: '请选择', trigger: 'change'
@@ -421,7 +449,17 @@
                     if (valid) {
                         if (this.ruleForm.startTime > this.ruleForm.endTime) {
                             this.$notify.error({
+                                message: '竞赛开始时间不能再竞赛结束时间之后，请重新输入',
+                                title: '错误',
+                            });
+                        } else if (this.ruleForm.startTime > this.ruleForm.endTime) {
+                            this.$notify.error({
                                 message: '开始时间不能再结束时间之后',
+                                title: '错误',
+                            });
+                        } else if (this.ruleForm.applyStop > this.ruleForm.startTime) {
+                            this.$notify.error({
+                                message: '竞赛报名时间不能再竞赛开始时间之后，请重新输入',
                                 title: '错误',
                             });
                         } else {

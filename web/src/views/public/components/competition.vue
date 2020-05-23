@@ -32,7 +32,9 @@
                         </el-button>
                     </div>
 
-                    <div style="margin-top: 20px">
+                    <div style="margin-top: 20px"
+                         v-loading="loading"
+                    >
                         <el-card class="at" shadow="hover" v-for="(item,index) in tableData" :key="item.id">
                             <el-row>
                                 <el-col :span="1">
@@ -49,7 +51,6 @@
                                     <span style="color: #5a5e66;margin-left: 10px">
                                      报名时间<i class="el-icon-time"></i>   {{formatTimeA(item.applyTime)}}
                                      </span>
-
 
 
                                     <span style="color: #5a5e66;margin-left: 10px">
@@ -72,7 +73,7 @@
                                 @current-change="handleCurrentChange"
                                 @next-click="handleCurrentChange"
                                 @prev-click="handleCurrentChange"
-                                :current-page="page.page"
+                                :current-page="page.pages"
                                 :page-sizes="[20,50,100]"
                                 :page-size="page.size"
                                 background
@@ -81,7 +82,9 @@
                         </el-pagination>
                     </div>
                 </el-card>
+
             </div>
+
             <el-tooltip placement="top" content="返回顶部">
                 <back-to-top :visibility-height="300" :back-position="50" transition-name="fade"/>
             </el-tooltip>
@@ -108,6 +111,7 @@
                 page: {
                     size: 20,
                     page: 0,
+                    pages: 0,
                     organizer: null,
                     name: null,
                     level: null,
@@ -149,7 +153,7 @@
             /*当前页数*/
             handleCurrentChange(val) {
                 /*页面切换*/
-                this.page.page = val;
+                this.page.page = val - 1;
                 this.getDataPage()
             },
 
@@ -186,7 +190,6 @@
         padding-left: 10%;
         padding-right: 10%;
     }
-
 
 
     .top {

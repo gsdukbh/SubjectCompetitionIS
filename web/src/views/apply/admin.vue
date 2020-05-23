@@ -118,6 +118,9 @@
                             prop="applyTime"
                             label="申请时间"
                             width="180">
+                        <template slot-scope="{row}">
+                            <span>{{formatTimeA(row.applyTime)}}</span>
+                        </template>
                     </el-table-column>
                     <el-table-column label="学号">
                         <template slot-scope="{row}">
@@ -147,7 +150,7 @@
                             @current-change="handleCurrentChange"
                             @next-click="handleCurrentChange"
                             @prev-click="handleCurrentChange"
-                            :current-page="page.page"
+                            :current-page="page.pages"
                             :page-sizes="[20,50,100]"
                             :page-size="page.size"
                             background
@@ -200,6 +203,7 @@
                 page: {
                     size: 20,
                     page: 0,
+                    pages: 0,
                     name: '',
                     totalElements: 1,
                 },
@@ -218,6 +222,9 @@
             this.getDataPage()
         },
         methods: {
+            formatTimeA(time) {
+                return parseTime(time, '{y}-{m}-{d} {h}:{i}')
+            },
             dl() {
                 let a = document.createElement('a');
                 a.href = "/api/tea/apply/downloadApply/" + this.competitionId;
@@ -270,7 +277,7 @@
             /*当前页数*/
             handleCurrentChange(val) {
                 /*页面切换*/
-                this.page.page = val;
+                this.page.page = val - 1;
                 this.loading = true;
                 this.getDataPage()
             },
@@ -323,11 +330,7 @@
             setPageTitle() {
                 const title = this.competition.name;
                 document.title = `${title} - 报名信息`
-            },
-            formatTimeA(time) {
-                return parseTime(time, '{y}-{m}-{d} {h}:{i}')
-            },
-
+            }
         }
     }
 </script>

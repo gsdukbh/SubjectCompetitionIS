@@ -2,6 +2,7 @@ package werls.scis.controller.teacher;
 
 import com.alibaba.excel.EasyExcel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -21,6 +22,7 @@ import werls.scis.dao.pojo.ScisWorks;
 import werls.scis.service.ApplyFromSericeImpl;
 import werls.scis.service.CollegeServiceImpl;
 import werls.scis.service.UserService;
+import werls.scis.service.WorksServiceImpl;
 import werls.scis.util.*;
 import werls.scis.webSocket.WebSocket;
 
@@ -52,12 +54,18 @@ public class ScoreAdminController {
     @Autowired
     UserService userService;
 
-    @CachePut(value = "Score", unless = "#result == null ", key = "'competitionId:'+#id")
-    @PostMapping("/modifyInfo/{id}")
-    public Map<String, Object> modifyInfo(@RequestBody ScisApplyFrom applyFrom, Integer id) {
+    @Autowired
+    WorksServiceImpl worksService;
+
+    @CachePut(value = "Score", unless = "#result == null ",
+            key = "'competitionId:'+#applyFrom.competition.id")
+    @CacheEvict(value = "Score", key = "'competition:'+#applyFrom.competition.id")
+    @PostMapping("/modifyInfo")
+    public Map<String, Object> modifyInfo(@RequestBody ScisApplyFrom applyFrom) {
         Map<String, Object> res = new HashMap<>(16);
         ScisWorks works = applyFrom.getWorks();
         works.setScore(applyFrom.getScore());
+        worksService.save(works);
         applyFrom.setWorks(works);
         applyFromSerice.save(applyFrom);
         res.put("status", 200);
@@ -218,12 +226,14 @@ public class ScoreAdminController {
     }
 
     @CachePut(value = "Score", unless = "#result == null ", key = "'competitionId:'+#competitionId")
+    @CacheEvict(value = "Score", key = "'competition:'+#competitionId")
     @PostMapping("/upScoreInfo")
     public Map<String, Object> upScoreInfo(@RequestParam("file") MultipartFile file,
                                            @RequestParam("id") Integer id,
                                            @RequestParam("competitionId") Integer competitionId) {
         Map<String, Object> res = new HashMap<>(16);
         String fileName = "/temp/" + file.getOriginalFilename();
+
         try {
             InputStream inputStream = file.getInputStream();
             File file1 = new File(fileName);

@@ -3,6 +3,7 @@ package werls.scis.controller.open;
 
 import com.alibaba.excel.EasyExcel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -85,6 +86,7 @@ public class ScoreController {
         return res;
     }
 
+
     @PostMapping("/findScore")
     public Map<String, Object> findScore(@RequestParam(name = "page", defaultValue = "0") Integer page,
                                          @RequestParam(name = "size", defaultValue = "100") Integer size,
@@ -97,6 +99,7 @@ public class ScoreController {
         return res;
     }
 
+    @Cacheable(value = "Score", unless = "#result == null ", key = "'competition:'+#id")
     @PostMapping("/findAll/{id}")
     public Map<String, Object> findAll(@PathVariable Integer id,
                                        @RequestParam(name = "value", defaultValue = "") String name,

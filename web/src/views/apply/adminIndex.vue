@@ -37,6 +37,9 @@
                             prop="applyTime"
                             label="申请时间"
                             width="180">
+                        <template slot-scope="{row}">
+                            <span>{{ formatTimeA(row.applyTime) }}</span>
+                        </template>
                     </el-table-column>
                     <el-table-column label="学号">
                         <template slot-scope="{row}">
@@ -66,7 +69,7 @@
                             @current-change="handleCurrentChange"
                             @next-click="handleCurrentChange"
                             @prev-click="handleCurrentChange"
-                            :current-page="page.page"
+                            :current-page="page.pages"
                             :page-sizes="[20,50,100]"
                             :page-size="page.size"
                             background
@@ -155,7 +158,7 @@
     import {mapGetters} from "vuex";
     import {getJson, postFrom} from "../../api/api";
     import BackToTop from "../../components/BackTop/index";
-
+    import {parseTime} from '../../utils/index'
     export default {
         name: "adminIndex",
         components: {BackToTop, MdInput},
@@ -177,6 +180,7 @@
                 page: {
                     size: 20,
                     page: 0,
+                    pages: 0,
                     name: '',
                     totalElements: 0,
                 },
@@ -208,6 +212,9 @@
             this.getDataPage2()
         },
         methods: {
+            formatTimeA(time) {
+                return parseTime(time, '{y}-{m}-{d} {h}:{i}')
+            },
             dl() {
                 let a = document.createElement('a');
                 a.href = "/api/tea/apply/downloadApply/" + this.competition.id;
@@ -216,11 +223,11 @@
                 a.click();
             },
             handleCurrentChange1(val) {
-                this.page1.page = val;
+                this.page1.page = val - 1;
                 this.getDataPage1()
             },
             handleCurrentChange2(val) {
-                this.page2.page = val;
+                this.page2.page = val - 1;
                 this.getDataPage2()
             },
             getDataPage2() {
@@ -272,7 +279,7 @@
             /*当前页数*/
             handleCurrentChange(val) {
                 /*页面切换*/
-                this.page.page = val;
+                this.page.page = val - 1;
                 this.loading = true;
                 this.getDataPage()
             },

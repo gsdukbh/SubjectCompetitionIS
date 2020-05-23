@@ -142,7 +142,7 @@
                     @current-change="handleCurrentChange"
                     @next-click="handleCurrentChange"
                     @prev-click="handleCurrentChange"
-                    :current-page="page.page"
+                    :current-page="page.pages"
                     :page-sizes="[20,50,100]"
                     :page-size="page.size"
                     background
@@ -167,7 +167,7 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
             <el-button @click="dialogVisible = false">取 消</el-button>
-         <el-button type="primary" @click="edit">确 定</el-button>
+         <el-button :loading="loadingButton1" type="primary" @click="edit">确 定</el-button>
   </span>
         </el-dialog>
     </div>
@@ -197,6 +197,7 @@
                 page: {
                     size: 20,
                     page: 0,
+                    pages: 0,
                     value: null,
                     left: null,
                     right: null,
@@ -221,7 +222,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    postJson('/tea/score/modifyInfo/4', this.score)
+                    postJson('/tea/score/modifyInfo', this.score)
                         .then(response => {
                             if (response.data.status === 200) {
                                 this.$notify({

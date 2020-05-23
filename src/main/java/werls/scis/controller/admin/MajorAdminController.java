@@ -45,9 +45,9 @@ public class MajorAdminController {
             res.put("content", majors.getContent());
             res.put("totalElements", majors.getTotalElements());
         } else {
-            List<ScisMajor> majorList = service.findByAll();
-            res.put("content", majorList);
-            res.put("totalElements", majorList.size());
+            Page<ScisMajor> majorList = service.findByAll(pageable);
+            res.put("content", majorList.getContent());
+            res.put("totalElements", majorList.getTotalElements());
         }
         res.put("status", 200);
         return res;

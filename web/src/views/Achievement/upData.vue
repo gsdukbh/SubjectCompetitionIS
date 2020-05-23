@@ -207,11 +207,11 @@
                 return parseTime(time, '{y}-{m}-{d} {h}:{i}')
             },
             handleCurrentChange1(val) {
-                this.page1.page = val;
+                this.page1.page = val - 1;
                 this.getDataPage1()
             },
             handleCurrentChange2(val) {
-                this.page2.page = val;
+                this.page2.page = val - 1;
                 this.getDataPage2()
             },
             getDataPage2() {

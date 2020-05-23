@@ -164,7 +164,6 @@
                                         title: '登录成功',
                                         message: response.data.message
                                     });
-
                                  this.$router.push({path: '/home' || '/'})
                                 }
 

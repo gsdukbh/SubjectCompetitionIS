@@ -47,6 +47,6 @@ public interface ClassJpaRepository extends JpaRepository<ScisClass, Integer> {
      * @param pageable pageable
      * @return Page<ScisClass>
      */
-    Page<ScisClass> findByNameLike(String name, Pageable pageable);
+    Page<ScisClass> findByNameContaining(String name, Pageable pageable);
 
 }

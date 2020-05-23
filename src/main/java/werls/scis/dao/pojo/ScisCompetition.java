@@ -125,6 +125,14 @@ public class ScisCompetition implements Serializable {
                 '}';
     }
 
+    public Date getApplyStop() {
+        return applyStop;
+    }
+
+    public void setApplyStop(Date applyStop) {
+        this.applyStop = applyStop;
+    }
+
     public String getImg() {
         return img;
     }

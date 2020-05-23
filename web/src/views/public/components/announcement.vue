@@ -65,7 +65,7 @@
                         @current-change="handleCurrentChange"
                         @next-click="handleCurrentChange"
                         @prev-click="handleCurrentChange"
-                        :current-page="page.page"
+                        :current-page="page.pages"
                         :page-sizes="[20,50,100]"
                         :page-size="page.size"
                         background
@@ -99,6 +99,7 @@
                 page: {
                     size: 20,
                     page: 0,
+                    pages: 0,
                     title: null,
                     totalElements: 100,
                 },
@@ -138,7 +139,7 @@
             /*当前页数*/
             handleCurrentChange(val) {
                 /*页面切换*/
-                this.page.page = val;
+                this.page.page = val - 1;
                 this.loading = true;
                 this.getDataPage()
             },
@@ -159,7 +160,7 @@
             },
             async getDataPage() {
 
-                await postFrom('public/announcement/findAllA', this.page)
+                await postFrom('/public/announcement/findAllA', this.page)
                     .then(response => {
                         this.tableData = response.data.content;
                         this.page.totalElements = response.data.totalElements;

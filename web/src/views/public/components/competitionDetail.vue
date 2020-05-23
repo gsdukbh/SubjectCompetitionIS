@@ -53,7 +53,13 @@
                         <el-divider content-position="right"></el-divider>
                         <el-row>
                             <el-col :span="24">
-                                <span>负责人：  {{showData.principal}}</span>
+                                <span>负责人：{{showData.principal}}</span>
+                            </el-col>
+                            <el-col :span="24">
+                                <span>承办单位：{{showData.organizer}}</span>
+                            </el-col>
+                            <el-col :span="24" v-if="showData.place !==''">
+                                <span>举办地点：{{showData.place}}</span>
                             </el-col>
                             <el-col :span="24">
                                 <span>发布者：{{showData.author}}</span>
@@ -70,52 +76,36 @@
                         </el-row>
                     </el-card>
 
-                    <el-card class="box-card top right" shadow="hover">
-                        <h3>承办单位
-                            <svg-icon icon-class="college"></svg-icon>
+                    <el-card class="box-card top right" shadow="hover" v-if="showData.objectName!=null">
+                        <h3>相关附件
+                            <svg-icon icon-class="annex"></svg-icon>
                         </h3>
-                        <el-divider content-position="right">画楼西畔桂堂东</el-divider>
-
-                        <router-link to="#">
-
-                            <!--                            <el-tooltip class="item" effect="dark" :content="'查看更多'+showData.organizer+'举办的竞赛'"-->
-                            <!--                                        placement="bottom">-->
-                            <span>
-<!--                                    <router-link to="/competition/user">-->
-                                <!--                                        <el-link-->
-                                <!--                                        type="primary">-->
-                                            {{showData.organizer}}
-                                <!--                                        </el-link>-->
-                                <!--                                    </router-link>-->
-                                </span>
-                            <!--                            </el-tooltip>-->
-
-                        </router-link>
-
+                        <el-divider></el-divider>
+                        <el-link type="primary" @click="dl()"><i class="el-icon-download"></i>下载</el-link>
                     </el-card>
 
-                    <el-card class="box-card top right" shadow="hover" v-if="showData.place !==''">
-                        <h3>举办地点</h3>
-                        <el-divider content-position="right">身无彩凤双飞翼</el-divider>
-                        <span><el-link type="primary">比赛地点 {{showData.place}}</el-link></span>
-                    </el-card>
 
                     <el-card class="box-card top right" shadow="hover">
 
                         <h3>比赛进程
                             <svg-icon icon-class="match"></svg-icon>
-
                         </h3>
-
-                        <el-divider content-position="right">隔座送钩春酒暖</el-divider>
+                        <br>
                         <div class="block">
 
                             <el-timeline>
 
                                 <el-timeline-item :timestamp="formatTimeA(showData.applyTime)" placement="top">
                                     <el-card>
-                                        <h4>开始报名</h4>
-                                        <p>参赛者可以进行报名 时间：{{formatTimeA(showData.applyTime)}}</p>
+                                        <h4>开始报名:{{formatTimeA(showData.applyTime)}}</h4>
+                                        <p>参赛者开始进行报名</p>
+                                    </el-card>
+                                </el-timeline-item>
+
+                                <el-timeline-item :timestamp="formatTimeA(showData.applyStop)" placement="top">
+                                    <el-card>
+                                        <h4>报名结束:{{formatTimeA(showData.applyStop)}}</h4>
+                                        <p>报名结束，确定最终报报名人数。</p>
                                     </el-card>
                                 </el-timeline-item>
 
@@ -125,10 +115,11 @@
                                         <p>比赛开始于： {{formatTimeA(showData.startTime)}} </p>
                                     </el-card>
                                 </el-timeline-item>
+
                                 <el-timeline-item :timestamp="formatTimeA(showData.endTime)" placement="top">
                                     <el-card>
                                         <h4>比赛结束</h4>
-                                        <p>比赛于：{{formatTimeA(showData.endTime)}} 结束</p>
+                                        <p>比赛于：{{formatTimeA(showData.endTime)}} 结束,后续更新成绩。</p>
                                     </el-card>
 
                                 </el-timeline-item>
@@ -138,13 +129,6 @@
                     </el-card>
 
 
-                    <el-card class="box-card top right" shadow="hover" v-if="showData.objectName!=null">
-                        <h3>相关附件
-                            <svg-icon icon-class="annex"></svg-icon>
-                        </h3>
-                        <el-divider></el-divider>
-                        <el-link type="primary" @click="dl()"><i class="el-icon-download"></i>下载</el-link>
-                    </el-card>
                 </div>
             </div>
 

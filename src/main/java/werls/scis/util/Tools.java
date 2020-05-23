@@ -149,7 +149,7 @@ public class Tools {
     public void saveUserInfo(List<UserUpObject> userUpObject, Integer roleId, Integer adminUser) {
         try {
             logger.info("开始将信息写入数据库");
-            List<UserUpObject> list = new CopyOnWriteArrayList<>(userUpObject);
+            List<UserUpObject> list = new ArrayList<>(userUpObject);
             for (UserUpObject object : list) {
                 webSocket.sendOneMessage(adminUser.toString(), JSON.toJSONString(object));
                 ScisUser user = new ScisUser();

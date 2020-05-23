@@ -26,59 +26,59 @@ public class ClassServiceImpl {
     @Autowired
     ClassJpaRepository classJpaRepository;
 
-    public List<ScisClass> findAll(){
+    public List<ScisClass> findAll() {
         return classJpaRepository.findAll();
     }
 
-  /**
+    /**
      * 使用班级名称查询，全称查询
+     *
      * @param name 班级名称
      * @return 班级
      */
 
-    public Optional<ScisClass> findByName(String name){
+    public Optional<ScisClass> findByName(String name) {
         return classJpaRepository.findByName(name);
     }
 
     /**
      * 分页查询，可在pageable 加入 Sort
-     * @param name 班级名称
+     *
+     * @param name     班级名称
      * @param pageable pageable
      * @return Page<ScisClass>
      */
 
-    public Page<ScisClass> findByName(String name, Pageable pageable){
+    public Page<ScisClass> findByName(String name, Pageable pageable) {
         return classJpaRepository.findByName(name, pageable);
     }
 
-    /**
-     * 模糊查询，分页查询，可在pageable 加入 Sort
-     * @param name 班级名称
-     * @param pageable pageable
-     * @return Page<ScisClass>
-     */
-
-    public Page<ScisClass> findByNameLike(String name,Pageable pageable){
-        return classJpaRepository.findByNameLike(name, pageable);
+    public Page<ScisClass> findByNameContaining(String name, Pageable pageable) {
+        return classJpaRepository.findByNameContaining(name, pageable);
     }
 
-    public ScisClass save(ScisClass scisClass){
+
+    public ScisClass save(ScisClass scisClass) {
         return classJpaRepository.save(scisClass);
     }
-    public List<ScisClass> save( List<ScisClass> scisClass){
+
+    public List<ScisClass> save(List<ScisClass> scisClass) {
         return classJpaRepository.saveAll(scisClass);
     }
 
-    public Page<ScisClass> findAll( Pageable pageable){
+    public Page<ScisClass> findAll(Pageable pageable) {
         return classJpaRepository.findAll(pageable);
     }
-    public void delete(ScisClass scisClass){
+
+    public void delete(ScisClass scisClass) {
         this.classJpaRepository.delete(scisClass);
     }
-    public void deleteAll(List<ScisClass>  scisClass){
+
+    public void deleteAll(List<ScisClass> scisClass) {
         this.classJpaRepository.deleteAll(scisClass);
     }
-    public void deleteById(Integer id){
+
+    public void deleteById(Integer id) {
         this.classJpaRepository.deleteById(id);
     }
 }

@@ -90,7 +90,7 @@ public class CompetitionAdmin {
 
 
     @GetMapping("/findById/{id}")
-    @Cacheable(value = "findById", key = "'id:'+#id", unless = "#result == null ")
+//    @Cacheable(value = "findById", key = "'id:'+#id", unless = "#result == null ")
     public Map<String, Object> findById(@PathVariable Integer id) {
         Map<String, Object> res = new ConcurrentHashMap<>(10);
         Optional<ScisCompetition> competition = competitionService.findById(id);

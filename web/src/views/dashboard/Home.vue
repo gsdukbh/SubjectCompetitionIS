@@ -189,13 +189,14 @@
         created() {
             // this.initWebSocket();
             this.getMyInfo();
+
             setTimeout(() => {
-                this.getAnnouncement();
-                this.getCompetition();
-                if (this.myInfo.role !== '学生') {
-                    this.getAnnouncement1();
-                    this.getCompetition1()
-                }
+                // this.getAnnouncement();
+                // this.getCompetition();
+                // if (this.myInfo.role !== '学生') {
+                //     this.getAnnouncement1();
+                //     this.getCompetition1()
+                // }
             }, 2000);
 
 
@@ -280,6 +281,20 @@
                             message: '服务器异常' + error
                         })
                     })
+                console.log(this.myInfo.status)
+                if (this.myInfo.status === 'false') {
+                    this.$notify.warning({
+                        title: '提示',
+                        message: '您还未绑定邮箱账号，请及时绑定账号，方便找回密码。',
+                        duration: 0
+                    })
+                }
+                this.getAnnouncement();
+                this.getCompetition();
+                if (this.myInfo.role !== '学生') {
+                    this.getAnnouncement1();
+                    this.getCompetition1()
+                }
             },
             formatTimeA(time) {
                 return Myformat("yyyy年MM月dd日hh小时mm分", new Date(time))
