@@ -3,6 +3,7 @@ package werls.scis.controller.open;
 
 import com.alibaba.excel.EasyExcel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import werls.scis.aop.ScoreAopInterface;
 import werls.scis.dao.pojo.ScisApplyFrom;
 import werls.scis.dao.pojo.ScisUser;
 import werls.scis.service.ApplyFromSericeImpl;
@@ -53,21 +55,22 @@ public class ScoreController {
 
 
     @PostMapping("/findMy/{id}")
+    @ScoreAopInterface
     public Map<String, Object> findMy(@PathVariable Integer id,
                                       @RequestParam(name = "competitionId", defaultValue = "0") Integer competitionId,
-                                      @RequestParam(name = "left", defaultValue = "0") Integer left,
-                                      @RequestParam(name = "right", defaultValue = "0") Integer right,
+                                      @RequestParam(name = "grade", defaultValue = "0") Integer grade,
                                       @RequestParam(name = "page", defaultValue = "0") Integer page,
                                       @RequestParam(name = "size", defaultValue = "100") Integer size) {
         Map<String, Object> res = new HashMap<>(16);
         Pageable pageable = PageRequest.of(page, size, Sort.by("score").descending());
-        if (right != 0 && competitionId != 0) {
-            Page<ScisApplyFrom> scisApplyFroms = applyFromSerice.findByScisUserIdAndCompetitionIdAndScoreBetweenAndScoreNotNull(id, competitionId, left, right, pageable);
+
+        if (grade != 0 && competitionId != 0) {
+            Page<ScisApplyFrom> scisApplyFroms = applyFromSerice.findByScisUserIdAndCompetitionIdAndPrizeAndScoreNotNull(id, competitionId, grade, pageable);
             res.put("content", tools.addRank(scisApplyFroms.getContent()));
             res.put("totalElements", scisApplyFroms.getTotalElements());
             res.put("status", 200);
-        } else if (right != 0) {
-            Page<ScisApplyFrom> scisApplyFroms = applyFromSerice.findByScoreBetweenAndScisUserIdAndScoreNotNull(left, right, id, pageable);
+        } else if (grade != 0) {
+            Page<ScisApplyFrom> scisApplyFroms = applyFromSerice.findByScisUserIdAndScoreNotNullAndPrize(id, grade, pageable);
             res.put("content", tools.addRank(scisApplyFroms.getContent()));
             res.put("totalElements", scisApplyFroms.getTotalElements());
             res.put("status", 200);
@@ -85,7 +88,9 @@ public class ScoreController {
         return res;
     }
 
+
     @PostMapping("/findScore")
+    @ScoreAopInterface
     public Map<String, Object> findScore(@RequestParam(name = "page", defaultValue = "0") Integer page,
                                          @RequestParam(name = "size", defaultValue = "100") Integer size,
                                          @RequestParam(name = "userName", defaultValue = "") String userName,
@@ -97,23 +102,24 @@ public class ScoreController {
         return res;
     }
 
+    @Cacheable(value = "Score", unless = "#result == null ", key = "'competition:'+#id")
     @PostMapping("/findAll/{id}")
+    @ScoreAopInterface
     public Map<String, Object> findAll(@PathVariable Integer id,
                                        @RequestParam(name = "value", defaultValue = "") String name,
-                                       @RequestParam(name = "left", defaultValue = "0") Integer left,
-                                       @RequestParam(name = "right", defaultValue = "0") Integer right,
+                                       @RequestParam(name = "grade", defaultValue = "0") Integer grade,
                                        @RequestParam(name = "page", defaultValue = "0") Integer page,
                                        @RequestParam(name = "size", defaultValue = "20") Integer size) {
         Map<String, Object> res = new ConcurrentHashMap<>(16);
         Pageable pageable = PageRequest.of(page, size, Sort.by("score").descending());
-        if (right != 0 && !"".equals(name)) {
-            Page<ScisApplyFrom> scisApplyFroms = applyFromSerice.findByScisUserNameContainingOrScisUserLoginContainingAndScoreBetween(
-                    name, name, left, right, pageable);
+        if (grade != 0 && !"".equals(name)) {
+            Page<ScisApplyFrom> scisApplyFroms = applyFromSerice.findByScisUserNameContainingOrScisUserLoginContainingAndPrize(
+                    name, name, grade, pageable);
             res.put("content", tools.addRank(scisApplyFroms.getContent()));
             res.put("totalElements", scisApplyFroms.getTotalElements());
             res.put("status", 200);
-        } else if (right != 0) {
-            Page<ScisApplyFrom> scisApplyFroms = applyFromSerice.findByScoreBetween(left, right, pageable);
+        } else if (grade != 0) {
+            Page<ScisApplyFrom> scisApplyFroms = applyFromSerice.findByPrize(grade, pageable);
             res.put("content", tools.addRank(scisApplyFroms.getContent()));
             res.put("totalElements", scisApplyFroms.getTotalElements());
             res.put("status", 200);

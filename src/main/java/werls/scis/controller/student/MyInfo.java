@@ -53,6 +53,7 @@ public class MyInfo {
             user.setPassword(userOptional.get().getPassword());
             res.put("status", 200);
             user.setApplyFroms(userOptional.get().getApplyFroms());
+            user.setStatus("true");
             res.put("data", userService.upData(user));
         } else {
             res.put("status", 403);

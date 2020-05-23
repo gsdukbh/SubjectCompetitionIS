@@ -51,6 +51,8 @@ public class ScisApplyFrom implements Serializable {
     @Column(name = "apply_status")
     private String status;
 
+    @Column(name = "apply_prize")
+    private String prize;
     /**
      * 竞赛用户
      */
@@ -72,6 +74,14 @@ public class ScisApplyFrom implements Serializable {
     @OneToOne(cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "works_id", referencedColumnName = "works_id")
     private ScisWorks works;
+
+    public String getPrize() {
+        return prize;
+    }
+
+    public void setPrize(String prize) {
+        this.prize = prize;
+    }
 
     public Date getScoreUpTime() {
         return scoreUpTime;

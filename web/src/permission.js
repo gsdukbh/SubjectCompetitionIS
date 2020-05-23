@@ -66,6 +66,7 @@ router.beforeEach(async (to, from, next) => {
         /* has no token*/
         //
 
+
         if (whiteList(to.path) || to.path === '/') {
 
             //在登录白名单中，直接进入

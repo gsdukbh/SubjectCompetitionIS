@@ -91,7 +91,7 @@
                         @current-change="handleCurrentChange"
                         @next-click="handleCurrentChange"
                         @prev-click="handleCurrentChange"
-                        :current-page="page.page"
+                        :current-page="page.pages"
                         :page-sizes="[20,50,100]"
                         :page-size="page.size"
                         background
@@ -131,6 +131,7 @@
                 page: {
                     size: 20,
                     page: 0,
+                    pages: 0,
                     name: null,
                     totalElements: 100,
                 },
@@ -151,7 +152,7 @@
             /*当前页数*/
             handleCurrentChange(val) {
                 /*页面切换*/
-                this.page.page = val;
+                this.page.page = val - 1;
                 this.loading = true;
                 this.getDataPage()
             },

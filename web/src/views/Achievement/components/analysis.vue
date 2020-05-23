@@ -68,7 +68,7 @@
                     })
                 this.chart.setOption({
                     legend: {
-                        data: ['不合格', '合格', '中等', '良好', '优秀']
+                        data: ['三等奖', '二等奖', '一等奖']
                     },
                     series: {
                         data: this.scoreData
@@ -104,7 +104,7 @@
 
                     angleAxis: {
                         type: 'category',
-                        data: ['不合格', '合格', '中等', '良好', '优秀']
+                        data: ['三等奖', '二等奖', '一等奖']
                     },
                     radiusAxis: {},
                     polar: {},
@@ -131,7 +131,7 @@
                     legend: {
                         left: 'center',
                         bottom: '10',
-                        data: ['不合格', '合格', '中等', '良好', '优秀']
+                        data: ['三等奖', '二等奖', '一等奖']
                     },
                     series: [
                         {

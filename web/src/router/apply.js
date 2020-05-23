@@ -48,16 +48,16 @@ const applyRouter={
                 roles: ['ROLE_STU']
             }
         },
-        // {
-        //     path: 'team',
-        //     name: 'team info',
-        //     component: () => import('../views/apply/team'),
-        //     meta: {
-        //         title: "我的团队",
-        //         icon: 'team',
-        //         roles: ['ROLE_STU'],
-        //     }
-        // }
+        {
+            path: 'team',
+            name: 'team info',
+            component: () => import('../views/apply/team'),
+            meta: {
+                title: "我的团队",
+                icon: 'team',
+                roles: ['ROLE_STU'],
+            }
+        }
     ]
 };
 export default applyRouter;

@@ -11,10 +11,23 @@
                     比赛时间:{{formatTimeA(competition.startTime)}} - {{formatTimeA(competition.endTime)}}
                 </span>
             </el-card>
+            <el-card shadow="always"
+                     class="apply"
+                     style="margin-top: 10px"
+            >
+                <span>
+                    比赛报名时间:{{formatTimeA(competition.applyTime)}} - {{formatTimeA(competition.applyStop)}}
+                </span>
+            </el-card>
 
             <el-card class="apply top" v-if="!isApplyTime " shadow="always">
                 <span>
                  距离报名开始还有：{{applyTime}}
+                 </span>
+            </el-card>
+            <el-card class="apply top" v-if="! isApplyEnd " shadow="always">
+                <span>
+                 距离报名截止时间还有：{{applyEnd}}
                  </span>
             </el-card>
             <el-card class="apply top" v-if="!isEnd" shadow="always">
@@ -22,8 +35,14 @@
                  距离比赛开始还有：{{startTime}}
                  </span>
             </el-card>
+
             <el-card class="apply top" v-if="isEnd" shadow="always">
-                比赛已经结束！！！
+                <span>比赛已经结束！！！</span>
+            </el-card>
+            <el-card class="apply top" v-if="isApplyEnd" shadow="always">
+                <span>
+                    报名已经结束。
+                </span>
             </el-card>
 
             <div class="top">
@@ -118,7 +137,7 @@
 
 
                 <el-button class="top" type="primary" :loading="buttonLoading" round
-                           v-if=" !isEnd && isApplyTime && !competition.team  " @click="applyIn()">
+                           v-if=" !isEnd && isApplyTime && !competition.team &&  !isApplyEnd " @click="applyIn()">
                     》》 立刻报名 《《
                 </el-button>
 
@@ -270,6 +289,8 @@
                 buttonLoading1: false,
                 showTeamInfo: false,
                 buttonLoading2: false,
+                applyEnd: null,
+                isApplyEnd: null,
 
             }
         },
@@ -285,6 +306,8 @@
             this.timeout = setInterval(() => {
                 this.date = new Date();
                 this.applyTime = getDuration(new Date(this.competition.applyTime) - new Date());
+                this.applyEnd = getDuration(new Date(this.competition.applyStop) - new Date());
+                this.isApplyEnd = (new Date() > new Date(this.competition.applyStop));
                 this.isApplyTime = (new Date() > new Date(this.competition.applyTime));
                 this.isEnd = (new Date() > new Date(this.competition.endTime))
                 this.isApplyTimeStop = (new Date() > new Date(this.competition.startTime));

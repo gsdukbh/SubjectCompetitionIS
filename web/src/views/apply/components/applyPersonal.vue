@@ -5,12 +5,21 @@
             <el-input placeholder="名称" style="width: 200px;margin-left: 10px;" v-model="page.name"/>
 
 
-            <el-button class="filter-item" type="primary" style="margin-left: 10px;" icon="el-icon-search"
+            <el-button round
+                       class="filter-item"
+                       type="primary"
+                       style="margin-left: 10px;"
+                       icon="el-icon-search"
                        @click="handleFilter">
                 搜索
             </el-button>
-            <el-button class="filter-item" type="primary" style="margin-left: 10px;" icon="el-icon-refresh-left"
-                       @click="handleRefresh">
+            <el-button
+                    class="filter-item"
+                    type="primary"
+                    style="margin-left: 10px;"
+                    icon="el-icon-refresh-left"
+                    round
+                    @click="handleRefresh">
                 重置搜索
             </el-button>
 
@@ -23,6 +32,11 @@
                     prop="applyTime"
                     label="申请时间"
                     width="180">
+                <template slot-scope="{row}">
+                     <span>
+                       {{formatTimeA(row.applyTime)}}
+                    </span>
+                </template>
             </el-table-column>
             <el-table-column
                     prop="name"
@@ -70,10 +84,22 @@
                         </router-link>
                     </div>
 
-                    <el-button style="margin-left: 10px" type="danger" :loading="buttonLoading" size="mini"
+                    <el-button style="margin-left: 10px"
+                               type="danger"
+                               v-if="new Date() < new Date(row.applyStop) "
+                               :loading="buttonLoading"
+                               size="mini"
+                               round
                                icon="el-icon-edit"
                                @click="escApply(row)">
                         取消报名
+                    </el-button>
+                    <el-button style="margin-left: 10px"
+                               v-if="new Date() > new Date(row.applyStop) "
+                               size="mini"
+                               round
+                    >
+                        报名截止，无法取消报名
                     </el-button>
 
                 </template>
@@ -87,7 +113,7 @@
                     @current-change="handleCurrentChange"
                     @next-click="handleCurrentChange"
                     @prev-click="handleCurrentChange"
-                    :current-page="page.page"
+                    :current-page="page.pages"
                     :page-sizes="[20,50,100]"
                     :page-size="page.size"
                     background
@@ -123,9 +149,11 @@
                 buttonLoading: false,
                 myApply: [],
                 loading: true,
+
                 page: {
                     size: 20,
                     page: 0,
+                    pages: 0,
                     name: '',
                     totalElements: 100,
                 },
@@ -133,6 +161,7 @@
         },
         created() {
             this.getDataPage();
+
         },
         methods: {
             escApply(value) {
@@ -179,7 +208,7 @@
             /*当前页数*/
             handleCurrentChange(val) {
                 /*页面切换*/
-                this.page.page = val;
+                this.page.page = val - 1;
                 this.loading = true;
                 this.getDataPage()
             },

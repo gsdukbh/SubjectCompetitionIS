@@ -27,8 +27,26 @@ public class ApplyFromSericeImpl {
     @Autowired
     private ApplyFromRepository apply;
 
+    public List<ScisApplyFrom> findBySocreDesc(Integer competitionId) {
+        return apply.findBySocreDesc(competitionId);
+    }
+
+    public void update(Integer id, String prize) {
+        apply.update(id, prize);
+    }
+
+    public void update(List<ScisApplyFrom> id, String prize) {
+        for (ScisApplyFrom ids : id) {
+            apply.update(ids.getId(), prize);
+        }
+    }
+
     public Integer getGradeRank(Integer applyId) {
         return apply.getGradeRank(applyId);
+    }
+
+    public int gradeDistribution(Integer competitionId, String prize, String college) {
+        return apply.gradeDistribution(competitionId, prize, college);
     }
 
     public Page<ScisApplyFrom> findByScisUserNameContaining(String name, Pageable pageable) {
@@ -37,6 +55,10 @@ public class ApplyFromSericeImpl {
 
     public int gradeDistribution(Integer competitionId, Integer left, Integer right) {
         return apply.gradeDistribution(competitionId, left, right);
+    }
+
+    public int gradeDistribution(Integer competitionId, String prize) {
+        return apply.gradeDistribution(competitionId, prize);
     }
 
     public int gradeDistribution(Integer competitionId, Integer left, Integer right, String college) {
@@ -52,12 +74,39 @@ public class ApplyFromSericeImpl {
         return apply.findByScisUserNameContainingOrScisUserLoginContainingAndScoreBetween(name, login, left, right, pageable);
     }
 
+    public Page<ScisApplyFrom> findByScisUserNameContainingOrScisUserLoginContainingAndPrize(String name, String login, Integer grade, Pageable pageable) {
+        switch (grade) {
+            case 4:
+                return apply.findByScisUserNameContainingOrScisUserLoginContainingAndPrize(name, login, "一等奖", pageable);
+            case 3:
+                return apply.findByScisUserNameContainingOrScisUserLoginContainingAndPrize(name, login, "二等奖", pageable);
+            case 2:
+                return apply.findByScisUserNameContainingOrScisUserLoginContainingAndPrize(name, login, "三等奖", pageable);
+            default:
+                return null;
+        }
+    }
+
     public Page<ScisApplyFrom> findByScisUserIdAndCompetitionIdAndScoreBetween(Integer userId, Integer competitionId, Integer left, Integer right, Pageable pageable) {
         return apply.findByScisUserIdAndCompetitionIdAndScoreBetween(userId, competitionId, left, right, pageable);
     }
 
     public Page<ScisApplyFrom> findByScisUserIdAndCompetitionIdAndScoreBetweenAndScoreNotNull(Integer userId, Integer competitionId, Integer left, Integer right, Pageable pageable) {
         return apply.findByScisUserIdAndCompetitionIdAndScoreBetweenAndScoreNotNull(userId, competitionId, left, right, pageable);
+    }
+
+    public Page<ScisApplyFrom> findByScisUserIdAndCompetitionIdAndPrizeAndScoreNotNull(
+            Integer userId, Integer competitionId, Integer grade, Pageable pageable) {
+        switch (grade) {
+            case 4:
+                return apply.findByScisUserIdAndCompetitionIdAndPrizeAndScoreNotNull(userId, competitionId, "一等奖", pageable);
+            case 3:
+                return apply.findByScisUserIdAndCompetitionIdAndPrizeAndScoreNotNull(userId, competitionId, "二等奖", pageable);
+            case 2:
+                return apply.findByScisUserIdAndCompetitionIdAndPrizeAndScoreNotNull(userId, competitionId, "三等奖", pageable);
+            default:
+                return null;
+        }
     }
 
     public Page<ScisApplyFrom> findByScisUserLoginContaining(String login, Pageable pageable) {
@@ -146,12 +195,38 @@ public class ApplyFromSericeImpl {
         return apply.findByScoreBetween(left, right, pageable);
     }
 
+    public Page<ScisApplyFrom> findByPrize(Integer grade, Pageable pageable) {
+        switch (grade) {
+            case 4:
+                return apply.findByPrize("一等奖", pageable);
+            case 3:
+                return apply.findByPrize("二等奖", pageable);
+            case 2:
+                return apply.findByPrize("三等奖", pageable);
+            default:
+                return null;
+        }
+    }
+
     public Page<ScisApplyFrom> findByScoreBetweenAndScisUserId(Integer left, Integer right, Integer userId, Pageable pageable) {
         return apply.findByScoreBetweenAndScisUserId(left, right, userId, pageable);
     }
 
     public Page<ScisApplyFrom> findByScoreBetweenAndScisUserIdAndScoreNotNull(Integer left, Integer right, Integer userId, Pageable pageable) {
         return apply.findByScoreBetweenAndScisUserIdAndScoreNotNull(left, right, userId, pageable);
+    }
+
+    public Page<ScisApplyFrom> findByScisUserIdAndScoreNotNullAndPrize(Integer userId, Integer grade, Pageable pageable) {
+        switch (grade) {
+            case 4:
+                return apply.findByScisUserIdAndScoreNotNullAndPrize(userId, "一等奖", pageable);
+            case 3:
+                return apply.findByScisUserIdAndScoreNotNullAndPrize(userId, "二等奖", pageable);
+            case 2:
+                return apply.findByScisUserIdAndScoreNotNullAndPrize(userId, "三等奖", pageable);
+            default:
+                return null;
+        }
     }
 
     /**

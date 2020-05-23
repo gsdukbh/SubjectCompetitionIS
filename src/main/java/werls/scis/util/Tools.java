@@ -60,29 +60,21 @@ public class Tools {
 
     public List<Map<String, Object>> getScoreLevel(Integer competitionId) {
         List<Map<String, Object>> score = new ArrayList<>(16);
-        Map<String, Object> temp1 = new HashMap<>(16);
-        Map<String, Object> temp2 = new HashMap<>(16);
         Map<String, Object> temp3 = new HashMap<>(16);
         Map<String, Object> temp4 = new HashMap<>(16);
         Map<String, Object> temp5 = new HashMap<>(16);
-        temp1.put("name", "不合格");
-        temp1.put("value", applyFromSerice.gradeDistribution(competitionId, 0, 59));
-
-        temp2.put("name", "合格");
-        temp2.put("value", applyFromSerice.gradeDistribution(competitionId, 60, 75));
-
-        temp3.put("name", "中等");
-        temp3.put("value", applyFromSerice.gradeDistribution(competitionId, 76, 85));
 
 
-        temp4.put("name", "良好");
-        temp4.put("value", applyFromSerice.gradeDistribution(competitionId, 86, 95));
+        temp3.put("name", "三等奖");
+        temp3.put("value", applyFromSerice.gradeDistribution(competitionId, "三等奖"));
 
-        temp5.put("name", "优秀");
-        temp5.put("value", applyFromSerice.gradeDistribution(competitionId, 96, 100));
 
-        score.add(temp1);
-        score.add(temp2);
+        temp4.put("name", "二等奖");
+        temp4.put("value", applyFromSerice.gradeDistribution(competitionId, "二等奖"));
+
+        temp5.put("name", "一等奖");
+        temp5.put("value", applyFromSerice.gradeDistribution(competitionId, "一等奖"));
+
         score.add(temp3);
         score.add(temp4);
         score.add(temp5);
@@ -149,7 +141,7 @@ public class Tools {
     public void saveUserInfo(List<UserUpObject> userUpObject, Integer roleId, Integer adminUser) {
         try {
             logger.info("开始将信息写入数据库");
-            List<UserUpObject> list = new CopyOnWriteArrayList<>(userUpObject);
+            List<UserUpObject> list = new ArrayList<>(userUpObject);
             for (UserUpObject object : list) {
                 webSocket.sendOneMessage(adminUser.toString(), JSON.toJSONString(object));
                 ScisUser user = new ScisUser();

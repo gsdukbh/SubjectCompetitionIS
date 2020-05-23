@@ -78,7 +78,7 @@ export function isArray(arg) {
  * @returns {boolean}
  */
 export function whiteList(str) {
-    const reg = /([public]|[password]|[login]|[404])/
+    const reg = /([public]|[password]|[login]|[404]|[api])/
     return reg.test(str);
 
 }

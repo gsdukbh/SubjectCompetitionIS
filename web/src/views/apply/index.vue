@@ -8,9 +8,11 @@
                     <apply-personal/>
                 </el-tab-pane>
 
-                <!--                <el-tab-pane label="团队赛报名信息" lazy name="second">-->
-                <!--                    <team-apply/>-->
-                <!--                </el-tab-pane>-->
+                <!--                                <el-tab-pane label="团队赛报名信息" lazy name="second">-->
+                <!--                                    -->
+                <!--                                    <team-apply/>-->
+                <!--                                    -->
+                <!--                                </el-tab-pane>-->
             </el-tabs>
         </div>
     </div>
@@ -18,6 +20,7 @@
 
 <script>
     import ApplyPersonal from "./components/applyPersonal";
+
 
     export default {
         name: "index",

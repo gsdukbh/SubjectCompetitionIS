@@ -1,52 +1,45 @@
-package werls.scis.util;
+package werls.scis.aop;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Marker;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import werls.scis.dao.pojo.ScisApplyFrom;
 import werls.scis.dao.pojo.ScisCompetition;
 import werls.scis.service.ApplyFromSericeImpl;
 import werls.scis.service.CompetitionServiceImpl;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author : LiJiWei
  * @version V1.0
  * @Project: scis
- * @Package werls.scis.util
+ * @Package werls.scis.aop
  * @Description: TODO
- * @date Date : 2020年04月04日 10:22
+ * @date Date : 2020年05月29日 21:40
  */
+@Aspect
 @Component
-public class CronJobs {
-    private Logger logger = LoggerFactory.getLogger(getClass());
-
-    @Autowired
-    CompetitionServiceImpl competitionService;
+public class ScoreAop {
 
     @Autowired
     ApplyFromSericeImpl applyFromSerice;
 
-    @Scheduled(cron = "0 0/10 *  * * ?")
-    public void checkingCompetitionStatus() {
+    @Autowired
+    CompetitionServiceImpl competitionService;
 
-        logger.info("  更新竞赛状态");
-        competitionService.upStatus();
-
-        competitionService.upStatusA();
+    @Pointcut(value = "@annotation(werls.scis.aop.ScoreAopInterface)")
+    public void score() {
     }
 
-    @Scheduled(cron = "0 0/10 *  * * ?")
-    public void upScore() {
-        logger.info("更新成绩分类");
+    @Before("score()")
+    public void update() {
         List<ScisCompetition> competitionList = competitionService.findAll();
         for (ScisCompetition competition : competitionList) {
             List<ScisApplyFrom> applyFroms = applyFromSerice.findBySocreDesc(competition.getId());

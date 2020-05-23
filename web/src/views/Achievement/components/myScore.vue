@@ -15,25 +15,18 @@
                 </el-select>
 
 
-                <el-select style="margin-left: 10px;" v-model="type" filterable placeholder="成绩">
+                <el-select style="margin-left: 10px;" v-model="page.grade" filterable placeholder="成绩">
+
                     <el-option
-                            label="不合格"
-                            value=0>
-                    </el-option>
-                    <el-option
-                            label="合格"
-                            value=1>
-                    </el-option>
-                    <el-option
-                            label="中等"
+                            label="三等奖"
                             value=2>
                     </el-option>
                     <el-option
-                            label="良好"
+                            label="二等奖"
                             value=3>
                     </el-option>
                     <el-option
-                            label="优秀"
+                            label="一等奖"
                             value=4>
                     </el-option>
                 </el-select>
@@ -92,6 +85,13 @@
                         prop="gradesanking"
                         label="排名">
                 </el-table-column>
+                <el-table-column
+                        sortable
+                        prop="prize"
+                        label="获奖情况"
+                >
+
+                </el-table-column>
             </el-table>
             <div class="center">
                 <el-pagination
@@ -99,7 +99,7 @@
                         @current-change="handleCurrentChange"
                         @next-click="handleCurrentChange"
                         @prev-click="handleCurrentChange"
-                        :current-page="page.page"
+                        :current-page="page.pages"
                         :page-sizes="[20,50,100]"
                         :page-size="page.size"
                         background
@@ -136,9 +136,9 @@
                 page: {
                     size: 20,
                     page: 0,
+                    pages: 0,
                     value: null,
-                    left: null,
-                    right: null,
+                    grade: null,
                     competitionId: null,
                     totalElements: 0,
                 },
@@ -162,7 +162,7 @@
             /*当前页数*/
             handleCurrentChange(val) {
                 /*页面切换*/
-                this.page.page = val;
+                this.page.page = val - 1;
                 this.loading = true;
                 this.getDataPage()
             },
@@ -192,23 +192,6 @@
             handleFilter() {
                 /*搜索*/
                 this.loading = true;
-
-                if (this.type === '0') {
-                    this.page.left = 0;
-                    this.page.right = 59;
-                } else if (this.type === '1') {
-                    this.page.left = 60;
-                    this.page.right = 75;
-                } else if (this.type === '2') {
-                    this.page.left = 76;
-                    this.page.right = 85;
-                } else if (this.type === '3') {
-                    this.page.left = 86;
-                    this.page.right = 95;
-                } else if (this.type === '4') {
-                    this.page.left = 96;
-                    this.page.right = 100;
-                }
                 this.getDataPage();
 
 

@@ -17,117 +17,173 @@
             <el-divider></el-divider>
 
             <div v-if="item ===1">
-                <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="20%" class="demo-ruleForm">
+                <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="30%" class="demo-ruleForm">
 
-                    <el-form-item label="竞赛名称" prop="name">
+                    <el-row>
+                        <el-col :span="12">
+                            <el-form-item label="竞赛名称" prop="name">
 
-                        <el-tooltip class="item" effect="dark" content="为了避免重复，请使用第**届，作为前缀命名" placement="top-start">
-                            <el-input v-model="ruleForm.name" style="width: 30%"></el-input>
-                        </el-tooltip>
-                    </el-form-item>
+                                <el-tooltip class="item" content="为了避免重复，请使用第**届，作为前缀命名" placement="top-start">
+                                    <el-input v-model="ruleForm.name" style="width: 80%"></el-input>
+                                </el-tooltip>
 
-                    <el-form-item label="竞赛级别" prop="level">
-                        <el-select v-model="ruleForm.level" placeholder="请选择竞赛级别">
-                            <el-option label="校级" value="校级"></el-option>
-                            <el-option label="院级" value="院级"></el-option>
-                            <el-option label="市级" value="市级"></el-option>
-                            <el-option label="区级/省级" value="区级/省级"></el-option>
-                            <el-option label="国级" value="国级"></el-option>
-                        </el-select>
-                    </el-form-item>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="竞赛级别" prop="level">
+                                <el-select v-model="ruleForm.level" placeholder="请选择竞赛级别">
+                                    <el-option label="校级" value="校级"></el-option>
+                                    <el-option label="院级" value="院级"></el-option>
+                                    <el-option label="市级" value="市级"></el-option>
+                                    <el-option label="区级/省级" value="区级/省级"></el-option>
+                                    <el-option label="国级" value="国级"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
 
-                    <el-form-item label="承办单位" prop="organizer">
+                        <el-col :span="12">
+                            <el-form-item label="承办单位" prop="organizer">
 
-                        <el-select v-model="ruleForm.organizer" placeholder="请选择举办单位">
-                            <div v-for="item in college" v-bind:key="item.id">
-                                <el-option :label=item.collegeName :value=item.collegeName></el-option>
-                            </div>
-                        </el-select>
+                                <el-select v-model="ruleForm.organizer" placeholder="请选择举办单位">
+                                    <div v-for="item in college" v-bind:key="item.id">
+                                        <el-option :label=item.name :value=item.name></el-option>
+                                    </div>
+                                </el-select>
 
-                    </el-form-item>
+                            </el-form-item>
+                        </el-col>
 
-                    <el-form-item label="竞赛开始时间" required>
+                        <el-col :span="12">
+                            <el-form-item label="竞赛开始时间" required>
 
-                        <el-form-item prop="startTime">
-                            <el-date-picker type="datetime" placeholder="选择日期时间" v-model="ruleForm.startTime"
-                                            value-format="yyyy-MM-dd HH-mm-ss"
-                                            style="width: 30%;"></el-date-picker>
-                        </el-form-item>
+                                <el-form-item prop="startTime">
+                                    <el-date-picker type="datetime" placeholder="选择日期时间" v-model="ruleForm.startTime"
 
-                    </el-form-item>
-                    <el-form-item label="结束时间" prop="endTime">
-                        <el-date-picker type="datetime" placeholder="选择日期时间" v-model="ruleForm.endTime"
-                                        value-format="yyyy-MM-dd HH-mm-ss"
-                                        style="width: 30%;"></el-date-picker>
-                    </el-form-item>
+                                                    style="width: 50%;"></el-date-picker>
+                                </el-form-item>
+
+                            </el-form-item>
+                        </el-col>
+
+                        <el-col :span="12">
+                            <el-form-item label="竞赛结束时间" prop="endTime">
+                                <el-date-picker type="datetime" placeholder="选择日期时间" v-model="ruleForm.endTime"
+
+                                                style="width: 50%;"></el-date-picker>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="竞赛报名时间" prop="applyTime">
+
+                                <el-date-picker type="datetime" placeholder="选择日期" v-model="ruleForm.applyTime"
+
+                                                style="width: 50%;">
+
+                                </el-date-picker>
+
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+
+                            <el-form-item label="竞赛报名结束时间" prop="applyStop">
+
+                                <el-date-picker type="datetime" placeholder="选择日期" v-model="ruleForm.applyStop"
+
+                                                style="width: 50%;">
+
+                                </el-date-picker>
+
+                            </el-form-item>
+                        </el-col>
+
+                        <el-col :span="12">
+                            <el-form-item label="一等奖人数" prop="firstPrize">
+                                <el-input-number v-model="ruleForm.firstPrize"
+                                                 controls-position="right"
+                                                 :min="1">
+                                </el-input-number>
+                            </el-form-item>
+
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="二等奖人数" prop="secondPrize">
+                                <el-input-number v-model="ruleForm.secondPrize"
+                                                 controls-position="right"
+                                                 :min="1">
+                                </el-input-number>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="三等奖人数" prop="thirdPrize">
+                                <el-input-number v-model="ruleForm.thirdPrize"
+                                                 controls-position="right"
+                                                 :min="1">
+                                </el-input-number>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="状态" prop="status">
+                                <el-select v-model="ruleForm.status" placeholder="请选择">
+                                    <el-option label="草稿" value="草稿"></el-option>
+                                    <el-option label="公开" value="公开"></el-option>
+                                    <el-option label="进行中" disabled value="进行中"></el-option>
+                                    <el-option label="已结束" disabled value="已结束"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+
+                        <el-col :span="12">
+                            <el-form-item label="举办形式" prop="type">
+                                <el-radio-group v-model="ruleForm.type">
+                                    <el-radio label="offline">线下比赛</el-radio>
+                                    <el-radio label="online">线上比赛（提交作品）</el-radio>
+                                </el-radio-group>
+
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="举办地点" v-if="ruleForm.type === 'offline'">
+                                <el-input
+                                        placeholder="请输入内容"
+                                        v-model="ruleForm.place"
+                                        style="width: 50%">
+                                </el-input>
+                            </el-form-item>
+                        </el-col>
+
+                        <!--                       <el-col :span="12" >-->
+                        <!--                    <el-form-item label="团队比赛">-->
+                        <!--                        <el-switch-->
+                        <!--                                v-model="ruleForm.team"-->
+                        <!--                                active-text="团队比赛"-->
+                        <!--                                inactive-text="个人比赛">-->
+                        <!--                        </el-switch>-->
+                        <!--                    </el-form-item>-->
+                        <!--                       </el-col>-->
+                        <!--                       <el-col :span="12">-->
+                        <!--                    <el-form-item label="人数限制" prop="type" v-if="ruleForm.team">-->
+                        <!--                        <el-input-number v-model="ruleForm.numLimit" :min="1" :max="10" label="描述文字"></el-input-number>-->
+                        <!--                    </el-form-item>-->
+                        <!--                       </el-col>-->
+
+                        <el-col :span="12">
+
+                            <el-form-item label="负责人" prop="principal">
+
+                                <el-tooltip class="item" content="请从下面的搜索结果输入" placement="top-start">
+                                    <el-autocomplete
+                                            style="width: 50%"
+                                            v-model="ruleForm.principal"
+                                            :fetch-suggestions="querySearchAsync"
+                                            placeholder="请输入内容"
+                                            @select="handleSelect"
+                                    ></el-autocomplete>
+                                </el-tooltip>
+                            </el-form-item>
+                        </el-col>
 
 
-                    <el-form-item label="报名时间" prop="applyTime">
-                        <el-date-picker type="datetime" placeholder="选择日期" v-model="ruleForm.applyTime"
-                                        value-format="yyyy-MM-dd HH-mm-ss"
-                                        style="width: 30%;">
-                        </el-date-picker>
-                    </el-form-item>
-
-                    <el-form-item label="竞赛报名结束时间" prop="applyStop">
-
-                        <el-date-picker type="datetime" placeholder="选择日期" v-model="ruleForm.applyStop"
-
-                                        style="width: 30%;">
-
-                        </el-date-picker>
-
-                    </el-form-item>
-
-                    <el-form-item label="状态" prop="status">
-                        <el-select v-model="ruleForm.status" placeholder="请选择">
-                            <el-option label="草稿" value="草稿"></el-option>
-                            <el-option label="公开" value="公开"></el-option>
-                            <el-option label="进行中" disabled value="进行中"></el-option>
-                            <el-option label="已结束" disabled value="已结束"></el-option>
-                        </el-select>
-                    </el-form-item>
-
-                    <el-form-item label="举办形式" prop="type">
-                        <el-radio-group v-model="ruleForm.type">
-                            <el-radio label="offline">线下比赛</el-radio>
-                            <el-radio label="online">线上比赛（提交作品）</el-radio>
-                        </el-radio-group>
-                    </el-form-item>
-
-                    <el-form-item label="举办地点" v-if="ruleForm.type === 'offline'">
-                        <el-input
-                                placeholder="请输入内容"
-                                v-model="ruleForm.place"
-                                style="width: 30%">
-                        </el-input>
-                    </el-form-item>
-
-                    <!--                    <el-form-item label="团队比赛">-->
-                    <!--                        <el-switch-->
-                    <!--                                v-model="ruleForm.team"-->
-                    <!--                                active-text="团队比赛"-->
-                    <!--                                inactive-text="个人比赛">-->
-                    <!--                        </el-switch>-->
-                    <!--                    </el-form-item>-->
-
-                    <!--                    <el-form-item label="人数限制" prop="type" v-if="ruleForm.team">-->
-                    <!--                        <el-input-number v-model="ruleForm.numLimit" :min="1" :max="10" label="描述文字"></el-input-number>-->
-                    <!--                    </el-form-item>-->
-
-                    <el-form-item label="负责人" prop="principal">
-
-                        <el-tooltip class="item" content="请从下面的搜索结果输入" placement="top-start">
-                            <el-autocomplete
-                                    style="width: 30%"
-                                    v-model="ruleForm.principal"
-                                    :value="ruleForm.principal"
-                                    :fetch-suggestions="querySearchAsync"
-                                    placeholder="请输入内容"
-                                    @select="handleSelect"
-                            ></el-autocomplete>
-                        </el-tooltip>
-                    </el-form-item>
+                    </el-row>
 
                     <el-form-item>
 
@@ -203,10 +259,34 @@
     import {getJson, postJson} from "../../api/api";
     import Page404 from '../error-page/404';
     import qs from 'qs';
+
     export default {
         name: "edit",
         components: {Page404, MarkdownEditor},
         data() {
+            const validateRequire = (rule, value, callback) => {
+                if (value > this.ruleForm.startTime) {
+                    callback(new Error('竞赛报名结束时间不能在竞赛开始时间之后，请重新输入'))
+                } else if (value < this.ruleForm.applyTime) {
+                    callback(new Error('报名结束时间不能在报名开始时间之前，请重新输入'))
+                } else {
+                    callback()
+                }
+            };
+            const validateRequire1 = (rule, value, callback) => {
+                if (value > this.ruleForm.startTime) {
+                    callback(new Error('报名时间不能在开始时间之后！请重新输入。'))
+                } else {
+                    callback()
+                }
+            }
+            const validateRequire2 = (rule, value, callback) => {
+                if (value < this.ruleForm.startTime) {
+                    callback(new Error('竞赛结束时间不能在开始时间之前，请重新输入！'))
+                } else {
+                    callback()
+                }
+            }
             return {
                 annex: false,
                 id: '',
@@ -227,6 +307,9 @@
                     principal: '',
                     content: '',
                     numLimit: 1,
+                    firstPrize: null,
+                    secondPrize: null,
+                    thirdPrize: null,
                     place: '',
                     team: false,
                     bucketName: null,
@@ -241,6 +324,15 @@
                     collegeName: '',
                 },
                 rules: {
+                    firstPrize: [
+                        {required: true, message: '该值不能为空'},
+                    ],
+                    secondPrize: [
+                        {required: true, message: '该值不能为空'},
+                    ],
+                    thirdPrize: [
+                        {required: true, message: '该值不能为空'},
+                    ],
                     name: [
                         {max: 255, message: '长度在  255 个字符 以下', trigger: 'blur'},
                         {required: true, message: '请输入活动名称', trigger: 'blur'}
@@ -252,6 +344,7 @@
                         {required: true, message: '请选择日期', trigger: 'change'}
                     ],
                     endTime: [
+                        {validator: validateRequire2},
                         {required: true, message: '请选择结束日期', trigger: 'change'}
                     ],
                     organizer: [
@@ -263,12 +356,15 @@
                         {max: 255, message: '长度在  255 个字符 以下', trigger: 'blur'},
                         {required: true, message: '请输入负责人', trigger: 'blur'},
                     ],
-                    applyTime: [{
-                        required: true, message: '请选择开始报名时间', trigger: 'change'
-                    }],
-                    applyStop: [{
-                        required: true, message: '请选择报名结束时间', trigger: 'change'
-                    }],
+                    applyTime: [
+                        {validator: validateRequire1},
+                        {required: true, message: '请选择开始报名时间', trigger: 'change'}
+                    ],
+                    applyStop: [
+                        {validator: validateRequire},
+                        {required: true, message: '请选择报名结束时间', trigger: 'change'},
+
+                    ],
                     type: [
                         {
                             required: true, message: '请选择', trigger: 'change'
@@ -421,7 +517,17 @@
                     if (valid) {
                         if (this.ruleForm.startTime > this.ruleForm.endTime) {
                             this.$notify.error({
+                                message: '竞赛开始时间不能再竞赛结束时间之后，请重新输入',
+                                title: '错误',
+                            });
+                        } else if (this.ruleForm.startTime > this.ruleForm.endTime) {
+                            this.$notify.error({
                                 message: '开始时间不能再结束时间之后',
+                                title: '错误',
+                            });
+                        } else if (this.ruleForm.applyStop > this.ruleForm.startTime) {
+                            this.$notify.error({
+                                message: '竞赛报名时间不能再竞赛开始时间之后，请重新输入',
                                 title: '错误',
                             });
                         } else {

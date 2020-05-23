@@ -22,6 +22,7 @@ import java.util.List;
  */
 public interface CompetitionRepository extends JpaRepository<ScisCompetition, Integer> {
 
+
     /**
      * my join
      *

@@ -21,6 +21,12 @@ import java.util.Map;
  */
 public interface ApplyFromRepository extends JpaRepository<ScisApplyFrom, Integer> {
 
+    @Query(nativeQuery = true, value = "select *\n" +
+            "from Is_apply_from\n" +
+            "where competition_id=?1\n" +
+            "order by apply_score desc ")
+    List<ScisApplyFrom> findBySocreDesc(Integer competitionId);
+
 
     Page<ScisApplyFrom> findByScisUserLoginContaining(String login, Pageable pageable);
 
@@ -30,6 +36,8 @@ public interface ApplyFromRepository extends JpaRepository<ScisApplyFrom, Intege
 
     Page<ScisApplyFrom> findByScisUserNameContainingOrScisUserLoginContainingAndScoreBetween(String name, String login, Integer left, Integer right, Pageable pageable);
 
+    Page<ScisApplyFrom> findByScisUserNameContainingOrScisUserLoginContainingAndPrize(String name, String login, String prize, Pageable pageable);
+
     Page<ScisApplyFrom> findByScisUserId(Integer id, Pageable pageable);
 
     Page<ScisApplyFrom> findByScisUserIdAndScoreNotNull(Integer id, Pageable pageable);
@@ -37,6 +45,8 @@ public interface ApplyFromRepository extends JpaRepository<ScisApplyFrom, Intege
     Page<ScisApplyFrom> findByScisUserIdAndCompetitionIdAndScoreBetween(Integer userId, Integer competitionId, Integer left, Integer right, Pageable pageable);
 
     Page<ScisApplyFrom> findByScisUserIdAndCompetitionIdAndScoreBetweenAndScoreNotNull(Integer userId, Integer competitionId, Integer left, Integer right, Pageable pageable);
+
+    Page<ScisApplyFrom> findByScisUserIdAndCompetitionIdAndPrizeAndScoreNotNull(Integer userId, Integer competitionId, String prize, Pageable pageable);
 
     /**
      * s
@@ -59,6 +69,21 @@ public interface ApplyFromRepository extends JpaRepository<ScisApplyFrom, Intege
             "  and a.competition_id = ?1\n" +
             "  and a.apply_score between ?2 and ?3")
     int gradeDistribution(Integer competitionId, Integer left, Integer right);
+
+    @Query(nativeQuery = true,
+            value = "select distinct count(*)\n" +
+                    "from Is_apply_from a,\n" +
+                    "     Is_user b,\n" +
+                    "     Is_college c,\n" +
+                    "     Is_major d,\n" +
+                    "     Is_class e\n" +
+                    "where a.user_id = b.user_id\n" +
+                    "  and c.college_id = d.college_id\n" +
+                    "  and e.major_id = d.major_id\n" +
+                    "  and b.class_id = e.class_id\n" +
+                    "  and a.competition_id = ?1\n" +
+                    "  and a.apply_prize=?2")
+    int gradeDistribution(Integer competitionId, String prize);
 
     /**
      * 实时查询排名
@@ -93,6 +118,22 @@ public interface ApplyFromRepository extends JpaRepository<ScisApplyFrom, Intege
             "  and a.apply_score between ?2 and ?3 " +
             "and  c.college_name =?4")
     int gradeDistribution(Integer competitionId, Integer left, Integer right, String college);
+
+    @Query(nativeQuery = true,
+            value = "select distinct count(*)\n" +
+                    "from Is_apply_from a,\n" +
+                    "     Is_user b,\n" +
+                    "     Is_college c,\n" +
+                    "     Is_major d,\n" +
+                    "     Is_class e\n" +
+                    "where a.user_id = b.user_id\n" +
+                    "  and c.college_id = d.college_id\n" +
+                    "  and e.major_id = d.major_id\n" +
+                    "  and b.class_id = e.class_id\n" +
+                    "  and a.competition_id = ?1\n" +
+                    "  and a.apply_prize=?2\n" +
+                    "  and c.college_name = ?3")
+    int gradeDistribution(Integer competitionId, String prize, String college);
 
     /**
      * @param id
@@ -145,6 +186,11 @@ public interface ApplyFromRepository extends JpaRepository<ScisApplyFrom, Intege
     void update(Integer userId, Integer competitionId, Integer worksId);
 
 
+    @Query(nativeQuery = true, value = "update Is_apply_from\n" +
+            "set apply_prize=?2\n" +
+            "where apply_id =?1")
+    void update(Integer id, String prize);
+
     /**
      * @param id
      * @param name
@@ -159,6 +205,7 @@ public interface ApplyFromRepository extends JpaRepository<ScisApplyFrom, Intege
                     "       c.competition_id       as competitionId,\n" +
                     "       competition_name       as name,\n" +
                     "       competition_start_time as startTime," +
+                    " c.competition_apply_stop as applyStop," +
                     "       competition_place as place ," +
                     "       competition_type as type \n" +
                     "from Is_user a,\n" +
@@ -270,9 +317,13 @@ public interface ApplyFromRepository extends JpaRepository<ScisApplyFrom, Intege
      */
     Page<ScisApplyFrom> findByScoreBetween(Integer left, Integer right, Pageable pageable);
 
+    Page<ScisApplyFrom> findByPrize(String prize, Pageable pageable);
+
     Page<ScisApplyFrom> findByScoreBetweenAndScisUserId(Integer left, Integer right, Integer userId, Pageable pageable);
 
     Page<ScisApplyFrom> findByScoreBetweenAndScisUserIdAndScoreNotNull(Integer left, Integer right, Integer userId, Pageable pageable);
+
+    Page<ScisApplyFrom> findByScisUserIdAndScoreNotNullAndPrize(Integer userId, String prize, Pageable pageable);
 
     /**
      * 竞赛报名
@@ -309,7 +360,8 @@ public interface ApplyFromRepository extends JpaRepository<ScisApplyFrom, Intege
                     "where a.user_id = b.user_id\n" +
                     "  and b.competition_id = c.competition_id\n" +
                     "  and c.competition_id=?1\n" +
-                    "and  a.user_name like  concat('%',?2,'%') " +
+                    "  and  ( a.user_name like  concat('%',?2,'%') " +
+                    " or a.user_id=?2)" +
                     "ORDER BY  b.apply_time DESC " +
                     "limit ?3,?4")
     List<Map<String, Object>> findCompetitionId(Integer id, String name, Integer page, Integer size);

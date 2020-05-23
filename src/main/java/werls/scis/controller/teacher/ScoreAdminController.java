@@ -2,6 +2,7 @@ package werls.scis.controller.teacher;
 
 import com.alibaba.excel.EasyExcel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -14,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import werls.scis.aop.ScoreAopInterface;
 import werls.scis.dao.pojo.ScisApplyFrom;
 import werls.scis.dao.pojo.ScisCollege;
 import werls.scis.dao.pojo.ScisUser;
@@ -21,6 +23,7 @@ import werls.scis.dao.pojo.ScisWorks;
 import werls.scis.service.ApplyFromSericeImpl;
 import werls.scis.service.CollegeServiceImpl;
 import werls.scis.service.UserService;
+import werls.scis.service.WorksServiceImpl;
 import werls.scis.util.*;
 import werls.scis.webSocket.WebSocket;
 
@@ -52,12 +55,18 @@ public class ScoreAdminController {
     @Autowired
     UserService userService;
 
-    @CachePut(value = "Score", unless = "#result == null ", key = "'competitionId:'+#id")
-    @PostMapping("/modifyInfo/{id}")
-    public Map<String, Object> modifyInfo(@RequestBody ScisApplyFrom applyFrom, Integer id) {
+    @Autowired
+    WorksServiceImpl worksService;
+
+    @CachePut(value = "Score", unless = "#result == null ",
+            key = "'competitionId:'+#applyFrom.competition.id")
+    @CacheEvict(value = "Score", key = "'competition:'+#applyFrom.competition.id")
+    @PostMapping("/modifyInfo")
+    public Map<String, Object> modifyInfo(@RequestBody ScisApplyFrom applyFrom) {
         Map<String, Object> res = new HashMap<>(16);
         ScisWorks works = applyFrom.getWorks();
         works.setScore(applyFrom.getScore());
+        worksService.save(works);
         applyFrom.setWorks(works);
         applyFromSerice.save(applyFrom);
         res.put("status", 200);
@@ -88,6 +97,7 @@ public class ScoreAdminController {
 
     @Cacheable(value = "Score", unless = "#result == null ", key = "'competitionId:'+#competitionId")
     @GetMapping("/getScore/analysis/{competitionId}")
+    @ScoreAopInterface
     public Map<String, Object> getScoreInfo(@PathVariable Integer competitionId) {
         Map<String, Object> res = new HashMap<>(16);
         List<ScisCollege> scisColleges = collegeService.findAll();
@@ -98,11 +108,9 @@ public class ScoreAdminController {
             List<Integer> data = new ArrayList<>(16);
             collegeName.add(college.getName());
             tem.put("name", college.getName());
-            data.add(applyFromSerice.gradeDistribution(competitionId, 0, 59, college.getName()));
-            data.add(applyFromSerice.gradeDistribution(competitionId, 60, 75, college.getName()));
-            data.add(applyFromSerice.gradeDistribution(competitionId, 76, 85, college.getName()));
-            data.add(applyFromSerice.gradeDistribution(competitionId, 86, 95, college.getName()));
-            data.add(applyFromSerice.gradeDistribution(competitionId, 96, 100, college.getName()));
+            data.add(applyFromSerice.gradeDistribution(competitionId, "三等奖", college.getName()));
+            data.add(applyFromSerice.gradeDistribution(competitionId, "二等奖", college.getName()));
+            data.add(applyFromSerice.gradeDistribution(competitionId, "一等奖", college.getName()));
             tem.put("data", data);
             tem.put("type", "bar");
             tem.put("coordinateSystem", "polar");
@@ -218,12 +226,14 @@ public class ScoreAdminController {
     }
 
     @CachePut(value = "Score", unless = "#result == null ", key = "'competitionId:'+#competitionId")
+    @CacheEvict(value = "Score", key = "'competition:'+#competitionId")
     @PostMapping("/upScoreInfo")
     public Map<String, Object> upScoreInfo(@RequestParam("file") MultipartFile file,
                                            @RequestParam("id") Integer id,
                                            @RequestParam("competitionId") Integer competitionId) {
         Map<String, Object> res = new HashMap<>(16);
         String fileName = "/temp/" + file.getOriginalFilename();
+
         try {
             InputStream inputStream = file.getInputStream();
             File file1 = new File(fileName);

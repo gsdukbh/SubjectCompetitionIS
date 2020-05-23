@@ -27,6 +27,9 @@ public class CompetitionServiceImpl {
     @Autowired
     private CompetitionRepository competitionRepository;
 
+    public List<ScisCompetition> findAll() {
+        return competitionRepository.findAll();
+    }
 
     public List<ScisCompetition> findApplyUser(Integer id, String competitionName, Integer page, Integer size) {
         return competitionRepository.findApplyUser(id, competitionName, page, size);

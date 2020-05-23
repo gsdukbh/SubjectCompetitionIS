@@ -6,25 +6,18 @@
 
             <el-input placeholder="学号/姓名" style="width: 200px;margin-left: 10px;" v-model="page.value"/>
 
-            <el-select style="margin-left: 10px;" v-model="type" filterable placeholder="成绩">
+            <el-select style="margin-left: 10px;" v-model="page.grade" filterable placeholder="成绩">
+
                 <el-option
-                        label="不合格"
-                        value=0>
-                </el-option>
-                <el-option
-                        label="合格"
-                        value=1>
-                </el-option>
-                <el-option
-                        label="中等"
+                        label="三等奖"
                         value=2>
                 </el-option>
                 <el-option
-                        label="良好"
+                        label="二等奖"
                         value=3>
                 </el-option>
                 <el-option
-                        label="优秀"
+                        label="一等奖"
                         value=4>
                 </el-option>
             </el-select>
@@ -142,7 +135,7 @@
                     @current-change="handleCurrentChange"
                     @next-click="handleCurrentChange"
                     @prev-click="handleCurrentChange"
-                    :current-page="page.page"
+                    :current-page="page.pages"
                     :page-sizes="[20,50,100]"
                     :page-size="page.size"
                     background
@@ -167,7 +160,7 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
             <el-button @click="dialogVisible = false">取 消</el-button>
-         <el-button type="primary" @click="edit">确 定</el-button>
+         <el-button :loading="loadingButton1" type="primary" @click="edit">确 定</el-button>
   </span>
         </el-dialog>
     </div>
@@ -197,9 +190,9 @@
                 page: {
                     size: 20,
                     page: 0,
+                    pages: 0,
                     value: null,
-                    left: null,
-                    right: null,
+                    grade: null,
                     totalElements: 0,
                 },
                 rules: {
@@ -221,7 +214,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    postJson('/tea/score/modifyInfo/4', this.score)
+                    postJson('/tea/score/modifyInfo', this.score)
                         .then(response => {
                             if (response.data.status === 200) {
                                 this.$notify({
@@ -363,24 +356,6 @@
             handleFilter() {
                 /*搜索*/
                 this.loading = true;
-                console.log(this.type)
-                if (this.type === '0') {
-                    this.page.left = 0;
-                    this.page.right = 59;
-                } else if (this.type === '1') {
-                    this.page.left = 60;
-                    this.page.right = 75;
-                } else if (this.type === '2') {
-                    this.page.left = 76;
-                    this.page.right = 85;
-                } else if (this.type === '3') {
-                    this.page.left = 86;
-                    this.page.right = 95;
-                } else if (this.type === '4') {
-                    this.page.left = 96;
-                    this.page.right = 100;
-                }
-                console.log(this.page)
                 this.getDataPage();
             },
             handleRefresh() {

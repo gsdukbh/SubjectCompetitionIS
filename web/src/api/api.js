@@ -18,7 +18,7 @@ export const postJson = (url,params)=>{
     })
 };
 
-/**]
+/**
  * From
  * @param url
  * @param params

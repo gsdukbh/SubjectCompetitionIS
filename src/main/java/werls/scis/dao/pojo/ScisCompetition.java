@@ -71,6 +71,14 @@ public class ScisCompetition implements Serializable {
     @Column(name = "competition_isTeam")
     private Boolean team;
 
+    @Column(name = "competition_first_prize")
+    private Integer firstPrize;
+    @Column(name = "competition_second_prize")
+    private Integer secondPrize;
+
+    @Column(name = "competition_third_prize ")
+    private Integer thirdPrize;
+
     @Column(name = "competition_bucketName")
     private String bucketName;
     @Column(name = "competition_objectName")
@@ -123,6 +131,38 @@ public class ScisCompetition implements Serializable {
                 ", startTime=" + startTime +
                 ", applyTime=" + applyTime +
                 '}';
+    }
+
+    public Date getApplyStop() {
+        return applyStop;
+    }
+
+    public Integer getFirstPrize() {
+        return firstPrize;
+    }
+
+    public void setFirstPrize(Integer firstPrize) {
+        this.firstPrize = firstPrize;
+    }
+
+    public Integer getSecondPrize() {
+        return secondPrize;
+    }
+
+    public void setSecondPrize(Integer secondPrize) {
+        this.secondPrize = secondPrize;
+    }
+
+    public Integer getThirdPrize() {
+        return thirdPrize;
+    }
+
+    public void setThirdPrize(Integer thirdPrize) {
+        this.thirdPrize = thirdPrize;
+    }
+
+    public void setApplyStop(Date applyStop) {
+        this.applyStop = applyStop;
     }
 
     public String getImg() {

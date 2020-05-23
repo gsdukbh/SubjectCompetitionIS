@@ -70,13 +70,13 @@
                             width="55">
                     </el-table-column>
 
-                    <el-table-column
-                            prop="id"
-                            label="ID"
-                            width="100"
-                            sortable
-                    >
-                    </el-table-column>
+                    <!--                    <el-table-column-->
+                    <!--                            prop="id"-->
+                    <!--                            label="ID"-->
+                    <!--                            width="100"-->
+                    <!--                            sortable-->
+                    <!--                    >-->
+                    <!--                    </el-table-column>-->
 
                     <el-table-column
                             prop="name"
@@ -85,7 +85,13 @@
                     >
                     </el-table-column>
 
+                    <el-table-column
+                            prop="college.name"
+                            sortable
+                            label="所属学院"
+                    >
 
+                    </el-table-column>
                     <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
                         <template slot-scope="{row}">
 
@@ -130,6 +136,17 @@
                                 <el-option label="专科" value="专科"></el-option>
                             </el-select>
                         </el-form-item>
+                        <el-form-item label="所属学院" prop="college">
+                            <el-select v-model="majorEdit.college.id" filterable placeholder="请选择" style="width: 100%"
+                            >
+                                <el-option
+                                        v-for="item in college"
+                                        :key="item.id"
+                                        :label="item.name"
+                                        :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
                     </el-form>
 
 
@@ -146,7 +163,7 @@
                             @current-change="handleCurrentChange"
                             @next-click="handleCurrentChange"
                             @prev-click="handleCurrentChange"
-                            :current-page="page.page"
+                            :current-page="page.pages"
                             :page-sizes="[5,10,20,50,100]"
                             :page-size="page.size"
                             background
@@ -212,6 +229,7 @@
                 buttonLoading: false,
                 loading2: false,
                 loading: false,
+                buttonLoading1: false,
                 multipleSelection: [],
                 major: {
                     name: '',
@@ -232,6 +250,7 @@
                 page: {
                     size: 20,
                     page: 0,
+                    pages: 0,
                     name: null,
                     totalElements: 0,
                 },
@@ -276,6 +295,7 @@
                                 title: '成功',
                                 message: '删除成功'
                             });
+                            this.getDataPage();
                         } else {
                             this.$notify.error({
                                 title: '警告',
@@ -287,28 +307,31 @@
             edit(value) {
                 this.majorEdit = value;
                 this.dialogVisible = true;
-                console.log(this.collegeEdit)
             },
-            updataMajor() {
+            updataMajor(form) {
                 this.buttonLoading = true;
-                postJson('/admin/major/save', this.majorEdit)
-                    .then(response => {
-                        if (response.data.status === 200) {
-                            this.$notify.success({
-                                title: '成功',
-                                message: '修改成功'
-                            })
+                this.$refs[form].validate((valid) => {
+                    if (valid) {
+                        postJson('/admin/major/save', this.majorEdit)
+                            .then(response => {
+                                if (response.data.status === 200) {
+                                    this.$notify.success({
+                                        title: '成功',
+                                        message: '修改成功'
+                                    })
+                                    this.buttonLoading = false;
+                                    this.getDataPage();
+                                }
+                            }).catch(error => {
                             this.buttonLoading = false;
                             this.getDataPage();
-                        }
-                    }).catch(error => {
-                    this.buttonLoading = false;
-                    this.getDataPage();
-                    this.$message.error('出现一些错误' + error)
+                            this.$message.error('出现一些错误' + error)
+                        })
+                    }
                 })
             },
             handleClick(tab) {
-                console.log(tab.index);
+
                 if (tab.index === '1') {
                     this.getDataPage();
                 }
@@ -321,7 +344,7 @@
             /*当前页数*/
             handleCurrentChange(val) {
                 /*页面切换*/
-                this.page.page = val;
+                this.page.page = val - 1;
                 this.getDataPage()
             },
 
@@ -347,6 +370,7 @@
                                 title: '成功',
                                 message: '删除成功'
                             })
+                            this.getDataPage();
                         } else {
                             this.loading2 = false;
                             this.$notify.error({
@@ -394,9 +418,11 @@
                             this.$message.error("出现一些错误:" + error);
                             this.buttonLoading = false;
                         });
+                    } else {
+                        this.buttonLoading = false;
                     }
                 });
-                this.buttonLoading = false;
+
             },
             resetForm(formName) {
                 this.$refs[formName].resetFields();

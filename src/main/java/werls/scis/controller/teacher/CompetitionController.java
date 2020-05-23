@@ -83,6 +83,9 @@ public class CompetitionController {
     }
 
     @RequestMapping("/findAll")
+//    @Cacheable(value = "findById",
+//            key = "'page:'+#page+'size:'+#size+'name:'+#name+'organizer:'+#organizer+'level:'+#level",
+//            unless = "#result == null ")
     public Page<ScisCompetition> findByAll(@RequestParam(name = "page", defaultValue = "0") Integer page,
                                            @RequestParam(name = "size", defaultValue = "20") Integer size,
                                            @RequestParam(name = "name", defaultValue = "") String name,
