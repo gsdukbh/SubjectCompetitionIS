@@ -103,7 +103,7 @@
             handleSelect(key, keyPath) {
                 this.keys = key;
                 this.keyPath = keyPath;
-                console.log(key, keyPath)
+           
             },
             login() {
                 this.$router.push({path: '/login'})
