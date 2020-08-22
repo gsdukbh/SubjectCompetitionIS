@@ -23,11 +23,11 @@ import java.io.InputStream;
 public class FileUploader {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private static final String A_KEY = "1361404576";
+    private static final String A_KEY = "";
 
-    private static final String S_KEY = "lijiawei+520";
+    private static final String S_KEY = "";
 
-    public static final String URL = "https://data.werls.top";
+    public static final String URL = "";
 //    public static final String URL = "http://127.0.0.1:9000";
 
     public static final String ENDPOINT = "http://120.78.148.61:9000";
