@@ -58,6 +58,8 @@ public class ScoreAop {
                         "二等奖");
             }
             if (!s) {
+
+                
                 applyFromSerice.update(
                         applyFroms.subList(
                                 competition.getSecondPrize(),
