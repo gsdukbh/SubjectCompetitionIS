@@ -3,5 +3,12 @@ services:
   scis-redis:
     image: redis
     container_name: scis-redis
+  scis-mysql:
+    image: mysql:8.0.21
+    container_name: scis-mysql
+    command:
+      --
+
   scis:
     build:
+      dockerfile:
