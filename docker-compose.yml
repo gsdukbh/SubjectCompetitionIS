@@ -1,0 +1,7 @@
+version: '3'
+services:
+  scis-redis:
+    image: redis
+    container_name: scis-redis
+  scis:
+    build:
