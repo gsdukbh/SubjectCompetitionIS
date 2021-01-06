@@ -1,0 +1,70 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    open-in-view: false
+    database: mysql
+  datasource:
+    url: jdbc:mysql://db:3306/scis?serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+    type: com.alibaba.druid.pool.DruidDataSource
+  mail:
+    host: smtp.werls.top
+    username: admin@werls.top
+    password: lijiawei+520
+    test-connection: false
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          ssl:
+            enable: true
+        imap:
+          ssl:
+            socketFactory:
+              fallback: false
+              class: com.fintech.modules.base.util.mail.MailSSLSocketFactory
+    port: 465
+  session:
+    store-type: redis
+    timeout: 5h
+    redis:
+      flush-mode: on_save
+      namespace: 'resdis:session'
+  redis:
+    host: redis
+    password: werlst
+    timeout: 300ms
+    port: 6379
+  cache:
+    type: redis
+    cache-names: scis
+    redis:
+      time-to-live: 10m
+  data:
+    redis:
+      repositories:
+        enabled: false
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
+
+application:
+  version: 0.0.1
+  formatted-version: 1
+minio:
+  ACCESSKEY: root
+  SECRETKEY: 12345678
+  BucketName: scis
+  url: 'http://minio:9000'
+
+
+
+
+

@@ -23,18 +23,15 @@ import java.io.InputStream;
 public class FileUploader {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private static final String A_KEY = "";
-
-    private static final String S_KEY = "";
-
-    public static final String URL = "";
-//    public static final String URL = "http://127.0.0.1:9000";
-
-    public static final String ENDPOINT = "http://120.78.148.61:9000";
-//    public static final String ENDPOINT = "http://127.0.0.1:9000";
+    @Value(value = "${minio.ACCESSKEY}")
+    private String aKey;
+    @Value(value = "${minio.SECRETKEY}")
+    private String sKey;
+    @Value(value = "${minio.url}")
+    public String url;
 
     private static final String IMG = "img";
-    MinioClient minioClient = new MinioClient(ENDPOINT, A_KEY, S_KEY);
+    MinioClient minioClient = new MinioClient(url, aKey, sKey);
 
     public FileUploader() throws Exception {
         super();
@@ -70,7 +67,7 @@ public class FileUploader {
     }
 
     public String URl() {
-        return URL;
+        return url;
     }
 
     public void getObject(String bucketName, String objectName, String fileName) throws Exception {
