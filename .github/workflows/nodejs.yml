@@ -12,11 +12,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
-      - run: npm install
-        working-directory: ./web
-      - run: npm run build
-        working-directory: ./web
-      - run: npm test
+      - run: |
+          npm install
+          npm run build
+          npm test
         working-directory: ./web
         env:
           CI: true
@@ -24,6 +23,6 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: Package dist
-          path: dist
+          path: web/dist
           retention-days: 30
 
