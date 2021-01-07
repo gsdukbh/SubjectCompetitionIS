@@ -24,8 +24,6 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: Package dist
-          path: |
-            dist
-            !dist/**/*.md
+          path: dist
           retention-days: 30
 
