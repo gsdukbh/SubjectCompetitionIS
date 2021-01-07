@@ -9,6 +9,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 
+/**
+ * @author admin
+ */
 @SpringBootApplication
 @EnableScheduling
 @EnableCaching

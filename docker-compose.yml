@@ -9,7 +9,7 @@ services:
     image: mysql:8.0.21
     container_name: scis-mysql
     command:
-      -- mysqld --character-set-server=utf8mb4
+      mysqld --character-set-server=utf8mb4
     volumes:
       - /scis/mysql/data/db:/var/lib/mysql
       - /scis/mysql/conf:/etc/mysql/conf.d

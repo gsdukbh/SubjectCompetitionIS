@@ -1,9 +1,12 @@
 package werls.scis.util;
 
 import io.minio.MinioClient;
+import io.minio.errors.InvalidEndpointException;
+import io.minio.errors.InvalidPortException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -24,20 +27,23 @@ public class FileUploader {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Value(value = "${minio.ACCESSKEY}")
-    private String aKey;
+    private String aKey ="root";
     @Value(value = "${minio.SECRETKEY}")
     private String sKey;
     @Value(value = "${minio.url}")
-    public String url;
+    private String url;
 
     private static final String IMG = "img";
-    MinioClient minioClient = new MinioClient(url, aKey, sKey);
+//    MinioClient minioClient = new MinioClient(url, aKey, sKey);
 
     public FileUploader() throws Exception {
         super();
+
     }
 
     public void makeBucket(String bucketName) throws Exception {
+        MinioClient minioClient = new MinioClient(url, aKey, sKey);
+
         logger.info("创建了存储对象：" + bucketName);
         minioClient.makeBucket(bucketName);
     }
@@ -48,6 +54,8 @@ public class FileUploader {
                           InputStream stream,
                           long size,
                           String contentType) throws Exception {
+        MinioClient minioClient = new MinioClient(url, aKey, sKey);
+
         logger.info(" 上传了文件：" + objectName + "  文件大小：" + size + " 文件类型：" + contentType);
         minioClient.putObject(bucketName, objectName, stream, size, contentType);
     }
@@ -57,11 +65,15 @@ public class FileUploader {
                              InputStream stream,
                              long size,
                              String contentType) throws Exception {
+        MinioClient minioClient = new MinioClient(url, aKey, sKey);
+
         logger.info(" 上传了文件：" + objectName + "  文件大小：" + size + " 文件类型：" + contentType);
         minioClient.putObject(IMG, objectName, stream, size, contentType);
     }
 
     public InputStream getObject(String bucketName, String objectName) throws Exception {
+        MinioClient minioClient = new MinioClient(url, aKey, sKey);
+
         logger.info(" 下传了文件：" + objectName);
         return minioClient.getObject(bucketName, objectName);
     }
@@ -71,11 +83,14 @@ public class FileUploader {
     }
 
     public void getObject(String bucketName, String objectName, String fileName) throws Exception {
+        MinioClient minioClient = new MinioClient(url, aKey, sKey);
+
         minioClient.getObject(bucketName, objectName, fileName);
     }
 
-    public void remove(String bucketName, String objectName) {
+    public void remove(String bucketName, String objectName){
         try {
+            MinioClient minioClient = new MinioClient(url, aKey, sKey);
             minioClient.removeObject(bucketName, objectName);
             logger.info(" 删除文件：" + "/" + bucketName + objectName);
         } catch (Exception e) {

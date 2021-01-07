@@ -69,8 +69,16 @@ public class WorksController {
         ScisWorks works = new ScisWorks();
         if (optionalScisApplyFrom.isPresent()) {
             works = optionalScisWorks.get();
-            fileUploader.remove(works.getBucketName(), works.getObjectName());
-            fileUploader.remove("img", works.getImg());
+            try {
+                fileUploader.remove(works.getBucketName(), works.getObjectName());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                fileUploader.remove("img", works.getImg());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         worksService.deleteById(id);
         res.put("status", 200);
@@ -186,7 +194,11 @@ public class WorksController {
         if (works1.isPresent()) {
             scisCompetition = works1.get().getCompetition();
             if (!scisWorks.getObjectName().equals(works1.get().getObjectName())) {
-                fileUploader.remove(works1.get().getBucketName(), works1.get().getObjectName());
+                try {
+                    fileUploader.remove(works1.get().getBucketName(), works1.get().getObjectName());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
         res.put("result", worksService.save(scisWorks));
