@@ -1,6 +1,6 @@
 name: Node.js Vue.js CI
 
-on: [push]
+on: [ push ]
 
 jobs:
   build:
@@ -13,20 +13,23 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
-      - run: npm install
+      - name: npm install
+        run: npm install
         working-directory: ./web
+      - name: npm build
       - run: npm run build
-#      - run: mkdir dist && cp target/*.jar staging
         working-directory: ./web
+      - name: npm test
       - run: npm test
         working-directory: ./web
-        env:
-          CI: true
-      - name: up artifact
       - uses: actions/upload-artifact@v2
+      - name: up artifact
         with:
           name: Package dist
           path: |
             dist
             !dist/**/*.md
+          retention-days: 30
+        env:
+          CI: true
 

@@ -27,5 +27,6 @@ jobs:
         with:
           name: Package jar
           path: staging
+          retention-days: 30
 
  
