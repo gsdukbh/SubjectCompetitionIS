@@ -6,7 +6,7 @@ spring:
     open-in-view: false
     database: mysql
   datasource:
-    url: jdbc:mysql://db:3306/scis?serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://db:3305/scis?serverTimezone=Asia/Shanghai
     username: root
     password: 123456
     type: com.alibaba.druid.pool.DruidDataSource
@@ -40,7 +40,7 @@ spring:
     host: redis
     password: werlst
     timeout: 300ms
-    port: 6379
+    port: 6378
   cache:
     type: redis
     cache-names: scis
@@ -61,8 +61,8 @@ application:
 minio:
   ACCESSKEY: root
   SECRETKEY: 12345678
-  BucketName: scis
-  url: 'http://minio:9000'
+  BucketName: scic
+  url: http://minio:9001
 
 
 
