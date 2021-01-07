@@ -9,15 +9,24 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js 
+      - name: Use Node.js
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
       - run: npm install
         working-directory: ./web
-      - run: npm run build --if-present
+      - run: npm run build
+#      - run: mkdir dist && cp target/*.jar staging
         working-directory: ./web
       - run: npm test
         working-directory: ./web
         env:
           CI: true
+      - name: up artifact
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Package dist
+          path: |
+            dist
+            !dist/**/*.md
+
