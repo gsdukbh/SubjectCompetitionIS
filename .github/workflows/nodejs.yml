@@ -6,7 +6,6 @@ jobs:
   build:
 
     runs-on: ubuntu-20.04
-
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js
@@ -22,8 +21,8 @@ jobs:
       - name: npm test
       - run: npm test
         working-directory: ./web
-      - uses: actions/upload-artifact@v2
       - name: up artifact
+        uses: actions/upload-artifact@v2
         with:
           name: Package dist
           path: |
